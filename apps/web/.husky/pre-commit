@@ -1,0 +1,19 @@
+echo "🚑 Health check, please be patient..."
+
+if npm run lint; then
+  echo "✅ Code lint/format checked!"
+else
+  echo "⚠️ WARNING: Incorrect code lint/format, fix it before committing, please!"
+  echo "💡 Use the command npm run lint:fix"
+  exit 1
+fi
+
+if npm run test:ci; then
+  echo "✅ Tests passed!"
+else
+  echo "⚠️ WARNING: Tests failing, fix them before committing, please!"
+  exit 1
+fi
+
+echo "👍 Health check completed."
+echo

@@ -1,0 +1,209 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "snapshots/2025-05-22T17-12-25+01-00/informacao_base.json",
+  "type": "object",
+  "properties": {
+    "CirculosEleitorais": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "cpDes": {
+            "type": "string"
+          },
+          "cpId": {
+            "type": "number"
+          },
+          "legDes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cpDes",
+          "cpId",
+          "legDes"
+        ]
+      }
+    },
+    "Deputados": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "DepCadId": {
+            "type": "number"
+          },
+          "DepCargo": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
+              "properties": {
+                "carDes": {
+                  "type": "string"
+                },
+                "carDtFim": {
+                  "type": "null"
+                },
+                "carDtInicio": {
+                  "type": "string"
+                },
+                "carId": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "carDes",
+                "carDtFim",
+                "carDtInicio",
+                "carId"
+              ]
+            }
+          },
+          "DepCPDes": {
+            "type": "string"
+          },
+          "DepCPId": {
+            "type": "number"
+          },
+          "DepGP": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "gpDtFim": {
+                  "type": "string"
+                },
+                "gpDtInicio": {
+                  "type": "string"
+                },
+                "gpId": {
+                  "type": "number"
+                },
+                "gpSigla": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "gpDtFim",
+                "gpDtInicio",
+                "gpId",
+                "gpSigla"
+              ]
+            }
+          },
+          "DepId": {
+            "type": "number"
+          },
+          "DepNomeCompleto": {
+            "type": "string"
+          },
+          "DepNomeParlamentar": {
+            "type": "string"
+          },
+          "DepSituacao": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sioDes": {
+                  "type": "string"
+                },
+                "sioDtFim": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "sioDtInicio": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sioDes",
+                "sioDtFim",
+                "sioDtInicio"
+              ]
+            }
+          },
+          "LegDes": {
+            "type": "string"
+          },
+          "Videos": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "DepCadId",
+          "DepCargo",
+          "DepCPDes",
+          "DepCPId",
+          "DepGP",
+          "DepId",
+          "DepNomeCompleto",
+          "DepNomeParlamentar",
+          "DepSituacao",
+          "LegDes",
+          "Videos"
+        ]
+      }
+    },
+    "DetalheLegislatura": {
+      "type": "object",
+      "properties": {
+        "dtfim": {
+          "type": "null"
+        },
+        "dtini": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "sigla": {
+          "type": "string"
+        },
+        "siglaAntiga": {
+          "type": "string"
+        }
+      }
+    },
+    "GruposParlamentares": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "sigla": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nome",
+          "sigla"
+        ]
+      }
+    },
+    "SessoesLegislativas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dataFim": {
+            "type": "null"
+          },
+          "dataInicio": {
+            "type": "string"
+          },
+          "numSessao": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

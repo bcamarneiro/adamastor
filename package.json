@@ -1,0 +1,15 @@
+{
+  "name": "gov-perf",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "bun --filter web dev",
+    "build": "bun --filter web build",
+    "sync": "bun --filter watcher start",
+    "test": "bun test",
+    "lint": "bun --filter '*' lint"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

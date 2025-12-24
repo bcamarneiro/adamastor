@@ -1,0 +1,32 @@
+{
+  "name": "watcher",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun build index.ts --outdir dist --target bun",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "bun index.ts",
+    "lint": "biome check .",
+    "format": "biome check --write ."
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/minimist": "^1.2.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@bokuweb/zstd-wasm": "^0.0.27",
+    "@types/backblaze-b2": "^1.5.6",
+    "@types/deep-diff": "^1.0.5",
+    "@vercel/blob": "^1.0.2",
+    "ajv": "^8.17.1",
+    "backblaze-b2": "^1.7.0",
+    "date-fns": "^4.1.0",
+    "deep-diff": "^1.0.2",
+    "generate-schema": "^2.6.0",
+    "minimist": "^1.2.8",
+    "zstd-codec": "^0.1.5"
+  }
+}

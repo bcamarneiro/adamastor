@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "snapshots/2025-05-22T17-12-25+01-00/agenda.json Set",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "AllDayEvent": {
+        "type": "boolean"
+      },
+      "AnexosComissaoPermanente": {
+        "type": "null"
+      },
+      "AnexosPlenario": {
+        "type": "null"
+      },
+      "EventEndDate": {
+        "type": "string"
+      },
+      "EventEndTime": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "EventStartDate": {
+        "type": "string"
+      },
+      "EventStartTime": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Id": {
+        "type": "number"
+      },
+      "InternetText": {
+        "type": "string"
+      },
+      "LegDes": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "Link": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Local": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "OrderValue": {
+        "type": "number"
+      },
+      "OrgDes": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "ParlamentGroup": {
+        "type": "number"
+      },
+      "PostPlenary": {
+        "type": "boolean"
+      },
+      "ReuNumero": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "Section": {
+        "type": "string"
+      },
+      "SectionId": {
+        "type": "number"
+      },
+      "SelNumero": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "Subtitle": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "Theme": {
+        "type": "string"
+      },
+      "ThemeId": {
+        "type": "number"
+      },
+      "Title": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "AllDayEvent",
+      "AnexosComissaoPermanente",
+      "AnexosPlenario",
+      "EventEndDate",
+      "EventEndTime",
+      "EventStartDate",
+      "EventStartTime",
+      "Id",
+      "InternetText",
+      "LegDes",
+      "Link",
+      "Local",
+      "OrderValue",
+      "OrgDes",
+      "ParlamentGroup",
+      "PostPlenary",
+      "ReuNumero",
+      "Section",
+      "SectionId",
+      "SelNumero",
+      "Subtitle",
+      "Theme",
+      "ThemeId",
+      "Title"
+    ],
+    "title": "snapshots/2025-05-22T17-12-25+01-00/agenda.json"
+  }
+}

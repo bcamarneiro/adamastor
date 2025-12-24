@@ -1,0 +1,25 @@
+name: 🫡 Commit checkups (Verification)
+
+on:
+ push:
+    branches:
+      - main
+      - develop
+ pull_request:
+
+jobs:
+ commit-checkups:
+    continue-on-error: false
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare Code
+        uses: ./.github/actions/prepare-code
+
+      - name: Commit checks
+        run: npm run lint

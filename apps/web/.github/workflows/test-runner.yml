@@ -1,0 +1,33 @@
+name: 💍 Tester runner
+
+on:
+  workflow_dispatch:
+  push:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  test-checkups:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    env:
+      HUSKY: 0
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Prepare Code
+        uses: ./.github/actions/prepare-code
+
+      - name: Run Tests
+        run: |
+          if ! npm run test:ci; then
+            echo "👹 Oops! Test run failed"
+            exit 1
+          fi

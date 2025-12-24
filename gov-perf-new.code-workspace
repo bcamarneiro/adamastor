@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../gov-perf-watcher"
+		},
+		{
+			"path": "../gov-perf-be"
+		},
+		{
+			"path": "../gov-perf"
+		}
+	],
+	"settings": {}
+}

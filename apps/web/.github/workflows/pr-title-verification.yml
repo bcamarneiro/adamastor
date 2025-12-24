@@ -1,0 +1,21 @@
+name: 🍄 PR title verification
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+permissions:
+  pull-requests: read
+
+jobs:
+  pr-title-verification:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

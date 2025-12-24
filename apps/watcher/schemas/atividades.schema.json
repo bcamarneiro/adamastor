@@ -1,0 +1,1491 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "snapshots/2025-05-22T17-12-25+01-00/atividades.json",
+  "type": "object",
+  "properties": {
+    "AtividadesGerais": {
+      "type": "object",
+      "properties": {
+        "Atividades": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Assunto": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "AutoresGP": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "Convidados": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "cargo": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "honra": {
+                      "type": "string"
+                    },
+                    "nome": {
+                      "type": "string"
+                    },
+                    "pais": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cargo",
+                    "honra",
+                    "nome",
+                    "pais"
+                  ]
+                }
+              },
+              "DataAgendamentoDebate": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "DataAnuncio": {
+                "type": "null"
+              },
+              "DataEntrada": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "DescTipo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "Eleitos": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "cargo": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "nome": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cargo",
+                    "nome"
+                  ]
+                }
+              },
+              "IniciativasConjuntas": {
+                "type": "null"
+              },
+              "Legislatura": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "Numero": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "Observacoes": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "OrgaoExterior": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "OutrosSubscritores": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "Publicacao": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "debateDtReu": {
+                      "type": "null"
+                    },
+                    "idAct": {
+                      "type": "null"
+                    },
+                    "idDeb": {
+                      "type": "null"
+                    },
+                    "idInt": {
+                      "type": "null"
+                    },
+                    "idPag": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "obs": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "pag": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "pagFinalDiarioSupl": {
+                      "type": "null"
+                    },
+                    "pubdt": {
+                      "type": "string"
+                    },
+                    "pubLeg": {
+                      "type": "string"
+                    },
+                    "pubNr": {
+                      "type": "string"
+                    },
+                    "pubSL": {
+                      "type": "string"
+                    },
+                    "pubTipo": {
+                      "type": "string"
+                    },
+                    "pubTp": {
+                      "type": "string"
+                    },
+                    "supl": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "URLDiario": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "debateDtReu",
+                    "idAct",
+                    "idDeb",
+                    "idInt",
+                    "idPag",
+                    "obs",
+                    "pag",
+                    "pagFinalDiarioSupl",
+                    "pubdt",
+                    "pubLeg",
+                    "pubNr",
+                    "pubSL",
+                    "pubTipo",
+                    "pubTp",
+                    "supl",
+                    "URLDiario"
+                  ]
+                }
+              },
+              "PublicacaoDebate": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "debateDtReu": {
+                      "type": "null"
+                    },
+                    "idAct": {
+                      "type": "null"
+                    },
+                    "idDeb": {
+                      "type": "null"
+                    },
+                    "idInt": {
+                      "type": "null"
+                    },
+                    "idPag": {
+                      "type": "string"
+                    },
+                    "obs": {
+                      "type": "null"
+                    },
+                    "pag": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "pagFinalDiarioSupl": {
+                      "type": "null"
+                    },
+                    "pubdt": {
+                      "type": "string"
+                    },
+                    "pubLeg": {
+                      "type": "string"
+                    },
+                    "pubNr": {
+                      "type": "string"
+                    },
+                    "pubSL": {
+                      "type": "string"
+                    },
+                    "pubTipo": {
+                      "type": "string"
+                    },
+                    "pubTp": {
+                      "type": "string"
+                    },
+                    "supl": {
+                      "type": "null"
+                    },
+                    "URLDiario": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "debateDtReu",
+                    "idAct",
+                    "idDeb",
+                    "idInt",
+                    "idPag",
+                    "obs",
+                    "pag",
+                    "pagFinalDiarioSupl",
+                    "pubdt",
+                    "pubLeg",
+                    "pubNr",
+                    "pubSL",
+                    "pubTipo",
+                    "pubTp",
+                    "supl",
+                    "URLDiario"
+                  ]
+                }
+              },
+              "ResultadoVotacaoPontos": {
+                "type": "null"
+              },
+              "Sessao": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "Texto": {
+                "type": "null"
+              },
+              "TextosAprovados": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "Tipo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "TipoAutor": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "VotacaoDebate": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ausencias": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "data": {
+                      "type": "string"
+                    },
+                    "descricao": {
+                      "type": "null"
+                    },
+                    "detalhe": {
+                      "type": "null"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "publicacao": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "debateDtReu": {
+                            "type": "null"
+                          },
+                          "idAct": {
+                            "type": "null"
+                          },
+                          "idDeb": {
+                            "type": "null"
+                          },
+                          "idInt": {
+                            "type": "null"
+                          },
+                          "idPag": {
+                            "type": "string"
+                          },
+                          "obs": {
+                            "type": "null"
+                          },
+                          "pag": {
+                            "type": [
+                              "array",
+                              "null"
+                            ],
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "pagFinalDiarioSupl": {
+                            "type": "null"
+                          },
+                          "pubdt": {
+                            "type": "string"
+                          },
+                          "pubLeg": {
+                            "type": "string"
+                          },
+                          "pubNr": {
+                            "type": "string"
+                          },
+                          "pubSL": {
+                            "type": "string"
+                          },
+                          "pubTipo": {
+                            "type": "string"
+                          },
+                          "pubTp": {
+                            "type": "string"
+                          },
+                          "supl": {
+                            "type": "null"
+                          },
+                          "URLDiario": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "debateDtReu",
+                          "idAct",
+                          "idDeb",
+                          "idInt",
+                          "idPag",
+                          "obs",
+                          "pag",
+                          "pagFinalDiarioSupl",
+                          "pubdt",
+                          "pubLeg",
+                          "pubNr",
+                          "pubSL",
+                          "pubTipo",
+                          "pubTp",
+                          "supl",
+                          "URLDiario"
+                        ]
+                      }
+                    },
+                    "resultado": {
+                      "type": "string"
+                    },
+                    "reuniao": {
+                      "type": "string"
+                    },
+                    "tipoReuniao": {
+                      "type": "null"
+                    },
+                    "unanime": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ausencias",
+                    "data",
+                    "descricao",
+                    "detalhe",
+                    "id",
+                    "publicacao",
+                    "resultado",
+                    "reuniao",
+                    "tipoReuniao",
+                    "unanime"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "Assunto",
+              "AutoresGP",
+              "Convidados",
+              "DataAgendamentoDebate",
+              "DataAnuncio",
+              "DataEntrada",
+              "DescTipo",
+              "Eleitos",
+              "IniciativasConjuntas",
+              "Legislatura",
+              "Numero",
+              "Observacoes",
+              "OrgaoExterior",
+              "OutrosSubscritores",
+              "Publicacao",
+              "PublicacaoDebate",
+              "ResultadoVotacaoPontos",
+              "Sessao",
+              "Texto",
+              "TextosAprovados",
+              "Tipo",
+              "TipoAutor",
+              "VotacaoDebate"
+            ]
+          }
+        },
+        "Relatorios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Assunto": {
+                "type": "string"
+              },
+              "Audicoes": {
+                "type": "null"
+              },
+              "Comissao": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "DataAgendamentoDebate": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "DataEntrada": {
+                "type": "string"
+              },
+              "DataParecerUTAO": {
+                "type": "null"
+              },
+              "DataPedidoParecer": {
+                "type": "null"
+              },
+              "DescTipo": {
+                "type": "string"
+              },
+              "Documentos": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "DataDocumento": {
+                      "type": "string"
+                    },
+                    "TipoDocumento": {
+                      "type": "string"
+                    },
+                    "TituloDocumento": {
+                      "type": "string"
+                    },
+                    "URL": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "DataDocumento",
+                    "TipoDocumento",
+                    "TituloDocumento",
+                    "URL"
+                  ]
+                }
+              },
+              "EntidadesExternas": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "IniciativasConjuntas": {
+                "type": "null"
+              },
+              "Legislatura": {
+                "type": "string"
+              },
+              "Links": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "DataDocumento": {
+                      "type": "string"
+                    },
+                    "TipoDocumento": {
+                      "type": "string"
+                    },
+                    "TituloDocumento": {
+                      "type": "string"
+                    },
+                    "URL": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "DataDocumento",
+                    "TipoDocumento",
+                    "TituloDocumento",
+                    "URL"
+                  ]
+                }
+              },
+              "LinkTexto": {
+                "type": "null"
+              },
+              "MembrosGoverno": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "Observacoes": {
+                "type": "null"
+              },
+              "ParecerComissao": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Codigo": {
+                      "type": "null"
+                    },
+                    "Documentos": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "codigoErro": {
+                            "type": "null"
+                          },
+                          "dataDocumento": {
+                            "type": "string"
+                          },
+                          "descricao": {
+                            "type": "null"
+                          },
+                          "publicarInternet": {
+                            "type": "string"
+                          },
+                          "tipoDocumento": {
+                            "type": "string"
+                          },
+                          "tituloDocumento": {
+                            "type": "string"
+                          },
+                          "URL": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "codigoErro",
+                          "dataDocumento",
+                          "descricao",
+                          "publicarInternet",
+                          "tipoDocumento",
+                          "tituloDocumento",
+                          "URL"
+                        ]
+                      }
+                    },
+                    "Id": {
+                      "type": "string"
+                    },
+                    "Nome": {
+                      "type": "string"
+                    },
+                    "Numero": {
+                      "type": "string"
+                    },
+                    "Relatores": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "dataCessacao": {
+                            "type": "null"
+                          },
+                          "dataNomeacao": {
+                            "type": "null"
+                          },
+                          "gp": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          },
+                          "motivoCessacao": {
+                            "type": "null"
+                          },
+                          "nome": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "dataCessacao",
+                          "dataNomeacao",
+                          "gp",
+                          "id",
+                          "motivoCessacao",
+                          "nome"
+                        ]
+                      }
+                    },
+                    "Sigla": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Codigo",
+                    "Documentos",
+                    "Id",
+                    "Nome",
+                    "Numero",
+                    "Relatores",
+                    "Sigla"
+                  ]
+                }
+              },
+              "Publicacao": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "debateDtReu": {
+                      "type": "null"
+                    },
+                    "idAct": {
+                      "type": "null"
+                    },
+                    "idDeb": {
+                      "type": "null"
+                    },
+                    "idInt": {
+                      "type": "null"
+                    },
+                    "idPag": {
+                      "type": "string"
+                    },
+                    "obs": {
+                      "type": "string"
+                    },
+                    "pag": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "pagFinalDiarioSupl": {
+                      "type": "null"
+                    },
+                    "pubdt": {
+                      "type": "string"
+                    },
+                    "pubLeg": {
+                      "type": "string"
+                    },
+                    "pubNr": {
+                      "type": "string"
+                    },
+                    "pubSL": {
+                      "type": "string"
+                    },
+                    "pubTipo": {
+                      "type": "string"
+                    },
+                    "pubTp": {
+                      "type": "string"
+                    },
+                    "supl": {
+                      "type": "string"
+                    },
+                    "URLDiario": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "PublicacaoDebate": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "debateDtReu": {
+                      "type": "null"
+                    },
+                    "idAct": {
+                      "type": "null"
+                    },
+                    "idDeb": {
+                      "type": "null"
+                    },
+                    "idInt": {
+                      "type": "null"
+                    },
+                    "idPag": {
+                      "type": "string"
+                    },
+                    "obs": {
+                      "type": "null"
+                    },
+                    "pag": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "pagFinalDiarioSupl": {
+                      "type": "null"
+                    },
+                    "pubdt": {
+                      "type": "string"
+                    },
+                    "pubLeg": {
+                      "type": "string"
+                    },
+                    "pubNr": {
+                      "type": "string"
+                    },
+                    "pubSL": {
+                      "type": "string"
+                    },
+                    "pubTipo": {
+                      "type": "string"
+                    },
+                    "pubTp": {
+                      "type": "string"
+                    },
+                    "supl": {
+                      "type": "null"
+                    },
+                    "URLDiario": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "debateDtReu",
+                    "idAct",
+                    "idDeb",
+                    "idInt",
+                    "idPag",
+                    "obs",
+                    "pag",
+                    "pagFinalDiarioSupl",
+                    "pubdt",
+                    "pubLeg",
+                    "pubNr",
+                    "pubSL",
+                    "pubTipo",
+                    "pubTp",
+                    "supl",
+                    "URLDiario"
+                  ]
+                }
+              },
+              "Relatores": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "dataCessacao": {
+                      "type": "null"
+                    },
+                    "dataNomeacao": {
+                      "type": "null"
+                    },
+                    "gp": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "motivoCessacao": {
+                      "type": "null"
+                    },
+                    "nome": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "dataCessacao",
+                    "dataNomeacao",
+                    "gp",
+                    "id",
+                    "motivoCessacao",
+                    "nome"
+                  ]
+                }
+              },
+              "Sessao": {
+                "type": "string"
+              },
+              "TextoRelatorio": {
+                "type": "null"
+              },
+              "TextosAprovados": {
+                "type": "null"
+              },
+              "Tipo": {
+                "type": "string"
+              },
+              "VotacaoDebate": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "VotacaoRelatorio": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "ausencias": {
+                    "type": "null"
+                  },
+                  "data": {
+                    "type": "string"
+                  },
+                  "descricao": {
+                    "type": "string"
+                  },
+                  "detalhe": {
+                    "type": "null"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "publicacao": {
+                    "type": "null"
+                  },
+                  "resultado": {
+                    "type": "string"
+                  },
+                  "reuniao": {
+                    "type": "string"
+                  },
+                  "tipoReuniao": {
+                    "type": "null"
+                  },
+                  "unanime": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": [
+              "Assunto",
+              "Audicoes",
+              "Comissao",
+              "DataAgendamentoDebate",
+              "DataEntrada",
+              "DataParecerUTAO",
+              "DataPedidoParecer",
+              "DescTipo",
+              "Documentos",
+              "EntidadesExternas",
+              "IniciativasConjuntas",
+              "Legislatura",
+              "Links",
+              "LinkTexto",
+              "MembrosGoverno",
+              "Observacoes",
+              "ParecerComissao",
+              "Publicacao",
+              "PublicacaoDebate",
+              "Relatores",
+              "Sessao",
+              "TextoRelatorio",
+              "TextosAprovados",
+              "Tipo",
+              "VotacaoDebate",
+              "VotacaoRelatorio"
+            ]
+          }
+        }
+      }
+    },
+    "Audicoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Assunto": {
+            "type": "string"
+          },
+          "Data": {
+            "type": "string"
+          },
+          "Documentos": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "Entidades": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "IDAudicao": {
+            "type": "number"
+          },
+          "Legislatura": {
+            "type": "string"
+          },
+          "Links": {
+            "type": "null"
+          },
+          "NumeroAudicao": {
+            "type": "string"
+          },
+          "SessaoLegislativa": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Assunto",
+          "Data",
+          "Documentos",
+          "Entidades",
+          "IDAudicao",
+          "Legislatura",
+          "Links",
+          "NumeroAudicao",
+          "SessaoLegislativa"
+        ]
+      }
+    },
+    "Audiencias": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Assunto": {
+            "type": "string"
+          },
+          "Concedida": {
+            "type": "string"
+          },
+          "Data": {
+            "type": "string"
+          },
+          "Documentos": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "Entidades": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "IDAudiencia": {
+            "type": "number"
+          },
+          "Legislatura": {
+            "type": "string"
+          },
+          "Links": {
+            "type": "null"
+          },
+          "NumeroAudiencia": {
+            "type": "string"
+          },
+          "SessaoLegislativa": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Assunto",
+          "Concedida",
+          "Data",
+          "Documentos",
+          "Entidades",
+          "IDAudiencia",
+          "Legislatura",
+          "Links",
+          "NumeroAudiencia",
+          "SessaoLegislativa"
+        ]
+      }
+    },
+    "Debates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Artigo": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "Assunto": {
+            "type": "string"
+          },
+          "AutoresDeputados": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "AutoresGP": {
+            "type": [
+              "null",
+              "string",
+              "array"
+            ]
+          },
+          "DataDebate": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "DataEntrada": {
+            "type": "string"
+          },
+          "DebateId": {
+            "type": "string"
+          },
+          "Intervencoes": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "Legislatura": {
+            "type": "string"
+          },
+          "Observacoes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "Publicacao": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
+              "properties": {
+                "debateDtReu": {
+                  "type": "null"
+                },
+                "idAct": {
+                  "type": "null"
+                },
+                "idDeb": {
+                  "type": "string"
+                },
+                "idInt": {
+                  "type": "null"
+                },
+                "idPag": {
+                  "type": "string"
+                },
+                "obs": {
+                  "type": "null"
+                },
+                "pag": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "pagFinalDiarioSupl": {
+                  "type": "null"
+                },
+                "pubdt": {
+                  "type": "string"
+                },
+                "pubLeg": {
+                  "type": "string"
+                },
+                "pubNr": {
+                  "type": "string"
+                },
+                "pubSL": {
+                  "type": "string"
+                },
+                "pubTipo": {
+                  "type": "string"
+                },
+                "pubTp": {
+                  "type": "string"
+                },
+                "supl": {
+                  "type": "null"
+                },
+                "URLDiario": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "debateDtReu",
+                "idAct",
+                "idDeb",
+                "idInt",
+                "idPag",
+                "obs",
+                "pag",
+                "pagFinalDiarioSupl",
+                "pubdt",
+                "pubLeg",
+                "pubNr",
+                "pubSL",
+                "pubTipo",
+                "pubTp",
+                "supl",
+                "URLDiario"
+              ]
+            }
+          },
+          "Sessao": {
+            "type": "string"
+          },
+          "TipoAutor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "TipoDebate": {
+            "type": "string"
+          },
+          "TipoDebateDesig": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Artigo",
+          "Assunto",
+          "AutoresDeputados",
+          "AutoresGP",
+          "DataDebate",
+          "DataEntrada",
+          "DebateId",
+          "Intervencoes",
+          "Legislatura",
+          "Observacoes",
+          "Publicacao",
+          "Sessao",
+          "TipoAutor",
+          "TipoDebate",
+          "TipoDebateDesig"
+        ]
+      }
+    },
+    "Deslocacoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "DataFim": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "DataIni": {
+            "type": "string"
+          },
+          "Designacao": {
+            "type": "string"
+          },
+          "Documentos": {
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "IDDeslocacao": {
+            "type": "number"
+          },
+          "Legislatura": {
+            "type": "string"
+          },
+          "Links": {
+            "type": "null"
+          },
+          "LocalEvento": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "SessaoLegislativa": {
+            "type": "string"
+          },
+          "Tipo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "DataFim",
+          "DataIni",
+          "Designacao",
+          "Documentos",
+          "IDDeslocacao",
+          "Legislatura",
+          "Links",
+          "LocalEvento",
+          "SessaoLegislativa",
+          "Tipo"
+        ]
+      }
+    },
+    "Eventos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Data": {
+            "type": "string"
+          },
+          "Designacao": {
+            "type": "string"
+          },
+          "Documentos": {
+            "type": "null"
+          },
+          "IDEvento": {
+            "type": "number"
+          },
+          "Legislatura": {
+            "type": "string"
+          },
+          "Links": {
+            "type": "null"
+          },
+          "LocalEvento": {
+            "type": "string"
+          },
+          "SessaoLegislativa": {
+            "type": "string"
+          },
+          "TipoEvento": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Data",
+          "Designacao",
+          "Documentos",
+          "IDEvento",
+          "Legislatura",
+          "Links",
+          "LocalEvento",
+          "SessaoLegislativa",
+          "TipoEvento"
+        ]
+      }
+    },
+    "OrcamentoContasGerencia": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "anexos": {
+            "type": "null"
+          },
+          "ano": {
+            "type": "string"
+          },
+          "dtAgendamento": {
+            "type": "null"
+          },
+          "dtAprovacaoCA": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "leg": {
+            "type": "string"
+          },
+          "obs": {
+            "type": "null"
+          },
+          "SL": {
+            "type": "string"
+          },
+          "textosAprovados": {
+            "type": "null"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "tp": {
+            "type": "string"
+          },
+          "votacao": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "anexos",
+          "ano",
+          "dtAgendamento",
+          "dtAprovacaoCA",
+          "id",
+          "leg",
+          "obs",
+          "SL",
+          "textosAprovados",
+          "tipo",
+          "titulo",
+          "tp",
+          "votacao"
+        ]
+      }
+    }
+  }
+}

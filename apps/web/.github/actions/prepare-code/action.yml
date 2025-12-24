@@ -1,0 +1,25 @@
+name: "Common Steps for Node Projects"
+description: "Composite action to checkout the repository, set up Node.js, cache dependencies, and install dependencies."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Cache Node Modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-modules-
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+
+    - name: Install dependencies
+      shell: bash
+      run: npm i
