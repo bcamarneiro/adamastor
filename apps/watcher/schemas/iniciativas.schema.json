@@ -6,7 +6,7 @@
     "type": "object",
     "properties": {
       "DataFimleg": {
-        "type": "null"
+        "type": ["string", "null"]
       },
       "DataInicioleg": {
         "type": "string"
@@ -281,7 +281,7 @@
                           }
                         },
                         "pagFinalDiarioSupl": {
-                          "type": "null"
+                          "type": ["string", "null"]
                         },
                         "pubdt": {
                           "type": "string"
@@ -302,7 +302,7 @@
                           "type": "string"
                         },
                         "supl": {
-                          "type": "null"
+                          "type": ["string", "null"]
                         },
                         "URLDiario": {
                           "type": "string"
@@ -358,7 +358,7 @@
                           }
                         },
                         "pagFinalDiarioSupl": {
-                          "type": "null"
+                          "type": ["string", "null"]
                         },
                         "pubdt": {
                           "type": "string"
@@ -379,7 +379,7 @@
                           "type": "string"
                         },
                         "supl": {
-                          "type": "null"
+                          "type": ["string", "null"]
                         },
                         "URLDiario": {
                           "type": "string"
@@ -715,7 +715,7 @@
                                 }
                               },
                               "pagFinalDiarioSupl": {
-                                "type": "null"
+                                "type": ["string", "null"]
                               },
                               "pubdt": {
                                 "type": "string"
@@ -736,7 +736,7 @@
                                 "type": "string"
                               },
                               "supl": {
-                                "type": "null"
+                                "type": ["string", "null"]
                               },
                               "URLDiario": {
                                 "type": "string"
@@ -978,7 +978,7 @@
                           }
                         },
                         "pagFinalDiarioSupl": {
-                          "type": "null"
+                          "type": ["string", "null"]
                         },
                         "pubdt": {
                           "type": "string"
@@ -999,7 +999,7 @@
                           "type": "string"
                         },
                         "supl": {
-                          "type": "null"
+                          "type": ["string", "null"]
                         },
                         "URLDiario": {
                           "type": "string"

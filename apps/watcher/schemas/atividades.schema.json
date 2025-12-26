@@ -286,10 +286,10 @@
                       "type": "string"
                     },
                     "descricao": {
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "detalhe": {
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "id": {
                       "type": "string"
@@ -435,7 +435,8 @@
                 "type": "string"
               },
               "Audicoes": {
-                "type": "null"
+                "type": ["array", "null"],
+                "items": { "type": "string" }
               },
               "Comissao": {
                 "type": ["null", "string"]
@@ -447,10 +448,10 @@
                 "type": "string"
               },
               "DataParecerUTAO": {
-                "type": "null"
+                "type": ["string", "null"]
               },
               "DataPedidoParecer": {
-                "type": "null"
+                "type": ["string", "null"]
               },
               "DescTipo": {
                 "type": "string"
@@ -638,7 +639,7 @@
                       "type": "string"
                     },
                     "obs": {
-                      "type": "string"
+                      "type": ["string", "null"]
                     },
                     "pag": {
                       "type": ["array", "null"],
@@ -668,7 +669,7 @@
                       "type": "string"
                     },
                     "supl": {
-                      "type": "string"
+                      "type": ["string", "null"]
                     },
                     "URLDiario": {
                       "type": "string"
@@ -787,13 +788,16 @@
                 "type": "null"
               },
               "TextosAprovados": {
-                "type": "null"
+                "type": ["array", "null"],
+                "items": {
+                  "type": "string"
+                }
               },
               "Tipo": {
                 "type": "string"
               },
               "VotacaoDebate": {
-                "type": ["object", "null"]
+                "type": ["object", "array", "null"]
               },
               "VotacaoRelatorio": {
                 "type": ["object", "null"],
@@ -805,7 +809,7 @@
                     "type": "string"
                   },
                   "descricao": {
-                    "type": "string"
+                    "type": ["string", "null"]
                   },
                   "detalhe": {
                     "type": "null"
