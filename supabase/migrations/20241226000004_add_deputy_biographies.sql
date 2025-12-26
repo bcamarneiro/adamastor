@@ -4,7 +4,7 @@
 
 -- Create deputy_biographies table
 CREATE TABLE deputy_biographies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   deputy_id UUID UNIQUE NOT NULL REFERENCES deputies(id) ON DELETE CASCADE,
   birth_date DATE,
   profession TEXT,

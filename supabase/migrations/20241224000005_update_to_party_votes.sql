@@ -28,7 +28,7 @@ DROP TABLE IF EXISTS votes;
 -- STEP 3: Create party_votes table
 -- ===================
 CREATE TABLE party_votes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   external_id TEXT UNIQUE NOT NULL,
   initiative_id UUID REFERENCES initiatives(id) ON DELETE CASCADE,
   session_number INTEGER,

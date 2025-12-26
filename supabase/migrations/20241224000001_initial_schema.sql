@@ -7,7 +7,8 @@
 -- ===================
 -- EXTENSIONS
 -- ===================
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Note: uuid-ossp is pre-installed in Supabase but in the 'extensions' schema
+-- We use gen_random_uuid() instead which is built into PostgreSQL 13+
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";  -- For fuzzy search
 
 -- ===================
@@ -15,7 +16,7 @@ CREATE EXTENSION IF NOT EXISTS "pg_trgm";  -- For fuzzy search
 -- ===================
 
 CREATE TABLE parties (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   external_id TEXT UNIQUE NOT NULL,
   acronym TEXT NOT NULL,
   name TEXT NOT NULL,
@@ -25,7 +26,7 @@ CREATE TABLE parties (
 );
 
 CREATE TABLE districts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT UNIQUE NOT NULL,
   postal_prefixes TEXT[] NOT NULL,  -- ['1000', '1100', ...]
   deputy_count INTEGER,
@@ -36,7 +37,7 @@ CREATE TABLE districts (
 CREATE INDEX idx_districts_postal ON districts USING GIN(postal_prefixes);
 
 CREATE TABLE deputies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   external_id TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
   short_name TEXT,
@@ -61,7 +62,7 @@ CREATE INDEX idx_deputies_name_search ON deputies USING GIN(name gin_trgm_ops);
 -- ===================
 
 CREATE TABLE sessions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   external_id TEXT UNIQUE NOT NULL,
   date DATE NOT NULL,
   type TEXT,  -- 'plenary', 'committee'
@@ -72,7 +73,7 @@ CREATE TABLE sessions (
 CREATE INDEX idx_sessions_date ON sessions(date);
 
 CREATE TABLE initiatives (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   external_id TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
   number TEXT,  -- e.g., "PL 123/XVI"
@@ -96,7 +97,7 @@ CREATE TABLE initiative_authors (
 );
 
 CREATE TABLE votes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id UUID REFERENCES sessions(id),
   deputy_id UUID REFERENCES deputies(id),
   initiative_id UUID REFERENCES initiatives(id),
@@ -111,7 +112,7 @@ CREATE INDEX idx_votes_vote ON votes(vote);
 CREATE INDEX idx_votes_session ON votes(session_id);
 
 CREATE TABLE interventions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   external_id TEXT UNIQUE,
   deputy_id UUID REFERENCES deputies(id),
   session_id UUID REFERENCES sessions(id),
@@ -128,7 +129,7 @@ CREATE INDEX idx_interventions_date ON interventions(date);
 -- ===================
 
 CREATE TABLE deputy_stats (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   deputy_id UUID UNIQUE REFERENCES deputies(id) ON DELETE CASCADE,
 
   -- Raw counts
@@ -164,7 +165,7 @@ CREATE INDEX idx_deputy_stats_rank ON deputy_stats(national_rank);
 -- ===================
 
 CREATE TABLE audit_events (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   entity_type TEXT NOT NULL,
   entity_id UUID NOT NULL,
   action TEXT NOT NULL CHECK (action IN ('create', 'update', 'delete')),
@@ -188,7 +189,7 @@ CREATE RULE audit_no_delete AS ON DELETE TO audit_events DO INSTEAD NOTHING;
 -- ===================
 
 CREATE TABLE sync_runs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   started_at TIMESTAMPTZ DEFAULT NOW(),
   completed_at TIMESTAMPTZ,
   status TEXT CHECK (status IN ('running', 'success', 'failed')),

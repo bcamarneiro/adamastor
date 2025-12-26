@@ -20,7 +20,7 @@ CREATE INDEX IF NOT EXISTS idx_deputies_biography_id ON deputies(biography_id);
 -- ===================
 
 CREATE TABLE plenary_meetings (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   external_id INTEGER UNIQUE NOT NULL,  -- BID from Parliament website
   meeting_date DATE NOT NULL,
   legislature INTEGER DEFAULT 16,
@@ -35,7 +35,7 @@ CREATE INDEX idx_plenary_meetings_legislature ON plenary_meetings(legislature);
 -- ===================
 
 CREATE TABLE plenary_attendance (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   deputy_id UUID NOT NULL REFERENCES deputies(id) ON DELETE CASCADE,
   meeting_id UUID NOT NULL REFERENCES plenary_meetings(id) ON DELETE CASCADE,
   status TEXT NOT NULL,  -- 'present', 'absent_quorum', 'absent_justified', 'absent_unjustified'

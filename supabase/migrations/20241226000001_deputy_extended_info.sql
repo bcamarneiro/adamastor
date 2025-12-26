@@ -10,7 +10,7 @@
 -- Tracks positions like Presidente, Vice-Presidente, Secretário, etc.
 
 CREATE TABLE deputy_roles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   deputy_id UUID NOT NULL REFERENCES deputies(id) ON DELETE CASCADE,
   role_name TEXT NOT NULL,           -- e.g., "Presidente", "Vice-Presidente"
   role_id INTEGER,                   -- Parliament's internal ID
@@ -28,7 +28,7 @@ CREATE INDEX idx_deputy_roles_active ON deputy_roles(deputy_id) WHERE end_date I
 -- Tracks party changes (mudança de partido)
 
 CREATE TABLE deputy_party_history (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   deputy_id UUID NOT NULL REFERENCES deputies(id) ON DELETE CASCADE,
   party_id UUID REFERENCES parties(id),
   party_acronym TEXT NOT NULL,       -- Store acronym directly for historical reference
@@ -46,7 +46,7 @@ CREATE INDEX idx_deputy_party_history_dates ON deputy_party_history(start_date, 
 -- Tracks status changes (Efetivo, Suspenso, Renunciou, Suplente)
 
 CREATE TABLE deputy_status_history (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   deputy_id UUID NOT NULL REFERENCES deputies(id) ON DELETE CASCADE,
   status TEXT NOT NULL,              -- "Efetivo", "Suspenso", "Renunciou", "Suplente"
   start_date DATE NOT NULL,
