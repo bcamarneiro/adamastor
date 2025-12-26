@@ -32,6 +32,7 @@ export interface MP {
   DepNomeParlamentar: string; // Parliamentary name
   DepSituacao: MPSituation[]; // Situations history
   LegDes: string; // Legislature designation
+  // biome-ignore lint/suspicious/noExplicitAny: Videos type from Parliament API is untyped
   Videos: any | null; // Videos (type can be refined based on actual data)
 }
 

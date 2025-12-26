@@ -689,7 +689,8 @@ export async function transformDistricts(
   }
 
   // Record step result
-  const status = failedCount === 0 ? 'success' : failedCount === circulos.length ? 'error' : 'warning';
+  const status =
+    failedCount === 0 ? 'success' : failedCount === circulos.length ? 'error' : 'warning';
   pipelineResult.addStep('Districts', {
     status,
     processed: circulos.length,

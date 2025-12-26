@@ -44,7 +44,9 @@ export class ProgressBar {
     const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
 
     // Use \r to overwrite the line (no newline)
-    process.stdout.write(`\r  ${this.label} [${bar}] ${percent}% (${this.current}/${this.total}) ${elapsed}s`);
+    process.stdout.write(
+      `\r  ${this.label} [${bar}] ${percent}% (${this.current}/${this.total}) ${elapsed}s`
+    );
   }
 
   /**
@@ -53,7 +55,9 @@ export class ProgressBar {
   complete(message?: string): void {
     const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
     const finalMessage = message || `${this.current}/${this.total} in ${elapsed}s`;
-    process.stdout.write(`\r  ${this.label} [${`█`.repeat(this.barWidth)}] 100% - ${finalMessage}\n`);
+    process.stdout.write(
+      `\r  ${this.label} [${'█'.repeat(this.barWidth)}] 100% - ${finalMessage}\n`
+    );
   }
 
   /**

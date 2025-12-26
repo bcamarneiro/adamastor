@@ -112,8 +112,7 @@ export async function fetchMeetingList(): Promise<PlenaryMeeting[]> {
   // Pattern: <a ... href="/DeputadoGP/Paginas/DetalheReuniaoPlenaria.aspx?BID=335330">2025-12-18</a>
   const regex = /href="[^"]*DetalheReuniaoPlenaria\.aspx\?BID=(\d+)"[^>]*>(\d{4}-\d{2}-\d{2})</g;
 
-  let match;
-  while ((match = regex.exec(html)) !== null) {
+  for (const match of html.matchAll(regex)) {
     const bidStr = match[1];
     const dateStr = match[2];
     if (bidStr && dateStr) {
@@ -147,13 +146,12 @@ export async function fetchMeetingAttendance(meeting: PlenaryMeeting): Promise<A
   const deputyBlockRegex =
     /hplDeputado[^>]*href="[^"]*BID=(\d+)"[^>]*>([^<]+)<\/a>[\s\S]*?lblGP[^>]*>([^<]*)<[\s\S]*?lblPresenca[^>]*>([^<]*)<[\s\S]*?lblMotivo[^>]*>([^<]*)</g;
 
-  let match;
-  while ((match = deputyBlockRegex.exec(html)) !== null) {
-    const bidStr = match[1];
-    const name = match[2];
-    const party = match[3];
-    const statusRaw = match[4];
-    const reason = match[5];
+  for (const deputyMatch of html.matchAll(deputyBlockRegex)) {
+    const bidStr = deputyMatch[1];
+    const name = deputyMatch[2];
+    const party = deputyMatch[3];
+    const statusRaw = deputyMatch[4];
+    const reason = deputyMatch[5];
 
     if (!bidStr || !name || !statusRaw) continue;
 
@@ -242,9 +240,9 @@ if (import.meta.main) {
 
     // Show sample records
     console.log('\nSample records:');
-    attendance.slice(0, 5).forEach((r) => {
+    for (const r of attendance.slice(0, 5)) {
       console.log(`  - ${r.deputyName} (${r.party}): ${r.statusRaw}`);
-    });
+    }
   } catch (err) {
     console.error('[ERROR] Scraping failed:', err);
     process.exit(1);

@@ -57,6 +57,7 @@ export async function runFetch(): Promise<string> {
     const schema = SCHEMAS[dataset.name];
 
     if (schema) {
+      // biome-ignore lint/suspicious/noExplicitAny: Schema types from JSON don't match Ajv's strict typing
       await validate(filePath, schema as any);
       const checksum = await sha256(filePath);
       console.log(`  ✓ ${dataset.name} (sha256: ${checksum.slice(0, 16)}...)`);

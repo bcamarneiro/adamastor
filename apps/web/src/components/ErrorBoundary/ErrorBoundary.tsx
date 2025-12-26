@@ -1,5 +1,5 @@
-import { Component, type ReactNode } from 'react';
 import { Sentry } from '@/lib/sentry';
+import { Component, type ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;

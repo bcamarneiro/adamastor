@@ -66,7 +66,8 @@ export async function transformParties(
   }
 
   // Record step result
-  const status = failedCount === 0 ? 'success' : failedCount === grupos.length ? 'error' : 'warning';
+  const status =
+    failedCount === 0 ? 'success' : failedCount === grupos.length ? 'error' : 'warning';
   pipelineResult.addStep('Parties', {
     status,
     processed: grupos.length,

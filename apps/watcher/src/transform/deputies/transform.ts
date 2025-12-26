@@ -158,7 +158,8 @@ export async function transformDeputies(
   progress.complete(`${byDepId.size} loaded (${activeCount} active)`);
 
   // Record step result
-  const status = failedCount === 0 ? 'success' : failedCount === uniqueDeputies.size ? 'error' : 'warning';
+  const status =
+    failedCount === 0 ? 'success' : failedCount === uniqueDeputies.size ? 'error' : 'warning';
   pipelineResult.addStep('Deputies', {
     status,
     processed: uniqueDeputies.size,

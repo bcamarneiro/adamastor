@@ -43,14 +43,15 @@ async function testFetch() {
 
   for (const d of DATASETS) {
     const filePath = `${SNAPSHOT_PATH}/${ts}/${d.name}.json`;
-    const schema =
+    // biome-ignore lint/suspicious/noExplicitAny: Schema types from JSON don't match Ajv's strict typing
+    const schema: any =
       d.name === 'informacao_base'
         ? schemaBase
         : d.name === 'agenda'
           ? schemaAgenda
           : d.name === 'atividades'
-            ? (schemaAtv as any)
-            : (schemaIniciativas as any);
+            ? schemaAtv
+            : schemaIniciativas;
 
     console.log(`📄 ${d.name}`);
     console.log(`   URL: ${d.url.substring(0, 60)}...`);

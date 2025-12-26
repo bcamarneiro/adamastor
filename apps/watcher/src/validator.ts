@@ -3,10 +3,12 @@ import Ajv from 'ajv';
 import type { JSONSchemaType } from 'ajv';
 import generateSchema from 'generate-schema';
 
+// biome-ignore lint/suspicious/noExplicitAny: Ajv JSONSchemaType requires generic, unknown not compatible
 export async function validate(path: string, schema: JSONSchemaType<any>) {
   try {
     console.log(`[DEBUG] Validating file: ${path}`);
     // Configure Ajv to not validate schema against meta-schema
+    // biome-ignore lint/suspicious/noExplicitAny: Ajv module requires this cast for proper instantiation
     const ajv = new (Ajv as any).default({
       allErrors: true,
       validateSchema: false, // Skip validating schema against meta-schema

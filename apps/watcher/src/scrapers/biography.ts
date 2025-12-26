@@ -94,6 +94,7 @@ function parsePortugueseDate(dateStr: string): string | null {
   const normalized = dateStr
     .toLowerCase()
     .normalize('NFD')
+    // biome-ignore lint/suspicious/noMisleadingCharacterClass: Unicode range for diacritical marks is intentional
     .replace(/[\u0300-\u036f]/g, ''); // Remove accents
 
   const match = normalized.match(/(\d{1,2})\s+de\s+(\w+)\s+de\s+(\d{4})/);

@@ -89,5 +89,7 @@ export async function syncDeputyExtendedInfo(
     progress.update();
   }
 
-  progress.complete(`${rolesCount} roles, ${partyHistoryCount} party, ${statusHistoryCount} status`);
+  progress.complete(
+    `${rolesCount} roles, ${partyHistoryCount} party, ${statusHistoryCount} status`
+  );
 }

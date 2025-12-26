@@ -310,10 +310,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <User className="w-5 h-5 text-accent-9" />
             <span className="flex items-center">
               Biografia
-              <SourceIndicator
-                sourceType="scraper"
-                sourceUrl={deputy.biography_source_url}
-              />
+              <SourceIndicator sourceType="scraper" sourceUrl={deputy.biography_source_url} />
             </span>
           </h2>
           <p className="text-neutral-11 text-sm leading-relaxed">{deputy.bio_narrative}</p>

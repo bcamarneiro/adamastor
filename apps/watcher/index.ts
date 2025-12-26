@@ -24,14 +24,15 @@ let errorCount = 0;
     for (const d of DATASETS) {
       try {
         const p = `${SNAPSHOT_PATH}/${ts}/${d.name}.json`;
-        const schema =
+        // biome-ignore lint/suspicious/noExplicitAny: Schema types from JSON don't match Ajv's strict typing
+        const schema: any =
           d.name === 'informacao_base'
             ? schemaBase
             : d.name === 'agenda'
               ? schemaAgenda
               : d.name === 'atividades'
-                ? (schemaAtv as any)
-                : (schemaIniciativas as any);
+                ? schemaAtv
+                : schemaIniciativas;
         console.log(`[DEBUG] Validating ${d.name} with schema`);
         await validate(p, schema);
 

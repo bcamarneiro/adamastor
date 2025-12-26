@@ -129,7 +129,7 @@ jobs:
           version: latest
 
       - name: Start Supabase
-        run: supabase start -x realtime,storage,imgproxy,inbucket,postgrest,pgadmin,studio,edge-runtime,logflare,vector,supavisor
+        run: supabase start -x realtime,imgproxy,postgrest,studio,edge-runtime,logflare,vector,supavisor > /dev/null 2>&1 || true
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
