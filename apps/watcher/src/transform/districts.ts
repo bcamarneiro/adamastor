@@ -1,4 +1,5 @@
 import { supabase } from '../supabase.js';
+import { pipelineResult } from '../utils/pipeline-result.js';
 
 interface ParliamentCirculoEleitoral {
   cpId: number;
@@ -647,6 +648,8 @@ export async function transformDistricts(
   console.log(`📦 Transforming ${circulos.length} districts...`);
 
   const districtMap = new Map<number, string>(); // cpId -> uuid
+  let failedCount = 0;
+  const errors: string[] = [];
 
   for (const ce of circulos) {
     const district = {
@@ -665,12 +668,34 @@ export async function transformDistricts(
 
     if (error) {
       console.error(`  ❌ Error upserting district ${ce.cpDes}:`, error.message);
+      failedCount++;
+      if (errors.length < 5) errors.push(`${ce.cpDes}: ${error.message}`);
+
+      // Fail fast on authentication errors
+      if (error.message.includes('Invalid API key') || error.message.includes('JWT')) {
+        pipelineResult.addStep('Districts', {
+          status: 'error',
+          processed: circulos.length,
+          failed: circulos.length,
+          errors: ['Authentication failed: Invalid Supabase API key'],
+        });
+        throw new Error('Authentication failed: Invalid Supabase API key');
+      }
       continue;
     }
 
     districtMap.set(ce.cpId, data.id);
     console.log(`  ✓ ${ce.cpDes} -> ${data.id}`);
   }
+
+  // Record step result
+  const status = failedCount === 0 ? 'success' : failedCount === circulos.length ? 'error' : 'warning';
+  pipelineResult.addStep('Districts', {
+    status,
+    processed: circulos.length,
+    failed: failedCount,
+    errors,
+  });
 
   console.log(`✅ Districts: ${districtMap.size} loaded\n`);
   return districtMap;

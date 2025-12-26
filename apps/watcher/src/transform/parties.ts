@@ -1,4 +1,5 @@
 import { supabase } from '../supabase.js';
+import { pipelineResult } from '../utils/pipeline-result.js';
 
 // Party colors - official or commonly used
 const PARTY_COLORS: Record<string, string> = {
@@ -24,6 +25,8 @@ export async function transformParties(
   console.log(`📦 Transforming ${grupos.length} parties...`);
 
   const partyMap = new Map<string, string>(); // acronym -> uuid
+  let failedCount = 0;
+  const errors: string[] = [];
 
   for (const gp of grupos) {
     const party = {
@@ -42,12 +45,34 @@ export async function transformParties(
 
     if (error) {
       console.error(`  ❌ Error upserting party ${gp.sigla}:`, error.message);
+      failedCount++;
+      if (errors.length < 5) errors.push(`${gp.sigla}: ${error.message}`);
+
+      // Fail fast on authentication errors
+      if (error.message.includes('Invalid API key') || error.message.includes('JWT')) {
+        pipelineResult.addStep('Parties', {
+          status: 'error',
+          processed: grupos.length,
+          failed: grupos.length,
+          errors: ['Authentication failed: Invalid Supabase API key'],
+        });
+        throw new Error('Authentication failed: Invalid Supabase API key');
+      }
       continue;
     }
 
     partyMap.set(data.acronym, data.id);
     console.log(`  ✓ ${gp.sigla} -> ${data.id}`);
   }
+
+  // Record step result
+  const status = failedCount === 0 ? 'success' : failedCount === grupos.length ? 'error' : 'warning';
+  pipelineResult.addStep('Parties', {
+    status,
+    processed: grupos.length,
+    failed: failedCount,
+    errors,
+  });
 
   console.log(`✅ Parties: ${partyMap.size} loaded\n`);
   return partyMap;

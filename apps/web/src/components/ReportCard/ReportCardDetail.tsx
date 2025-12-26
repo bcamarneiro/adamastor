@@ -149,7 +149,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
       <div className="p-6 space-y-6">
         <h2 className="text-lg font-semibold text-neutral-12 flex items-center">
           Atividade Parlamentar
-          <SourceIndicator sourceType="api" label="API" />
+          <SourceIndicator sourceType="api" />
         </h2>
 
         <MetricBar
@@ -179,7 +179,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
                 <Users className="w-5 h-5 text-accent-9" />
                 <h3 className="text-base font-medium text-neutral-12 flex items-center">
                   Presenca em Plenario
-                  <SourceIndicator sourceType="scraper" label="Scraper" />
+                  <SourceIndicator sourceType="scraper" />
                 </h3>
               </div>
               <MetricBar
@@ -312,7 +312,6 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
               Biografia
               <SourceIndicator
                 sourceType="scraper"
-                label="Scraper"
                 sourceUrl={deputy.biography_source_url}
               />
             </span>

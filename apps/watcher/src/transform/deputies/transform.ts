@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '../../supabase.js';
+import { pipelineResult } from '../../utils/pipeline-result.js';
 import type { DeputyMaps, ParliamentDeputado } from './types.js';
 
 function parseLegislature(legDes: string): number {
@@ -79,6 +80,8 @@ export async function transformDeputies(
   const byDepId = new Map<number, string>();
   const byCadastroId = new Map<number, string>();
   let activeCount = 0;
+  let failedCount = 0;
+  const errors: string[] = [];
 
   // Deduplicate deputies by DepId (take most recent)
   const uniqueDeputies = new Map<number, ParliamentDeputado>();
@@ -127,12 +130,34 @@ export async function transformDeputies(
 
     if (error) {
       console.error(`  ❌ Error upserting deputy ${dep.DepNomeParlamentar}:`, error.message);
+      failedCount++;
+      if (errors.length < 5) errors.push(`${dep.DepNomeParlamentar}: ${error.message}`);
+
+      // Fail fast on authentication errors
+      if (error.message.includes('Invalid API key') || error.message.includes('JWT')) {
+        pipelineResult.addStep('Deputies', {
+          status: 'error',
+          processed: uniqueDeputies.size,
+          failed: uniqueDeputies.size,
+          errors: ['Authentication failed: Invalid Supabase API key'],
+        });
+        throw new Error('Authentication failed: Invalid Supabase API key');
+      }
       continue;
     }
 
     byDepId.set(dep.DepId, data.id);
     byCadastroId.set(dep.DepCadId, data.id);
   }
+
+  // Record step result
+  const status = failedCount === 0 ? 'success' : failedCount === uniqueDeputies.size ? 'error' : 'warning';
+  pipelineResult.addStep('Deputies', {
+    status,
+    processed: uniqueDeputies.size,
+    failed: failedCount,
+    errors,
+  });
 
   console.log(`✅ Deputies: ${byDepId.size} loaded (${activeCount} active)\n`);
   return { byDepId, byCadastroId };
