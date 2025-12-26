@@ -10,9 +10,10 @@
  */
 
 import { runTransformPipeline } from '../transform/index.js';
+import { flushSentry, initSentry, reportError } from '../utils/sentry.js';
 import { runFetch } from './fetch.js';
 
-async function runSync(): Promise<void> {
+async function runSync(): Promise<number> {
   console.log('╔═══════════════════════════════════════════════════════════╗');
   console.log('║           GOV-PERF DATA SYNC                              ║');
   console.log('╚═══════════════════════════════════════════════════════════╝\n');
@@ -23,21 +24,31 @@ async function runSync(): Promise<void> {
   console.log('\n');
 
   // Step 2: Transform to database
-  await runTransformPipeline(timestamp);
+  const exitCode = await runTransformPipeline(timestamp);
 
   console.log('\n╔═══════════════════════════════════════════════════════════╗');
   console.log('║           SYNC COMPLETE                                   ║');
   console.log('╚═══════════════════════════════════════════════════════════╝\n');
+
+  return exitCode;
 }
 
 // CLI entry point
 if (import.meta.main) {
+  // Initialize Sentry before running
+  initSentry();
+
   runSync()
-    .then(() => {
-      process.exit(0);
+    .then(async (exitCode) => {
+      await flushSentry();
+      process.exit(exitCode);
     })
-    .catch((err) => {
+    .catch(async (err) => {
       console.error('Sync failed:', err);
+      if (err instanceof Error) {
+        reportError(err, { command: 'sync' });
+      }
+      await flushSentry();
       process.exit(1);
     });
 }

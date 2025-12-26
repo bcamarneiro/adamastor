@@ -8,7 +8,7 @@
     "transform": "bun run src/commands/transform.ts",
     "sync": "bun run src/commands/sync.ts",
     "build": "bun build src/commands/sync.ts --outdir dist --target bun",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "bun test",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@bokuweb/zstd-wasm": "^0.0.27",
+    "@sentry/node": "^10.32.1",
     "@supabase/supabase-js": "^2.89.0",
     "@types/backblaze-b2": "^1.5.6",
     "@types/deep-diff": "^1.0.5",
