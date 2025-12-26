@@ -12,6 +12,8 @@ Configure these in **Settings > Environments > staging > Environment secrets**:
 |-------------|-------------|---------|
 | `SUPABASE_URL` | Supabase project URL for staging | `https://abc123.supabase.co` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (NOT anon key) | `eyJhbG...` |
+| `SUPABASE_PROJECT_ID` | Project reference ID (from URL) | `abc123xyz` |
+| `SUPABASE_ACCESS_TOKEN` | Personal access token for CLI | `sbp_...` |
 
 ### Production Environment
 
@@ -21,6 +23,8 @@ Configure these in **Settings > Environments > production > Environment secrets*
 |-------------|-------------|---------|
 | `SUPABASE_URL` | Supabase project URL for production | `https://xyz789.supabase.co` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (NOT anon key) | `eyJhbG...` |
+| `SUPABASE_PROJECT_ID` | Project reference ID (from URL) | `xyz789abc` |
+| `SUPABASE_ACCESS_TOKEN` | Personal access token for CLI | `sbp_...` |
 
 ## Optional Secrets (B2 Archiving)
 
@@ -75,6 +79,8 @@ These are used across all workflows:
 2. Navigate to **Settings > API**
 3. Copy the **Project URL** for `SUPABASE_URL`
 4. Copy the **service_role** key (under "Project API keys") for `SUPABASE_SERVICE_ROLE_KEY`
+5. Go to **Settings > General** and copy the **Reference ID** for `SUPABASE_PROJECT_ID`
+6. Go to [Account Tokens](https://supabase.com/dashboard/account/tokens) and generate a token for `SUPABASE_ACCESS_TOKEN`
 
 > **Security Warning:** The service role key bypasses Row Level Security. Never expose it client-side.
 
@@ -108,6 +114,8 @@ These are used across all workflows:
 - [ ] Create `staging` environment in GitHub repo settings
 - [ ] Add `SUPABASE_URL` secret
 - [ ] Add `SUPABASE_SERVICE_ROLE_KEY` secret
+- [ ] Add `SUPABASE_PROJECT_ID` secret (for DB migrations)
+- [ ] Add `SUPABASE_ACCESS_TOKEN` secret (for DB migrations)
 - [ ] (Optional) Add `SENTRY_DSN` secret for error tracking
 - [ ] (Optional) Add B2 secrets if archiving enabled
 
@@ -116,6 +124,8 @@ These are used across all workflows:
 - [ ] Create `production` environment in GitHub repo settings
 - [ ] Add `SUPABASE_URL` secret (different project than staging!)
 - [ ] Add `SUPABASE_SERVICE_ROLE_KEY` secret
+- [ ] Add `SUPABASE_PROJECT_ID` secret (for DB migrations)
+- [ ] Add `SUPABASE_ACCESS_TOKEN` secret (for DB migrations)
 - [ ] (Optional) Add `SENTRY_DSN` secret for error tracking
 - [ ] (Optional) Enable "Required reviewers" for production approval gate
 - [ ] (Optional) Add B2 secrets if archiving enabled
@@ -132,7 +142,7 @@ These are used across all workflows:
 
 The watcher validates environment variables at startup. If any required secrets are missing, you'll see an error like:
 
-```
+```text
 ❌ Environment validation failed:
 
    • SUPABASE_URL is required
