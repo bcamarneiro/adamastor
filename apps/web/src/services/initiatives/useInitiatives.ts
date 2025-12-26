@@ -80,17 +80,14 @@ export const useInitiatives = () => {
       }
     }
 
-    const totalByFase = parsedData.reduce(
-      (acc: Record<string, number>, initiative) => {
-        const phase = initiative.latestEvent.CodigoFase;
-        if (!acc[phase]) {
-          acc[phase] = 0;
-        }
-        acc[phase]++;
-        return acc;
-      },
-      {},
-    );
+    const totalByFase = parsedData.reduce((acc: Record<string, number>, initiative) => {
+      const phase = initiative.latestEvent.CodigoFase;
+      if (!acc[phase]) {
+        acc[phase] = 0;
+      }
+      acc[phase]++;
+      return acc;
+    }, {});
 
     return {
       total: parsedData.length,

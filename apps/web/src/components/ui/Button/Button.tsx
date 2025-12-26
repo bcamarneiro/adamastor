@@ -1,13 +1,7 @@
 import { type PropsWithChildren, useMemo } from 'react';
 
 interface ButtonProps extends PropsWithChildren {
-  variant?:
-    | 'neutral'
-    | 'accent'
-    | 'warning'
-    | 'danger'
-    | 'success'
-    | 'transparent';
+  variant?: 'neutral' | 'accent' | 'warning' | 'danger' | 'success' | 'transparent';
   size?: 'regular' | 'narrow';
   className?: string;
   onClick?: () => void;

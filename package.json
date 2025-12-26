@@ -7,9 +7,13 @@
     "build": "bun --filter web build",
     "sync": "bun --filter watcher start",
     "test": "bun test",
-    "lint": "bun --filter '*' lint"
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "cd apps/watcher && bun tsc --noEmit && cd ../web && bun tsc --noEmit"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "typescript": "^5.7.2"
   }
 }

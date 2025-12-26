@@ -18,8 +18,8 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-neutral-800 mb-8 leading-relaxed font-medium">
-            A comprehensive platform for monitoring and analyzing parliamentary
-            activities, making governance data accessible to everyone.
+            A comprehensive platform for monitoring and analyzing parliamentary activities, making
+            governance data accessible to everyone.
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 justify-center">

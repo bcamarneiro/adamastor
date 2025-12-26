@@ -4,9 +4,7 @@ interface LoadingDisplayProps {
   message?: string;
 }
 
-const LoadingDisplay: React.FC<LoadingDisplayProps> = ({
-  message = 'Loading...',
-}) => {
+const LoadingDisplay: React.FC<LoadingDisplayProps> = ({ message = 'Loading...' }) => {
   return (
     <div className="flex flex-col justify-center items-center h-64 gap-4">
       <Spinner size="lg" />

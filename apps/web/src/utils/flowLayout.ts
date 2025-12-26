@@ -15,13 +15,10 @@ export function calculateNodePositions<
 >(nodes: Node<NodeData>[], edges: Edge<EdgeData>[]): Node<NodeData>[] {
   // Step 1: Identify root nodes (nodes that are only sources, not targets)
   const targetNodeIds = new Set(edges.map((edge) => edge.target));
-  const rootNodeIds = nodes
-    .map((node) => node.id)
-    .filter((id) => !targetNodeIds.has(id));
+  const rootNodeIds = nodes.map((node) => node.id).filter((id) => !targetNodeIds.has(id));
 
   // If no root nodes found, use nodes with the most outgoing connections
-  const rootIds =
-    rootNodeIds.length > 0 ? rootNodeIds : findAlternativeRoots(nodes, edges);
+  const rootIds = rootNodeIds.length > 0 ? rootNodeIds : findAlternativeRoots(nodes, edges);
 
   // Build adjacency lists for faster traversal
   const outgoingEdges: Record<string, string[]> = {};
@@ -42,7 +39,7 @@ export function calculateNodePositions<
     nodes.map((n) => n.id),
     outgoingEdges,
     incomingEdges,
-    rootIds,
+    rootIds
   );
 
   // Step 3: Calculate positions based on groups
@@ -59,10 +56,7 @@ export function calculateNodePositions<
     const groupNum = Number.parseInt(groupIndex);
 
     // Calculate group dimensions
-    const groupWidth = Math.max(
-      group.length * HORIZONTAL_SPACING,
-      HORIZONTAL_SPACING,
-    );
+    const groupWidth = Math.max(group.length * HORIZONTAL_SPACING, HORIZONTAL_SPACING);
 
     // Position nodes within the group
     for (let i = 0; i < group.length; i++) {
@@ -71,11 +65,7 @@ export function calculateNodePositions<
 
       if (node) {
         // Calculate node position within its group
-        const x =
-          groupXOffset +
-          i * HORIZONTAL_SPACING -
-          groupWidth / 2 +
-          HORIZONTAL_SPACING / 2;
+        const x = groupXOffset + i * HORIZONTAL_SPACING - groupWidth / 2 + HORIZONTAL_SPACING / 2;
 
         // Use a more compact vertical layout
         const y = groupNum * VERTICAL_SPACING;
@@ -110,7 +100,7 @@ function analyzeGraphStructure(
   nodeIds: string[],
   outgoingEdges: Record<string, string[]>,
   incomingEdges: Record<string, string[]>,
-  rootIds: string[],
+  rootIds: string[]
 ): Record<number, string[]> {
   // Initialize groups
   const groups: Record<number, string[]> = {};
@@ -173,9 +163,7 @@ function analyzeGraphStructure(
  * @param groups Initial grouping of nodes
  * @returns Balanced groups
  */
-function balanceGroups(
-  groups: Record<number, string[]>,
-): Record<number, string[]> {
+function balanceGroups(groups: Record<number, string[]>): Record<number, string[]> {
   const MAX_GROUP_SIZE = 5;
   const balancedGroups: Record<number, string[]> = {};
   let currentGroup = 0;
@@ -214,8 +202,7 @@ function findAlternativeRoots<
   }
 
   for (const edge of edges) {
-    outgoingConnections[edge.source] =
-      (outgoingConnections[edge.source] || 0) + 1;
+    outgoingConnections[edge.source] = (outgoingConnections[edge.source] || 0) + 1;
   }
 
   // Find nodes with the most outgoing connections

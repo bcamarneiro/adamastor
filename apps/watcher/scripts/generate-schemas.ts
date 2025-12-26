@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 
-import { readdirSync, statSync, existsSync, mkdirSync } from 'node:fs';
-import { join, basename, dirname, relative } from 'node:path';
+import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join, relative } from 'node:path';
 import generateSchema from 'generate-schema';
 import minimist from 'minimist';
 
@@ -15,11 +15,11 @@ const argv = minimist(process.argv.slice(2), {
     o: 'output',
     p: 'pattern',
     r: 'recursive',
-    h: 'help'
+    h: 'help',
   },
   default: {
-    recursive: false
-  }
+    recursive: false,
+  },
 });
 
 // Display help if requested or if required arguments are missing
@@ -68,13 +68,13 @@ async function main() {
       // Calculate relative path to maintain directory structure
       const relPath = relative(inputDir, jsonFile);
       const schemaFile = join(outputDir, relPath.replace(/\.json$/, '.schema.json'));
-      
+
       // Ensure the output directory exists
       const outputSubDir = dirname(schemaFile);
       if (!existsSync(outputSubDir)) {
         mkdirSync(outputSubDir, { recursive: true });
       }
-      
+
       // Generate schema
       await createSchemaFromFile(jsonFile, schemaFile);
       console.log(`✅ Generated schema for ${jsonFile} -> ${schemaFile}`);
@@ -111,7 +111,7 @@ function findJsonFiles(dir: string, pattern: string, recursive: boolean): string
 
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
-    
+
     if (entry.isDirectory() && recursive) {
       files.push(...findJsonFiles(fullPath, pattern, recursive));
     } else if (entry.isFile() && entry.name.endsWith('.json')) {
@@ -129,9 +129,9 @@ function findJsonFiles(dir: string, pattern: string, recursive: boolean): string
 function matchesPattern(filename: string, pattern: string): boolean {
   // Convert glob pattern to regex
   const regexPattern = pattern
-    .replace(/\./g, '\\.')    // Escape dots
-    .replace(/\*/g, '.*');    // Convert * to .*
-  
+    .replace(/\./g, '\\.') // Escape dots
+    .replace(/\*/g, '.*'); // Convert * to .*
+
   return new RegExp(`^${regexPattern}$`).test(filename);
 }
 
@@ -162,7 +162,7 @@ Examples:
 }
 
 // Run the main function
-main().catch(error => {
+main().catch((error) => {
   console.error('Error:', error);
   process.exit(1);
 });

@@ -30,9 +30,7 @@ const KeyMetrics = () => {
           transition={{ delay: 0.2 + index * 0.1 }}
           className="text-center"
         >
-          <div className="text-3xl md:text-4xl font-light mb-2">
-            {metric.value}
-          </div>
+          <div className="text-3xl md:text-4xl font-light mb-2">{metric.value}</div>
           <div className="text-sm text-neutral-600">{metric.label}</div>
         </motion.div>
       ))}

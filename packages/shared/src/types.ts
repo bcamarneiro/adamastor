@@ -40,7 +40,7 @@ export interface DeputyStats {
   questionCount: number;
   attendanceRate: number;
   workScore: number;
-  grade: "A" | "B" | "C" | "D" | "F";
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
   districtRank?: number;
   nationalRank?: number;
   calculatedAt: string;
@@ -62,7 +62,7 @@ export interface Vote {
   sessionId: string;
   deputyId: string;
   initiativeId?: string;
-  vote: "favor" | "contra" | "abstencao" | "ausente";
+  vote: 'favor' | 'contra' | 'abstencao' | 'ausente';
   votedAt?: string;
 }
 
@@ -92,10 +92,10 @@ export const GRADE_THRESHOLDS = {
   F: 0,
 } as const;
 
-export function scoreToGrade(score: number): "A" | "B" | "C" | "D" | "F" {
-  if (score >= GRADE_THRESHOLDS.A) return "A";
-  if (score >= GRADE_THRESHOLDS.B) return "B";
-  if (score >= GRADE_THRESHOLDS.C) return "C";
-  if (score >= GRADE_THRESHOLDS.D) return "D";
-  return "F";
+export function scoreToGrade(score: number): 'A' | 'B' | 'C' | 'D' | 'F' {
+  if (score >= GRADE_THRESHOLDS.A) return 'A';
+  if (score >= GRADE_THRESHOLDS.B) return 'B';
+  if (score >= GRADE_THRESHOLDS.C) return 'C';
+  if (score >= GRADE_THRESHOLDS.D) return 'D';
+  return 'F';
 }

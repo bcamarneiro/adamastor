@@ -70,7 +70,7 @@ export const useParliament = () => {
         }
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     const totalByDistrict = parsedData.Deputados.reduce(
@@ -78,7 +78,7 @@ export const useParliament = () => {
         acc[mp.DepCPDes] = (acc[mp.DepCPDes] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     const totalByStatus = parsedData.Deputados.reduce(
@@ -90,7 +90,7 @@ export const useParliament = () => {
         }
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     return {
@@ -114,16 +114,16 @@ export const useParliament = () => {
     (districtId: number) => {
       return parsedData.Deputados.filter((mp) => mp.DepCPId === districtId);
     },
-    [parsedData.Deputados],
+    [parsedData.Deputados]
   );
 
   const getPartyMPs = useCallback(
     (partySigla: string) => {
       return parsedData.Deputados.filter(
-        (mp) => mp.DepGP[mp.DepGP.length - 1]?.gpSigla === partySigla,
+        (mp) => mp.DepGP[mp.DepGP.length - 1]?.gpSigla === partySigla
       );
     },
-    [parsedData.Deputados],
+    [parsedData.Deputados]
   );
 
   return {

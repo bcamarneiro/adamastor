@@ -5,13 +5,7 @@ import * as Accordion from '@radix-ui/react-accordion';
 import { Table } from '@radix-ui/themes';
 import { debounce } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
-import {
-  FaChevronDown,
-  FaChevronRight,
-  FaClock,
-  FaSearch,
-  FaVoteYea,
-} from 'react-icons/fa';
+import { FaChevronDown, FaChevronRight, FaClock, FaSearch, FaVoteYea } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const calcularDuracao = (inicio: string, fim?: string): number => {
@@ -31,7 +25,7 @@ const InitiativeList = () => {
   // Debounce filter text updates
   const debouncedSetFilter = useMemo(
     () => debounce((value: string) => setDebouncedFilterText(value), 300),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -45,11 +39,9 @@ const InitiativeList = () => {
   const filteredInitiatives = useMemo(() => {
     return initiatives.filter((initiative) => {
       const matchesSearch = initiative.IniTitulo.toLowerCase().includes(
-        debouncedFilterText.toLowerCase(),
+        debouncedFilterText.toLowerCase()
       );
-      const matchesPhase = selectedPhase
-        ? initiative.latestEvent.Fase === selectedPhase
-        : true;
+      const matchesPhase = selectedPhase ? initiative.latestEvent.Fase === selectedPhase : true;
       return matchesSearch && matchesPhase;
     });
   }, [initiatives, debouncedFilterText, selectedPhase]);
@@ -82,11 +74,7 @@ const InitiativeList = () => {
       <div className="w-full h-full flex items-center justify-center">
         <div className="text-red-600 text-center">
           <h2 className="text-xl font-bold mb-2">Error loading initiatives</h2>
-          <p>
-            {error instanceof Error
-              ? error.message
-              : 'An unexpected error occurred'}
-          </p>
+          <p>{error instanceof Error ? error.message : 'An unexpected error occurred'}</p>
         </div>
       </div>
     );
@@ -98,38 +86,27 @@ const InitiativeList = () => {
         <h1 className="text-2xl font-bold mb-4">Initiatives List</h1>
 
         <Accordion.Root type="single" collapsible className="mb-6">
-          <Accordion.Item
-            value="details"
-            className="border rounded-lg overflow-hidden"
-          >
+          <Accordion.Item value="details" className="border rounded-lg overflow-hidden">
             <Accordion.Header className="bg-neutral-2">
               <Accordion.Trigger className="w-full flex items-center justify-between p-4 hover:bg-neutral-3 transition-colors">
-                <span className="font-medium text-neutral-12">
-                  Statistics Overview
-                </span>
+                <span className="font-medium text-neutral-12">Statistics Overview</span>
                 <FaChevronDown className="text-neutral-11 transition-transform ui-expanded:rotate-180" />
               </Accordion.Trigger>
             </Accordion.Header>
             <Accordion.Content className="p-4 bg-white">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <div className="bg-neutral-2 p-4 rounded-lg">
-                  <span className="text-neutral-11 text-sm">
-                    Total Initiatives
-                  </span>
+                  <span className="text-neutral-11 text-sm">Total Initiatives</span>
                   <p className="text-2xl font-bold mt-1">{metadata.total}</p>
                 </div>
-                {Object.entries(metadata?.totalByFase ?? {}).map(
-                  ([key, value]) => {
-                    return metadata.fasesList ? (
-                      <div key={key} className="bg-neutral-2 p-4 rounded-lg">
-                        <span className="text-neutral-11 text-sm">
-                          {metadata.fasesList[key]}
-                        </span>
-                        <p className="text-2xl font-bold mt-1">{value}</p>
-                      </div>
-                    ) : null;
-                  },
-                )}
+                {Object.entries(metadata?.totalByFase ?? {}).map(([key, value]) => {
+                  return metadata.fasesList ? (
+                    <div key={key} className="bg-neutral-2 p-4 rounded-lg">
+                      <span className="text-neutral-11 text-sm">{metadata.fasesList[key]}</span>
+                      <p className="text-2xl font-bold mt-1">{value}</p>
+                    </div>
+                  ) : null;
+                })}
               </div>
             </Accordion.Content>
           </Accordion.Item>
@@ -178,12 +155,8 @@ const InitiativeList = () => {
                 <Table.Row className="bg-neutral-2">
                   <Table.ColumnHeaderCell scope="col" className="w-12" />
                   <Table.ColumnHeaderCell scope="col">#</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col">
-                    Phase
-                  </Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col">
-                    Title
-                  </Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell scope="col">Phase</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell scope="col">Title</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell scope="col" className="w-24">
                     Actions
                   </Table.ColumnHeaderCell>
@@ -193,10 +166,7 @@ const InitiativeList = () => {
               <Table.Body>
                 {filteredInitiatives.length === 0 ? (
                   <Table.Row>
-                    <Table.Cell
-                      colSpan={5}
-                      className="text-center py-8 text-neutral-11"
-                    >
+                    <Table.Cell colSpan={5} className="text-center py-8 text-neutral-11">
                       <div className="flex flex-col items-center gap-2">
                         <FaSearch className="w-6 h-6" aria-hidden="true" />
                         <p>
@@ -216,10 +186,10 @@ const InitiativeList = () => {
                         : initiative.IniEventos[0].DataFase.toISOString(),
                       typeof initiative.latestEvent.DataFase === 'string'
                         ? initiative.latestEvent.DataFase
-                        : initiative.latestEvent.DataFase.toISOString(),
+                        : initiative.latestEvent.DataFase.toISOString()
                     );
-                    const hasVotingPhases = initiative.IniEventos.some(
-                      (event) => event.Fase.toLowerCase().includes('votação'),
+                    const hasVotingPhases = initiative.IniEventos.some((event) =>
+                      event.Fase.toLowerCase().includes('votação')
                     );
 
                     return (
@@ -236,19 +206,14 @@ const InitiativeList = () => {
                               <FaChevronRight className="text-neutral-11" />
                             )}
                           </Table.Cell>
-                          <Table.RowHeaderCell>
-                            {initiative.IniNr}
-                          </Table.RowHeaderCell>
+                          <Table.RowHeaderCell>{initiative.IniNr}</Table.RowHeaderCell>
                           <Table.Cell>
                             <div className="flex items-center gap-2">
                               <span className="inline-flex px-2 py-1 rounded-full text-sm bg-neutral-2">
                                 {initiative.latestEvent.Fase?.trim()}
                               </span>
                               {hasVotingPhases && (
-                                <FaVoteYea
-                                  className="text-neutral-11"
-                                  title="Has voting phases"
-                                />
+                                <FaVoteYea className="text-neutral-11" title="Has voting phases" />
                               )}
                               {duration > 180 && (
                                 <FaClock
@@ -280,9 +245,7 @@ const InitiativeList = () => {
                                     <h4 className="font-medium text-sm text-neutral-11 mb-1">
                                       Description
                                     </h4>
-                                    <p className="text-neutral-12">
-                                      {initiative.description}
-                                    </p>
+                                    <p className="text-neutral-12">{initiative.description}</p>
                                   </div>
                                 )}
 
@@ -304,49 +267,39 @@ const InitiativeList = () => {
                                       </span>
                                     </div>
                                     <div className="space-y-2">
-                                      {initiative.IniEventos.map(
-                                        (event, index) => (
-                                          <div
-                                            key={event.EvtId}
-                                            className="flex items-start gap-3"
-                                          >
-                                            <div className="flex flex-col items-center">
-                                              <div
-                                                className={`w-2 h-2 rounded-full ${
-                                                  event.Fase.toLowerCase().includes(
-                                                    'votação',
-                                                  )
-                                                    ? 'bg-blue-500'
-                                                    : 'bg-neutral-6'
-                                                }`}
-                                              />
-                                              {index <
-                                                initiative.IniEventos.length -
-                                                  1 && (
-                                                <div className="w-0.5 h-full bg-neutral-6" />
-                                              )}
-                                            </div>
-                                            <div className="flex-1 pb-4">
-                                              <p className="text-sm font-medium text-neutral-12">
-                                                {event.Fase}
-                                              </p>
-                                              <p className="text-sm text-neutral-11">
-                                                {formatDate(
-                                                  typeof event.DataFase ===
-                                                    'string'
-                                                    ? event.DataFase
-                                                    : event.DataFase.toISOString(),
-                                                )}
-                                              </p>
-                                              {event.Observacoes && (
-                                                <p className="text-sm text-neutral-11 mt-1 italic">
-                                                  {event.Observacoes}
-                                                </p>
-                                              )}
-                                            </div>
+                                      {initiative.IniEventos.map((event, index) => (
+                                        <div key={event.EvtId} className="flex items-start gap-3">
+                                          <div className="flex flex-col items-center">
+                                            <div
+                                              className={`w-2 h-2 rounded-full ${
+                                                event.Fase.toLowerCase().includes('votação')
+                                                  ? 'bg-blue-500'
+                                                  : 'bg-neutral-6'
+                                              }`}
+                                            />
+                                            {index < initiative.IniEventos.length - 1 && (
+                                              <div className="w-0.5 h-full bg-neutral-6" />
+                                            )}
                                           </div>
-                                        ),
-                                      )}
+                                          <div className="flex-1 pb-4">
+                                            <p className="text-sm font-medium text-neutral-12">
+                                              {event.Fase}
+                                            </p>
+                                            <p className="text-sm text-neutral-11">
+                                              {formatDate(
+                                                typeof event.DataFase === 'string'
+                                                  ? event.DataFase
+                                                  : event.DataFase.toISOString()
+                                              )}
+                                            </p>
+                                            {event.Observacoes && (
+                                              <p className="text-sm text-neutral-11 mt-1 italic">
+                                                {event.Observacoes}
+                                              </p>
+                                            )}
+                                          </div>
+                                        </div>
+                                      ))}
                                     </div>
                                   </div>
                                 </div>
@@ -360,29 +313,19 @@ const InitiativeList = () => {
                                     <div className="bg-neutral-2 p-4 rounded-lg">
                                       <div className="flex items-center gap-2 mb-3">
                                         <FaVoteYea className="text-neutral-11" />
-                                        <span className="text-sm font-medium">
-                                          Voting Phases
-                                        </span>
+                                        <span className="text-sm font-medium">Voting Phases</span>
                                       </div>
                                       <div className="space-y-3">
                                         {initiative.IniEventos.filter((event) =>
-                                          event.Fase.toLowerCase().includes(
-                                            'votação',
-                                          ),
+                                          event.Fase.toLowerCase().includes('votação')
                                         ).map((event) => (
-                                          <div
-                                            key={event.EvtId}
-                                            className="flex flex-col gap-1"
-                                          >
-                                            <p className="text-sm text-neutral-12">
-                                              {event.Fase}
-                                            </p>
+                                          <div key={event.EvtId} className="flex flex-col gap-1">
+                                            <p className="text-sm text-neutral-12">{event.Fase}</p>
                                             <p className="text-sm text-neutral-11">
                                               {formatDate(
-                                                typeof event.DataFase ===
-                                                  'string'
+                                                typeof event.DataFase === 'string'
                                                   ? event.DataFase
-                                                  : event.DataFase.toISOString(),
+                                                  : event.DataFase.toISOString()
                                               )}
                                             </p>
                                             {event.Observacoes && (
@@ -415,10 +358,9 @@ const InitiativeList = () => {
                                     </h4>
                                     <p className="text-neutral-12">
                                       {formatDate(
-                                        typeof initiative.latestEvent
-                                          .DataFase === 'string'
+                                        typeof initiative.latestEvent.DataFase === 'string'
                                           ? initiative.latestEvent.DataFase
-                                          : initiative.latestEvent.DataFase.toISOString(),
+                                          : initiative.latestEvent.DataFase.toISOString()
                                       )}
                                     </p>
                                   </div>
@@ -440,12 +382,9 @@ const InitiativeList = () => {
                                     (ini) =>
                                       ini.IniId !== initiative.IniId &&
                                       (ini.IniTipo === initiative.IniTipo ||
-                                        initiative.IniTitulo.split(' ').some(
-                                          (word) =>
-                                            ini.IniTitulo.toLowerCase().includes(
-                                              word.toLowerCase(),
-                                            ),
-                                        )),
+                                        initiative.IniTitulo.split(' ').some((word) =>
+                                          ini.IniTitulo.toLowerCase().includes(word.toLowerCase())
+                                        ))
                                   )
                                   .slice(0, 3).length > 0 && (
                                   <div>
@@ -457,15 +396,12 @@ const InitiativeList = () => {
                                         .filter(
                                           (ini) =>
                                             ini.IniId !== initiative.IniId &&
-                                            (ini.IniTipo ===
-                                              initiative.IniTipo ||
-                                              initiative.IniTitulo.split(
-                                                ' ',
-                                              ).some((word) =>
+                                            (ini.IniTipo === initiative.IniTipo ||
+                                              initiative.IniTitulo.split(' ').some((word) =>
                                                 ini.IniTitulo.toLowerCase().includes(
-                                                  word.toLowerCase(),
-                                                ),
-                                              )),
+                                                  word.toLowerCase()
+                                                )
+                                              ))
                                         )
                                         .slice(0, 3)
                                         .map((relatedInitiative) => (
@@ -480,8 +416,7 @@ const InitiativeList = () => {
                                                 #{relatedInitiative.IniNr}
                                               </span>
                                               <span className="text-sm text-neutral-11">
-                                                {relatedInitiative.IniTipo ===
-                                                'P'
+                                                {relatedInitiative.IniTipo === 'P'
                                                   ? 'Proposta de Lei'
                                                   : relatedInitiative.IniTipo}
                                               </span>

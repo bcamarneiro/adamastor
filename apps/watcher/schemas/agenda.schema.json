@@ -18,19 +18,13 @@
         "type": "string"
       },
       "EventEndTime": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": ["string", "null"]
       },
       "EventStartDate": {
         "type": "string"
       },
       "EventStartTime": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": ["string", "null"]
       },
       "Id": {
         "type": "number"
@@ -39,31 +33,19 @@
         "type": "string"
       },
       "LegDes": {
-        "type": [
-          "null",
-          "string"
-        ]
+        "type": ["null", "string"]
       },
       "Link": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": ["string", "null"]
       },
       "Local": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": ["string", "null"]
       },
       "OrderValue": {
         "type": "number"
       },
       "OrgDes": {
-        "type": [
-          "null",
-          "string"
-        ]
+        "type": ["null", "string"]
       },
       "ParlamentGroup": {
         "type": "number"
@@ -72,10 +54,7 @@
         "type": "boolean"
       },
       "ReuNumero": {
-        "type": [
-          "null",
-          "string"
-        ]
+        "type": ["null", "string"]
       },
       "Section": {
         "type": "string"
@@ -84,16 +63,10 @@
         "type": "number"
       },
       "SelNumero": {
-        "type": [
-          "null",
-          "string"
-        ]
+        "type": ["null", "string"]
       },
       "Subtitle": {
-        "type": [
-          "null",
-          "string"
-        ]
+        "type": ["null", "string"]
       },
       "Theme": {
         "type": "string"

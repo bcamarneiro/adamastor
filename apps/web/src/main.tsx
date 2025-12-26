@@ -25,6 +25,6 @@ if (root) {
           {/* </AuthProvider> */}
         </QueryClientProvider>
       </Theme>
-    </StrictMode>,
+    </StrictMode>
   );
 }

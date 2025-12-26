@@ -13,14 +13,13 @@ export const useAppSettingsStore = create<AppSettings>()(
   persist(
     (set) => ({
       leftSidebarExpanded: true,
-      setLeftSidebarExpanded: (expanded: boolean) =>
-        set({ leftSidebarExpanded: expanded }),
+      setLeftSidebarExpanded: (expanded: boolean) => set({ leftSidebarExpanded: expanded }),
 
       theme: 'light',
       setTheme: (theme: 'light' | 'dark') => set({ theme }),
     }),
     {
       name: 'sidebar-storage',
-    },
-  ),
+    }
+  )
 );

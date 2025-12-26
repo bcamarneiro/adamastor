@@ -12,16 +12,10 @@
             "type": "object",
             "properties": {
               "Assunto": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "AutoresGP": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "oneOf": [
                     {
@@ -34,18 +28,12 @@
                 }
               },
               "Convidados": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
                     "cargo": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
+                      "type": ["string", "null"]
                     },
                     "honra": {
                       "type": "string"
@@ -57,100 +45,59 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "cargo",
-                    "honra",
-                    "nome",
-                    "pais"
-                  ]
+                  "required": ["cargo", "honra", "nome", "pais"]
                 }
               },
               "DataAgendamentoDebate": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "DataAnuncio": {
                 "type": "null"
               },
               "DataEntrada": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "DescTipo": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "Eleitos": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
                     "cargo": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
+                      "type": ["string", "null"]
                     },
                     "nome": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "cargo",
-                    "nome"
-                  ]
+                  "required": ["cargo", "nome"]
                 }
               },
               "IniciativasConjuntas": {
                 "type": "null"
               },
               "Legislatura": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "Numero": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "Observacoes": {
-                "type": [
-                  "null",
-                  "string"
-                ]
+                "type": ["null", "string"]
               },
               "OrgaoExterior": {
-                "type": [
-                  "null",
-                  "string"
-                ]
+                "type": ["null", "string"]
               },
               "OutrosSubscritores": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "string"
                 }
               },
               "Publicacao": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -167,22 +114,13 @@
                       "type": "null"
                     },
                     "idPag": {
-                      "type": [
-                        "null",
-                        "string"
-                      ]
+                      "type": ["null", "string"]
                     },
                     "obs": {
-                      "type": [
-                        "null",
-                        "string"
-                      ]
+                      "type": ["null", "string"]
                     },
                     "pag": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "string"
                       }
@@ -209,10 +147,7 @@
                       "type": "string"
                     },
                     "supl": {
-                      "type": [
-                        "null",
-                        "string"
-                      ]
+                      "type": ["null", "string"]
                     },
                     "URLDiario": {
                       "type": "string"
@@ -239,10 +174,7 @@
                 }
               },
               "PublicacaoDebate": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -265,10 +197,7 @@
                       "type": "null"
                     },
                     "pag": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "string"
                       }
@@ -325,48 +254,30 @@
                 "type": "null"
               },
               "Sessao": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "Texto": {
                 "type": "null"
               },
               "TextosAprovados": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "string"
                 }
               },
               "Tipo": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "TipoAutor": {
-                "type": [
-                  "string",
-                  "null"
-                ]
+                "type": ["string", "null"]
               },
               "VotacaoDebate": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
                     "ausencias": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "string"
                       }
@@ -384,10 +295,7 @@
                       "type": "string"
                     },
                     "publicacao": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "object",
                         "properties": {
@@ -410,10 +318,7 @@
                             "type": "null"
                           },
                           "pag": {
-                            "type": [
-                              "array",
-                              "null"
-                            ],
+                            "type": ["array", "null"],
                             "items": {
                               "type": "string"
                             }
@@ -476,10 +381,7 @@
                       "type": "null"
                     },
                     "unanime": {
-                      "type": [
-                        "null",
-                        "string"
-                      ]
+                      "type": ["null", "string"]
                     }
                   },
                   "required": [
@@ -536,16 +438,10 @@
                 "type": "null"
               },
               "Comissao": {
-                "type": [
-                  "null",
-                  "string"
-                ]
+                "type": ["null", "string"]
               },
               "DataAgendamentoDebate": {
-                "type": [
-                  "null",
-                  "string"
-                ]
+                "type": ["null", "string"]
               },
               "DataEntrada": {
                 "type": "string"
@@ -560,10 +456,7 @@
                 "type": "string"
               },
               "Documentos": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -580,19 +473,11 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "DataDocumento",
-                    "TipoDocumento",
-                    "TituloDocumento",
-                    "URL"
-                  ]
+                  "required": ["DataDocumento", "TipoDocumento", "TituloDocumento", "URL"]
                 }
               },
               "EntidadesExternas": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "string"
                 }
@@ -604,10 +489,7 @@
                 "type": "string"
               },
               "Links": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -624,22 +506,14 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "DataDocumento",
-                    "TipoDocumento",
-                    "TituloDocumento",
-                    "URL"
-                  ]
+                  "required": ["DataDocumento", "TipoDocumento", "TituloDocumento", "URL"]
                 }
               },
               "LinkTexto": {
                 "type": "null"
               },
               "MembrosGoverno": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "string"
                 }
@@ -648,10 +522,7 @@
                 "type": "null"
               },
               "ParecerComissao": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -659,10 +530,7 @@
                       "type": "null"
                     },
                     "Documentos": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "object",
                         "properties": {
@@ -709,10 +577,7 @@
                       "type": "string"
                     },
                     "Relatores": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "object",
                         "properties": {
@@ -749,22 +614,11 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "Codigo",
-                    "Documentos",
-                    "Id",
-                    "Nome",
-                    "Numero",
-                    "Relatores",
-                    "Sigla"
-                  ]
+                  "required": ["Codigo", "Documentos", "Id", "Nome", "Numero", "Relatores", "Sigla"]
                 }
               },
               "Publicacao": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -787,10 +641,7 @@
                       "type": "string"
                     },
                     "pag": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "string"
                       }
@@ -826,10 +677,7 @@
                 }
               },
               "PublicacaoDebate": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -852,10 +700,7 @@
                       "type": "null"
                     },
                     "pag": {
-                      "type": [
-                        "array",
-                        "null"
-                      ],
+                      "type": ["array", "null"],
                       "items": {
                         "type": "string"
                       }
@@ -909,10 +754,7 @@
                 }
               },
               "Relatores": {
-                "type": [
-                  "array",
-                  "null"
-                ],
+                "type": ["array", "null"],
                 "items": {
                   "type": "object",
                   "properties": {
@@ -935,14 +777,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "dataCessacao",
-                    "dataNomeacao",
-                    "gp",
-                    "id",
-                    "motivoCessacao",
-                    "nome"
-                  ]
+                  "required": ["dataCessacao", "dataNomeacao", "gp", "id", "motivoCessacao", "nome"]
                 }
               },
               "Sessao": {
@@ -958,16 +793,10 @@
                 "type": "string"
               },
               "VotacaoDebate": {
-                "type": [
-                  "object",
-                  "null"
-                ]
+                "type": ["object", "null"]
               },
               "VotacaoRelatorio": {
-                "type": [
-                  "object",
-                  "null"
-                ],
+                "type": ["object", "null"],
                 "properties": {
                   "ausencias": {
                     "type": "null"
@@ -1046,16 +875,10 @@
             "type": "string"
           },
           "Documentos": {
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": ["array", "null"]
           },
           "Entidades": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "IDAudicao": {
             "type": "number"
@@ -1101,16 +924,10 @@
             "type": "string"
           },
           "Documentos": {
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": ["array", "null"]
           },
           "Entidades": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "IDAudiencia": {
             "type": "number"
@@ -1148,32 +965,19 @@
         "type": "object",
         "properties": {
           "Artigo": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "Assunto": {
             "type": "string"
           },
           "AutoresDeputados": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "AutoresGP": {
-            "type": [
-              "null",
-              "string",
-              "array"
-            ]
+            "type": ["null", "string", "array"]
           },
           "DataDebate": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "DataEntrada": {
             "type": "string"
@@ -1182,10 +986,7 @@
             "type": "string"
           },
           "Intervencoes": {
-            "type": [
-              "array",
-              "null"
-            ],
+            "type": ["array", "null"],
             "items": {
               "type": "string"
             }
@@ -1194,16 +995,10 @@
             "type": "string"
           },
           "Observacoes": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "Publicacao": {
-            "type": [
-              "array",
-              "null"
-            ],
+            "type": ["array", "null"],
             "items": {
               "type": "object",
               "properties": {
@@ -1226,10 +1021,7 @@
                   "type": "null"
                 },
                 "pag": {
-                  "type": [
-                    "array",
-                    "null"
-                  ],
+                  "type": ["array", "null"],
                   "items": {
                     "type": "string"
                   }
@@ -1286,10 +1078,7 @@
             "type": "string"
           },
           "TipoAutor": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "TipoDebate": {
             "type": "string"
@@ -1323,10 +1112,7 @@
         "type": "object",
         "properties": {
           "DataFim": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "DataIni": {
             "type": "string"
@@ -1335,10 +1121,7 @@
             "type": "string"
           },
           "Documentos": {
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": ["array", "null"]
           },
           "IDDeslocacao": {
             "type": "number"
@@ -1350,10 +1133,7 @@
             "type": "null"
           },
           "LocalEvento": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "SessaoLegislativa": {
             "type": "string"
@@ -1437,10 +1217,7 @@
             "type": "null"
           },
           "dtAprovacaoCA": {
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": ["string", "null"]
           },
           "id": {
             "type": "string"

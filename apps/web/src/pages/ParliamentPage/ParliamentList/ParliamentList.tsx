@@ -18,9 +18,7 @@ const ParliamentList = () => {
       const matchesSearch =
         mp.DepNomeCompleto.toLowerCase().includes(filterText.toLowerCase()) ||
         mp.DepNomeParlamentar.toLowerCase().includes(filterText.toLowerCase());
-      const matchesDistrict = selectedDistrict
-        ? mp.DepCPDes === selectedDistrict
-        : true;
+      const matchesDistrict = selectedDistrict ? mp.DepCPDes === selectedDistrict : true;
       const matchesParty = selectedParty
         ? mp.DepGP[mp.DepGP.length - 1]?.gpSigla === selectedParty
         : true;
@@ -44,9 +42,7 @@ const ParliamentList = () => {
   // Get districts for filter
   const districts = useMemo(() => {
     if (!parliament?.CirculosEleitorais) return [];
-    return parliament.CirculosEleitorais.sort((a, b) =>
-      a.cpDes.localeCompare(b.cpDes),
-    );
+    return parliament.CirculosEleitorais.sort((a, b) => a.cpDes.localeCompare(b.cpDes));
   }, [parliament?.CirculosEleitorais]);
 
   // Generate chart data
@@ -65,13 +61,11 @@ const ParliamentList = () => {
       '#2ECC71',
     ];
 
-    return Object.entries(metadata.totalByParty).map(
-      ([party, count], index) => ({
-        title: party,
-        value: count,
-        color: colors[index % colors.length],
-      }),
-    );
+    return Object.entries(metadata.totalByParty).map(([party, count], index) => ({
+      title: party,
+      value: count,
+      color: colors[index % colors.length],
+    }));
   }, [metadata?.totalByParty]);
 
   if (isLoading) {
@@ -86,14 +80,8 @@ const ParliamentList = () => {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="text-red-600 text-center">
-          <h2 className="text-xl font-bold mb-2">
-            Error loading parliament data
-          </h2>
-          <p>
-            {error instanceof Error
-              ? error.message
-              : 'An unexpected error occurred'}
-          </p>
+          <h2 className="text-xl font-bold mb-2">Error loading parliament data</h2>
+          <p>{error instanceof Error ? error.message : 'An unexpected error occurred'}</p>
         </div>
       </div>
     );
@@ -191,28 +179,17 @@ const ParliamentList = () => {
             <Table.Header>
               <Table.Row className="bg-neutral-2">
                 <Table.ColumnHeaderCell scope="col" />
-                <Table.ColumnHeaderCell scope="col">
-                  Name
-                </Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell scope="col">
-                  District
-                </Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell scope="col">
-                  Party
-                </Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell scope="col">
-                  Status
-                </Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell scope="col">Name</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell scope="col">District</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell scope="col">Party</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell scope="col">Status</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
 
             <Table.Body>
               {filteredMPs.length === 0 ? (
                 <Table.Row>
-                  <Table.Cell
-                    colSpan={5}
-                    className="text-center py-8 text-neutral-11"
-                  >
+                  <Table.Cell colSpan={5} className="text-center py-8 text-neutral-11">
                     <div className="flex flex-col items-center gap-2">
                       <FaUserTie className="w-6 h-6" aria-hidden="true" />
                       <p>
@@ -225,21 +202,14 @@ const ParliamentList = () => {
                 </Table.Row>
               ) : (
                 filteredMPs.map((mp) => (
-                  <Table.Row
-                    key={mp.DepId}
-                    className="hover:bg-neutral-1 transition-colors"
-                  >
+                  <Table.Row key={mp.DepId} className="hover:bg-neutral-1 transition-colors">
                     <Table.Cell>
                       <FaUserTie className="text-neutral-11" />
                     </Table.Cell>
                     <Table.Cell>
                       <div>
-                        <div className="font-medium">
-                          {mp.DepNomeParlamentar}
-                        </div>
-                        <div className="text-sm text-neutral-11">
-                          {mp.DepNomeCompleto}
-                        </div>
+                        <div className="font-medium">{mp.DepNomeParlamentar}</div>
+                        <div className="text-sm text-neutral-11">{mp.DepNomeCompleto}</div>
                       </div>
                     </Table.Cell>
                     <Table.Cell>{mp.DepCPDes}</Table.Cell>

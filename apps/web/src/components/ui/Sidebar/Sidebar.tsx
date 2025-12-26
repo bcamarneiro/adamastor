@@ -11,8 +11,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   children,
 }) => {
   const innerWidth = expandedSize === '230' ? 'w-[230px]' : 'w-[350px]';
-  const outerMaxWidth =
-    expandedSize === '230' ? 'max-w-[230px]' : 'max-w-[350px]';
+  const outerMaxWidth = expandedSize === '230' ? 'max-w-[230px]' : 'max-w-[350px]';
 
   return (
     <div
@@ -20,9 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         isExpanded ? outerMaxWidth : 'max-w-[0px]'
       }`}
     >
-      <div className={`flex flex-col h-full gap-2-5 py-2-5 px-3 ${innerWidth}`}>
-        {children}
-      </div>
+      <div className={`flex flex-col h-full gap-2-5 py-2-5 px-3 ${innerWidth}`}>{children}</div>
     </div>
   );
 };

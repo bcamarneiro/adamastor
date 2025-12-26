@@ -3,11 +3,13 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "bun build index.ts --outdir dist --target bun",
+    "start": "bun run src/commands/sync.ts",
+    "fetch": "bun run src/commands/fetch.ts",
+    "transform": "bun run src/commands/transform.ts",
+    "sync": "bun run src/commands/sync.ts",
+    "build": "bun build src/commands/sync.ts --outdir dist --target bun",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "bun index.ts",
-    "lint": "biome check .",
-    "format": "biome check --write ."
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -18,6 +20,7 @@
   },
   "dependencies": {
     "@bokuweb/zstd-wasm": "^0.0.27",
+    "@supabase/supabase-js": "^2.89.0",
     "@types/backblaze-b2": "^1.5.6",
     "@types/deep-diff": "^1.0.5",
     "@vercel/blob": "^1.0.2",

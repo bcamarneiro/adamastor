@@ -35,3 +35,7 @@ bun.lockb
 # Misc
 *.tgz
 .cache/
+
+# Supabase
+.supabase/
+supabase/.temp/

@@ -19,10 +19,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, title, path }) => {
 
       <div className="w-full flex flex-col">
         <nav className="flex flex-row gap-2 py-2-5 px-3 justify-between">
-          <Button
-            variant="neutral"
-            onClick={() => setLeftSidebarExpanded(!leftSidebarExpanded)}
-          >
+          <Button variant="neutral" onClick={() => setLeftSidebarExpanded(!leftSidebarExpanded)}>
             <span className={`${!leftSidebarExpanded && 'rotate-180'}`}>
               <ChevronBack />
             </span>
@@ -33,9 +30,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, title, path }) => {
           </div>
         </nav>
 
-        <main className="w-full h-full overflow-y-auto overflow-x-hidden">
-          {children}
-        </main>
+        <main className="w-full h-full overflow-y-auto overflow-x-hidden">{children}</main>
       </div>
     </div>
   );
