@@ -9,7 +9,7 @@ CREATE INDEX IF NOT EXISTS idx_deputy_stats_national_rank
   ON deputy_stats(national_rank ASC NULLS LAST);
 
 CREATE INDEX IF NOT EXISTS idx_deputy_stats_district_rank
-  ON deputy_stats(district_id, district_rank ASC NULLS LAST);
+  ON deputy_stats(district_rank ASC NULLS LAST);
 
 -- Deputy lookups
 CREATE INDEX IF NOT EXISTS idx_deputies_external_id
