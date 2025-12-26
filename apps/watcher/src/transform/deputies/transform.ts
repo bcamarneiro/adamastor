@@ -31,7 +31,7 @@ function parseLegislature(legDes: string): number {
     XIX: 19,
     XX: 20,
   };
-  return romanNumerals[legDes] || 16;
+  return romanNumerals[legDes] || 17;
 }
 
 function getPhotoUrl(depId: number): string {

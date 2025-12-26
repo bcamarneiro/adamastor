@@ -9,10 +9,11 @@
 // DATA SOURCES
 // =============================================================================
 
+// XVII Legislature (current) - URLs obtained from parlamento.pt/Cidadania/Paginas/DadosAbertos.aspx
 export const DATASETS = [
   {
     name: 'informacao_base',
-    url: 'https://app.parlamento.pt/webutils/docs/doc.txt?path=olg1f1%2frCt%2bfMmqQu7EYsANwHy3lTooaSVXeYPi7bnPPjKnOs0ec8jJKil69DrJmWU%2fXR8YYvbrgrWsMei9bJTiyEgfyaUWmCxFry303MX4SLs8vqHpbxFZnfMyN89LZnf1OpiYEqhds%2bd1orWsA8iSmHh6xNb8FnWz2BfhlFrX9CSN19YqSM70j85O4xwL1v%2fiOWXZI8kZa7B%2bva2DMgZwv0AHNbng6LeoWsN%2bh0bKTg8OGPB0JKAtU9k2VIhFzRH8NigB0Rr38yTkF%2bVX56xVZo9jdeIw4BtIWMFiQAEILErDBheI8aCaxLq9iPK%2bmNlU%2bWRJiE%2fONrjYWYpAaIz8r5eM3lM%2bJQg6XiJMEtY0g%2bZlbqiC1QMbfOdyQvGCv&fich=InformacaoBaseXVI_json.txt&Inline=true',
+    url: 'https://app.parlamento.pt/webutils/docs/doc.txt?path=a4zfhVMRlkdx8PM4w%2fg1C1Vt1TLL3nxEyDWBwgqjBdJ7w%2f%2bbRwjvq2lIPr1xRzJ6DBy%2fOxQCKfWDla%2fScSjS6%2f0N3a%2b%2b%2bTVRcUvCJTkFrTAUT%2bpzIFRAScSKhiWv2HGWkAHIxlwTIeOsSOOsrXmbVE%2bHE%2fHLJ6RWbSsJBaLWq70lF4rBy8G6GbdPHdrrdiatO%2fCimTiuyO8Wki6C7zu5Klq5f53YZ%2b4MtX8FF5lC1pyiQrC%2bwSVBcu%2brHigPkI56fz8xBGvxVgoQ0nQdAuby1qmhEyYT6RCxaQAqbqv0m70pJF19SyzE62kUF%2fYRio8PiC5DjRA4%2b2eF1X7FfO4s7Bfcq7lsR9LR2PCbXn9zBNQ9mqEnp0H%2brT%2f5vD%2fgcT%2bzF3SPcKfuZKhhDvK1cBgse9ktAzWSZxzzqgCqsUeQ760%3d&fich=InformacaoBaseXVII_json.txt&Inline=true',
   },
   {
     name: 'agenda',
@@ -20,11 +21,11 @@ export const DATASETS = [
   },
   {
     name: 'atividades',
-    url: 'https://app.parlamento.pt/webutils/docs/doc.txt?path=pKgqcXYRTmZUKtkIRuj%2boKoP6a%2fq2xHbk5Zhh%2bkzHcpBv1Gaj28wfhimJLlOpTfIUu1enBHODqQklaJ%2fKA4EmG5e7alPCdljjSNizx6xs3FZgxcnNIUfDA8hrHVMUVk5Q5b6X5%2bIyST8iq6CE3nkqiEXqttN8e%2bOitG8tShegV60ZZGsJ5Ad3LlZ%2fhwLm5HAH36g%2b87ZmXMcjZGRg7XP%2f9ocs2S4c8iDJwoOq9IhIb5bwkbYx%2fACZsMoHjW2%2bEibkSjaK%2bec6%2bPOgc%2bb4K9Y%2fEyspTn2zB%2fX0yIj0I%2bsRRNppTfmCWp7sh2bHmf0VG2DQL31bMA9oCf9bM4KlYYNJhvDVuy%2bdNfPN2Ju72vB3CY%3d&fich=AtividadesXVI_json.txt&Inline=true',
+    url: 'https://app.parlamento.pt/webutils/docs/doc.txt?path=e1YJBaCJaLQK8BASoFHdlARZwZA5hyhPh5vP0APddrwNl69a1wHYpmA3RQoAqxhbXnLIszOaHdfWRZHIIlZaMkLnjq1ZCO2YGG5GKoYbRWmrGbDBP9i6aup%2fDmNgFv8k7l8z%2bBFOZTjUtIxu%2bNZVfT67IVFOQN%2bj2aJvKpDTqr5IQ67%2ffrTpoFYo%2b19eDltEPk%2ftAA8dPgHIjmnFnFt8%2f6%2bFRyowASGEjWOPgVSAW%2bY2kRvgIl5f07BcTYq%2fp7PMVR8MRccoEgv6dwCvaj0VGt2ZrJUPgaAbvV0Z06lWk%2boGu6MFb3kAQnX1kFWn33d2rE64nk7zDYlXd18EAGj6c3UQsj4UtT%2fbNR0VXC6Z%2fmc%3d&fich=AtividadesXVII_json.txt&Inline=true',
   },
   {
     name: 'iniciativas',
-    url: 'https://app.parlamento.pt/webutils/docs/doc.txt?path=W2OionzM%2fXDmzTuw2%2bc7LOUJgVqUKbhH0K%2fn4Ar89VxjaLXEY0mUVBtetd5W%2bFL9TRZkOmLBb3ny5Lx1iwEGddC0KTDFDZcUZIUUhAmO2UET1Tu3LaCNBJPH7%2f%2b1%2bB4s4IKwVi4Ym5w4BA%2bpo8%2fIBKQR8Y8cPCiN94w7nKDnZs%2fy1fEDCyZw%2bruDbvr8Y%2bZngg8%2f7RMlF8808vDAp%2bM6FVUDxoqeUdnC%2bT0AGqGOzsPT8JatKvswhxEUDmMyDei1q8OoB5t4vLEaWuZ6OMM0xOeqXAXIVyybZbGMGxxAL5%2bysxddhq04jhIf7gzyd4nCuhIyymlUkpsfiMlA%2bwRmjunbQWeyzKmcJCYIku7jh9U%3d&fich=IniciativasXVI_json.txt&Inline=true',
+    url: 'https://app.parlamento.pt/webutils/docs/doc.txt?path=Yz8kckc%2fHKUrwsW5K50QhxjWY9xUh9OHGQI1m8LzCYqid4%2bQA61kIcK%2fkcXn0ch3QBk8i38ciIwq8%2b5WlsgEmok3%2fiP%2fmgbCMayFdyVZziZOuis%2bEQjEB4UqSyViYoIt7yC5YLIdbQtXXB6u2UedPJ%2bxanNa0TetcHCXLoWeDxEGMn5Wc8XVaSuF4g%2ftt9JVkxpA4RelGdYOw30DJNx25X7u%2bsw3LsDCKpRYtb9X3dYPeQ6aO3162M%2bFWnYaf32NwiTs7j7qym%2f%2bI%2bfA2JUpan9A3%2fcQNnVarImiljhv6X1vGI1h%2fPxi0PtQPKg8ffPTXdFLok%2fzeZDpprEEeW34axU6%2b6YFKcmH3bAm%2fssYCoc%3d&fich=IniciativasXVII_json.txt&Inline=true',
   },
 ];
 

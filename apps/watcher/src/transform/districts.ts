@@ -7,7 +7,7 @@ interface ParliamentCirculoEleitoral {
   legDes: string;
 }
 
-// Deputy counts per district (XVI Legislature)
+// Deputy counts per district (fixed by electoral law)
 const DISTRICT_DEPUTY_COUNTS: Record<string, number> = {
   Lisboa: 48,
   Porto: 40,
