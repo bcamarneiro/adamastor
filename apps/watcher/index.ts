@@ -6,7 +6,7 @@ import schemaIniciativas from './schemas/iniciativas.schema.json';
 import { DATASETS, SNAPSHOT_PATH } from './src/config.js';
 import { fetchDatasets } from './src/fetcher.js';
 import { sha256 } from './src/hash.js';
-import { makeLatest } from './src/normalise.js';
+import { isBlobEnabled, makeLatest } from './src/normalise.js';
 import { isB2Enabled, uploadFile } from './src/upload-b2.js';
 import { validate } from './src/validator.js';
 
@@ -65,16 +65,21 @@ let errorCount = 0;
       console.log('[INFO] B2 not configured, skipping snapshot archiving');
     }
 
-    // make "latest"
-    for (const d of DATASETS) {
-      try {
-        const local = `${SNAPSHOT_PATH}/${ts}/${d.name}.json`;
-        console.log(`[DEBUG] Making latest for ${d.name}`);
-        await makeLatest(local, d.name);
-      } catch (err) {
-        console.error(`[ERROR] Failed to make latest for ${d.name}:`, err);
-        errorCount++;
+    // make "latest" (optional - requires BLOB_READ_WRITE_TOKEN)
+    if (isBlobEnabled()) {
+      console.log('[DEBUG] Blob storage enabled, updating latest...');
+      for (const d of DATASETS) {
+        try {
+          const local = `${SNAPSHOT_PATH}/${ts}/${d.name}.json`;
+          console.log(`[DEBUG] Making latest for ${d.name}`);
+          await makeLatest(local, d.name);
+        } catch (err) {
+          console.error(`[ERROR] Failed to make latest for ${d.name}:`, err);
+          errorCount++;
+        }
       }
+    } else {
+      console.log('[INFO] Blob storage not configured, skipping latest update');
     }
 
     if (errorCount > 0) {

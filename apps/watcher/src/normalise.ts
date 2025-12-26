@@ -2,7 +2,19 @@ import { readFile } from 'node:fs/promises';
 import { put } from '@vercel/blob';
 import { sha256 } from './hash.js';
 
+/**
+ * Check if Vercel Blob storage is configured
+ */
+export function isBlobEnabled(): boolean {
+  return !!process.env.BLOB_READ_WRITE_TOKEN;
+}
+
 export async function makeLatest(datasetPath: string, key: string) {
+  if (!isBlobEnabled()) {
+    console.log(`[DEBUG] Blob storage not configured, skipping makeLatest for ${key}`);
+    return null;
+  }
+
   try {
     console.log(`[DEBUG] makeLatest started for: ${datasetPath}, key: ${key}`);
     const raw = await readFile(datasetPath);
@@ -10,8 +22,8 @@ export async function makeLatest(datasetPath: string, key: string) {
 
     // Upload the raw file directly without compression
     const { url } = await put(`latest/${key}.json`, raw, {
-      token: process.env.VERCEL_TOKEN,
       access: 'public',
+      allowOverwrite: true,
     });
     console.log(`[DEBUG] File uploaded to blob: ${url}`);
 

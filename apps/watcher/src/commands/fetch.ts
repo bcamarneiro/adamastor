@@ -21,7 +21,7 @@ import schemaIniciativas from '../../schemas/iniciativas.schema.json';
 import { DATASETS, SNAPSHOT_PATH } from '../config.js';
 import { fetchDatasets } from '../fetcher.js';
 import { sha256 } from '../hash.js';
-import { makeLatest } from '../normalise.js';
+import { isBlobEnabled, makeLatest } from '../normalise.js';
 import { isB2Enabled, uploadFile } from '../upload-b2.js';
 import { validate } from '../validator.js';
 
@@ -81,15 +81,19 @@ export async function runFetch(): Promise<string> {
   }
   console.log();
 
-  // Step 4: Update "latest" on Vercel Blob
+  // Step 4: Update "latest" on Vercel Blob (optional)
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('STEP 4: UPDATE LATEST');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-  for (const dataset of DATASETS) {
-    const local = `${SNAPSHOT_PATH}/${timestamp}/${dataset.name}.json`;
-    await makeLatest(local, dataset.name);
-    console.log(`  ✓ ${dataset.name} → latest`);
+  if (isBlobEnabled()) {
+    for (const dataset of DATASETS) {
+      const local = `${SNAPSHOT_PATH}/${timestamp}/${dataset.name}.json`;
+      await makeLatest(local, dataset.name);
+      console.log(`  ✓ ${dataset.name} → latest`);
+    }
+  } else {
+    console.log('  ⊘ Blob storage not configured, skipping latest update');
   }
   console.log();
 
