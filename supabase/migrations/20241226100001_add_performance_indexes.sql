@@ -38,19 +38,15 @@ CREATE INDEX IF NOT EXISTS idx_initiatives_type
 CREATE INDEX IF NOT EXISTS idx_party_votes_initiative_id
   ON party_votes(initiative_id);
 
-CREATE INDEX IF NOT EXISTS idx_party_votes_party_id
-  ON party_votes(party_id);
+CREATE INDEX IF NOT EXISTS idx_party_votes_voted_at
+  ON party_votes(voted_at DESC);
 
 -- Attendance queries
 CREATE INDEX IF NOT EXISTS idx_plenary_attendance_deputy_id
   ON plenary_attendance(deputy_id);
 
-CREATE INDEX IF NOT EXISTS idx_plenary_attendance_meeting_date
-  ON plenary_attendance(meeting_date DESC);
-
--- District postal code lookups
-CREATE INDEX IF NOT EXISTS idx_district_postal_ranges_prefix
-  ON district_postal_ranges(postal_prefix);
+CREATE INDEX IF NOT EXISTS idx_plenary_meetings_date
+  ON plenary_meetings(meeting_date DESC);
 
 -- Composite indexes for common joins
 CREATE INDEX IF NOT EXISTS idx_deputies_active_party
