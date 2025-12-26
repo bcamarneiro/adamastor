@@ -128,8 +128,12 @@ jobs:
         with:
           version: latest
 
+      - name: Start Supabase
+        run: supabase start -x realtime,storage,imgproxy,inbucket,postgrest,pgadmin,studio,edge-runtime,logflare,vector,supavisor
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
       - name: Verify migrations
-        run: |
-          supabase db lint
+        run: supabase db lint
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
