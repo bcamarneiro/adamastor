@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '../../supabase.js';
+import { ProgressBar } from '../../utils/progress.js';
 import type { ParliamentDeputado } from './types.js';
 
 export async function syncDeputyExtendedInfo(
@@ -16,6 +17,10 @@ export async function syncDeputyExtendedInfo(
   let rolesCount = 0;
   let partyHistoryCount = 0;
   let statusHistoryCount = 0;
+
+  // Count deputies with valid IDs for progress
+  const validDeputados = deputados.filter((dep) => deputyMap.has(dep.DepId));
+  const progress = new ProgressBar(validDeputados.length, 'Extended Info');
 
   for (const dep of deputados) {
     const deputyId = deputyMap.get(dep.DepId);
@@ -35,12 +40,7 @@ export async function syncDeputyExtendedInfo(
 
       const { error: rolesError } = await supabase.from('deputy_roles').insert(roles);
 
-      if (rolesError) {
-        console.error(
-          `  ❌ Error inserting roles for ${dep.DepNomeParlamentar}:`,
-          rolesError.message
-        );
-      } else {
+      if (!rolesError) {
         rolesCount += roles.length;
       }
     }
@@ -61,12 +61,7 @@ export async function syncDeputyExtendedInfo(
         .from('deputy_party_history')
         .insert(partyHistory);
 
-      if (partyError) {
-        console.error(
-          `  ❌ Error inserting party history for ${dep.DepNomeParlamentar}:`,
-          partyError.message
-        );
-      } else {
+      if (!partyError) {
         partyHistoryCount += partyHistory.length;
       }
     }
@@ -86,18 +81,13 @@ export async function syncDeputyExtendedInfo(
         .from('deputy_status_history')
         .insert(statusHistory);
 
-      if (statusError) {
-        console.error(
-          `  ❌ Error inserting status history for ${dep.DepNomeParlamentar}:`,
-          statusError.message
-        );
-      } else {
+      if (!statusError) {
         statusHistoryCount += statusHistory.length;
       }
     }
+
+    progress.update();
   }
 
-  console.log(
-    `✅ Extended info synced: ${rolesCount} roles, ${partyHistoryCount} party records, ${statusHistoryCount} status records\n`
-  );
+  progress.complete(`${rolesCount} roles, ${partyHistoryCount} party, ${statusHistoryCount} status`);
 }

@@ -5,6 +5,7 @@
 
 import { supabase } from '../../supabase.js';
 import { pipelineResult } from '../../utils/pipeline-result.js';
+import { ProgressBar } from '../../utils/progress.js';
 import type { DeputyMaps, ParliamentDeputado } from './types.js';
 
 function parseLegislature(legDes: string): number {
@@ -100,6 +101,8 @@ export async function transformDeputies(
 
   console.log(`  Found ${uniqueDeputies.size} unique deputies`);
 
+  const progress = new ProgressBar(uniqueDeputies.size, 'Deputies');
+
   for (const dep of uniqueDeputies.values()) {
     const partyAcronym = getCurrentParty(dep);
     const partyId = partyAcronym ? partyMap.get(partyAcronym) : null;
@@ -129,12 +132,12 @@ export async function transformDeputies(
       .single();
 
     if (error) {
-      console.error(`  ❌ Error upserting deputy ${dep.DepNomeParlamentar}:`, error.message);
       failedCount++;
       if (errors.length < 5) errors.push(`${dep.DepNomeParlamentar}: ${error.message}`);
 
       // Fail fast on authentication errors
       if (error.message.includes('Invalid API key') || error.message.includes('JWT')) {
+        progress.fail('Authentication failed');
         pipelineResult.addStep('Deputies', {
           status: 'error',
           processed: uniqueDeputies.size,
@@ -143,12 +146,16 @@ export async function transformDeputies(
         });
         throw new Error('Authentication failed: Invalid Supabase API key');
       }
+      progress.update();
       continue;
     }
 
     byDepId.set(dep.DepId, data.id);
     byCadastroId.set(dep.DepCadId, data.id);
+    progress.update();
   }
+
+  progress.complete(`${byDepId.size} loaded (${activeCount} active)`);
 
   // Record step result
   const status = failedCount === 0 ? 'success' : failedCount === uniqueDeputies.size ? 'error' : 'warning';
@@ -158,7 +165,5 @@ export async function transformDeputies(
     failed: failedCount,
     errors,
   });
-
-  console.log(`✅ Deputies: ${byDepId.size} loaded (${activeCount} active)\n`);
   return { byDepId, byCadastroId };
 }
