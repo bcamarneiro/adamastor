@@ -1,0 +1,103 @@
+name: Sync Production
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # Daily at 7 AM UTC (1h after staging)
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: production # Requires approval if configured in GitHub settings
+
+    steps:
+      # Checkout the latest release tag, not main
+      - name: Get latest release tag
+        id: latest_release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 1
+            });
+            if (releases.data.length === 0) {
+              core.setFailed('No releases found. Create a release first before production can sync.');
+              return;
+            }
+            const tag = releases.data[0].tag_name;
+            core.setOutput('tag', tag);
+            console.log(`Using release: ${tag}`);
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.latest_release.outputs.tag }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+        working-directory: apps/watcher
+
+      - name: Sync to production
+        id: sync
+        env:
+          B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
+          B2_APP_KEY: ${{ secrets.B2_APP_KEY }}
+          B2_BUCKET: ${{ secrets.B2_BUCKET }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ENVIRONMENT: production
+        run: bun run start
+        working-directory: apps/watcher
+
+      # Smoke test - verify data was synced
+      - name: Smoke test - verify deputies exist
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "🔍 Running smoke tests..."
+
+          # Check deputies table has data
+          DEPUTY_COUNT=$(curl -s \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            "$SUPABASE_URL/rest/v1/deputies?select=id&is_active=eq.true&limit=1" \
+            -H "Prefer: count=exact" \
+            -w "\n%{http_code}" | tail -1)
+
+          if [ "$DEPUTY_COUNT" != "200" ]; then
+            echo "❌ Failed to query deputies table (HTTP $DEPUTY_COUNT)"
+            exit 1
+          fi
+
+          # Check deputy_stats has data
+          STATS_COUNT=$(curl -s \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            "$SUPABASE_URL/rest/v1/deputy_stats?select=id&limit=1" \
+            -w "\n%{http_code}" | tail -1)
+
+          if [ "$STATS_COUNT" != "200" ]; then
+            echo "❌ Failed to query deputy_stats table (HTTP $STATS_COUNT)"
+            exit 1
+          fi
+
+          echo "✅ Smoke tests passed"
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Production sync failed - ${new Date().toISOString().split('T')[0]}`,
+              body: `The production sync workflow failed.\n\nRelease: ${{ steps.latest_release.outputs.tag }}\nRun: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              labels: ['bug', 'sync', 'production']
+            });

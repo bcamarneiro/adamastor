@@ -22,7 +22,7 @@ import { DATASETS, SNAPSHOT_PATH } from '../config.js';
 import { fetchDatasets } from '../fetcher.js';
 import { sha256 } from '../hash.js';
 import { makeLatest } from '../normalise.js';
-import { uploadFile } from '../upload-b2.js';
+import { isB2Enabled, uploadFile } from '../upload-b2.js';
 import { validate } from '../validator.js';
 
 const SCHEMAS: Record<string, object> = {
@@ -64,16 +64,20 @@ export async function runFetch(): Promise<string> {
   }
   console.log();
 
-  // Step 3: Upload to B2
+  // Step 3: Upload to B2 (optional)
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('STEP 3: ARCHIVE TO B2');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-  for (const dataset of DATASETS) {
-    const local = `${SNAPSHOT_PATH}/${timestamp}/${dataset.name}.json`;
-    const remote = `${timestamp}/${dataset.name}.json`;
-    await uploadFile(local, remote);
-    console.log(`  ✓ ${dataset.name} → B2`);
+  if (isB2Enabled()) {
+    for (const dataset of DATASETS) {
+      const local = `${SNAPSHOT_PATH}/${timestamp}/${dataset.name}.json`;
+      const remote = `${timestamp}/${dataset.name}.json`;
+      await uploadFile(local, remote);
+      console.log(`  ✓ ${dataset.name} → B2`);
+    }
+  } else {
+    console.log('  ⊘ B2 not configured, skipping archive step');
   }
   console.log();
 

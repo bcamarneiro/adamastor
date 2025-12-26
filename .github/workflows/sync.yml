@@ -1,27 +1,14 @@
-name: Sync Parliament Data
+name: Sync Staging
 
 on:
   schedule:
     - cron: "0 6 * * *" # Daily at 6 AM UTC
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Target environment'
-        required: true
-        default: 'production'
-        type: choice
-        options:
-          - staging
-          - production
-
-env:
-  # Default to production for scheduled runs
-  TARGET_ENV: ${{ github.event.inputs.environment || 'production' }}
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'production' }}
+    environment: staging
 
     steps:
       - uses: actions/checkout@v4
@@ -34,17 +21,14 @@ jobs:
         run: bun install
         working-directory: apps/watcher
 
-      - name: Run sync
+      - name: Sync to staging
         env:
-          # B2 credentials (same bucket structure, different prefixes)
           B2_KEY_ID: ${{ secrets.B2_KEY_ID }}
           B2_APP_KEY: ${{ secrets.B2_APP_KEY }}
           B2_BUCKET: ${{ secrets.B2_BUCKET }}
-          # Supabase credentials (environment-specific)
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          # Environment flag
-          ENVIRONMENT: ${{ env.TARGET_ENV }}
+          ENVIRONMENT: staging
         run: bun run start
         working-directory: apps/watcher
 
@@ -56,7 +40,7 @@ jobs:
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Sync failed for ${process.env.TARGET_ENV} - ${new Date().toISOString().split('T')[0]}`,
-              body: `The Parliament data sync workflow failed.\n\nRun: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              title: `Staging sync failed - ${new Date().toISOString().split('T')[0]}`,
+              body: `The staging sync workflow failed.\n\nRun: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
               labels: ['bug', 'sync']
             });

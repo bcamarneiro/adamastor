@@ -2,16 +2,33 @@ import { readFile } from 'node:fs/promises';
 // src/upload-b2.ts
 import Backblaze from 'backblaze-b2';
 
-if (!process.env.B2_KEY_ID) throw new Error('B2_KEY_ID is not set');
-if (!process.env.B2_APP_KEY) throw new Error('B2_APP_KEY is not set');
-if (!process.env.B2_BUCKET) throw new Error('B2_BUCKET is not set');
+// B2 is optional - check if configured
+const B2_ENABLED = Boolean(
+  process.env.B2_KEY_ID && process.env.B2_APP_KEY && process.env.B2_BUCKET
+);
 
-const b2 = new Backblaze({
-  applicationKeyId: process.env.B2_KEY_ID!,
-  applicationKey: process.env.B2_APP_KEY!,
-});
+let b2: Backblaze | null = null;
+
+if (B2_ENABLED) {
+  b2 = new Backblaze({
+    applicationKeyId: process.env.B2_KEY_ID!,
+    applicationKey: process.env.B2_APP_KEY!,
+  });
+}
+
+/**
+ * Check if B2 archiving is enabled
+ */
+export function isB2Enabled(): boolean {
+  return B2_ENABLED === true;
+}
 
 export async function uploadFile(localPath: string, remotePath: string) {
+  // Skip if B2 is not configured
+  if (!B2_ENABLED || !b2) {
+    console.log(`[SKIP] B2 not configured, skipping upload: ${remotePath}`);
+    return;
+  }
   try {
     console.log('[DEBUG] Authorizing B2 for upload');
     const authRes = await b2.authorize(); // token good for 24h

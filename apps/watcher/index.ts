@@ -7,7 +7,7 @@ import { DATASETS, SNAPSHOT_PATH } from './src/config.js';
 import { fetchDatasets } from './src/fetcher.js';
 import { sha256 } from './src/hash.js';
 import { makeLatest } from './src/normalise.js';
-import { uploadFile } from './src/upload-b2.js';
+import { isB2Enabled, uploadFile } from './src/upload-b2.js';
 import { validate } from './src/validator.js';
 
 let errorCount = 0;
@@ -47,17 +47,22 @@ let errorCount = 0;
     // compare with previous snapshot
     // (left as exercise – list snapshot folder, pick newest-1, run diffFiles)
 
-    // upload raw files & index.json
-    for (const d of DATASETS) {
-      try {
-        const local = `${SNAPSHOT_PATH}/${ts}/${d.name}.json`;
-        const remote = `${ts}/${d.name}.json`;
-        console.log(`[DEBUG] Uploading ${local} to ${remote}`);
-        await uploadFile(local, remote);
-      } catch (err) {
-        console.error(`[ERROR] Failed to upload ${d.name}:`, err);
-        errorCount++;
+    // upload raw files to B2 (optional - for audit trail)
+    if (isB2Enabled()) {
+      console.log('[DEBUG] B2 archiving enabled, uploading snapshots...');
+      for (const d of DATASETS) {
+        try {
+          const local = `${SNAPSHOT_PATH}/${ts}/${d.name}.json`;
+          const remote = `${ts}/${d.name}.json`;
+          console.log(`[DEBUG] Uploading ${local} to ${remote}`);
+          await uploadFile(local, remote);
+        } catch (err) {
+          console.error(`[ERROR] Failed to upload ${d.name}:`, err);
+          errorCount++;
+        }
       }
+    } else {
+      console.log('[INFO] B2 not configured, skipping snapshot archiving');
     }
 
     // make "latest"
