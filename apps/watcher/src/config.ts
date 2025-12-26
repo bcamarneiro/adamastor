@@ -1,3 +1,14 @@
+/**
+ * Watcher Configuration
+ *
+ * All tunable parameters for the data pipeline.
+ * Environment variables can override defaults.
+ */
+
+// =============================================================================
+// DATA SOURCES
+// =============================================================================
+
 export const DATASETS = [
   {
     name: 'informacao_base',
@@ -17,6 +28,89 @@ export const DATASETS = [
   },
 ];
 
+// =============================================================================
+// FILE PATHS
+// =============================================================================
+
 export const SNAPSHOT_PATH = 'snapshots'; // local cache dir
 export const BUCKET = process.env.B2_BUCKET;
+
+// =============================================================================
+// HTTP & SCRAPING
+// =============================================================================
+
 export const POLITENESS_UA = 'parl-watch-bot (+your@email)';
+
+export const HTTP_CONFIG = {
+  /** Default timeout for HTTP requests in ms */
+  timeout: Number(process.env.HTTP_TIMEOUT) || 30000,
+  /** User agent for scraping requests */
+  userAgent: process.env.USER_AGENT || POLITENESS_UA,
+} as const;
+
+// =============================================================================
+// RETRY CONFIGURATION
+// =============================================================================
+
+export const RETRY_CONFIG = {
+  /** Maximum number of retry attempts */
+  maxRetries: Number(process.env.MAX_RETRIES) || 3,
+  /** Base delay between retries in ms (exponential backoff) */
+  baseDelayMs: Number(process.env.RETRY_BASE_DELAY) || 1000,
+  /** Maximum delay between retries in ms */
+  maxDelayMs: Number(process.env.RETRY_MAX_DELAY) || 30000,
+} as const;
+
+// =============================================================================
+// BATCH PROCESSING
+// =============================================================================
+
+export const BATCH_CONFIG = {
+  /** Database upsert batch size */
+  dbBatchSize: Number(process.env.DB_BATCH_SIZE) || 50,
+  /** Photo download batch size (parallel requests) */
+  photoBatchSize: Number(process.env.PHOTO_BATCH_SIZE) || 10,
+  /** Delay between batches in ms */
+  batchDelayMs: Number(process.env.BATCH_DELAY) || 100,
+  /** Delay between photo batches in ms */
+  photoBatchDelayMs: Number(process.env.PHOTO_BATCH_DELAY) || 500,
+} as const;
+
+// =============================================================================
+// RATE LIMITING
+// =============================================================================
+
+export const RATE_LIMIT_CONFIG = {
+  /** Delay between API calls to Parliament in ms */
+  parliamentApiDelayMs: Number(process.env.PARLIAMENT_API_DELAY) || 200,
+  /** Delay between scraping requests in ms */
+  scrapeDelayMs: Number(process.env.SCRAPE_DELAY) || 1000,
+} as const;
+
+// =============================================================================
+// FEATURE FLAGS
+// =============================================================================
+
+export const FEATURES = {
+  /** Enable photo syncing from Parliament */
+  syncPhotos: process.env.SYNC_PHOTOS !== 'false',
+  /** Enable attendance scraping */
+  syncAttendance: process.env.SYNC_ATTENDANCE !== 'false',
+  /** Enable B2 archiving (auto-detected from env) */
+  archiveToB2: Boolean(process.env.B2_KEY_ID && process.env.B2_APP_KEY && process.env.B2_BUCKET),
+  /** Enable verbose logging */
+  verboseLogging: process.env.VERBOSE === 'true',
+} as const;
+
+// =============================================================================
+// VALIDATION THRESHOLDS
+// =============================================================================
+
+export const VALIDATION_CONFIG = {
+  /** Minimum expected deputies count */
+  minDeputies: Number(process.env.MIN_DEPUTIES) || 200,
+  /** Minimum expected parties count */
+  minParties: Number(process.env.MIN_PARTIES) || 5,
+  /** Maximum expected work score */
+  maxWorkScore: 200,
+} as const;

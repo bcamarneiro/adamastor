@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { SNAPSHOT_PATH } from '../config.js';
 import { fetchAllAttendance } from '../scrapers/attendance.js';
+import { pipelineResult, runStep } from '../utils/pipeline-result.js';
 import { countInterventions, distributeInterventionsToDeputies } from './activities.js';
 import { transformAttendance } from './attendance.js';
 import { transformBiographies } from './biography.js';
@@ -15,7 +16,7 @@ import {
   updatePartyVoteStats,
 } from './stats.js';
 
-export async function runTransformPipeline(snapshotTs: string): Promise<void> {
+export async function runTransformPipeline(snapshotTs: string): Promise<number> {
   const snapshotPath = `${SNAPSHOT_PATH}/${snapshotTs}`;
 
   console.log('═══════════════════════════════════════════════════════════');
@@ -88,24 +89,28 @@ export async function runTransformPipeline(snapshotTs: string): Promise<void> {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('STEP 6: PLENARY ATTENDANCE');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  try {
-    const { meetings, attendance } = await fetchAllAttendance();
-    await transformAttendance(meetings, attendance);
-  } catch (err) {
-    console.error('  ⚠️  Attendance scraping failed (non-critical):', err);
-    console.log('  Continuing with pipeline...\n');
-  }
+  await runStep(
+    'Plenary Attendance',
+    async () => {
+      const { meetings, attendance } = await fetchAllAttendance();
+      await transformAttendance(meetings, attendance);
+      return { processed: attendance.length, failed: 0 };
+    },
+    { critical: false }
+  );
 
   // Step 7: Scrape and transform deputy biographies
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('STEP 7: DEPUTY BIOGRAPHIES');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  try {
-    await transformBiographies();
-  } catch (err) {
-    console.error('  ⚠️  Biography scraping failed (non-critical):', err);
-    console.log('  Continuing with pipeline...\n');
-  }
+  await runStep(
+    'Deputy Biographies',
+    async () => {
+      await transformBiographies();
+      return { processed: 0, failed: 0 };
+    },
+    { critical: false }
+  );
 
   // Step 8: Update deputy stats
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -122,11 +127,18 @@ export async function runTransformPipeline(snapshotTs: string): Promise<void> {
   await updatePartyVoteStats(partyMap);
 
   // Recalculate work scores and rankings
-  await recalculateAllStats();
+  await runStep(
+    'Recalculate Stats',
+    async () => {
+      await recalculateAllStats();
+      return { processed: 1, failed: 0 };
+    },
+    { critical: true }
+  );
 
-  console.log('═══════════════════════════════════════════════════════════');
-  console.log('           TRANSFORM PIPELINE COMPLETE');
-  console.log('═══════════════════════════════════════════════════════════\n');
+  // Print summary and return exit code
+  pipelineResult.printSummary();
+  return pipelineResult.getExitCode();
 }
 
 // CLI entry point
@@ -138,8 +150,12 @@ if (import.meta.main) {
     process.exit(1);
   }
 
-  runTransformPipeline(snapshotTs).catch((err) => {
-    console.error('Transform failed:', err);
-    process.exit(1);
-  });
+  runTransformPipeline(snapshotTs)
+    .then((exitCode) => {
+      process.exit(exitCode);
+    })
+    .catch((err) => {
+      console.error('Transform failed:', err);
+      process.exit(1);
+    });
 }

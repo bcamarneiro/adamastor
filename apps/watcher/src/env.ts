@@ -22,16 +22,20 @@ interface EnvConfig {
 function validateEnv(): EnvConfig {
   const errors: string[] = [];
 
+  // Capture values to avoid repeated access
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
   // Required variables
-  if (!process.env.SUPABASE_URL) {
+  if (!supabaseUrl) {
     errors.push('SUPABASE_URL is required');
   }
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (!supabaseKey) {
     errors.push('SUPABASE_SERVICE_ROLE_KEY is required');
   }
 
   // Validate URL format
-  if (process.env.SUPABASE_URL && !isValidUrl(process.env.SUPABASE_URL)) {
+  if (supabaseUrl && !isValidUrl(supabaseUrl)) {
     errors.push('SUPABASE_URL must be a valid URL');
   }
 
@@ -45,9 +49,9 @@ function validateEnv(): EnvConfig {
   }
 
   // Environment validation
-  const env = process.env.ENVIRONMENT || 'local';
-  if (!['local', 'staging', 'production'].includes(env)) {
-    errors.push(`ENVIRONMENT must be 'local', 'staging', or 'production' (got '${env}')`);
+  const envValue = process.env.ENVIRONMENT || 'local';
+  if (!['local', 'staging', 'production'].includes(envValue)) {
+    errors.push(`ENVIRONMENT must be 'local', 'staging', or 'production' (got '${envValue}')`);
   }
 
   if (errors.length > 0) {
@@ -59,13 +63,15 @@ function validateEnv(): EnvConfig {
     process.exit(1);
   }
 
+  // At this point, supabaseUrl and supabaseKey are guaranteed to be defined
+  // because we would have exited above if they weren't
   return {
-    SUPABASE_URL: process.env.SUPABASE_URL!,
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    SUPABASE_URL: supabaseUrl as string,
+    SUPABASE_SERVICE_ROLE_KEY: supabaseKey as string,
     B2_KEY_ID: process.env.B2_KEY_ID,
     B2_APP_KEY: process.env.B2_APP_KEY,
     B2_BUCKET: process.env.B2_BUCKET,
-    ENVIRONMENT: env as EnvConfig['ENVIRONMENT'],
+    ENVIRONMENT: envValue as EnvConfig['ENVIRONMENT'],
   };
 }
 
