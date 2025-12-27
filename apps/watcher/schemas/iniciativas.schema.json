@@ -74,10 +74,10 @@
         "type": "null"
       },
       "IniciativasOrigem": {
-        "type": "null"
+        "type": ["array", "null"]
       },
       "IniciativasOriginadas": {
-        "type": "null"
+        "type": ["array", "null"]
       },
       "IniDescTipo": {
         "type": "string"
@@ -198,7 +198,7 @@
                     "type": "null"
                   },
                   "DistribuicaoSubcomissao": {
-                    "type": "null"
+                    "type": ["string", "null"]
                   },
                   "Documentos": {
                     "type": ["array", "null"],
