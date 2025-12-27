@@ -136,11 +136,15 @@ jobs:
         with:
           version: latest
 
-      # Step 1: Lint migrations (fast, no DB needed)
+      # Step 1: Start Supabase with minimal services (required for db lint)
+      - name: Start Supabase (DB only)
+        run: supabase start -x realtime,imgproxy,postgrest,studio,edge-runtime,logflare,vector,supavisor,storage-api,auth
+
+      # Step 2: Lint migrations
       - name: Lint migrations
         run: supabase db lint
 
-      # Step 2: Only validate fixtures if migrations or seed-e2e.sql changed
+      # Step 3: Only validate fixtures if migrations or seed-e2e.sql changed
       - name: Check if DB validation needed
         id: check-changes
         run: |
@@ -152,17 +156,11 @@ jobs:
             echo "Skipping DB validation - no supabase file changes"
           fi
 
-      - name: Start Supabase (DB only)
-        if: steps.check-changes.outputs.needs_validation == 'true'
-        run: supabase start -x realtime,imgproxy,postgrest,studio,edge-runtime,logflare,vector,supavisor,storage-api,auth
-
       - name: Validate E2E fixtures match schema
         if: steps.check-changes.outputs.needs_validation == 'true'
         run: |
           # Use hardcoded local Supabase DB URL (always the same)
-          DB_URL="postgresql://postgres:postgres@127.0.0.1:54322/postgres"
-
-          PGPASSWORD=postgres psql "$DB_URL" -f supabase/seed-e2e.sql || {
+          PGPASSWORD=postgres psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -f supabase/seed-e2e.sql || {
             echo "::error::E2E fixtures don't match current schema!"
             echo "::error::Update supabase/seed-e2e.sql to match new columns"
             exit 1
