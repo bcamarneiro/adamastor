@@ -18,7 +18,7 @@ mock.module('react-router-dom', () => ({
 
 const mockDeputy: DeputyDetail = {
   id: '123',
-  external_id: 1234,
+  external_id: '1234',
   name: 'João Silva Santos',
   short_name: 'João Silva',
   party_acronym: 'PS',
