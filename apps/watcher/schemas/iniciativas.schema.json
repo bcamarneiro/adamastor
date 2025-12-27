@@ -74,10 +74,36 @@
         "type": "null"
       },
       "IniciativasOrigem": {
-        "type": ["array", "null"]
+        "type": ["array", "null"],
+        "items": {
+          "type": "object",
+          "properties": {
+            "assunto": { "type": "string" },
+            "dcl": { "type": "null" },
+            "descTipo": { "type": "string" },
+            "id": { "type": "string" },
+            "legislatura": { "type": "string" },
+            "numero": { "type": "string" },
+            "sessao": { "type": "string" },
+            "tipo": { "type": "string" }
+          }
+        }
       },
       "IniciativasOriginadas": {
-        "type": ["array", "null"]
+        "type": ["array", "null"],
+        "items": {
+          "type": "object",
+          "properties": {
+            "assunto": { "type": "string" },
+            "dcl": { "type": "null" },
+            "descTipo": { "type": "string" },
+            "id": { "type": "string" },
+            "legislatura": { "type": "string" },
+            "numero": { "type": "string" },
+            "sessao": { "type": "string" },
+            "tipo": { "type": "string" }
+          }
+        }
       },
       "IniDescTipo": {
         "type": "string"
@@ -198,7 +224,18 @@
                     "type": "null"
                   },
                   "DistribuicaoSubcomissao": {
-                    "type": ["string", "null"]
+                    "type": ["array", "null"],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "leg": { "type": "string" },
+                        "nome": { "type": "string" },
+                        "num": { "type": "string" },
+                        "orgId": { "type": "string" },
+                        "publicacao": { "type": "null" },
+                        "sigla": { "type": "string" }
+                      }
+                    }
                   },
                   "Documentos": {
                     "type": ["array", "null"],
