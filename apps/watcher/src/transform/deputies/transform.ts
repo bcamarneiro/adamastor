@@ -7,12 +7,12 @@ import { supabase } from '../../supabase.js';
 import { pipelineResult } from '../../utils/pipeline-result.js';
 import { ProgressBar } from '../../utils/progress.js';
 import {
-  parseLegislature,
-  getPhotoUrl,
-  isActiveDeputy,
+  deduplicateDeputies,
   getCurrentParty,
   getMandateDates,
-  deduplicateDeputies,
+  getPhotoUrl,
+  isActiveDeputy,
+  parseLegislature,
 } from './helpers.js';
 import type { DeputyMaps, ParliamentDeputado } from './types.js';
 

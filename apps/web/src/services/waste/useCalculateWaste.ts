@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { PARLIAMENT_BUDGET_SHARE } from './useWasteStats';
+import { PARLIAMENT_BUDGET_SHARE } from './constants';
 
 interface WasteCalculation {
   irsAmount: number;

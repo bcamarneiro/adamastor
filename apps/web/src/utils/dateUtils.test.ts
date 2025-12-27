@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, daysBetween } from './dateUtils';
+import { daysBetween, formatDate } from './dateUtils';
 
 describe('formatDate', () => {
   it('should format a valid ISO date string to pt-BR format', () => {

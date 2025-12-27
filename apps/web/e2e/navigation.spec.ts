@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Navigation', () => {
   test('should navigate to leaderboard page', async ({ page }) => {
@@ -35,7 +35,10 @@ test.describe('Navigation', () => {
     await page.goto('/ranking');
 
     // Click on logo/home link
-    await page.getByRole('link', { name: /adamastor/i }).first().click();
+    await page
+      .getByRole('link', { name: /adamastor/i })
+      .first()
+      .click();
 
     // Should be back on home page
     await expect(page).toHaveURL('/');

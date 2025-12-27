@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import {
   DEPUTY_MONTHLY_SALARY,
-  YEARLY_SALARY,
-  TOTAL_DEPUTIES,
   PARLIAMENT_BUDGET_SHARE,
-} from './useWasteStats';
+  TOTAL_DEPUTIES,
+  YEARLY_SALARY,
+} from './constants';
 
 describe('Waste Stats Constants', () => {
   it('should have correct monthly salary', () => {

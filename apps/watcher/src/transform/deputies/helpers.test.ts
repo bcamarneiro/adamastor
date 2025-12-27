@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'bun:test';
 import {
-  parseLegislature,
-  getPhotoUrl,
-  isActiveDeputy,
+  deduplicateDeputies,
   getCurrentParty,
   getMandateDates,
-  deduplicateDeputies,
+  getPhotoUrl,
+  isActiveDeputy,
+  parseLegislature,
 } from './helpers.js';
 import type { ParliamentDeputado } from './types.js';
 
@@ -63,36 +63,28 @@ describe('getPhotoUrl', () => {
 describe('isActiveDeputy', () => {
   it('should return true for deputy with Efetivo status', () => {
     const dep = createDeputy({
-      DepSituacao: [
-        { sioDes: 'Efetivo', sioDtInicio: '2024-01-01', sioDtFim: null },
-      ],
+      DepSituacao: [{ sioDes: 'Efetivo', sioDtInicio: '2024-01-01', sioDtFim: null }],
     });
     expect(isActiveDeputy(dep)).toBe(true);
   });
 
   it('should return true for deputy with efetivo in lowercase', () => {
     const dep = createDeputy({
-      DepSituacao: [
-        { sioDes: 'efetivo', sioDtInicio: '2024-01-01', sioDtFim: null },
-      ],
+      DepSituacao: [{ sioDes: 'efetivo', sioDtInicio: '2024-01-01', sioDtFim: null }],
     });
     expect(isActiveDeputy(dep)).toBe(true);
   });
 
   it('should return true for deputy with Efetivo in mixed case status', () => {
     const dep = createDeputy({
-      DepSituacao: [
-        { sioDes: 'Deputado Efetivo', sioDtInicio: '2024-01-01', sioDtFim: null },
-      ],
+      DepSituacao: [{ sioDes: 'Deputado Efetivo', sioDtInicio: '2024-01-01', sioDtFim: null }],
     });
     expect(isActiveDeputy(dep)).toBe(true);
   });
 
   it('should return false for deputy without Efetivo status', () => {
     const dep = createDeputy({
-      DepSituacao: [
-        { sioDes: 'Suspenso', sioDtInicio: '2024-01-01', sioDtFim: null },
-      ],
+      DepSituacao: [{ sioDes: 'Suspenso', sioDtInicio: '2024-01-01', sioDtFim: null }],
     });
     expect(isActiveDeputy(dep)).toBe(false);
   });
@@ -116,9 +108,7 @@ describe('isActiveDeputy', () => {
 describe('getCurrentParty', () => {
   it('should return current party when no end date', () => {
     const dep = createDeputy({
-      DepGP: [
-        { gpId: 1, gpSigla: 'PS', gpDtInicio: '2024-01-01', gpDtFim: null },
-      ],
+      DepGP: [{ gpId: 1, gpSigla: 'PS', gpDtInicio: '2024-01-01', gpDtFim: null }],
     });
     expect(getCurrentParty(dep)).toBe('PS');
   });
@@ -165,9 +155,7 @@ describe('getMandateDates', () => {
 
   it('should return null end date when current mandate has no end', () => {
     const dep = createDeputy({
-      DepSituacao: [
-        { sioDes: 'Efetivo', sioDtInicio: '2024-01-01', sioDtFim: null },
-      ],
+      DepSituacao: [{ sioDes: 'Efetivo', sioDtInicio: '2024-01-01', sioDtFim: null }],
     });
     const { start, end } = getMandateDates(dep);
     expect(start).toBe('2024-01-01');

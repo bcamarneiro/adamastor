@@ -1,5 +1,5 @@
+import { afterEach, mock } from 'bun:test';
 import { GlobalRegistrator } from '@happy-dom/global-registrator';
-import { mock, afterEach } from 'bun:test';
 
 // Register happy-dom globals synchronously before anything else
 GlobalRegistrator.register();

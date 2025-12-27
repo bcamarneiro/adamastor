@@ -1,11 +1,15 @@
-import { describe, expect, it, mock, beforeEach } from 'bun:test';
+import { describe, expect, it, mock } from 'bun:test';
 import { render, screen } from '@testing-library/react';
-import { LeaderboardCard } from './LeaderboardCard';
 import type { DeputyDetail } from '../../lib/supabase';
+import { LeaderboardCard } from './LeaderboardCard';
 
 // Mock react-router-dom Link
 mock.module('react-router-dom', () => ({
-  Link: ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
+  Link: ({
+    to,
+    children,
+    className,
+  }: { to: string; children: React.ReactNode; className?: string }) => (
     <a href={to} className={className} data-testid="leaderboard-link">
       {children}
     </a>
@@ -110,7 +114,9 @@ describe('LeaderboardCard', () => {
   });
 
   it('should apply danger border for bottom workers', () => {
-    const { container } = render(<LeaderboardCard deputy={mockDeputy} position={1} isTop={false} />);
+    const { container } = render(
+      <LeaderboardCard deputy={mockDeputy} position={1} isTop={false} />
+    );
     const link = container.querySelector('a');
     expect(link?.className).toContain('border-danger-6');
   });

@@ -51,7 +51,10 @@ export function getCurrentParty(dep: ParliamentDeputado): string | null {
   return currentGP?.gpSigla || dep.DepGP[0]?.gpSigla || null;
 }
 
-export function getMandateDates(dep: ParliamentDeputado): { start: string | null; end: string | null } {
+export function getMandateDates(dep: ParliamentDeputado): {
+  start: string | null;
+  end: string | null;
+} {
   let start: string | null = null;
   let end: string | null = null;
 

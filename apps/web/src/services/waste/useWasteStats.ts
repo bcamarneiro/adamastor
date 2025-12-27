@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
+import { TOTAL_DEPUTIES, YEARLY_SALARY } from './constants';
 
 interface WasteStats {
   totalDeputies: number;
@@ -8,13 +9,6 @@ interface WasteStats {
   lowWorkersPercentage: number;
   totalSalaryWaste: number; // Estimated salary going to low-performers
 }
-
-// Constants for calculation
-const DEPUTY_MONTHLY_SALARY = 4021; // euros
-const MONTHS_PER_YEAR = 14; // 14 salaries in Portugal
-const YEARLY_SALARY = DEPUTY_MONTHLY_SALARY * MONTHS_PER_YEAR;
-const TOTAL_DEPUTIES = 230;
-const PARLIAMENT_BUDGET_SHARE = 0.001; // Parliament represents ~0.1% of state budget (approximate)
 
 async function fetchWasteStats(): Promise<WasteStats> {
   // Get count of low-performing deputies (grade D or F)
@@ -65,5 +59,3 @@ export function useWasteStats() {
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 }
-
-export { DEPUTY_MONTHLY_SALARY, YEARLY_SALARY, TOTAL_DEPUTIES, PARLIAMENT_BUDGET_SHARE };
