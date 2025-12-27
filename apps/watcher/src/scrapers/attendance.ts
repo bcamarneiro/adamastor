@@ -9,6 +9,7 @@
  */
 
 import { POLITENESS_UA } from '../config.js';
+import { supabase } from '../supabase.js';
 
 const BASE_URL = 'https://www.parlamento.pt';
 const MEETING_LIST_URL = `${BASE_URL}/DeputadoGP/Paginas/reunioesplenarias.aspx`;
@@ -174,41 +175,104 @@ export async function fetchMeetingAttendance(meeting: PlenaryMeeting): Promise<A
 }
 
 /**
- * Fetch all attendance data for all meetings
+ * Get the most recent meeting date we have scraped attendance for.
+ * Used for incremental scraping.
+ */
+async function getLastScrapedMeetingDate(): Promise<string | null> {
+  const { data, error } = await supabase
+    .from('plenary_meetings')
+    .select('meeting_date')
+    .order('meeting_date', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error && error.code !== 'PGRST116') {
+    console.warn('[WARN] Failed to get last scraped meeting date:', error.message);
+  }
+
+  return data?.meeting_date ?? null;
+}
+
+export interface FetchAttendanceOptions {
+  /** If true, scrapes all meetings regardless of what's already in DB */
+  fullResync?: boolean;
+  /** Progress callback */
+  onProgress?: (current: number, total: number) => void;
+}
+
+/**
+ * Fetch attendance data for meetings.
+ * By default, only fetches new meetings (incremental scraping).
+ *
+ * @param options - Options for controlling scraping behavior
  */
 export async function fetchAllAttendance(
-  onProgress?: (current: number, total: number) => void
+  options: FetchAttendanceOptions = {}
 ): Promise<{
   meetings: PlenaryMeeting[];
   attendance: AttendanceRecord[];
+  skipped: number;
 }> {
-  const meetings = await fetchMeetingList();
+  const { fullResync = false, onProgress } = options;
+
+  const allMeetings = await fetchMeetingList();
+
+  // Determine which meetings to scrape
+  let meetingsToScrape: PlenaryMeeting[];
+  let skipped = 0;
+
+  if (fullResync) {
+    console.log('[INFO] Full resync requested - will scrape all meetings');
+    meetingsToScrape = allMeetings;
+  } else {
+    // Get the most recent meeting we've already scraped
+    const lastScrapedDate = await getLastScrapedMeetingDate();
+
+    if (lastScrapedDate) {
+      // Filter to only meetings newer than what we've scraped
+      meetingsToScrape = allMeetings.filter((m) => m.date > lastScrapedDate);
+      skipped = allMeetings.length - meetingsToScrape.length;
+
+      if (meetingsToScrape.length === 0) {
+        console.log(`[INFO] No new meetings since ${lastScrapedDate} - nothing to scrape`);
+        return { meetings: [], attendance: [], skipped };
+      }
+
+      console.log(
+        `[INFO] Found ${meetingsToScrape.length} new meetings since ${lastScrapedDate} (skipping ${skipped} already scraped)`
+      );
+    } else {
+      console.log('[INFO] No previous attendance data - will scrape all meetings');
+      meetingsToScrape = allMeetings;
+    }
+  }
+
   const attendance: AttendanceRecord[] = [];
 
-  for (let i = 0; i < meetings.length; i++) {
-    const meeting = meetings[i];
+  for (let i = 0; i < meetingsToScrape.length; i++) {
+    const meeting = meetingsToScrape[i];
     if (!meeting) continue;
 
     console.log(
-      `[INFO] Fetching attendance for meeting ${i + 1}/${meetings.length}: ${meeting.date} (BID=${meeting.bid})`
+      `[INFO] Fetching attendance for meeting ${i + 1}/${meetingsToScrape.length}: ${meeting.date} (BID=${meeting.bid})`
     );
 
     const records = await fetchMeetingAttendance(meeting);
     attendance.push(...records);
 
     if (onProgress) {
-      onProgress(i + 1, meetings.length);
+      onProgress(i + 1, meetingsToScrape.length);
     }
 
     // Be polite - add delay between requests
-    if (i < meetings.length - 1) {
+    if (i < meetingsToScrape.length - 1) {
       await sleep(POLITENESS_DELAY_MS);
     }
   }
 
   console.log(`[INFO] Total attendance records fetched: ${attendance.length}`);
 
-  return { meetings, attendance };
+  return { meetings: meetingsToScrape, attendance, skipped };
 }
 
 // CLI entry point
@@ -217,16 +281,26 @@ if (import.meta.main) {
   console.log('           ATTENDANCE SCRAPER - Parliament Data');
   console.log('═══════════════════════════════════════════════════════════\n');
 
+  // Check for --full flag to force full resync
+  const fullResync = process.argv.includes('--full');
+  if (fullResync) {
+    console.log('⚠️  Full resync mode enabled\n');
+  }
+
   try {
-    const { meetings, attendance } = await fetchAllAttendance((current, total) => {
-      const pct = Math.round((current / total) * 100);
-      console.log(`  Progress: ${current}/${total} (${pct}%)`);
+    const { meetings, attendance, skipped } = await fetchAllAttendance({
+      fullResync,
+      onProgress: (current, total) => {
+        const pct = Math.round((current / total) * 100);
+        console.log(`  Progress: ${current}/${total} (${pct}%)`);
+      },
     });
 
     console.log('\n═══════════════════════════════════════════════════════════');
     console.log('                       SUMMARY');
     console.log('═══════════════════════════════════════════════════════════');
     console.log(`Meetings scraped: ${meetings.length}`);
+    console.log(`Meetings skipped (already in DB): ${skipped}`);
     console.log(`Attendance records: ${attendance.length}`);
 
     // Calculate stats

@@ -45,25 +45,38 @@ async function fetchWithRetry(
   throw lastError || new Error('Fetch failed after retries');
 }
 
+async function fetchSingleDataset(
+  dataset: { name: string; url: string },
+  timestamp: string
+): Promise<void> {
+  console.log(`[DEBUG] Fetching dataset: ${dataset.name} from ${dataset.url}`);
+  const res = await fetchWithRetry(dataset.url, {
+    headers: { 'user-agent': POLITENESS_UA },
+  });
+  if (!res.ok) throw new Error(`${dataset.name} download failed ${res.status}`);
+
+  const filePath = `${SNAPSHOT_PATH}/${timestamp}/${dataset.name}.json`;
+  console.log(`[DEBUG] Writing dataset to: ${filePath}`);
+  const file = createWriteStream(filePath);
+  await pipeline(res.body as unknown as NodeJS.ReadableStream, file);
+  console.log(`[DEBUG] Finished writing: ${filePath}`);
+}
+
 export async function fetchDatasets(timestamp: string) {
   try {
     console.log(`[DEBUG] Creating snapshot directory: ${SNAPSHOT_PATH}/${timestamp}`);
     await mkdir(`${SNAPSHOT_PATH}/${timestamp}`, { recursive: true });
 
-    for (const d of DATASETS) {
-      console.log(`[DEBUG] Fetching dataset: ${d.name} from ${d.url}`);
-      const res = await fetchWithRetry(d.url, {
-        headers: { 'user-agent': POLITENESS_UA },
-      });
-      if (!res.ok) throw new Error(`${d.name} download failed ${res.status}`);
+    // Fetch all datasets in parallel for faster downloads
+    console.log(`[DEBUG] Fetching ${DATASETS.length} datasets in parallel...`);
+    const startTime = Date.now();
 
-      const filePath = `${SNAPSHOT_PATH}/${timestamp}/${d.name}.json`;
-      console.log(`[DEBUG] Writing dataset to: ${filePath}`);
-      const file = createWriteStream(filePath);
-      await pipeline(res.body as unknown as NodeJS.ReadableStream, file);
-      console.log(`[DEBUG] Finished writing: ${filePath}`);
-    }
-    console.log(`[DEBUG] All datasets fetched for timestamp: ${timestamp}`);
+    await Promise.all(
+      DATASETS.map((d) => fetchSingleDataset(d, timestamp))
+    );
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.log(`[DEBUG] All datasets fetched in ${elapsed}s for timestamp: ${timestamp}`);
   } catch (err) {
     console.error('[ERROR] fetchDatasets failed:', err);
     throw err;

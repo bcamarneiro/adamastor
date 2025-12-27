@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "0 7 * * *" # Daily at 7 AM UTC (1h after staging)
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Force full sync (ignore hash comparison)"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -52,6 +58,16 @@ jobs:
         run: bun install
         working-directory: apps/watcher
 
+      # Cache snapshots directory to speed up re-runs and debugging
+      - name: Cache snapshots
+        if: steps.latest_release.outputs.skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: apps/watcher/snapshots
+          key: sync-snapshots-production-${{ github.run_id }}
+          restore-keys: |
+            sync-snapshots-production-
+
       - name: Sync to production
         if: steps.latest_release.outputs.skip != 'true'
         id: sync
@@ -63,7 +79,13 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           ENVIRONMENT: production
-        run: bun run start
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            echo "🔄 Force mode enabled - running full sync"
+            bun run start -- --force
+          else
+            bun run start
+          fi
         working-directory: apps/watcher
 
       # Smoke test - verify data was synced
