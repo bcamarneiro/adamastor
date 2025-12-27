@@ -71,9 +71,7 @@ export async function fetchDatasets(timestamp: string) {
     console.log(`[DEBUG] Fetching ${DATASETS.length} datasets in parallel...`);
     const startTime = Date.now();
 
-    await Promise.all(
-      DATASETS.map((d) => fetchSingleDataset(d, timestamp))
-    );
+    await Promise.all(DATASETS.map((d) => fetchSingleDataset(d, timestamp)));
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.log(`[DEBUG] All datasets fetched in ${elapsed}s for timestamp: ${timestamp}`);

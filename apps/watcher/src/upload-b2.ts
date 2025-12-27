@@ -11,8 +11,8 @@ let b2: Backblaze | null = null;
 
 if (B2_ENABLED) {
   b2 = new Backblaze({
-    applicationKeyId: process.env.B2_KEY_ID!,
-    applicationKey: process.env.B2_APP_KEY!,
+    applicationKeyId: process.env.B2_KEY_ID as string,
+    applicationKey: process.env.B2_APP_KEY as string,
   });
 }
 

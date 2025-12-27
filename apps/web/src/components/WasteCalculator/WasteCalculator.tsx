@@ -64,12 +64,13 @@ export function WasteCalculator() {
       {!calculation ? (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5">
-            <label className="block text-lg font-medium text-neutral-12 mb-4">
+            <label htmlFor="irs-amount" className="block text-lg font-medium text-neutral-12 mb-4">
               Quanto pagaste de IRS no ultimo ano?
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-9">€</span>
               <input
+                id="irs-amount"
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}

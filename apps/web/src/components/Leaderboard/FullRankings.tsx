@@ -24,9 +24,9 @@ export function FullRankings({ partyId, districtId }: FullRankingsProps) {
   if (isLoading && deputies.length === 0) {
     return (
       <div className="space-y-3">
-        {[...Array(5)].map((_, i) => (
+        {[1, 2, 3, 4, 5].map((n) => (
           <div
-            key={i}
+            key={`skeleton-${n}`}
             className="animate-pulse flex items-center gap-4 p-4 bg-neutral-1 rounded-lg"
           >
             <div className="w-10 h-6 bg-neutral-4 rounded" />

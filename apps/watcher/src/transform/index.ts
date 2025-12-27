@@ -106,7 +106,10 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
     (async () => {
       console.log('  🎤 Starting activities transform...');
       const interventionsByParty = await countInterventions(atividades, partyMap);
-      interventionsByDeputy = await distributeInterventionsToDeputies(interventionsByParty, partyMap);
+      interventionsByDeputy = await distributeInterventionsToDeputies(
+        interventionsByParty,
+        partyMap
+      );
       console.log('  ✅ Activities complete');
       return interventionsByDeputy;
     })(),
@@ -130,7 +133,9 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
       async () => {
         console.log('  📝 Starting biography scraping (TTL-filtered)...');
         const result = await transformBiographies();
-        console.log(`  ✅ Biographies complete (${result.scraped} scraped, ${result.skipped} skipped)`);
+        console.log(
+          `  ✅ Biographies complete (${result.scraped} scraped, ${result.skipped} skipped)`
+        );
         return { processed: result.scraped, failed: 0 };
       },
       { critical: false }

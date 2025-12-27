@@ -93,8 +93,14 @@ export function FullRankingsPage() {
           <div className="bg-neutral-1 rounded-xl p-4 mb-6 border border-neutral-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-11 mb-2">Partido</label>
+                <label
+                  htmlFor="party-filter"
+                  className="block text-sm font-medium text-neutral-11 mb-2"
+                >
+                  Partido
+                </label>
                 <select
+                  id="party-filter"
                   value={selectedParty || ''}
                   onChange={(e) => setSelectedParty(e.target.value || null)}
                   className="w-full px-3 py-2 bg-neutral-2 border border-neutral-5 rounded-lg text-neutral-12 focus:ring-2 focus:ring-accent-9 focus:border-accent-9"
@@ -109,8 +115,14 @@ export function FullRankingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-11 mb-2">Distrito</label>
+                <label
+                  htmlFor="district-filter"
+                  className="block text-sm font-medium text-neutral-11 mb-2"
+                >
+                  Distrito
+                </label>
                 <select
+                  id="district-filter"
                   value={selectedDistrict || ''}
                   onChange={(e) => setSelectedDistrict(e.target.value || null)}
                   className="w-full px-3 py-2 bg-neutral-2 border border-neutral-5 rounded-lg text-neutral-12 focus:ring-2 focus:ring-accent-9 focus:border-accent-9"

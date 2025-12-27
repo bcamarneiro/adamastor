@@ -206,9 +206,7 @@ export interface FetchAttendanceOptions {
  *
  * @param options - Options for controlling scraping behavior
  */
-export async function fetchAllAttendance(
-  options: FetchAttendanceOptions = {}
-): Promise<{
+export async function fetchAllAttendance(options: FetchAttendanceOptions = {}): Promise<{
   meetings: PlenaryMeeting[];
   attendance: AttendanceRecord[];
   skipped: number;

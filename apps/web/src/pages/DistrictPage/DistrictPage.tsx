@@ -22,7 +22,7 @@ export function DistrictPage() {
 
   const { data: district, isLoading: districtLoading } = useQuery({
     queryKey: ['district', 'slug', districtSlug],
-    queryFn: () => fetchDistrictBySlug(districtSlug!),
+    queryFn: () => fetchDistrictBySlug(districtSlug as string),
     enabled: !!districtSlug,
   });
 

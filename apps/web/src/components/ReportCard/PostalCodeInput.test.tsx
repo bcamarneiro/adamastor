@@ -78,7 +78,7 @@ describe('PostalCodeInput', () => {
       render(<PostalCodeInput onSubmit={handleSubmit} />);
 
       const input = screen.getByLabelText('O teu codigo postal') as HTMLInputElement;
-      const form = input.closest('form')!;
+      const form = input.closest('form') as HTMLFormElement;
 
       fireEvent.change(input, { target: { value: '1000001' } });
       fireEvent.submit(form);
@@ -92,7 +92,7 @@ describe('PostalCodeInput', () => {
       render(<PostalCodeInput onSubmit={handleSubmit} />);
 
       const input = screen.getByLabelText('O teu codigo postal') as HTMLInputElement;
-      const form = input.closest('form')!;
+      const form = input.closest('form') as HTMLFormElement;
 
       fireEvent.change(input, { target: { value: '100' } });
       fireEvent.submit(form);

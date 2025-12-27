@@ -39,10 +39,7 @@ export async function getStoredHash(dataset: string): Promise<string | null> {
  * Get all stored sync states
  */
 export async function getAllSyncStates(): Promise<SyncStateRecord[]> {
-  const { data, error } = await supabase
-    .from('sync_state')
-    .select('*')
-    .order('dataset');
+  const { data, error } = await supabase.from('sync_state').select('*').order('dataset');
 
   if (error) {
     console.error('[WARN] Failed to get sync states:', error.message);
