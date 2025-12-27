@@ -1,0 +1,89 @@
+name: Revert Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      commits_back:
+        description: 'Number of commits to revert (default: 1)'
+        required: false
+        default: '1'
+      confirm:
+        description: 'Type "revert" to confirm'
+        required: true
+
+# Prevent concurrent reverts
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  confirm-revert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "revert" ]; then
+            echo "::error::You must type 'revert' to confirm"
+            exit 1
+          fi
+          echo "Revert confirmed"
+
+  revert:
+    runs-on: ubuntu-latest
+    needs: confirm-revert
+    environment: production  # Requires approval if configured
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.DEPLOY_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Revert commits
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          COMMITS_BACK=${{ github.event.inputs.commits_back }}
+          echo "Reverting last $COMMITS_BACK commit(s)..."
+
+          # Revert the last N merge commits
+          for i in $(seq 1 $COMMITS_BACK); do
+            COMMIT_TO_REVERT="HEAD~$((i-1))"
+            echo "Reverting: $(git log -1 --oneline $COMMIT_TO_REVERT)"
+            git revert --no-commit $COMMIT_TO_REVERT -m 1 || true
+          done
+
+          git commit -m "revert: rollback $COMMITS_BACK commit(s) from production
+
+          Triggered by: ${{ github.actor }}
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          git push origin main
+
+      - name: Sync revert to staging
+        run: |
+          git checkout staging
+          git merge main --no-edit -m "chore: sync revert from main to staging"
+          git push origin staging
+
+      - name: Create issue for tracking
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Production reverted - ${new Date().toISOString().split('T')[0]}`,
+              body: `## Production Revert
+
+**Commits reverted:** ${{ github.event.inputs.commits_back }}
+**Triggered by:** @${{ github.actor }}
+**Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+
+### Next Steps
+- [ ] Investigate the root cause
+- [ ] Create a fix in a feature branch
+- [ ] Test thoroughly before re-deploying`,
+              labels: ['bug', 'production', 'revert']
+            });

@@ -7,6 +7,11 @@ on:
         description: 'Type "deploy" to confirm production deployment'
         required: true
 
+# Prevent concurrent deploys
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 jobs:
   verify-tests:
     runs-on: ubuntu-latest
@@ -55,7 +60,8 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use DEPLOY_TOKEN for protected branch push (falls back to GITHUB_TOKEN)
+          token: ${{ secrets.DEPLOY_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Merge staging to main
         run: |
@@ -64,6 +70,12 @@ jobs:
           git fetch origin staging
           git merge origin/staging --no-edit -m "chore: merge staging to main for production deploy"
           git push origin main
+
+      - name: Sync main back to staging
+        run: |
+          git checkout staging
+          git merge main --no-edit
+          git push origin staging
 
   deploy-db-production:
     runs-on: ubuntu-latest

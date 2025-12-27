@@ -104,6 +104,12 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
+      - name: Load E2E test fixtures
+        run: |
+          DB_URL=$(npx supabase status | grep 'DB URL' | awk '{print $NF}')
+          PGPASSWORD=postgres psql "$DB_URL" -f supabase/seed-e2e.sql
+          echo "E2E fixtures loaded successfully"
+
       - name: Run E2E tests
         run: bun run e2e
         working-directory: apps/web
@@ -137,3 +143,16 @@ jobs:
         run: supabase db lint
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Validate E2E fixtures match schema
+        run: |
+          # Get database URL from local Supabase
+          DB_URL=$(supabase status | grep 'DB URL' | awk '{print $NF}')
+
+          # Try to load E2E fixtures - will fail if schema doesn't match
+          PGPASSWORD=postgres psql "$DB_URL" -f supabase/seed-e2e.sql || {
+            echo "::error::E2E fixtures don't match current schema!"
+            echo "::error::Update supabase/seed-e2e.sql to match new columns"
+            exit 1
+          }
+          echo "E2E fixtures validated successfully"
