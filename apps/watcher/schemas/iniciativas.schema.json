@@ -186,7 +186,7 @@
                     "type": ["string", "null"]
                   },
                   "DataMotivoNaoParecer": {
-                    "type": "null"
+                    "type": ["string", "null"]
                   },
                   "DataRelatorio": {
                     "type": "null"
@@ -231,7 +231,7 @@
                     "type": "null"
                   },
                   "MotivoNaoParecer": {
-                    "type": "null"
+                    "type": ["string", "null"]
                   },
                   "Nome": {
                     "type": "string"
