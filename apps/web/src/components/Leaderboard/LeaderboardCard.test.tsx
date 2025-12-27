@@ -22,8 +22,10 @@ const mockDeputy: DeputyDetail = {
   name: 'João Silva Santos',
   short_name: 'João Silva',
   party_acronym: 'PS',
+  party_name: 'Partido Socialista',
   party_color: '#FF0000',
   district_name: 'Lisboa',
+  district_slug: 'lisboa',
   photo_url: 'https://example.com/photo.jpg',
   grade: 'A',
   work_score: 85,
@@ -40,11 +42,24 @@ const mockDeputy: DeputyDetail = {
   party_votes_against: 10,
   party_votes_abstain: 5,
   party_total_votes: 115,
-  loyalty_rate: 87,
   mandate_start: '2024-01-01',
   mandate_end: null,
-  created_at: '2024-01-01',
-  updated_at: '2024-01-01',
+  // Attendance
+  attendance_rate: null,
+  meetings_attended: null,
+  meetings_total: null,
+  // Biography
+  birth_date: null,
+  profession: null,
+  education: null,
+  bio_narrative: null,
+  biography_source_url: null,
+  biography_scraped_at: null,
+  // Source tracking
+  last_synced_at: null,
+  deputy_source_url: null,
+  deputy_source_type: null,
+  deputy_source_name: null,
 };
 
 describe('LeaderboardCard', () => {
