@@ -23,7 +23,7 @@ describe('PARTY_COLORS', () => {
 
   it('should have valid hex color codes', () => {
     const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
-    for (const [party, color] of Object.entries(PARTY_COLORS)) {
+    for (const [_party, color] of Object.entries(PARTY_COLORS)) {
       expect(color).toMatch(hexColorRegex);
     }
   });
