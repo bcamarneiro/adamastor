@@ -1,0 +1,5 @@
+[test]
+preload = ["./src/test/happydom.ts"]
+
+# Only run tests inside src directory, exclude e2e (Playwright) tests
+root = "./src"
