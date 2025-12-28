@@ -26,6 +26,8 @@ export default defineConfig({
     command: 'bun run dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000,
+    timeout: 180000, // 3 minutes for slow CI runners
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });
