@@ -148,3 +148,16 @@ export interface DataSource {
   description: string | null;
   is_active: boolean;
 }
+
+// Party statistics from party_stats view
+export interface PartyStats {
+  id: string;
+  acronym: string;
+  name: string;
+  color: string | null;
+  deputy_count: number;
+  avg_work_score: number | null;
+  total_proposals: number | null;
+  total_interventions: number | null;
+  total_questions: number | null;
+}

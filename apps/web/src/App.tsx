@@ -36,6 +36,12 @@ const WasteCalculatorPage = lazy(() =>
 const BattlePage = lazy(() =>
   import('./pages/BattlePage').then((m) => ({ default: m.BattlePage }))
 );
+const PartiesPage = lazy(() =>
+  import('./pages/PartiesPage').then((m) => ({ default: m.PartiesPage }))
+);
+const PartyComparisonPage = lazy(() =>
+  import('./pages/PartiesPage').then((m) => ({ default: m.PartyComparisonPage }))
+);
 
 function PageLoader() {
   return (
@@ -89,6 +95,10 @@ const App = () => {
 
             {/* Battle Royale Feature */}
             <Route path="batalha" element={<BattlePage />} />
+
+            {/* Parties Feature */}
+            <Route path="partidos" element={<PartiesPage />} />
+            <Route path="partidos/comparar" element={<PartyComparisonPage />} />
 
             <Route path="*" element={<FourOFour />} />
           </Routes>

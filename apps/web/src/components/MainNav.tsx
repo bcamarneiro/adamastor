@@ -9,6 +9,7 @@ interface MainNavProps {
 
 const navItems = [
   { path: '/report-card', label: 'Deputados' },
+  { path: '/partidos', label: 'Partidos' },
   { path: '/ranking', label: 'Ranking' },
   { path: '/desperdicio', label: 'Calculadora' },
   { path: '/batalha', label: 'Battle Royale' },
