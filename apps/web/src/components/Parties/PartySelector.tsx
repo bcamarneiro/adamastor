@@ -93,9 +93,7 @@ export function PartySelector({ label, selected, onSelect, excludeId }: PartySel
           {isLoading ? (
             <div className="p-3 text-center text-sm text-neutral-11">A carregar...</div>
           ) : filteredParties.length === 0 ? (
-            <div className="p-3 text-center text-sm text-neutral-11">
-              Nenhum partido encontrado
-            </div>
+            <div className="p-3 text-center text-sm text-neutral-11">Nenhum partido encontrado</div>
           ) : (
             filteredParties.map((party) => (
               <button

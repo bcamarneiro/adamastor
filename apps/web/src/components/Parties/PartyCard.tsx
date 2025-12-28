@@ -1,5 +1,5 @@
 import type { PartyStats } from '@/lib/supabase';
-import { FileText, MessageSquare, HelpCircle, Users } from 'lucide-react';
+import { FileText, HelpCircle, MessageSquare, Users } from 'lucide-react';
 
 interface PartyCardProps {
   party: PartyStats;
@@ -38,9 +38,19 @@ export function PartyCard({ party, rank, onClick, isSelected }: PartyCardProps) 
   const grade = getGradeFromScore(party.avg_work_score);
   const gradeColor = getGradeColor(grade);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
       className={`
         bg-neutral-1 rounded-xl p-4 border transition-all
         ${onClick ? 'cursor-pointer hover:border-accent-7 hover:shadow-md' : ''}
@@ -65,9 +75,7 @@ export function PartyCard({ party, rank, onClick, isSelected }: PartyCardProps) 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="font-bold text-lg text-neutral-12">{party.acronym}</span>
-            <span
-              className={`px-2 py-0.5 rounded-full text-xs font-semibold ${gradeColor}`}
-            >
+            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${gradeColor}`}>
               {grade}
             </span>
           </div>

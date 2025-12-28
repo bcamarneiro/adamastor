@@ -64,8 +64,7 @@ export function HelpTooltip({
 export const HELP_TEXTS = {
   workScore:
     'Pontuacao calculada com base na assiduidade (40%), propostas (30%), intervencoes (20%) e perguntas (10%).',
-  grade:
-    'Nota atribuida com base na pontuacao: A (≥85), B (≥70), C (≥55), D (≥40), F (<40).',
+  grade: 'Nota atribuida com base na pontuacao: A (≥85), B (≥70), C (≥55), D (≥40), F (<40).',
   nationalRank: 'Posicao do deputado entre os 230 deputados ativos da Assembleia da Republica.',
   districtRank: 'Posicao do deputado entre os deputados eleitos pelo mesmo circulo eleitoral.',
   attendance:

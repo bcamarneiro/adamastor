@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it } from 'bun:test';
 /**
  * Cross-View Data Consistency Tests
  *
@@ -15,7 +16,6 @@
  * Run against a seeded database for full coverage.
  */
 import { createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'bun:test';
 import type { DeputyDetail } from '../../lib/supabase';
 import { YEARLY_SALARY } from '../waste/constants';
 
@@ -266,7 +266,9 @@ describe('Cross-View Data Consistency', () => {
         .in('grade', ['D', 'F']);
 
       // Count manually from all deputies
-      const manualCount = allActiveDeputies.filter((d) => d.grade === 'D' || d.grade === 'F').length;
+      const manualCount = allActiveDeputies.filter(
+        (d) => d.grade === 'D' || d.grade === 'F'
+      ).length;
 
       expect(lowPerformers?.length).toBe(manualCount);
     });
@@ -275,7 +277,8 @@ describe('Cross-View Data Consistency', () => {
       if (allActiveDeputies.length === 0) return;
 
       const manualAverage =
-        allActiveDeputies.reduce((sum, d) => sum + (d.work_score || 0), 0) / allActiveDeputies.length;
+        allActiveDeputies.reduce((sum, d) => sum + (d.work_score || 0), 0) /
+        allActiveDeputies.length;
 
       // The calculation in useWasteStats
       const { data } = await supabase

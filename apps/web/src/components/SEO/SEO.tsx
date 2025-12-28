@@ -141,8 +141,7 @@ export function getOrganizationSchema() {
     name: SITE_NAME,
     url: BASE_URL,
     logo: `${BASE_URL}/debaixo-dolho-logo.svg`,
-    description:
-      'Plataforma independente de monitorização do trabalho dos deputados portugueses',
+    description: 'Plataforma independente de monitorização do trabalho dos deputados portugueses',
     sameAs: [],
   };
 }
@@ -183,9 +182,7 @@ export function getDeputySchema(deputy: {
 /**
  * Generate breadcrumb structured data
  */
-export function getBreadcrumbSchema(
-  items: Array<{ name: string; url: string }>
-) {
+export function getBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

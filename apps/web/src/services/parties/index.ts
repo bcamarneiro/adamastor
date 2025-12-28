@@ -1,2 +1,6 @@
 export { usePartyStats, usePartyById } from './usePartyStats';
-export { useCompareParties, type PartyComparisonResult, type PartyComparisonMetric } from './useCompareParties';
+export {
+  useCompareParties,
+  type PartyComparisonResult,
+  type PartyComparisonMetric,
+} from './useCompareParties';

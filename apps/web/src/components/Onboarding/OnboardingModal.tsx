@@ -33,8 +33,7 @@ const ONBOARDING_STEPS = [
     id: 'parties',
     icon: BarChart3,
     title: 'Compara Partidos',
-    description:
-      'Analisa o desempenho medio de cada partido e compara-os lado a lado.',
+    description: 'Analisa o desempenho medio de cada partido e compara-os lado a lado.',
     link: '/partidos',
   },
   {
@@ -49,8 +48,7 @@ const ONBOARDING_STEPS = [
     id: 'calculator',
     icon: Calculator,
     title: 'Calculadora de Desperdicio',
-    description:
-      'Descobre quanto do teu IRS vai para deputados que nao comparecem as sessoes.',
+    description: 'Descobre quanto do teu IRS vai para deputados que nao comparecem as sessoes.',
     link: '/desperdicio',
   },
 ];
@@ -140,9 +138,9 @@ export function OnboardingModal() {
 
         {/* Progress Dots */}
         <div className="flex justify-center gap-2 pb-4">
-          {ONBOARDING_STEPS.map((_, index) => (
+          {ONBOARDING_STEPS.map((onboardingStep, index) => (
             <button
-              key={index}
+              key={onboardingStep.id}
               onClick={() => setCurrentStep(index)}
               className={cn(
                 'w-2 h-2 rounded-full transition-colors',

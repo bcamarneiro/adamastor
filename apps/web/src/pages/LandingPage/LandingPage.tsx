@@ -74,11 +74,7 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-neutral-1 overflow-x-hidden">
-      <SEO
-        {...SEO_CONFIGS.landing}
-        url="/"
-        structuredData={getOrganizationSchema()}
-      />
+      <SEO {...SEO_CONFIGS.landing} url="/" structuredData={getOrganizationSchema()} />
       <MainNav scrollY={scrollY} />
 
       <AnimatePresence>

@@ -102,9 +102,7 @@ export function PartyComparison() {
 
           {/* Comparison Bars */}
           <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5">
-            <h3 className="font-semibold text-neutral-12 mb-4 text-center">
-              Comparacao Detalhada
-            </h3>
+            <h3 className="font-semibold text-neutral-12 mb-4 text-center">Comparacao Detalhada</h3>
             <PartyComparisonBars
               metrics={comparison.metrics}
               nameA={comparison.partyA.acronym}

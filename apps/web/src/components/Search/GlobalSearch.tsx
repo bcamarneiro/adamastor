@@ -156,7 +156,8 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
           {hasMinChars && (
             <div className="px-4 py-2 text-xs text-neutral-9 bg-neutral-2 border-t border-neutral-5">
               <kbd className="px-1 py-0.5 rounded bg-neutral-4 text-neutral-11">↑↓</kbd> navegar •{' '}
-              <kbd className="px-1 py-0.5 rounded bg-neutral-4 text-neutral-11">Enter</kbd> selecionar •{' '}
+              <kbd className="px-1 py-0.5 rounded bg-neutral-4 text-neutral-11">Enter</kbd>{' '}
+              selecionar •{' '}
               <kbd className="px-1 py-0.5 rounded bg-neutral-4 text-neutral-11">Esc</kbd> fechar
             </div>
           )}

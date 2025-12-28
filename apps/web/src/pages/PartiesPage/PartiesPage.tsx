@@ -31,9 +31,7 @@ export function PartiesPage() {
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-neutral-12 mb-2">Partidos</h1>
-          <p className="text-neutral-11">
-            Compara o desempenho dos partidos politicos portugueses
-          </p>
+          <p className="text-neutral-11">Compara o desempenho dos partidos politicos portugueses</p>
         </div>
 
         {/* Quick Actions */}

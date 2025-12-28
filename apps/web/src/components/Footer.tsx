@@ -94,14 +94,10 @@ const Footer = () => {
             <h3 className="font-medium mb-4">Dados</h3>
             <ul className="space-y-2">
               <li>
-                <span className="text-sm text-neutral-400">
-                  Fonte: Dados públicos da AR
-                </span>
+                <span className="text-sm text-neutral-400">Fonte: Dados públicos da AR</span>
               </li>
               <li>
-                <span className="text-sm text-neutral-400">
-                  Atualização: Diária
-                </span>
+                <span className="text-sm text-neutral-400">Atualização: Diária</span>
               </li>
               <li>
                 <a

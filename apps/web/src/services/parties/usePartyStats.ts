@@ -24,11 +24,7 @@ export function usePartyStats() {
 }
 
 async function fetchPartyById(partyId: string): Promise<PartyStats | null> {
-  const { data, error } = await supabase
-    .from('party_stats')
-    .select('*')
-    .eq('id', partyId)
-    .single();
+  const { data, error } = await supabase.from('party_stats').select('*').eq('id', partyId).single();
 
   if (error) {
     console.error('Error fetching party:', error);

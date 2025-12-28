@@ -8,8 +8,8 @@
  * Run with: SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=... bun test invariants
  */
 
-import { describe, expect, it, beforeAll } from 'bun:test';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { beforeAll, describe, expect, it } from 'bun:test';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { scoreToGrade } from './helpers.js';
 
 let supabase: SupabaseClient;
@@ -244,7 +244,9 @@ describe('Database Data Invariants', () => {
     it('meetings_attended should not exceed meetings_total', async () => {
       if (!supabase) return;
 
-      const { data, error } = await supabase.from('deputy_stats').select('deputy_id, meetings_attended, meetings_total');
+      const { data, error } = await supabase
+        .from('deputy_stats')
+        .select('deputy_id, meetings_attended, meetings_total');
 
       expect(error).toBeNull();
 

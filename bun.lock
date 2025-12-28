@@ -3,6 +3,9 @@
   "workspaces": {
     "": {
       "name": "gov-perf",
+      "dependencies": {
+        "@radix-ui/react-tooltip": "^1.2.8",
+      },
       "devDependencies": {
         "@biomejs/biome": "^1.9.4",
         "typescript": "^5.7.2",

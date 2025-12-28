@@ -26,10 +26,12 @@ test.describe('Data Consistency - Leaderboard', () => {
 
     // Should show position 1 (gold badge or text)
     const rankBadge = firstCard.locator('text=/1|#1/').first();
-    await expect(rankBadge).toBeVisible({ timeout: 5000 }).catch(() => {
-      // Alternative: check for gold styling indicating first place
-      console.log('Rank badge not found, checking for gold styling');
-    });
+    await expect(rankBadge)
+      .toBeVisible({ timeout: 5000 })
+      .catch(() => {
+        // Alternative: check for gold styling indicating first place
+        console.log('Rank badge not found, checking for gold styling');
+      });
   });
 
   test('clicking deputy in leaderboard should navigate to their detail page', async ({ page }) => {
@@ -58,9 +60,11 @@ test.describe('Data Consistency - Leaderboard', () => {
       const cleanName = deputyName.trim();
       if (cleanName.length > 3) {
         // Check that some part of the name appears on the page
-        await expect(page.getByText(cleanName)).toBeVisible({ timeout: 5000 }).catch(() => {
-          console.log(`Deputy name "${cleanName}" not found on detail page`);
-        });
+        await expect(page.getByText(cleanName))
+          .toBeVisible({ timeout: 5000 })
+          .catch(() => {
+            console.log(`Deputy name "${cleanName}" not found on detail page`);
+          });
       }
     }
   });
@@ -104,7 +108,9 @@ test.describe('Data Consistency - Deputy Detail', () => {
     await page.waitForLoadState('networkidle');
 
     // Find the score and grade elements
-    const gradeElement = page.locator('[data-testid="grade"], .grade-circle, [class*="grade"]').first();
+    const gradeElement = page
+      .locator('[data-testid="grade"], .grade-circle, [class*="grade"]')
+      .first();
 
     if ((await gradeElement.count()) > 0) {
       const gradeText = await gradeElement.textContent();
@@ -161,9 +167,9 @@ test.describe('Data Consistency - Filters', () => {
       }
     }
 
-    // Get initial count of results (if visible)
+    // Get initial count of results (if visible) - stored for potential future assertions
     const countElement = page.getByText(/deputado/i).first();
-    const initialCountText = (await countElement.textContent()) || '';
+    const _initialCountText = (await countElement.textContent()) || '';
 
     // Select a party option
     const selectElement = page.locator('select').first();
@@ -184,7 +190,9 @@ test.describe('Data Consistency - Filters', () => {
     await page.waitForLoadState('networkidle');
 
     // Find district filter dropdown
-    const districtFilter = page.locator('select[id*="district"], [data-testid="district-filter"]').first();
+    const districtFilter = page
+      .locator('select[id*="district"], [data-testid="district-filter"]')
+      .first();
 
     if ((await districtFilter.count()) === 0) {
       test.skip();
@@ -201,7 +209,9 @@ test.describe('Data Consistency - Filters', () => {
 });
 
 test.describe('Data Consistency - Navigation', () => {
-  test('back navigation from deputy detail should preserve scroll position on ranking', async ({ page }) => {
+  test('back navigation from deputy detail should preserve scroll position on ranking', async ({
+    page,
+  }) => {
     await page.goto('/ranking');
     await page.waitForLoadState('networkidle');
 
@@ -292,7 +302,10 @@ test.describe('Data Consistency - Error States', () => {
     await input.fill('0000');
 
     // Try to submit
-    const submitButton = page.locator('button[type="submit"], button').filter({ hasText: /ver|buscar|search/i }).first();
+    const submitButton = page
+      .locator('button[type="submit"], button')
+      .filter({ hasText: /ver|buscar|search/i })
+      .first();
 
     if ((await submitButton.count()) > 0) {
       await submitButton.click();

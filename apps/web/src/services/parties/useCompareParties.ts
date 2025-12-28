@@ -81,13 +81,9 @@ export function useCompareParties(
       {
         label: 'Propostas por Deputado',
         getA: () =>
-          partyA.deputy_count > 0
-            ? (partyA.total_proposals ?? 0) / partyA.deputy_count
-            : 0,
+          partyA.deputy_count > 0 ? (partyA.total_proposals ?? 0) / partyA.deputy_count : 0,
         getB: () =>
-          partyB.deputy_count > 0
-            ? (partyB.total_proposals ?? 0) / partyB.deputy_count
-            : 0,
+          partyB.deputy_count > 0 ? (partyB.total_proposals ?? 0) / partyB.deputy_count : 0,
         higherIsBetter: true,
       },
     ];

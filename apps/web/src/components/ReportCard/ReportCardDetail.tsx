@@ -169,11 +169,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <span className="text-sm font-medium text-neutral-11">Propostas apresentadas</span>
             <HelpTooltip content={HELP_TEXTS.proposals} />
           </div>
-          <MetricBar
-            label=""
-            value={deputy.proposal_count}
-            average={avgProposals}
-          />
+          <MetricBar label="" value={deputy.proposal_count} average={avgProposals} />
         </div>
 
         <div>
@@ -181,11 +177,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <span className="text-sm font-medium text-neutral-11">Intervencoes em debates</span>
             <HelpTooltip content={HELP_TEXTS.interventions} />
           </div>
-          <MetricBar
-            label=""
-            value={deputy.intervention_count}
-            average={avgInterventions}
-          />
+          <MetricBar label="" value={deputy.intervention_count} average={avgInterventions} />
         </div>
 
         <div>
@@ -193,11 +185,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <span className="text-sm font-medium text-neutral-11">Perguntas ao Governo</span>
             <HelpTooltip content={HELP_TEXTS.questions} />
           </div>
-          <MetricBar
-            label=""
-            value={deputy.question_count}
-            average={avgQuestions}
-          />
+          <MetricBar label="" value={deputy.question_count} average={avgQuestions} />
         </div>
 
         {/* Attendance Section */}
