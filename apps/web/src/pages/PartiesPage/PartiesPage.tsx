@@ -2,6 +2,7 @@ import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { PartyCard } from '@/components/Parties';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
+import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { usePartyStats } from '@/services/parties';
 import { ArrowLeft, Scale, Trophy, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -78,8 +79,9 @@ export function PartiesPage() {
 
         {parties && (
           <div className="space-y-3">
-            <h2 className="text-lg font-semibold text-neutral-12 mb-4">
+            <h2 className="text-lg font-semibold text-neutral-12 mb-4 flex items-center gap-1">
               Ranking por Pontuacao Media
+              <HelpTooltip content={HELP_TEXTS.partyRanking} />
             </h2>
             {parties.map((party, index) => (
               <PartyCard key={party.id} party={party} rank={index + 1} />

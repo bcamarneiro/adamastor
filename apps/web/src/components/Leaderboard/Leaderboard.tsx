@@ -1,3 +1,4 @@
+import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { AlertTriangle, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBottomWorkers } from '../../services/leaderboard/useBottomWorkers';
@@ -33,7 +34,10 @@ export function Leaderboard() {
       <section>
         <div className="flex items-center gap-3 mb-4">
           <Trophy className="w-6 h-6 text-success-9" />
-          <h2 className="text-xl font-bold text-neutral-12">Top Trabalhadores</h2>
+          <h2 className="text-xl font-bold text-neutral-12 flex items-center gap-1">
+            Top Trabalhadores
+            <HelpTooltip content={HELP_TEXTS.topWorkers} />
+          </h2>
         </div>
         <p className="text-neutral-11 mb-4">Os deputados mais ativos na Assembleia da Republica</p>
         <div className="space-y-3">
@@ -47,7 +51,10 @@ export function Leaderboard() {
       <section>
         <div className="flex items-center gap-3 mb-4">
           <AlertTriangle className="w-6 h-6 text-danger-9" />
-          <h2 className="text-xl font-bold text-neutral-12">Ranking de Preguica</h2>
+          <h2 className="text-xl font-bold text-neutral-12 flex items-center gap-1">
+            Ranking de Preguica
+            <HelpTooltip content={HELP_TEXTS.bottomWorkers} />
+          </h2>
         </div>
         <p className="text-neutral-11 mb-4">
           Os deputados menos ativos - sera que merecem o salario?

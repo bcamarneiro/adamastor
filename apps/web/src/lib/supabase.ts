@@ -161,3 +161,13 @@ export interface PartyStats {
   total_interventions: number | null;
   total_questions: number | null;
 }
+
+// District statistics from district_stats view
+export interface DistrictStats {
+  id: string;
+  name: string;
+  seat_count: number | null;
+  active_deputies: number;
+  avg_work_score: number | null;
+  avg_attendance_rate: number | null;
+}
