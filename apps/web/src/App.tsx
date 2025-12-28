@@ -6,6 +6,7 @@ import { cn } from '@utils/cn';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import FourOFour from './components/FourOFour/FourOFour';
+import { OnboardingModal } from './components/Onboarding';
 
 // Core pages - loaded eagerly
 import LandingPage from './pages/LandingPage/LandingPage';
@@ -62,6 +63,7 @@ const App = () => {
           theme === 'dark' && 'dark'
         )}
       >
+        <OnboardingModal />
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
