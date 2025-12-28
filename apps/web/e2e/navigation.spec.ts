@@ -5,7 +5,10 @@ test.describe('Navigation', () => {
     await page.goto('/');
 
     // Click on leaderboard link (labeled "Ranking" in MainNav)
-    await page.getByRole('link', { name: /ranking/i }).first().click();
+    await page
+      .getByRole('link', { name: /ranking/i })
+      .first()
+      .click();
 
     // Should be on leaderboard page
     await expect(page).toHaveURL(/\/ranking/);
@@ -15,7 +18,10 @@ test.describe('Navigation', () => {
     await page.goto('/');
 
     // Click on battle link (labeled "Battle Royale" in MainNav)
-    await page.getByRole('link', { name: /battle royale/i }).first().click();
+    await page
+      .getByRole('link', { name: /battle royale/i })
+      .first()
+      .click();
 
     // Should be on battle page
     await expect(page).toHaveURL(/\/batalha/);
@@ -25,7 +31,10 @@ test.describe('Navigation', () => {
     await page.goto('/');
 
     // Click on waste calculator link (labeled "Calculadora" in MainNav)
-    await page.getByRole('link', { name: /calculadora/i }).first().click();
+    await page
+      .getByRole('link', { name: /calculadora/i })
+      .first()
+      .click();
 
     // Should be on waste calculator page
     await expect(page).toHaveURL(/\/desperdicio/);

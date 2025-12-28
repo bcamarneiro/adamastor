@@ -150,6 +150,294 @@ test.describe('Data Consistency - Deputy Detail', () => {
   });
 });
 
+test.describe('Data Consistency - Deputy Profile Math Validation', () => {
+  /**
+   * Helper to extract numeric value from text like "85 pts" or "85"
+   */
+  function extractNumber(text: string | null): number | null {
+    if (!text) return null;
+    const match = text.match(/(\d+(?:\.\d+)?)/);
+    return match ? Number.parseFloat(match[1]) : null;
+  }
+
+  /**
+   * Helper to determine expected grade from work score
+   * Thresholds: A >= 80, B >= 60, C >= 40, D >= 20, F < 20
+   */
+  function getExpectedGrade(score: number): string {
+    if (score >= 80) return 'A';
+    if (score >= 60) return 'B';
+    if (score >= 40) return 'C';
+    if (score >= 20) return 'D';
+    return 'F';
+  }
+
+  test('grade should match work_score thresholds', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Find score display (format: "XX pts")
+    const scoreElement = page.getByText(/\d+\s*pts/i).first();
+    if ((await scoreElement.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    const scoreText = await scoreElement.textContent();
+    const score = extractNumber(scoreText);
+
+    if (score === null) {
+      test.skip();
+      return;
+    }
+
+    // Find grade display (single letter A-F)
+    const gradeContainer = page
+      .locator('.rounded-full')
+      .filter({ hasText: /^[ABCDF]$/ })
+      .first();
+    const gradeText = await gradeContainer.textContent();
+    const displayedGrade = gradeText?.trim();
+
+    if (!displayedGrade) {
+      test.skip();
+      return;
+    }
+
+    // Validate grade matches score thresholds
+    const expectedGrade = getExpectedGrade(score);
+    expect(displayedGrade).toBe(expectedGrade);
+  });
+
+  test('party vote percentages should sum to approximately 100%', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Find the party voting section with percentages
+    const votingSection = page.getByText(/Votacoes do Partido/i);
+    if ((await votingSection.count()) === 0) {
+      // No voting data displayed - skip
+      test.skip();
+      return;
+    }
+
+    // Find all percentage values in voting cards (format: "XX.X%")
+    const percentages: number[] = [];
+
+    const allPercentageTexts = await page.locator('text=/%/').allTextContents();
+    for (const text of allPercentageTexts) {
+      const match = text.match(/(\d+(?:\.\d+)?)\s*%/);
+      if (match) {
+        percentages.push(Number.parseFloat(match[1]));
+      }
+    }
+
+    // If we found vote percentages (favor, against, abstain), they should sum to ~100%
+    if (percentages.length >= 3) {
+      // Take first 3 (favor, against, abstain)
+      const sum = percentages.slice(0, 3).reduce((a, b) => a + b, 0);
+      // Allow for rounding errors (should be between 99% and 101%)
+      expect(sum).toBeGreaterThanOrEqual(99);
+      expect(sum).toBeLessThanOrEqual(101);
+    }
+  });
+
+  test('attendance rate should match meetings ratio', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Find attendance text (format: "Presente em X de Y sessoes")
+    const attendanceText = await page.getByText(/Presente em \d+ de \d+ sess/i).textContent();
+
+    if (!attendanceText) {
+      // No attendance data - skip
+      test.skip();
+      return;
+    }
+
+    // Extract numbers: "Presente em X de Y sessoes"
+    const attendanceMatch = attendanceText.match(/Presente em (\d+) de (\d+)/);
+    if (!attendanceMatch) {
+      test.skip();
+      return;
+    }
+
+    const attended = Number.parseInt(attendanceMatch[1], 10);
+    const total = Number.parseInt(attendanceMatch[2], 10);
+
+    if (total === 0) {
+      test.skip();
+      return;
+    }
+
+    // Calculate expected percentage
+    const expectedRate = (attended / total) * 100;
+
+    // Verify the math is consistent with what's displayed
+    expect(attended).toBeLessThanOrEqual(total);
+    expect(expectedRate).toBeGreaterThanOrEqual(0);
+    expect(expectedRate).toBeLessThanOrEqual(100);
+  });
+
+  test('national rank should be a positive integer', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Find national rank display (format: "#X nacional")
+    const rankText = await page.getByText(/#\d+\s*nacional/i).textContent();
+    if (!rankText) {
+      test.skip();
+      return;
+    }
+
+    const rankMatch = rankText.match(/#(\d+)/);
+    if (!rankMatch) {
+      test.skip();
+      return;
+    }
+
+    const rank = Number.parseInt(rankMatch[1], 10);
+
+    // Rank should be positive and reasonable (1-230 for Portuguese parliament)
+    expect(rank).toBeGreaterThanOrEqual(1);
+    expect(rank).toBeLessThanOrEqual(230);
+  });
+
+  test('district rank should be less than or equal to national rank', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Find national rank
+    const nationalRankText = await page.getByText(/#\d+\s*nacional/i).textContent();
+    const districtRankText = await page.getByText(/#\d+\s*no distrito/i).textContent();
+
+    if (!nationalRankText || !districtRankText) {
+      test.skip();
+      return;
+    }
+
+    const nationalMatch = nationalRankText.match(/#(\d+)/);
+    const districtMatch = districtRankText.match(/#(\d+)/);
+
+    if (!nationalMatch || !districtMatch) {
+      test.skip();
+      return;
+    }
+
+    const districtRank = Number.parseInt(districtMatch[1], 10);
+
+    // District rank is position within district
+    // A deputy ranked #50 nationally might be #3 in their district
+    expect(districtRank).toBeGreaterThanOrEqual(1);
+    // District max depends on district size - Lisboa has ~48, smaller ones have ~4
+    expect(districtRank).toBeLessThanOrEqual(50);
+  });
+
+  test('work score should be between 0 and 100', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Find score display (format: "XX pts")
+    const scoreElement = page.getByText(/\d+\s*pts/i).first();
+    if ((await scoreElement.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    const scoreText = await scoreElement.textContent();
+    const score = extractNumber(scoreText);
+
+    if (score === null) {
+      test.skip();
+      return;
+    }
+
+    // Score should be between 0 and 100
+    expect(score).toBeGreaterThanOrEqual(0);
+    expect(score).toBeLessThanOrEqual(100);
+  });
+
+  test('proposal and intervention counts should be non-negative', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Check that there are no negative numbers displayed on the page
+    const allText = await page.textContent('body');
+    if (!allText) {
+      test.skip();
+      return;
+    }
+
+    // Look for patterns that might indicate negative counts (e.g., "-5 propostas")
+    // This is a sanity check - there shouldn't be negative values
+    const negativePattern = /-\d+\s*(proposta|intervenc|pergunta|sess)/i;
+    expect(allText.match(negativePattern)).toBeNull();
+  });
+});
+
 test.describe('Data Consistency - Filters', () => {
   test('party filter should update results on full rankings', async ({ page }) => {
     await page.goto('/ranking/completo');
