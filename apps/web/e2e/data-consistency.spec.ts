@@ -87,7 +87,7 @@ test.describe('Data Consistency - Leaderboard', () => {
     await fullRankingsLink.click();
 
     // Should navigate to full rankings
-    await expect(page).toHaveURL(/\/ranking\/todos|\/ranking\/completo/);
+    await expect(page).toHaveURL(/\/ranking\/completo/);
   });
 });
 
@@ -152,7 +152,7 @@ test.describe('Data Consistency - Deputy Detail', () => {
 
 test.describe('Data Consistency - Filters', () => {
   test('party filter should update results on full rankings', async ({ page }) => {
-    await page.goto('/ranking/todos');
+    await page.goto('/ranking/completo');
     await page.waitForLoadState('networkidle');
 
     // Find party filter dropdown
@@ -186,7 +186,7 @@ test.describe('Data Consistency - Filters', () => {
   });
 
   test('district filter should update results on full rankings', async ({ page }) => {
-    await page.goto('/ranking/todos');
+    await page.goto('/ranking/completo');
     await page.waitForLoadState('networkidle');
 
     // Find district filter dropdown

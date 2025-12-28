@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Report Card (Postal Code Lookup)', () => {
-  test('should display postal code input on home page', async ({ page }) => {
-    await page.goto('/');
+  test('should display postal code input on report-card page', async ({ page }) => {
+    await page.goto('/report-card');
 
     // Should have postal code input
     const postalCodeInput = page.getByPlaceholder('1000-001');
@@ -10,7 +10,7 @@ test.describe('Report Card (Postal Code Lookup)', () => {
   });
 
   test('should format postal code input correctly', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/report-card');
 
     // Type a postal code
     const postalCodeInput = page.getByPlaceholder('1000-001');
@@ -21,7 +21,7 @@ test.describe('Report Card (Postal Code Lookup)', () => {
   });
 
   test('should enable submit button when postal code is valid', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/report-card');
 
     // Find the submit button (should be disabled initially)
     const submitButton = page.getByRole('button', { name: /ver/i });
@@ -35,7 +35,7 @@ test.describe('Report Card (Postal Code Lookup)', () => {
   });
 
   test('should keep submit button disabled for invalid postal code', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/report-card');
 
     // Find the submit button
     const submitButton = page.getByRole('button', { name: /ver/i });
