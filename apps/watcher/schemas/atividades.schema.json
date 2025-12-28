@@ -17,14 +17,7 @@
               "AutoresGP": {
                 "type": ["array", "null"],
                 "items": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": ["string", "null"]
-                    }
-                  ]
+                  "type": ["string", "null"]
                 }
               },
               "Convidados": {
