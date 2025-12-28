@@ -63,8 +63,8 @@ export function HelpTooltip({
 // Pre-defined help texts for common metrics
 export const HELP_TEXTS = {
   workScore:
-    'Pontuacao calculada com base na assiduidade (40%), propostas (30%), intervencoes (20%) e perguntas (10%).',
-  grade: 'Nota atribuida com base na pontuacao: A (≥85), B (≥70), C (≥55), D (≥40), F (<40).',
+    'Pontuacao calculada com base em propostas (50%), intervencoes (35%) e perguntas (15%). Quanto maior, melhor o desempenho.',
+  grade: 'Nota atribuida com base na pontuacao: A (≥120), B (≥90), C (≥60), D (≥30), F (<30). A media nacional e 100.',
   nationalRank: 'Posicao do deputado entre os 230 deputados ativos da Assembleia da Republica.',
   districtRank: 'Posicao do deputado entre os deputados eleitos pelo mesmo circulo eleitoral.',
   attendance:
@@ -81,4 +81,14 @@ export const HELP_TEXTS = {
   partyVoting:
     'Resumo de como o partido votou em todas as iniciativas parlamentares. Mostra a percentagem de votos a favor, contra e abstencoes.',
   avgScore: 'Media das pontuacoes de todos os deputados ativos do partido.',
+  topWorkers:
+    'Deputados com maior atividade parlamentar, considerando propostas apresentadas, intervencoes em debates e perguntas ao Governo.',
+  bottomWorkers:
+    'Deputados com menor atividade parlamentar. A pontuacao baixa pode indicar falta de participacao nos trabalhos da Assembleia.',
+  partyRanking:
+    'Ranking calculado com base na media de pontuacao de todos os deputados ativos de cada partido.',
+  districtRanking:
+    'Ranking calculado com base na media de pontuacao de todos os deputados ativos eleitos por cada circulo eleitoral.',
+  fullRanking:
+    'Lista completa de todos os deputados ordenados por pontuacao de trabalho parlamentar. Podes filtrar por partido, distrito ou nota.',
 };

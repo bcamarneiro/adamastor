@@ -24,6 +24,7 @@ export interface BiographyData {
   education: string | null;
   bioNarrative: string | null;
   sourceUrl: string;
+  photoUrl: string | null;
 }
 
 async function sleep(ms: number): Promise<void> {
@@ -146,6 +147,68 @@ function extractAllSpanValues(html: string, fieldId: string): string[] {
 }
 
 /**
+ * Extract photo URL from biography page HTML.
+ * Parliament biography pages embed deputy photos in various formats.
+ *
+ * Common patterns:
+ * - Direct img tag with src containing "Fotos" or "imagem"
+ * - img with id containing "imgFoto" or similar
+ * - Background images in style attributes
+ */
+function extractPhotoUrl(html: string): string | null {
+  // Pattern 1: Look for image tag with "Fotos" in the src (most common)
+  // Example: <img src="/Webutils/Fotos/Deputados/2024/abc123.jpg">
+  const fotosPattern = /<img[^>]+src=["']([^"']*Fotos[^"']+)["']/i;
+  const fotosMatch = html.match(fotosPattern);
+  if (fotosMatch?.[1]) {
+    return resolvePhotoUrl(fotosMatch[1]);
+  }
+
+  // Pattern 2: Look for getimage.aspx URLs (Parliament's image server)
+  const getimagePattern = /<img[^>]+src=["']([^"']*getimage\.aspx[^"']+)["']/i;
+  const getimageMatch = html.match(getimagePattern);
+  if (getimageMatch?.[1]) {
+    return resolvePhotoUrl(getimageMatch[1]);
+  }
+
+  // Pattern 3: Look for any img tag with "deputado" or "foto" in class/id
+  const deputadoPattern = /<img[^>]+(?:class|id)=["'][^"']*(?:foto|deputado)[^"']*["'][^>]+src=["']([^"']+)["']/i;
+  const deputadoMatch = html.match(deputadoPattern);
+  if (deputadoMatch?.[1]) {
+    return resolvePhotoUrl(deputadoMatch[1]);
+  }
+
+  // Pattern 4: Look for img tag in a div with class containing "foto"
+  const divFotoPattern = /<div[^>]+class=["'][^"']*foto[^"']*["'][^>]*>[\s\S]*?<img[^>]+src=["']([^"']+)["']/i;
+  const divFotoMatch = html.match(divFotoPattern);
+  if (divFotoMatch?.[1]) {
+    return resolvePhotoUrl(divFotoMatch[1]);
+  }
+
+  return null;
+}
+
+/**
+ * Resolve relative photo URLs to absolute URLs
+ */
+function resolvePhotoUrl(url: string): string {
+  if (!url) return url;
+
+  // Already absolute
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+
+  // Relative URL - prepend base
+  if (url.startsWith('/')) {
+    return `${BASE_URL}${url}`;
+  }
+
+  // Relative without leading slash
+  return `${BASE_URL}/${url}`;
+}
+
+/**
  * Fetch biography data for a single deputy
  */
 export async function fetchBiography(biographyId: number): Promise<BiographyData | null> {
@@ -175,8 +238,11 @@ export async function fetchBiography(biographyId: number): Promise<BiographyData
       bioNarrative = positions.join('\n');
     }
 
+    // Extract photo URL from biography page
+    const photoUrl = extractPhotoUrl(html);
+
     // Only return if we found at least some data
-    if (!birthDate && !profession && !education && !bioNarrative) {
+    if (!birthDate && !profession && !education && !bioNarrative && !photoUrl) {
       return null;
     }
 
@@ -187,9 +253,75 @@ export async function fetchBiography(biographyId: number): Promise<BiographyData
       education,
       bioNarrative,
       sourceUrl: url,
+      photoUrl,
     };
   } catch (err) {
     console.warn(`[WARN] Failed to fetch biography for BID=${biographyId}:`, err);
+    return null;
+  }
+}
+
+/**
+ * Fetch photo URL from a biography page.
+ * This is a lighter-weight alternative to fetchBiography when only the photo is needed.
+ */
+export async function fetchBiographyPhotoUrl(biographyId: number): Promise<string | null> {
+  const url = `${BIOGRAPHY_URL}?BID=${biographyId}`;
+
+  try {
+    const html = await fetchWithRetry(url);
+    return extractPhotoUrl(html);
+  } catch (err) {
+    console.warn(`[WARN] Failed to fetch biography photo for BID=${biographyId}:`, err);
+    return null;
+  }
+}
+
+/**
+ * Download photo from a URL and return as buffer.
+ * Handles Parliament website's various image hosting patterns.
+ */
+export async function downloadBiographyPhoto(photoUrl: string): Promise<Buffer | null> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+    const response = await fetch(photoUrl, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': POLITENESS_UA,
+        Accept: 'image/*',
+        Referer: BASE_URL,
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Validate it's an image (JPEG or PNG)
+    if (buffer.length < 100) {
+      return null;
+    }
+
+    const isJpeg = buffer[0] === 0xff && buffer[1] === 0xd8;
+    const isPng =
+      buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47;
+
+    if (!isJpeg && !isPng) {
+      return null;
+    }
+
+    return buffer;
+  } catch (error) {
+    if ((error as Error).name === 'AbortError') {
+      console.warn(`[WARN] Timeout downloading biography photo from ${photoUrl}`);
+    }
     return null;
   }
 }
