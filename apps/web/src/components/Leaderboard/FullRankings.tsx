@@ -8,15 +8,17 @@ import { GradeCircle } from '../ReportCard/GradeCircle';
 interface FullRankingsProps {
   partyId?: string | null;
   districtId?: string | null;
+  grade?: string | null;
 }
 
-export function FullRankings({ partyId, districtId }: FullRankingsProps) {
+export function FullRankings({ partyId, districtId, grade }: FullRankingsProps) {
   const [page, setPage] = useState(1);
   const pageSize = 20;
 
   const { data, isLoading } = useFullRankings(page, pageSize, {
     partyId,
     districtId,
+    grade,
   });
 
   const { deputies = [], total = 0, totalPages = 1 } = data || {};
