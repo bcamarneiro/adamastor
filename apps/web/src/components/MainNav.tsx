@@ -1,4 +1,4 @@
-import GovPerfLogo from '@/components/ui/Icons/GovPerfLogo';
+import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -30,8 +30,8 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
       <div className="container px-6 md:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <GovPerfLogo className="h-8 w-8" />
-            <span className="text-lg font-medium text-neutral-12">Gov Perf</span>
+            <DebaixoDolhoLogo size="md" className="text-neutral-12" />
+            <span className="text-lg font-medium text-neutral-12">Debaixo d'olho</span>
           </Link>
 
           {/* Desktop Navigation */}

@@ -1,4 +1,4 @@
-# Sobre o Projeto
+# Sobre o Debaixo d'olho
 
 ## Porquê este projeto?
 
@@ -30,4 +30,4 @@ A primeira fase do projeto está focada na **organização e visualização das 
 
 Como profissionais da área de IT, acreditamos que a tecnologia pode ter um impacto positivo na forma como os cidadãos interagem com a política, e este projeto é um passo nesse sentido.
 
-Se partilhas desta visão e tens interesse em contribuir, fica à vontade para explorar o nosso repositório no [GitHub](https://github.com/bcamarneiro/gov-perf-frontend) e juntar-te à discussão! 🚀
+Se partilhas desta visão e tens interesse em contribuir, fica à vontade para explorar o nosso repositório no [GitHub](https://github.com/bcamarneiro/adamastor) e juntar-te à discussão!

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
+import { HelmetProvider } from 'react-helmet-async';
 import '@styles/index.css';
 import App from '@/App.tsx';
 import { initSentry } from '@/lib/sentry';
@@ -22,17 +23,19 @@ if (root) {
 
   createRoot(root).render(
     <StrictMode>
-      <Theme>
-        <QueryClientProvider client={queryClient}>
-          {/* <AuthProvider> */}
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-          {/* </AuthProvider> */}
-        </QueryClientProvider>
-        <Analytics />
-        <SpeedInsights />
-      </Theme>
+      <HelmetProvider>
+        <Theme>
+          <QueryClientProvider client={queryClient}>
+            {/* <AuthProvider> */}
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+            {/* </AuthProvider> */}
+          </QueryClientProvider>
+          <Analytics />
+          <SpeedInsights />
+        </Theme>
+      </HelmetProvider>
     </StrictMode>
   );
 }

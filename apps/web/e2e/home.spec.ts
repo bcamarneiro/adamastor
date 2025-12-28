@@ -5,7 +5,7 @@ test.describe('Home Page', () => {
     await page.goto('/');
 
     // Check that the page loads without errors
-    await expect(page).toHaveTitle(/Adamastor/i);
+    await expect(page).toHaveTitle(/Debaixo d'olho/i);
   });
 
   test('should display the main navigation', async ({ page }) => {

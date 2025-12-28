@@ -1,4 +1,4 @@
-import GovPerfLogo from '@/components/ui/Icons/GovPerfLogo';
+import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -8,54 +8,54 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
             <Link to="/" className="flex items-center gap-2">
-              <GovPerfLogo className="h-8 w-8" />
-              <span className="text-lg font-medium">Gov Perf</span>
+              <DebaixoDolhoLogo size="md" className="text-white" />
+              <span className="text-lg font-medium">Debaixo d'olho</span>
             </Link>
             <p className="mt-4 text-sm text-neutral-400">
-              Making parliamentary data accessible and transparent for everyone.
+              Tornando os dados parlamentares acessíveis e transparentes para todos.
             </p>
           </div>
 
           <div>
-            <h3 className="font-medium mb-4">Navigation</h3>
+            <h3 className="font-medium mb-4">Navegação</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to="/about"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  About
+                  Sobre
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/initiatives"
+                  to="/report-card"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  Initiatives
+                  Deputados
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/parliament"
+                  to="/ranking"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  Parliament
+                  Ranking
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/docs"
+                  to="/desperdicio"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  Documentation
+                  Calculadora
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-medium mb-4">Resources</h3>
+            <h3 className="font-medium mb-4">Recursos</h3>
             <ul className="space-y-2">
               <li>
                 <a
@@ -64,40 +64,54 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  Portuguese Parliament
+                  Assembleia da República
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.parlamento.pt/sites/COM/XIVLeg/1CACDLG/Paginas/default.aspx"
+                  href="https://www.parlamento.pt/Legislacao/Paginas/ConstituicaoRepublicaPortuguesa.aspx"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  Parliamentary Committees
+                  Constituição da República
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.parlamento.pt/DeputadoGP/Paginas/Deputados.aspx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Lista de Deputados
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-medium mb-4">Legal</h3>
+            <h3 className="font-medium mb-4">Dados</h3>
             <ul className="space-y-2">
               <li>
-                <Link
-                  to="/privacy"
-                  className="text-sm text-neutral-400 hover:text-white transition-colors"
-                >
-                  Privacy Policy
-                </Link>
+                <span className="text-sm text-neutral-400">
+                  Fonte: Dados públicos da AR
+                </span>
               </li>
               <li>
-                <Link
-                  to="/terms"
+                <span className="text-sm text-neutral-400">
+                  Atualização: Diária
+                </span>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/bcamarneiro/adamastor"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  Terms of Service
-                </Link>
+                  Código Fonte (GitHub)
+                </a>
               </li>
             </ul>
           </div>
@@ -105,7 +119,7 @@ const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-neutral-800">
           <p className="text-sm text-neutral-400 text-center">
-            © {new Date().getFullYear()} Gov Perf. All rights reserved.
+            © {new Date().getFullYear()} Debaixo d'olho. Projecto open-source de cidadania activa.
           </p>
         </div>
       </div>

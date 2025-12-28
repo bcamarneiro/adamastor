@@ -36,7 +36,7 @@ test.describe('Navigation', () => {
 
     // Click on logo/home link
     await page
-      .getByRole('link', { name: /adamastor/i })
+      .getByRole('link', { name: /Debaixo d'olho/i })
       .first()
       .click();
 

@@ -1,4 +1,4 @@
-import GovPerfLogo from '@/components/ui/Icons/GovPerfLogo';
+import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
 import Sidebar from '@/components/ui/Sidebar/Sidebar';
 import { useAppSettingsStore } from '@store/useAppSettingsStore';
 import { Link, useLocation } from 'react-router-dom';
@@ -8,12 +8,12 @@ const CommonSidebar = () => {
   const location = useLocation();
 
   const navigationItems = [
-    { path: '/', label: 'Home' },
-    { path: '/what-happened', label: 'What Happened' },
-    { path: '/initiatives', label: 'Initiatives' },
-    { path: '/parliament', label: 'Parliament' },
-    { path: '/about', label: 'About' },
-    { path: '/docs', label: 'Docs' },
+    { path: '/', label: 'Início' },
+    { path: '/report-card', label: 'Deputados' },
+    { path: '/ranking', label: 'Ranking' },
+    { path: '/desperdicio', label: 'Calculadora' },
+    { path: '/batalha', label: 'Battle Royale' },
+    { path: '/about', label: 'Sobre' },
   ];
 
   return (
@@ -23,9 +23,9 @@ const CommonSidebar = () => {
         className="flex flex-row items-center justify-between bg-neutral-1 border-b border-b-neutral-4 pb-2-5 font-sans"
       >
         <div className="flex flex-row gap-1.5 h-full items-center w-full justify-base">
-          <GovPerfLogo />
+          <DebaixoDolhoLogo size="sm" />
           <Link to="/" className="text-lg">
-            Gov Perf
+            Debaixo d'olho
           </Link>
         </div>
       </div>

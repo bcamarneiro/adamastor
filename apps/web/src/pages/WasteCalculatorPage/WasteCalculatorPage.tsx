@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
+import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { WasteCalculator } from '@/components/WasteCalculator';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { Link } from 'react-router-dom';
 export function WasteCalculatorPage() {
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
+      <SEO {...SEO_CONFIGS.waste} url="/desperdicio" />
       <MainNav scrollY={0} />
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
