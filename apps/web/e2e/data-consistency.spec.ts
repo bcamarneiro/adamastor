@@ -319,8 +319,11 @@ test.describe('Data Consistency - Deputy Profile Math Validation', () => {
     await deputyLink.click();
     await page.waitForLoadState('networkidle');
 
-    // Find national rank display (format: "#X nacional")
-    const rankText = await page.getByText(/#\d+\s*nacional/i).textContent();
+    // Find national rank display (format: "#X nacional") - use first() for multiple matches
+    const rankText = await page
+      .getByText(/#\d+\s*nacional/i)
+      .first()
+      .textContent();
     if (!rankText) {
       test.skip();
       return;
@@ -352,9 +355,15 @@ test.describe('Data Consistency - Deputy Profile Math Validation', () => {
     await deputyLink.click();
     await page.waitForLoadState('networkidle');
 
-    // Find national rank
-    const nationalRankText = await page.getByText(/#\d+\s*nacional/i).textContent();
-    const districtRankText = await page.getByText(/#\d+\s*no distrito/i).textContent();
+    // Find national rank - use first() for multiple matches
+    const nationalRankText = await page
+      .getByText(/#\d+\s*nacional/i)
+      .first()
+      .textContent();
+    const districtRankText = await page
+      .getByText(/#\d+\s*no distrito/i)
+      .first()
+      .textContent();
 
     if (!nationalRankText || !districtRankText) {
       test.skip();
@@ -559,8 +568,12 @@ test.describe('Data Consistency - Error States', () => {
     await page.goto('/deputado/00000000-0000-0000-0000-000000000000');
     await page.waitForLoadState('networkidle');
 
-    // Should either show error message or redirect
-    const errorVisible = await page.getByText(/erro|not found|nao encontrado/i).isVisible();
+    // Should either show error message or redirect - use first() for multiple matches
+    const errorVisible = await page
+      .getByText(/erro|not found|nao encontrado/i)
+      .first()
+      .isVisible()
+      .catch(() => false);
     const redirected = !page.url().includes('00000000-0000-0000-0000-000000000000');
 
     expect(errorVisible || redirected).toBeTruthy();
