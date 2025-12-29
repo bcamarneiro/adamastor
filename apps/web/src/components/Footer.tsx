@@ -113,10 +113,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-neutral-800">
+        <div className="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row justify-between items-center gap-2">
           <p className="text-sm text-neutral-400 text-center">
             © {new Date().getFullYear()} Debaixo d'olho. Projecto open-source de cidadania activa.
           </p>
+          <p className="text-xs text-neutral-500">v{__APP_VERSION__}</p>
         </div>
       </div>
     </footer>

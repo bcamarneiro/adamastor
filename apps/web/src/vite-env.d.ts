@@ -9,3 +9,5 @@ interface ImportMeta {
 }
 
 declare module '*.md';
+
+declare const __APP_VERSION__: string;

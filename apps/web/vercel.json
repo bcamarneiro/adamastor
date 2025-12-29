@@ -4,6 +4,12 @@
   "installCommand": "bun install",
   "framework": "vite",
   "outputDirectory": "dist",
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "staging": true
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*)",
