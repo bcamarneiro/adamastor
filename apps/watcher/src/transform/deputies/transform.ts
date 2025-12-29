@@ -34,6 +34,21 @@ export async function transformDeputies(
 
   console.log(`  Found ${uniqueDeputies.size} unique deputies`);
 
+  // Fetch existing deputies to preserve Supabase Storage photo URLs
+  const externalIds = Array.from(uniqueDeputies.values()).map((d) => String(d.DepId));
+  const { data: existingDeputies } = await supabase
+    .from('deputies')
+    .select('external_id, photo_url')
+    .in('external_id', externalIds);
+
+  // Build a map of existing photo URLs that are from Supabase Storage (not parlamento.pt)
+  const existingPhotoUrls = new Map<string, string>();
+  for (const dep of existingDeputies || []) {
+    if (dep.photo_url && !dep.photo_url.includes('parlamento.pt')) {
+      existingPhotoUrls.set(dep.external_id, dep.photo_url);
+    }
+  }
+
   const progress = new ProgressBar(uniqueDeputies.size, 'Deputies');
 
   for (const dep of uniqueDeputies.values()) {
@@ -45,11 +60,16 @@ export async function transformDeputies(
 
     if (isActive) activeCount++;
 
+    const externalId = String(dep.DepId);
+
+    // Preserve existing Supabase Storage URL, fallback to Parliament URL for new deputies
+    const photoUrl = existingPhotoUrls.get(externalId) || getPhotoUrl(dep.DepId);
+
     const deputy = {
-      external_id: String(dep.DepId),
+      external_id: externalId,
       name: dep.DepNomeCompleto,
       short_name: dep.DepNomeParlamentar,
-      photo_url: getPhotoUrl(dep.DepId),
+      photo_url: photoUrl,
       party_id: partyId || undefined,
       district_id: districtId || undefined,
       is_active: isActive,
