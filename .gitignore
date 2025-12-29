@@ -40,3 +40,4 @@ bun.lockb
 .supabase/
 supabase/.temp/
 apps/web/playwright-report/
+.vercel
