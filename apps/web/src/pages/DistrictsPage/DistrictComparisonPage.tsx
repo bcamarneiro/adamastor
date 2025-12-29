@@ -1,6 +1,6 @@
+import { DistrictComparison } from '@/components/Districts';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
-import { DistrictComparison } from '@/components/Districts';
 import { SEO } from '@/components/SEO';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';

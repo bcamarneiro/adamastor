@@ -89,7 +89,9 @@ export function DistrictSelector({ label, selected, onSelect, excludeId }: Distr
           {isLoading ? (
             <div className="p-3 text-center text-sm text-neutral-11">A carregar...</div>
           ) : filteredDistricts.length === 0 ? (
-            <div className="p-3 text-center text-sm text-neutral-11">Nenhum distrito encontrado</div>
+            <div className="p-3 text-center text-sm text-neutral-11">
+              Nenhum distrito encontrado
+            </div>
           ) : (
             filteredDistricts.map((district) => (
               <button
@@ -100,7 +102,9 @@ export function DistrictSelector({ label, selected, onSelect, excludeId }: Distr
                 <MapPin className="w-4 h-4 text-accent-9 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-neutral-12">{district.name}</div>
-                  <div className="text-xs text-neutral-11">{district.active_deputies} deputados</div>
+                  <div className="text-xs text-neutral-11">
+                    {district.active_deputies} deputados
+                  </div>
                 </div>
                 <div className="text-sm font-medium text-neutral-10">
                   {district.avg_work_score?.toFixed(1) ?? 'N/A'}

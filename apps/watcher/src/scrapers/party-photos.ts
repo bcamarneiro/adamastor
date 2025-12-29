@@ -40,7 +40,8 @@ const PARTY_CONFIGS: PartyPhotoConfig[] = [
     partyAcronym: 'PSD',
     baseUrl: 'https://www.psd.pt',
     listPageUrl: 'https://www.psd.pt/pt/grupo-parlamentar/deputados/nome',
-    photoUrlPattern: /\/sites\/default\/files\/styles\/people_card_735x825\/public\/[^"'\s]+\.jpg/gi,
+    photoUrlPattern:
+      /\/sites\/default\/files\/styles\/people_card_735x825\/public\/[^"'\s]+\.jpg/gi,
     namePattern: /<a[^>]*>([^<]+)<\/a>/gi,
   },
   {
@@ -61,7 +62,8 @@ const PARTY_CONFIGS: PartyPhotoConfig[] = [
     partyAcronym: 'IL',
     baseUrl: 'https://iniciativaliberal.pt',
     listPageUrl: 'https://iniciativaliberal.pt/pessoas/grupo-parlamentar-nacional/',
-    photoUrlPattern: /https:\/\/iniciativaliberal\.pt\/wp-content\/uploads\/[^"'\s]+\-copiar\.jpg/gi,
+    photoUrlPattern:
+      /https:\/\/iniciativaliberal\.pt\/wp-content\/uploads\/[^"'\s]+\-copiar\.jpg/gi,
     namePattern: /<h[23][^>]*>([^<]+)<\/h[23]>/gi,
   },
   {
@@ -76,7 +78,8 @@ const PARTY_CONFIGS: PartyPhotoConfig[] = [
     baseUrl: 'https://partidolivre.pt',
     listPageUrl: 'https://partidolivre.pt/parlamento/',
     // LIVRE photos follow pattern: Name-Surname-2025.png or Name-Middle-Surname-2025.png
-    photoUrlPattern: /https:\/\/partidolivre\.pt\/wp-content\/uploads\/2025\/\d{2}\/[A-Z][a-z]+(?:-[A-Z][a-z]+)+-\d{4}\.png/gi,
+    photoUrlPattern:
+      /https:\/\/partidolivre\.pt\/wp-content\/uploads\/2025\/\d{2}\/[A-Z][a-z]+(?:-[A-Z][a-z]+)+-\d{4}\.png/gi,
     namePattern: /<h[23][^>]*>([^<]+)<\/h[23]>/gi,
   },
 ];
@@ -107,9 +110,7 @@ async function scrapePage(config: PartyPhotoConfig): Promise<ScrapedPhoto[]> {
 
     for (const photoPath of photoMatches) {
       // Make URL absolute if needed
-      const photoUrl = photoPath.startsWith('http')
-        ? photoPath
-        : `${config.baseUrl}${photoPath}`;
+      const photoUrl = photoPath.startsWith('http') ? photoPath : `${config.baseUrl}${photoPath}`;
 
       // Try to extract name from URL or nearby HTML
       const name = extractNameFromUrl(photoUrl);
@@ -171,13 +172,16 @@ function extractNameFromUrl(url: string): string | null {
  * Normalize a name for fuzzy matching.
  */
 function normalizeName(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-    .replace(/[^a-z\s]/g, '') // Remove non-alpha
-    .replace(/\s+/g, ' ')
-    .trim();
+  return (
+    name
+      .toLowerCase()
+      .normalize('NFD')
+      // biome-ignore lint/suspicious/noMisleadingCharacterClass: Unicode range for diacritical marks is intentional
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .replace(/[^a-z\s]/g, '') // Remove non-alpha
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
 }
 
 /**
@@ -186,7 +190,13 @@ function normalizeName(name: string): string {
 async function findDeputyByName(
   scrapedName: string,
   partyAcronym: string,
-  deputies: Array<{ id: string; name: string; short_name: string; external_id: string; party_acronym: string }>
+  deputies: Array<{
+    id: string;
+    name: string;
+    short_name: string;
+    external_id: string;
+    party_acronym: string;
+  }>
 ): Promise<{ id: string; external_id: string } | null> {
   const normalizedScraped = normalizeName(scrapedName);
 
@@ -215,10 +225,7 @@ async function findDeputyByName(
     const normalizedName = normalizeName(deputy.name);
     const normalizedShort = normalizeName(deputy.short_name);
 
-    if (
-      normalizedName === normalizedScraped ||
-      normalizedShort === normalizedScraped
-    ) {
+    if (normalizedName === normalizedScraped || normalizedShort === normalizedScraped) {
       return { id: deputy.id, external_id: deputy.external_id };
     }
   }
@@ -265,7 +272,7 @@ async function downloadAndUploadPhoto(
 
     return result.url || null;
   } catch (error) {
-    console.error(`      Error downloading photo:`, error);
+    console.error('      Error downloading photo:', error);
     return null;
   }
 }
@@ -345,7 +352,9 @@ export async function scrapePartyPhotos(options: {
     processed++;
 
     if (dryRun) {
-      console.log(`  🔵 [DRY RUN] Would sync: ${photo.name} → ${photo.photoUrl.substring(0, 50)}...`);
+      console.log(
+        `  🔵 [DRY RUN] Would sync: ${photo.name} → ${photo.photoUrl.substring(0, 50)}...`
+      );
       synced++;
       continue;
     }

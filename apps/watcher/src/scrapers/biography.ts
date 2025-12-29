@@ -172,14 +172,16 @@ function extractPhotoUrl(html: string): string | null {
   }
 
   // Pattern 3: Look for any img tag with "deputado" or "foto" in class/id
-  const deputadoPattern = /<img[^>]+(?:class|id)=["'][^"']*(?:foto|deputado)[^"']*["'][^>]+src=["']([^"']+)["']/i;
+  const deputadoPattern =
+    /<img[^>]+(?:class|id)=["'][^"']*(?:foto|deputado)[^"']*["'][^>]+src=["']([^"']+)["']/i;
   const deputadoMatch = html.match(deputadoPattern);
   if (deputadoMatch?.[1]) {
     return resolvePhotoUrl(deputadoMatch[1]);
   }
 
   // Pattern 4: Look for img tag in a div with class containing "foto"
-  const divFotoPattern = /<div[^>]+class=["'][^"']*foto[^"']*["'][^>]*>[\s\S]*?<img[^>]+src=["']([^"']+)["']/i;
+  const divFotoPattern =
+    /<div[^>]+class=["'][^"']*foto[^"']*["'][^>]*>[\s\S]*?<img[^>]+src=["']([^"']+)["']/i;
   const divFotoMatch = html.match(divFotoPattern);
   if (divFotoMatch?.[1]) {
     return resolvePhotoUrl(divFotoMatch[1]);

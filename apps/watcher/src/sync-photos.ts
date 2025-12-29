@@ -19,11 +19,7 @@
  */
 
 import { supabase } from './supabase.js';
-import {
-  downloadPhoto,
-  validatePhoto,
-  syncDeputyPhotoEnhanced,
-} from './transform/photos.js';
+import { downloadPhoto, syncDeputyPhotoEnhanced, validatePhoto } from './transform/photos.js';
 
 interface SyncOptions {
   dryRun: boolean;
@@ -232,7 +228,9 @@ async function main() {
     // Progress update every 25 deputies
     const processed = Math.min(i + batchSize, deputies.length);
     if (processed % 25 === 0 || processed === deputies.length) {
-      console.log(`\n📊 Progress: ${processed}/${deputies.length} (${successCount} ok, ${failCount} failed)\n`);
+      console.log(
+        `\n📊 Progress: ${processed}/${deputies.length} (${successCount} ok, ${failCount} failed)\n`
+      );
     }
 
     // Small delay between batches to be respectful to the server

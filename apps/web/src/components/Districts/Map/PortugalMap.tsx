@@ -34,16 +34,6 @@ const districtPaths: Record<string, string> = {
   europa: 'M 15,180 L 45,180 L 45,210 L 15,210 Z',
 };
 
-// Get color based on average work score
-function getScoreColor(score: number | null): string {
-  if (score === null) return 'fill-neutral-5';
-  if (score >= 85) return 'fill-success-9';
-  if (score >= 70) return 'fill-success-7';
-  if (score >= 55) return 'fill-warning-9';
-  if (score >= 40) return 'fill-warning-7';
-  return 'fill-danger-9';
-}
-
 function getScoreColorHex(score: number | null): string {
   if (score === null) return '#e5e5e5';
   if (score >= 85) return '#22c55e';
@@ -64,6 +54,7 @@ export function PortugalMap({ districts, className }: PortugalMapProps) {
       const slug = d.name
         .toLowerCase()
         .normalize('NFD')
+        // biome-ignore lint/suspicious/noMisleadingCharacterClass: Unicode range for diacritical marks is intentional
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/\s+/g, '-');
       acc[slug] = d;

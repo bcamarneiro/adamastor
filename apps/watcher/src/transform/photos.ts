@@ -1,9 +1,6 @@
 import sharp from 'sharp';
+import { downloadBiographyPhoto, fetchBiographyPhotoUrl } from '../scrapers/biography.js';
 import { supabase } from '../supabase.js';
-import {
-  fetchBiographyPhotoUrl,
-  downloadBiographyPhoto,
-} from '../scrapers/biography.js';
 
 const PARLIAMENT_PHOTO_URL = 'https://app.parlamento.pt/webutils/getimage.aspx';
 const NOPHOTO_REDIRECT_PATH = '/webutils/nophoto.jpg';

@@ -1,6 +1,6 @@
+import { DistrictCard, PortugalMap } from '@/components/Districts';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
-import { DistrictCard, PortugalMap } from '@/components/Districts';
 import { SEO } from '@/components/SEO';
 import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { useDistrictStats } from '@/services/districts';
