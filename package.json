@@ -11,7 +11,8 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "typecheck": "cd apps/watcher && bun tsc --noEmit && cd ../web && bun tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "release": "node scripts/release.js"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

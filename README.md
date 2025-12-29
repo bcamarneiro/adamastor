@@ -124,7 +124,12 @@ This project is **non-partisan**. We measure activity metrics only:
 
 ## Contributing
 
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and guidelines.
+1. Fork the repo
+2. Create branch from `staging`: `git checkout -b fix/my-fix`
+3. Make changes, test locally (`bun dev`)
+4. Submit PR to `staging`
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed setup.
 
 ---
 
