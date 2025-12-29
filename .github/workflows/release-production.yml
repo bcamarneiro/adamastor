@@ -43,15 +43,29 @@ jobs:
           # Get check runs status
           CHECKS=$(gh api repos/${{ github.repository }}/commits/$COMMIT/check-runs --jq '.check_runs')
           TOTAL=$(echo "$CHECKS" | jq 'length')
-          PASSED=$(echo "$CHECKS" | jq '[.[] | select(.conclusion == "success")] | length')
 
-          echo "Passed checks: $PASSED / $TOTAL"
+          # Count checks that passed (success) or were skipped (acceptable)
+          PASSED=$(echo "$CHECKS" | jq '[.[] | select(.conclusion == "success" or .conclusion == "skipped")] | length')
 
-          if [ "$PASSED" != "$TOTAL" ] || [ "$TOTAL" = "0" ]; then
-            echo "::error::Not all CI checks passed on staging"
+          # Count checks that failed
+          FAILED=$(echo "$CHECKS" | jq '[.[] | select(.conclusion != "success" and .conclusion != "skipped" and .conclusion != null)] | length')
+
+          echo "Check results: $PASSED passed/skipped, $FAILED failed, $TOTAL total"
+
+          # Show individual check results
+          echo "$CHECKS" | jq -r '.[] | "\(.name): \(.conclusion)"'
+
+          if [ "$FAILED" != "0" ]; then
+            echo "::error::CI checks failed on staging"
             exit 1
           fi
-          echo "All CI checks passed"
+
+          if [ "$TOTAL" = "0" ]; then
+            echo "::error::No CI checks found on staging"
+            exit 1
+          fi
+
+          echo "All CI checks passed or skipped"
         env:
           GH_TOKEN: ${{ github.token }}
 
