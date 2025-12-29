@@ -18,6 +18,7 @@
  * - PAN: Only 1 deputy, no photo URL on page
  */
 
+import { CURRENT_LEGISLATURE } from '../config.js';
 import { supabase } from '../supabase.js';
 import { uploadPhotoToStorage, validatePhoto } from '../transform/photos.js';
 
@@ -294,11 +295,12 @@ export async function scrapePartyPhotos(options: {
   if (limit) console.log(`Limit: ${limit}`);
   console.log('');
 
-  // Fetch all active deputies with their party info
+  // Fetch all active deputies with their party info (current legislature only)
   const { data: deputies, error } = await supabase
     .from('deputy_details')
-    .select('id, name, short_name, external_id, photo_url, party_acronym')
-    .eq('is_active', true);
+    .select('id, name, short_name, external_id, photo_url, party_acronym, legislature')
+    .eq('is_active', true)
+    .eq('legislature', CURRENT_LEGISLATURE);
 
   if (error || !deputies) {
     console.error('Failed to fetch deputies:', error?.message);

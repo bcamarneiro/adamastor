@@ -18,6 +18,7 @@
  *   --force    Re-sync all photos, even if deputy already has one
  */
 
+import { CURRENT_LEGISLATURE } from './config.js';
 import { supabase } from './supabase.js';
 import { downloadPhoto, syncDeputyPhotoEnhanced, validatePhoto } from './transform/photos.js';
 
@@ -63,8 +64,9 @@ function parseArgs(): SyncOptions {
 async function fetchDeputiesToSync(options: SyncOptions) {
   let query = supabase
     .from('deputies')
-    .select('id, name, short_name, external_id, biography_id, photo_url, is_active')
+    .select('id, name, short_name, external_id, biography_id, photo_url, is_active, legislature')
     .eq('is_active', true)
+    .eq('legislature', CURRENT_LEGISLATURE)
     .order('name');
 
   if (options.limit) {

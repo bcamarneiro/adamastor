@@ -2,7 +2,7 @@ import { useDeputySearch } from '@/hooks/useDeputySearch';
 import { cn } from '@/utils/cn';
 import { Loader2, Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface GlobalSearchProps {
   className?: string;
@@ -105,50 +105,55 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
           {results.length > 0 && (
             <ul className="py-1">
               {results.map((deputy, index) => (
-                <li key={deputy.id}>
-                  <Link
-                    to={`/deputado/${deputy.id}`}
-                    onClick={handleClose}
+                <li
+                  key={deputy.id}
+                  onClick={() => {
+                    navigate(`/deputado/${deputy.id}`);
+                    handleClose();
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      navigate(`/deputado/${deputy.id}`);
+                      handleClose();
+                    }
+                  }}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-2 hover:bg-neutral-3 transition-colors cursor-pointer',
+                    selectedIndex === index && 'bg-neutral-3'
+                  )}
+                >
+                  {deputy.photo_url ? (
+                    <img
+                      src={deputy.photo_url}
+                      alt=""
+                      className="w-8 h-8 rounded-full object-cover bg-neutral-4"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-neutral-5 flex items-center justify-center">
+                      <span className="text-neutral-9 text-sm">?</span>
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-neutral-12 truncate">{deputy.short_name}</div>
+                    <div className="text-xs text-neutral-10 truncate">
+                      {deputy.party_acronym} • {deputy.district_name}
+                    </div>
+                  </div>
+                  <span
                     className={cn(
-                      'flex items-center gap-3 px-4 py-2 hover:bg-neutral-3 transition-colors',
-                      selectedIndex === index && 'bg-neutral-3'
+                      'px-2 py-0.5 rounded-full text-xs font-semibold',
+                      deputy.grade === 'A' && 'bg-success-3 text-success-11',
+                      deputy.grade === 'B' && 'bg-accent-3 text-accent-11',
+                      deputy.grade === 'C' && 'bg-warning-3 text-warning-11',
+                      deputy.grade === 'D' && 'bg-danger-3 text-danger-11',
+                      deputy.grade === 'F' && 'bg-danger-4 text-danger-12'
                     )}
                   >
-                    {deputy.photo_url ? (
-                      <img
-                        src={deputy.photo_url}
-                        alt=""
-                        className="w-8 h-8 rounded-full object-cover bg-neutral-4"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
-                        }}
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-neutral-5 flex items-center justify-center">
-                        <span className="text-neutral-9 text-sm">?</span>
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-neutral-12 truncate">
-                        {deputy.short_name}
-                      </div>
-                      <div className="text-xs text-neutral-10 truncate">
-                        {deputy.party_acronym} • {deputy.district_name}
-                      </div>
-                    </div>
-                    <span
-                      className={cn(
-                        'px-2 py-0.5 rounded-full text-xs font-semibold',
-                        deputy.grade === 'A' && 'bg-success-3 text-success-11',
-                        deputy.grade === 'B' && 'bg-accent-3 text-accent-11',
-                        deputy.grade === 'C' && 'bg-warning-3 text-warning-11',
-                        deputy.grade === 'D' && 'bg-danger-3 text-danger-11',
-                        deputy.grade === 'F' && 'bg-danger-4 text-danger-12'
-                      )}
-                    >
-                      {deputy.grade}
-                    </span>
-                  </Link>
+                    {deputy.grade}
+                  </span>
                 </li>
               ))}
             </ul>

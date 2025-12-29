@@ -1,14 +1,16 @@
+import { CURRENT_LEGISLATURE } from './config.js';
 import { supabase } from './supabase.js';
 import { syncDeputyPhoto } from './transform/photos.js';
 
 async function main() {
   console.log('Retrying failed deputy photo syncs...\n');
 
-  // Get deputies that still have Parliament URLs
+  // Get deputies that still have Parliament URLs (current legislature only)
   const { data: deputies, error } = await supabase
     .from('deputies')
-    .select('id, external_id, short_name, photo_url')
+    .select('id, external_id, short_name, photo_url, legislature')
     .eq('is_active', true)
+    .eq('legislature', CURRENT_LEGISLATURE)
     .like('photo_url', '%parlamento.pt%');
 
   if (error) {
