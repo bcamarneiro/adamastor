@@ -6,6 +6,7 @@ import { cn } from '@utils/cn';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import FourOFour from './components/FourOFour/FourOFour';
+import { OnboardingModal } from './components/Onboarding';
 
 // Core pages - loaded eagerly
 import LandingPage from './pages/LandingPage/LandingPage';
@@ -36,6 +37,18 @@ const WasteCalculatorPage = lazy(() =>
 const BattlePage = lazy(() =>
   import('./pages/BattlePage').then((m) => ({ default: m.BattlePage }))
 );
+const PartiesPage = lazy(() =>
+  import('./pages/PartiesPage').then((m) => ({ default: m.PartiesPage }))
+);
+const PartyComparisonPage = lazy(() =>
+  import('./pages/PartiesPage').then((m) => ({ default: m.PartyComparisonPage }))
+);
+const DistrictsPage = lazy(() =>
+  import('./pages/DistrictsPage').then((m) => ({ default: m.DistrictsPage }))
+);
+const DistrictComparisonPage = lazy(() =>
+  import('./pages/DistrictsPage').then((m) => ({ default: m.DistrictComparisonPage }))
+);
 
 function PageLoader() {
   return (
@@ -56,6 +69,7 @@ const App = () => {
           theme === 'dark' && 'dark'
         )}
       >
+        <OnboardingModal />
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -89,6 +103,14 @@ const App = () => {
 
             {/* Battle Royale Feature */}
             <Route path="batalha" element={<BattlePage />} />
+
+            {/* Parties Feature */}
+            <Route path="partidos" element={<PartiesPage />} />
+            <Route path="partidos/comparar" element={<PartyComparisonPage />} />
+
+            {/* Districts Feature */}
+            <Route path="distritos" element={<DistrictsPage />} />
+            <Route path="distritos/comparar" element={<DistrictComparisonPage />} />
 
             <Route path="*" element={<FourOFour />} />
           </Routes>

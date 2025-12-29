@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { PostalCodeInput } from '@/components/ReportCard/PostalCodeInput';
+import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { useDistrictByPostal } from '@/services/reportCard/useDistrictByPostal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +23,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-accent-2 to-neutral-1 flex flex-col">
+      <SEO {...SEO_CONFIGS.reportCard} url="/report-card" />
       <MainNav scrollY={0} />
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">

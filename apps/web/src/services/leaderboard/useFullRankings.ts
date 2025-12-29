@@ -4,6 +4,7 @@ import { type DeputyDetail, supabase } from '../../lib/supabase';
 interface RankingsFilters {
   partyId?: string | null;
   districtId?: string | null;
+  grade?: string | null;
 }
 
 interface PaginatedRankings {
@@ -33,6 +34,10 @@ async function fetchFullRankings(
 
   if (filters.districtId) {
     query = query.eq('district_id', filters.districtId);
+  }
+
+  if (filters.grade) {
+    query = query.eq('grade', filters.grade);
   }
 
   const { data, error, count } = await query.range(offset, offset + pageSize - 1);

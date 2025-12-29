@@ -108,7 +108,7 @@
             "type": "string"
           },
           "Videos": {
-            "type": "null"
+            "type": ["array", "null"]
           }
         },
         "required": [

@@ -1,12 +1,14 @@
 import Footer from '@/components/Footer';
 import { Leaderboard } from '@/components/Leaderboard';
 import MainNav from '@/components/MainNav';
+import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function LeaderboardPage() {
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
+      <SEO {...SEO_CONFIGS.leaderboard} url="/ranking" />
       <MainNav scrollY={0} />
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">

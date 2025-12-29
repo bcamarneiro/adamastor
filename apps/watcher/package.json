@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/minimist": "^1.2.5"
+    "@types/minimist": "^1.2.5",
+    "@types/sharp": "^0.32.0"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -31,6 +32,7 @@
     "deep-diff": "^1.0.2",
     "generate-schema": "^2.6.0",
     "minimist": "^1.2.8",
+    "sharp": "^0.34.5",
     "zstd-codec": "^0.1.5"
   }
 }

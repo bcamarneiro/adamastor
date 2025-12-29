@@ -193,8 +193,8 @@ const InitiativeDetails: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h2>Voting Information</h2>
           <div className="space-y-4">
-            {votingPhases.map((phase, index) => (
-              <div key={index} className="bg-neutral-50 p-4 rounded">
+            {votingPhases.map((phase) => (
+              <div key={`${phase.Fase}-${phase.DataFase}`} className="bg-neutral-50 p-4 rounded">
                 <h3 className="font-medium text-gray-900 mb-2">{phase.Fase}</h3>
                 {phase.Observacoes && <p className="text-gray-600 mb-2">{phase.Observacoes}</p>}
                 <p className="text-sm text-gray-500">

@@ -1,3 +1,4 @@
+import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import {
   ArrowLeftRight,
   Award,
@@ -131,17 +132,28 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
       <div className="p-6 border-b border-neutral-5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-neutral-12">Classificacao</h2>
+            <h2 className="text-lg font-semibold text-neutral-12 flex items-center gap-1">
+              Classificacao
+              <HelpTooltip content={HELP_TEXTS.grade} />
+            </h2>
             <div className="flex items-center gap-4 mt-2 text-sm text-neutral-11">
               <span className="flex items-center gap-1">
                 <span className="font-medium">#{deputy.national_rank}</span> nacional
+                <HelpTooltip content={HELP_TEXTS.nationalRank} />
               </span>
               <span className="flex items-center gap-1">
                 <span className="font-medium">#{deputy.district_rank}</span> no distrito
+                <HelpTooltip content={HELP_TEXTS.districtRank} />
               </span>
             </div>
           </div>
-          <GradeCircle grade={deputy.grade} score={deputy.work_score} size="lg" />
+          <div className="flex flex-col items-center">
+            <GradeCircle grade={deputy.grade} score={deputy.work_score} size="lg" />
+            <span className="text-xs text-neutral-9 mt-1 flex items-center gap-1">
+              Pontuacao
+              <HelpTooltip content={HELP_TEXTS.workScore} />
+            </span>
+          </div>
         </div>
       </div>
 
@@ -152,23 +164,29 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
           <SourceIndicator sourceType="api" />
         </h2>
 
-        <MetricBar
-          label="Propostas apresentadas"
-          value={deputy.proposal_count}
-          average={avgProposals}
-        />
+        <div>
+          <div className="flex items-center gap-1 mb-2">
+            <span className="text-sm font-medium text-neutral-11">Propostas apresentadas</span>
+            <HelpTooltip content={HELP_TEXTS.proposals} />
+          </div>
+          <MetricBar label="" value={deputy.proposal_count} average={avgProposals} />
+        </div>
 
-        <MetricBar
-          label="Intervencoes em debates"
-          value={deputy.intervention_count}
-          average={avgInterventions}
-        />
+        <div>
+          <div className="flex items-center gap-1 mb-2">
+            <span className="text-sm font-medium text-neutral-11">Intervencoes em debates</span>
+            <HelpTooltip content={HELP_TEXTS.interventions} />
+          </div>
+          <MetricBar label="" value={deputy.intervention_count} average={avgInterventions} />
+        </div>
 
-        <MetricBar
-          label="Perguntas ao Governo"
-          value={deputy.question_count}
-          average={avgQuestions}
-        />
+        <div>
+          <div className="flex items-center gap-1 mb-2">
+            <span className="text-sm font-medium text-neutral-11">Perguntas ao Governo</span>
+            <HelpTooltip content={HELP_TEXTS.questions} />
+          </div>
+          <MetricBar label="" value={deputy.question_count} average={avgQuestions} />
+        </div>
 
         {/* Attendance Section */}
         {deputy.attendance_rate !== null &&
@@ -177,8 +195,9 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <div className="pt-4 border-t border-neutral-5">
               <div className="flex items-center gap-2 mb-4">
                 <Users className="w-5 h-5 text-accent-9" />
-                <h3 className="text-base font-medium text-neutral-12 flex items-center">
+                <h3 className="text-base font-medium text-neutral-12 flex items-center gap-1">
                   Presenca em Plenario
+                  <HelpTooltip content={HELP_TEXTS.attendance} />
                   <SourceIndicator sourceType="scraper" />
                 </h3>
               </div>
@@ -194,8 +213,9 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
 
       {/* Party Voting Section */}
       <div className="p-6 bg-neutral-2 border-t border-neutral-5">
-        <h2 className="text-lg font-semibold text-neutral-12 mb-4">
+        <h2 className="text-lg font-semibold text-neutral-12 mb-4 flex items-center gap-1">
           Votacoes do Partido ({deputy.party_acronym})
+          <HelpTooltip content={HELP_TEXTS.partyVoting} />
         </h2>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="p-4 bg-neutral-1 rounded-lg shadow-sm">

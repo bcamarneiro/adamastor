@@ -46,7 +46,7 @@ async function findDistrictByPostal(postalCode: string): Promise<DistrictResult>
 export function useDistrictByPostal(postalCode: string | null) {
   return useQuery({
     queryKey: ['district', postalCode],
-    queryFn: () => findDistrictByPostal(postalCode!),
+    queryFn: () => findDistrictByPostal(postalCode as string),
     enabled: !!postalCode && postalCode.length >= 4,
     staleTime: 1000 * 60 * 60, // 1 hour - districts don't change
   });

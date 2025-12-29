@@ -8,15 +8,17 @@ import { GradeCircle } from '../ReportCard/GradeCircle';
 interface FullRankingsProps {
   partyId?: string | null;
   districtId?: string | null;
+  grade?: string | null;
 }
 
-export function FullRankings({ partyId, districtId }: FullRankingsProps) {
+export function FullRankings({ partyId, districtId, grade }: FullRankingsProps) {
   const [page, setPage] = useState(1);
   const pageSize = 20;
 
   const { data, isLoading } = useFullRankings(page, pageSize, {
     partyId,
     districtId,
+    grade,
   });
 
   const { deputies = [], total = 0, totalPages = 1 } = data || {};
@@ -24,9 +26,9 @@ export function FullRankings({ partyId, districtId }: FullRankingsProps) {
   if (isLoading && deputies.length === 0) {
     return (
       <div className="space-y-3">
-        {[...Array(5)].map((_, i) => (
+        {[1, 2, 3, 4, 5].map((n) => (
           <div
-            key={i}
+            key={`skeleton-${n}`}
             className="animate-pulse flex items-center gap-4 p-4 bg-neutral-1 rounded-lg"
           >
             <div className="w-10 h-6 bg-neutral-4 rounded" />

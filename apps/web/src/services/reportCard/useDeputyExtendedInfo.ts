@@ -41,7 +41,7 @@ async function fetchDeputyExtendedInfo(deputyId: string): Promise<DeputyExtended
 export function useDeputyExtendedInfo(deputyId: string | null) {
   return useQuery({
     queryKey: ['deputy', 'extended', deputyId],
-    queryFn: () => fetchDeputyExtendedInfo(deputyId!),
+    queryFn: () => fetchDeputyExtendedInfo(deputyId as string),
     enabled: !!deputyId,
     staleTime: 1000 * 60 * 10, // 10 minutes
   });

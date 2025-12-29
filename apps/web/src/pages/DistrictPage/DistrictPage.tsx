@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { DistrictDeputyList } from '@/components/ReportCard/DistrictDeputyList';
+import { SEO } from '@/components/SEO';
 import { type District, supabase } from '@/lib/supabase';
 import { useDeputiesByDistrict } from '@/services/reportCard/useDeputiesByDistrict';
 import { useQuery } from '@tanstack/react-query';
@@ -22,7 +23,7 @@ export function DistrictPage() {
 
   const { data: district, isLoading: districtLoading } = useQuery({
     queryKey: ['district', 'slug', districtSlug],
-    queryFn: () => fetchDistrictBySlug(districtSlug!),
+    queryFn: () => fetchDistrictBySlug(districtSlug as string),
     enabled: !!districtSlug,
   });
 
@@ -58,6 +59,11 @@ export function DistrictPage() {
 
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
+      <SEO
+        title={`Deputados de ${district.name}`}
+        description={`Lista de deputados eleitos pelo círculo eleitoral de ${district.name}. Vê o desempenho de cada deputado e descobre quem te representa.`}
+        url={`/distrito/${districtSlug}`}
+      />
       <MainNav scrollY={0} />
 
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-8">

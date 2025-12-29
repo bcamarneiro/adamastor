@@ -2,6 +2,7 @@ import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import KeyMetrics from '@/components/KeyMetrics';
 import MainNav from '@/components/MainNav';
+import { SEO, SEO_CONFIGS, getOrganizationSchema } from '@/components/SEO';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@radix-ui/themes';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -73,6 +74,7 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-neutral-1 overflow-x-hidden">
+      <SEO {...SEO_CONFIGS.landing} url="/" structuredData={getOrganizationSchema()} />
       <MainNav scrollY={scrollY} />
 
       <AnimatePresence>
@@ -149,13 +151,13 @@ const LandingPage = () => {
                   <div className="flex justify-center mb-8">
                     <TabsList className="h-12">
                       <TabsTrigger value="sectors" className="text-sm md:text-base px-6">
-                        Key Features
+                        Funcionalidades
                       </TabsTrigger>
                       <TabsTrigger value="timeline" className="text-sm md:text-base px-6">
-                        Timeline
+                        Cronologia
                       </TabsTrigger>
                       <TabsTrigger value="promises" className="text-sm md:text-base px-6">
-                        Initiatives
+                        Iniciativas
                       </TabsTrigger>
                     </TabsList>
                   </div>
@@ -166,11 +168,11 @@ const LandingPage = () => {
                         <BarChart3 className="w-8 h-8 text-neutral-9" />
                       </div>
                       <h3 className="text-xl font-medium mb-2 text-neutral-12">
-                        Legislative Timeline
+                        Cronologia Legislativa
                       </h3>
                       <p className="text-neutral-11 max-w-md mx-auto">
-                        Track the progress of parliamentary initiatives through different phases and
-                        view complete legislative timelines.
+                        Acompanha o progresso das iniciativas parlamentares através das diferentes
+                        fases e visualiza a cronologia legislativa completa.
                       </p>
                     </div>
                   </TabsContent>
@@ -181,11 +183,11 @@ const LandingPage = () => {
                         <Flag className="w-8 h-8 text-neutral-9" />
                       </div>
                       <h3 className="text-xl font-medium mb-2 text-neutral-12">
-                        Parliamentary Initiatives
+                        Iniciativas Parlamentares
                       </h3>
                       <p className="text-neutral-11 max-w-md mx-auto">
-                        Search, filter, and track parliamentary initiatives, including voting
-                        records, debate transcripts, and related documents.
+                        Pesquisa, filtra e acompanha iniciativas parlamentares, incluindo registos
+                        de votação, transcrições de debates e documentos relacionados.
                       </p>
                     </div>
                   </TabsContent>

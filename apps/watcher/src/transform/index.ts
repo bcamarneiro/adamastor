@@ -18,42 +18,53 @@ import {
 
 export async function runTransformPipeline(snapshotTs: string): Promise<number> {
   const snapshotPath = `${SNAPSHOT_PATH}/${snapshotTs}`;
+  const pipelineStart = Date.now();
 
   console.log('═══════════════════════════════════════════════════════════');
   console.log('           TRANSFORM PIPELINE - Parliament Data');
   console.log('═══════════════════════════════════════════════════════════');
   console.log(`📁 Snapshot: ${snapshotPath}\n`);
 
-  // Load data files
+  // Load data files (can be parallelized)
   console.log('📂 Loading data files...\n');
+  const loadStart = Date.now();
 
-  const infoBase = JSON.parse(await readFile(`${snapshotPath}/informacao_base.json`, 'utf8'));
+  const [infoBase, iniciativas, atividades] = await Promise.all([
+    readFile(`${snapshotPath}/informacao_base.json`, 'utf8').then(JSON.parse),
+    readFile(`${snapshotPath}/iniciativas.json`, 'utf8').then(JSON.parse),
+    readFile(`${snapshotPath}/atividades.json`, 'utf8').then(JSON.parse),
+  ]);
+
   console.log(
     `  informacao_base: ${infoBase.Deputados.length} deputados, ${infoBase.GruposParlamentares.length} parties, ${infoBase.CirculosEleitorais.length} districts`
   );
-
-  const iniciativas = JSON.parse(await readFile(`${snapshotPath}/iniciativas.json`, 'utf8'));
   console.log(`  iniciativas: ${iniciativas.length} initiatives`);
+  console.log(`  atividades: ${atividades.Debates?.length || 0} debates`);
+  console.log(`  ⏱️  Files loaded in ${((Date.now() - loadStart) / 1000).toFixed(1)}s\n`);
 
-  const atividades = JSON.parse(await readFile(`${snapshotPath}/atividades.json`, 'utf8'));
-  console.log(`  atividades: ${atividades.Debates?.length || 0} debates\n`);
-
-  // Step 1: Transform parties
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PHASE 1: Foundation data (parties + districts run in parallel)
+  // ═══════════════════════════════════════════════════════════════════════════
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 1: PARTIES');
+  console.log('PHASE 1: FOUNDATION (Parties + Districts in parallel)');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  const partyMap = await transformParties(infoBase.GruposParlamentares);
+  const phase1Start = Date.now();
 
-  // Step 2: Transform districts
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 2: DISTRICTS');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  const districtMap = await transformDistricts(infoBase.CirculosEleitorais);
+  const [partyMap, districtMap] = await Promise.all([
+    transformParties(infoBase.GruposParlamentares),
+    transformDistricts(infoBase.CirculosEleitorais),
+  ]);
 
-  // Step 3: Transform deputies
+  console.log(`  ⏱️  Phase 1 completed in ${((Date.now() - phase1Start) / 1000).toFixed(1)}s\n`);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PHASE 2: Deputies (depends on parties & districts)
+  // ═══════════════════════════════════════════════════════════════════════════
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 3: DEPUTIES');
+  console.log('PHASE 2: DEPUTIES');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+  const phase2Start = Date.now();
+
   const deputyMaps = await transformDeputies(infoBase.Deputados, partyMap, districtMap);
 
   // Ensure deputy_stats records exist
@@ -62,60 +73,91 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
   // Sync extended deputy info (roles, party history, status history)
   await syncDeputyExtendedInfo(infoBase.Deputados, deputyMaps.byDepId, partyMap);
 
-  // Step 4: Transform initiatives and extract votes
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 4: INITIATIVES & VOTES');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  // Use byCadastroId for initiatives since authors use idCadastro (=DepCadId)
-  const { partyVotes, authorCounts } = await transformInitiatives(
-    iniciativas,
-    deputyMaps.byCadastroId
-  );
+  console.log(`  ⏱️  Phase 2 completed in ${((Date.now() - phase2Start) / 1000).toFixed(1)}s\n`);
 
-  // Upsert party votes
-  await upsertPartyVotes(partyVotes);
-
-  // Step 5: Process activities (interventions)
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PHASE 3: Data transforms + scraping (all independent, run in parallel)
+  // - Initiatives transform (CPU-bound)
+  // - Activities transform (CPU-bound)
+  // - Attendance scraping (I/O-bound)
+  // - Biography scraping (I/O-bound)
+  // ═══════════════════════════════════════════════════════════════════════════
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 5: ACTIVITIES');
+  console.log('PHASE 3: DATA TRANSFORMS + SCRAPING (in parallel)');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  const interventionsByParty = await countInterventions(atividades, partyMap);
-  const interventionsByDeputy = await distributeInterventionsToDeputies(
-    interventionsByParty,
-    partyMap
-  );
+  const phase3Start = Date.now();
 
-  // Step 6: Scrape and transform plenary attendance
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 6: PLENARY ATTENDANCE');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  await runStep(
-    'Plenary Attendance',
-    async () => {
-      const { meetings, attendance } = await fetchAllAttendance();
-      await transformAttendance(meetings, attendance);
-      return { processed: attendance.length, failed: 0 };
-    },
-    { critical: false }
-  );
+  // Variables to capture results from parallel tasks
+  let authorCounts: Map<string, number> = new Map();
+  let interventionsByDeputy: Map<string, number> = new Map();
 
-  // Step 7: Scrape and transform deputy biographies
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 7: DEPUTY BIOGRAPHIES');
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  await runStep(
-    'Deputy Biographies',
-    async () => {
-      await transformBiographies();
-      return { processed: 0, failed: 0 };
-    },
-    { critical: false }
-  );
+  const phase3Results = await Promise.allSettled([
+    // Task 1: Initiatives & Votes
+    (async () => {
+      console.log('  📋 Starting initiatives transform...');
+      const result = await transformInitiatives(iniciativas, deputyMaps.byCadastroId);
+      await upsertPartyVotes(result.partyVotes);
+      authorCounts = result.authorCounts;
+      console.log('  ✅ Initiatives complete');
+      return result;
+    })(),
 
-  // Step 8: Update deputy stats
+    // Task 2: Activities (interventions)
+    (async () => {
+      console.log('  🎤 Starting activities transform...');
+      const interventionsByParty = await countInterventions(atividades, partyMap);
+      interventionsByDeputy = await distributeInterventionsToDeputies(
+        interventionsByParty,
+        partyMap
+      );
+      console.log('  ✅ Activities complete');
+      return interventionsByDeputy;
+    })(),
+
+    // Task 3: Plenary Attendance (I/O-bound scraping with incremental support)
+    runStep(
+      'Plenary Attendance',
+      async () => {
+        console.log('  📊 Starting attendance scraping (incremental)...');
+        const { meetings, attendance, skipped } = await fetchAllAttendance();
+        await transformAttendance(meetings, attendance);
+        console.log(`  ✅ Attendance complete (${skipped} meetings skipped)`);
+        return { processed: attendance.length, failed: 0 };
+      },
+      { critical: false }
+    ),
+
+    // Task 4: Deputy Biographies (I/O-bound scraping with TTL)
+    runStep(
+      'Deputy Biographies',
+      async () => {
+        console.log('  📝 Starting biography scraping (TTL-filtered)...');
+        const result = await transformBiographies();
+        console.log(
+          `  ✅ Biographies complete (${result.scraped} scraped, ${result.skipped} skipped)`
+        );
+        return { processed: result.scraped, failed: 0 };
+      },
+      { critical: false }
+    ),
+  ]);
+
+  // Check for any failures in Phase 3
+  for (const result of phase3Results) {
+    if (result.status === 'rejected') {
+      console.error('  ⚠️ Phase 3 task failed:', result.reason);
+    }
+  }
+
+  console.log(`\n  ⏱️  Phase 3 completed in ${((Date.now() - phase3Start) / 1000).toFixed(1)}s\n`);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PHASE 4: Statistics (depends on everything above)
+  // ═══════════════════════════════════════════════════════════════════════════
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('STEP 8: UPDATE STATISTICS');
+  console.log('PHASE 4: UPDATE STATISTICS');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+  const phase4Start = Date.now();
 
   // Update proposal counts
   await updateDeputyProposalCounts(authorCounts);
@@ -136,7 +178,14 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
     { critical: true }
   );
 
-  // Print summary and return exit code
+  console.log(`  ⏱️  Phase 4 completed in ${((Date.now() - phase4Start) / 1000).toFixed(1)}s\n`);
+
+  // Print summary and timing
+  const totalTime = ((Date.now() - pipelineStart) / 1000).toFixed(1);
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log(`⏱️  TOTAL PIPELINE TIME: ${totalTime}s`);
+  console.log('═══════════════════════════════════════════════════════════\n');
+
   pipelineResult.printSummary();
   return pipelineResult.getExitCode();
 }

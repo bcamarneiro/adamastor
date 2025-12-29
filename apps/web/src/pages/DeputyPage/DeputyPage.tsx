@@ -2,6 +2,7 @@ import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { ReportCardDetail } from '@/components/ReportCard/ReportCardDetail';
 import { ShareButton } from '@/components/ReportCard/ShareButton';
+import { SEO, getDeputySchema } from '@/components/SEO';
 import { useDeputyDetail } from '@/services/reportCard/useDeputyDetail';
 import { useDeputyExtendedInfo } from '@/services/reportCard/useDeputyExtendedInfo';
 import { useNationalAverages } from '@/services/reportCard/useNationalAverages';
@@ -45,8 +46,22 @@ export function DeputyPage() {
     );
   }
 
+  const deputySchema = getDeputySchema({
+    name: deputy.name,
+    party: deputy.party_acronym,
+    district: deputy.district_name,
+    photoUrl: deputy.photo_url,
+  });
+
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
+      <SEO
+        title={deputy.name}
+        description={`Perfil do deputado ${deputy.name} (${deputy.party_acronym || 'Independente'}). Nota: ${deputy.grade || 'N/A'}. Vê a assiduidade, propostas e intervenções.`}
+        url={`/deputado/${deputyId}`}
+        type="profile"
+        structuredData={deputySchema}
+      />
       <MainNav scrollY={0} />
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">

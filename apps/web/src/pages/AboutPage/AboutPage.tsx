@@ -1,3 +1,4 @@
+import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import PageLayout from '@/components/ui/Layout/PageLayout';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -6,7 +7,8 @@ import aboutPtMd from './about-pt.md';
 
 const AboutPage: React.FC = () => {
   return (
-    <PageLayout title="About" path="/about">
+    <PageLayout title="Sobre" path="/about">
+      <SEO {...SEO_CONFIGS.about} url="/about" />
       <div className="max-w-2xl m-5">
         <Markdown remarkPlugins={[remarkGfm]}>{aboutPtMd}</Markdown>
       </div>

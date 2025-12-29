@@ -20,7 +20,7 @@ async function fetchDeputiesByDistrict(districtId: string): Promise<DeputyDetail
 export function useDeputiesByDistrict(districtId: string | null) {
   return useQuery({
     queryKey: ['deputies', 'district', districtId],
-    queryFn: () => fetchDeputiesByDistrict(districtId!),
+    queryFn: () => fetchDeputiesByDistrict(districtId as string),
     enabled: !!districtId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

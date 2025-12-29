@@ -10,10 +10,15 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
-    "typecheck": "cd apps/watcher && bun tsc --noEmit && cd ../web && bun tsc --noEmit"
+    "typecheck": "cd apps/watcher && bun tsc --noEmit && cd ../web && bun tsc --noEmit",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "husky": "^9.1.7",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@radix-ui/react-tooltip": "^1.2.8"
   }
 }

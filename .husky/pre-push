@@ -1,0 +1,18 @@
+#!/bin/sh
+
+echo "🔍 Running pre-push checks..."
+
+# Lint
+echo "📝 Linting..."
+bun lint || exit 1
+
+# Type check
+echo "🔬 Type checking..."
+bun run typecheck || exit 1
+
+# Unit tests (fast, no DOM/DB required)
+echo "🧪 Running unit tests..."
+cd apps/watcher && bun test --bail 1 src/config.test.ts src/utils/ src/transform/ || exit 1
+cd ../..
+
+echo "✅ All checks passed! Pushing..."

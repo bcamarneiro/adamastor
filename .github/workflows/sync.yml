@@ -4,6 +4,16 @@ on:
   schedule:
     - cron: "0 6 * * *" # Daily at 6 AM UTC
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Force full sync (ignore hash comparison)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
   sync:
@@ -12,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: staging
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -20,6 +32,15 @@ jobs:
       - name: Install dependencies
         run: bun install
         working-directory: apps/watcher
+
+      # Cache snapshots directory to speed up re-runs and debugging
+      - name: Cache snapshots
+        uses: actions/cache@v4
+        with:
+          path: apps/watcher/snapshots
+          key: sync-snapshots-staging-${{ github.run_id }}
+          restore-keys: |
+            sync-snapshots-staging-
 
       - name: Sync to staging
         env:
@@ -30,7 +51,13 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           ENVIRONMENT: staging
-        run: bun run start
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            echo "🔄 Force mode enabled - running full sync"
+            bun run start -- --force
+          else
+            bun run start
+          fi
         working-directory: apps/watcher
 
       - name: Notify on failure

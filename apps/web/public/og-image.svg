@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <title>Debaixo d'olho - OpenGraph Image</title>
+
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg-gradient)"/>
+
+  <!-- Pixelated Eye Logo (scaled up) -->
+  <g transform="translate(500, 180) scale(4)">
+    <!-- Eye outline - pixelated style -->
+    <g fill="#ffffff">
+      <!-- Top of eye -->
+      <rect x="8" y="8" width="4" height="4"/>
+      <rect x="12" y="4" width="4" height="4"/>
+      <rect x="16" y="4" width="4" height="4"/>
+      <rect x="20" y="8" width="4" height="4"/>
+
+      <!-- Sides of eye -->
+      <rect x="4" y="12" width="4" height="4"/>
+      <rect x="24" y="12" width="4" height="4"/>
+      <rect x="4" y="16" width="4" height="4"/>
+      <rect x="24" y="16" width="4" height="4"/>
+
+      <!-- Bottom of eye -->
+      <rect x="8" y="20" width="4" height="4"/>
+      <rect x="12" y="24" width="4" height="4"/>
+      <rect x="16" y="24" width="4" height="4"/>
+      <rect x="20" y="20" width="4" height="4"/>
+    </g>
+
+    <!-- Iris - green (Portuguese flag color) -->
+    <g fill="#046A38">
+      <rect x="10" y="12" width="4" height="4"/>
+      <rect x="10" y="16" width="4" height="4"/>
+      <rect x="14" y="12" width="4" height="4"/>
+      <rect x="14" y="16" width="4" height="4"/>
+      <rect x="18" y="12" width="4" height="4"/>
+      <rect x="18" y="16" width="4" height="4"/>
+    </g>
+
+    <!-- Pupil - dark center -->
+    <g fill="#1a1a1a">
+      <rect x="14" y="12" width="4" height="4"/>
+      <rect x="14" y="16" width="4" height="4"/>
+    </g>
+
+    <!-- Highlight -->
+    <rect x="16" y="12" width="2" height="2" fill="white" opacity="0.7"/>
+  </g>
+
+  <!-- Brand Name -->
+  <text x="600" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Debaixo d'olho
+  </text>
+
+  <!-- Tagline -->
+  <text x="600" y="490" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#a0a0a0" text-anchor="middle">
+    Fiscaliza o Teu Deputado
+  </text>
+
+  <!-- URL -->
+  <text x="600" y="580" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#666666" text-anchor="middle">
+    debaixodolho.pt
+  </text>
+</svg>

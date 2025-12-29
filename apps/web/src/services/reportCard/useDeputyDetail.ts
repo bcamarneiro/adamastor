@@ -19,7 +19,7 @@ async function fetchDeputyById(deputyId: string): Promise<DeputyDetail | null> {
 export function useDeputyDetail(deputyId: string | null) {
   return useQuery({
     queryKey: ['deputy', deputyId],
-    queryFn: () => fetchDeputyById(deputyId!),
+    queryFn: () => fetchDeputyById(deputyId as string),
     enabled: !!deputyId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

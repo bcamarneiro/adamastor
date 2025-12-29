@@ -1,5 +1,6 @@
-import GovPerfLogo from '@/components/ui/Icons/GovPerfLogo';
-import { Menu, X } from 'lucide-react';
+import { GlobalSearch } from '@/components/Search';
+import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
+import { Menu, Search, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -9,6 +10,7 @@ interface MainNavProps {
 
 const navItems = [
   { path: '/report-card', label: 'Deputados' },
+  { path: '/partidos', label: 'Partidos' },
   { path: '/ranking', label: 'Ranking' },
   { path: '/desperdicio', label: 'Calculadora' },
   { path: '/batalha', label: 'Battle Royale' },
@@ -18,6 +20,7 @@ const navItems = [
 const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -30,8 +33,8 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
       <div className="container px-6 md:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <GovPerfLogo className="h-8 w-8" />
-            <span className="text-lg font-medium text-neutral-12">Gov Perf</span>
+            <DebaixoDolhoLogo size="md" className="text-neutral-12" />
+            <span className="text-lg font-medium text-neutral-12">Debaixo d'olho</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -49,6 +52,22 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
             ))}
           </nav>
 
+          {/* Desktop Search */}
+          <div className="hidden md:flex items-center gap-2">
+            {searchOpen ? (
+              <GlobalSearch className="w-64" onClose={() => setSearchOpen(false)} />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                className="p-2 text-neutral-11 hover:text-neutral-12 hover:bg-neutral-3 rounded-lg transition-colors"
+                aria-label="Pesquisar"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+
           {/* Mobile Menu Button */}
           <button
             type="button"
@@ -63,20 +82,24 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-neutral-1 border-t border-neutral-5">
-          <nav className="container px-6 py-4 flex flex-col gap-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`text-base font-medium py-2 transition-colors ${
-                  isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="container px-6 py-4">
+            {/* Mobile Search */}
+            <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
+            <nav className="flex flex-col gap-3">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`text-base font-medium py-2 transition-colors ${
+                    isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
       )}
     </header>
