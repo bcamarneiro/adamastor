@@ -2,10 +2,14 @@ import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import pkg from './package.json';
 
 const port = (process.env.PUBLIC_DEV_PORT as unknown as number) || 3000;
 
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   server: {
     port,
   },
