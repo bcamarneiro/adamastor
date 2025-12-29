@@ -69,9 +69,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Bump version
+      - name: Bump version and prepare release
         id: version
         run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Bump version in package.json
           cd apps/web
           OLD_VERSION=$(jq -r .version package.json)
           npm version ${{ inputs.version_type }} --no-git-tag-version
@@ -79,22 +84,32 @@ jobs:
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "old_version=$OLD_VERSION" >> $GITHUB_OUTPUT
           echo "Bumped $OLD_VERSION → $NEW_VERSION"
+          cd ../..
 
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Commit version bump locally (not pushed yet)
           git add -A
-          git commit -m "chore: bump version to v${{ steps.version.outputs.version }}"
-          git push origin staging
+          git commit -m "chore: bump version to v${NEW_VERSION}"
 
-      - name: Merge to main and tag
-        run: |
+          # Fetch and merge to main locally
+          git fetch origin main
           git checkout main
-          git pull origin main
-          git merge staging --ff-only -m "Release v${{ steps.version.outputs.version }} to production"
-          git tag "v${{ steps.version.outputs.version }}"
+          git merge staging --ff-only
+
+          # Create tag locally
+          git tag "v${NEW_VERSION}"
+
+          echo "All local preparations complete. Ready to push."
+
+      - name: Push release to main
+        run: |
+          # Push main and tag atomically - this is the point of no return
           git push origin main --tags
+
+      - name: Update staging branch
+        run: |
+          # Now update staging to match main (includes version bump)
+          git checkout staging
+          git push origin staging
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -123,9 +138,3 @@ jobs:
           gh workflow run sync-data.yml -f environment=production || echo "Sync workflow not found or failed to trigger"
         env:
           GH_TOKEN: ${{ github.token }}
-
-      - name: Sync staging with main
-        run: |
-          git checkout staging
-          git rebase main
-          git push origin staging --force-with-lease
