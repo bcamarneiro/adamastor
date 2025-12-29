@@ -151,12 +151,23 @@ function extractAllSpanValues(html: string, fieldId: string): string[] {
  * Parliament biography pages embed deputy photos in various formats.
  *
  * Common patterns:
+ * - CSS background-image in div with imgDepContainer (MOST COMMON for current legislature)
  * - Direct img tag with src containing "Fotos" or "imagem"
  * - img with id containing "imgFoto" or similar
- * - Background images in style attributes
+ * - Background images in style attributes with getimage.aspx
  */
 function extractPhotoUrl(html: string): string | null {
-  // Pattern 1: Look for image tag with "Fotos" in the src (most common)
+  // Pattern 1: CSS background-image with getimage.aspx (MOST COMMON)
+  // Example: <div id="...imgDepContainer" class="Oval" style="background-image:url(https://app.parlamento.pt/webutils/getimage.aspx?id=6535&amp;type=deputado);">
+  const bgImagePattern = /background-image:\s*url\(([^)]+getimage\.aspx[^)]+)\)/i;
+  const bgImageMatch = html.match(bgImagePattern);
+  if (bgImageMatch?.[1]) {
+    // Decode HTML entities (e.g., &amp; -> &)
+    const url = bgImageMatch[1].replace(/&amp;/g, '&');
+    return resolvePhotoUrl(url);
+  }
+
+  // Pattern 2: Look for image tag with "Fotos" in the src
   // Example: <img src="/Webutils/Fotos/Deputados/2024/abc123.jpg">
   const fotosPattern = /<img[^>]+src=["']([^"']*Fotos[^"']+)["']/i;
   const fotosMatch = html.match(fotosPattern);
@@ -164,14 +175,14 @@ function extractPhotoUrl(html: string): string | null {
     return resolvePhotoUrl(fotosMatch[1]);
   }
 
-  // Pattern 2: Look for getimage.aspx URLs (Parliament's image server)
+  // Pattern 3: Look for getimage.aspx URLs in img tags (Parliament's image server)
   const getimagePattern = /<img[^>]+src=["']([^"']*getimage\.aspx[^"']+)["']/i;
   const getimageMatch = html.match(getimagePattern);
   if (getimageMatch?.[1]) {
     return resolvePhotoUrl(getimageMatch[1]);
   }
 
-  // Pattern 3: Look for any img tag with "deputado" or "foto" in class/id
+  // Pattern 4: Look for any img tag with "deputado" or "foto" in class/id
   const deputadoPattern =
     /<img[^>]+(?:class|id)=["'][^"']*(?:foto|deputado)[^"']*["'][^>]+src=["']([^"']+)["']/i;
   const deputadoMatch = html.match(deputadoPattern);
@@ -179,7 +190,7 @@ function extractPhotoUrl(html: string): string | null {
     return resolvePhotoUrl(deputadoMatch[1]);
   }
 
-  // Pattern 4: Look for img tag in a div with class containing "foto"
+  // Pattern 5: Look for img tag in a div with class containing "foto"
   const divFotoPattern =
     /<div[^>]+class=["'][^"']*foto[^"']*["'][^>]*>[\s\S]*?<img[^>]+src=["']([^"']+)["']/i;
   const divFotoMatch = html.match(divFotoPattern);
