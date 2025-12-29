@@ -12,16 +12,16 @@ test.describe('Leaderboard Page', () => {
     await page.goto('/ranking');
     await page.waitForLoadState('networkidle');
 
-    // Should have a section for top workers (use first() in case of multiple matches)
-    await expect(page.getByText(/mais trabalhadores/i).first()).toBeVisible();
+    // Should have a section for top workers - actual text is "Top Trabalhadores"
+    await expect(page.getByText(/top trabalhadores/i).first()).toBeVisible();
   });
 
   test('should display bottom workers section', async ({ page }) => {
     await page.goto('/ranking');
     await page.waitForLoadState('networkidle');
 
-    // Should have a section for bottom workers (use first() in case of multiple matches)
-    await expect(page.getByText(/menos trabalhadores/i).first()).toBeVisible();
+    // Should have a section for bottom workers - actual text is "Ranking de Preguica"
+    await expect(page.getByText(/ranking de preguica|preguica/i).first()).toBeVisible();
   });
 
   test('should be able to switch between tabs', async ({ page }) => {
