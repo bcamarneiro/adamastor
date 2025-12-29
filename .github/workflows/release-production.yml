@@ -1,0 +1,117 @@
+name: Release to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+# Prevent concurrent releases
+concurrency:
+  group: production-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout staging
+        uses: actions/checkout@v4
+        with:
+          ref: staging
+          fetch-depth: 0
+          token: ${{ secrets.DEPLOY_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Verify CI passed on staging
+        run: |
+          COMMIT=$(git rev-parse HEAD)
+          echo "Checking CI status for commit: $COMMIT"
+
+          # Get check runs status
+          CHECKS=$(gh api repos/${{ github.repository }}/commits/$COMMIT/check-runs --jq '.check_runs')
+          TOTAL=$(echo "$CHECKS" | jq 'length')
+          PASSED=$(echo "$CHECKS" | jq '[.[] | select(.conclusion == "success")] | length')
+
+          echo "Passed checks: $PASSED / $TOTAL"
+
+          if [ "$PASSED" != "$TOTAL" ] || [ "$TOTAL" = "0" ]; then
+            echo "::error::Not all CI checks passed on staging"
+            exit 1
+          fi
+          echo "All CI checks passed"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Bump version
+        id: version
+        run: |
+          cd apps/web
+          OLD_VERSION=$(jq -r .version package.json)
+          npm version ${{ inputs.version_type }} --no-git-tag-version
+          NEW_VERSION=$(jq -r .version package.json)
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "old_version=$OLD_VERSION" >> $GITHUB_OUTPUT
+          echo "Bumped $OLD_VERSION → $NEW_VERSION"
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: bump version to v${{ steps.version.outputs.version }}"
+          git push origin staging
+
+      - name: Merge to main and tag
+        run: |
+          git checkout main
+          git pull origin main
+          git merge staging --ff-only -m "Release v${{ steps.version.outputs.version }} to production"
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin main --tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy DB to production
+        run: |
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+          supabase db push
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+      - name: Trigger production data sync
+        run: |
+          gh workflow run sync-data.yml -f environment=production || echo "Sync workflow not found or failed to trigger"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Sync staging with main
+        run: |
+          git checkout staging
+          git rebase main
+          git push origin staging --force-with-lease
