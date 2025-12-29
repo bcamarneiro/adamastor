@@ -6,7 +6,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? 'github' : 'html',
+  // Use list reporter for real-time progress + github for annotations
+  reporter: process.env.CI ? [['list'], ['github']] : 'html',
   timeout: 30000,
 
   use: {
