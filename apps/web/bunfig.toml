@@ -1,3 +1,5 @@
 [test]
 # Exclude e2e tests from bun test (use playwright for those)
 root = "./src"
+# Enable DOM environment for React component tests
+preload = ["./src/test-setup.ts"]
