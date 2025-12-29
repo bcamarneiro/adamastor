@@ -40,20 +40,34 @@ jobs:
           COMMIT=$(git rev-parse HEAD)
           echo "Checking CI status for commit: $COMMIT"
 
-          # Get check runs status
-          CHECKS=$(gh api repos/${{ github.repository }}/commits/$COMMIT/check-runs --jq '.check_runs')
+          # Only check these specific CI workflow jobs
+          REQUIRED_CHECKS='["lint-and-typecheck", "test-watcher", "test-web", "build", "e2e", "db-migrations"]'
+
+          # Get all check runs
+          ALL_CHECKS=$(gh api repos/${{ github.repository }}/commits/$COMMIT/check-runs --jq '.check_runs')
+
+          # Filter to only the required CI checks
+          CHECKS=$(echo "$ALL_CHECKS" | jq --argjson required "$REQUIRED_CHECKS" '[.[] | select(.name as $n | $required | index($n))]')
           TOTAL=$(echo "$CHECKS" | jq 'length')
+
+          echo "Found $TOTAL of ${#REQUIRED_CHECKS[@]} required CI checks"
+
+          # Show individual check results
+          echo "$CHECKS" | jq -r '.[] | "\(.name): \(.conclusion)"'
 
           # Count checks that passed (success) or were skipped (acceptable)
           PASSED=$(echo "$CHECKS" | jq '[.[] | select(.conclusion == "success" or .conclusion == "skipped")] | length')
 
-          # Count checks that failed
+          # Count checks that failed or are still running
           FAILED=$(echo "$CHECKS" | jq '[.[] | select(.conclusion != "success" and .conclusion != "skipped" and .conclusion != null)] | length')
+          PENDING=$(echo "$CHECKS" | jq '[.[] | select(.conclusion == null)] | length')
 
-          echo "Check results: $PASSED passed/skipped, $FAILED failed, $TOTAL total"
+          echo "Check results: $PASSED passed/skipped, $FAILED failed, $PENDING pending"
 
-          # Show individual check results
-          echo "$CHECKS" | jq -r '.[] | "\(.name): \(.conclusion)"'
+          if [ "$PENDING" != "0" ]; then
+            echo "::error::Some CI checks are still running"
+            exit 1
+          fi
 
           if [ "$FAILED" != "0" ]; then
             echo "::error::CI checks failed on staging"
@@ -61,11 +75,11 @@ jobs:
           fi
 
           if [ "$TOTAL" = "0" ]; then
-            echo "::error::No CI checks found on staging"
+            echo "::error::No CI checks found on staging. Run CI first."
             exit 1
           fi
 
-          echo "All CI checks passed or skipped"
+          echo "All required CI checks passed or skipped"
         env:
           GH_TOKEN: ${{ github.token }}
 
