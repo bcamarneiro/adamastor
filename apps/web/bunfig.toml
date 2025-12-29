@@ -1,5 +1,3 @@
 [test]
-preload = ["./src/test/happydom.ts"]
-
-# Only run tests inside src directory, exclude e2e (Playwright) tests
+# Exclude e2e tests from bun test (use playwright for those)
 root = "./src"
