@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test.describe('Navigation', () => {
   test('should navigate to leaderboard page', async ({ page }) => {

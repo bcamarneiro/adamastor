@@ -8,7 +8,7 @@
  * Tests run against whatever environment the dev server is connected to.
  * For CI, this should be a seeded local Supabase instance.
  */
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test.describe('Data Consistency - Leaderboard', () => {
   test('top worker in leaderboard should have rank 1 displayed', async ({ page }) => {

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test.describe('Report Card (Postal Code Lookup)', () => {
   test('should display postal code input on report-card page', async ({ page }) => {
