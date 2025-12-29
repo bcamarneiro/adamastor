@@ -56,9 +56,23 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed explanation.
 
 ## Development Workflow
 
+### Branching Strategy
+
+```text
+staging (default) ──► main (production)
+    │
+    └── feature/your-feature (your PR)
+```
+
+- **Always branch from `staging`** - it's the default branch
+- PRs merge to `staging` first
+- Maintainers deploy `staging` → `main` for releases
+
 ### 1. Create a branch
 
 ```bash
+git checkout staging
+git pull origin staging
 git checkout -b feature/your-feature
 # or
 git checkout -b fix/issue-description
