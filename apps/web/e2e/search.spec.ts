@@ -17,13 +17,9 @@ test.describe('Global Search', () => {
       // Type a search query (need at least 2 chars to trigger search)
       await searchInput.fill('Costa');
 
-      // Wait for results to appear
-      const resultsList = page.locator('[cmdk-list]');
-      await expect(resultsList).toBeVisible({ timeout: 5000 });
-
-      // Get the first result item
+      // Wait for results to appear - need to wait for debounce (300ms) + API call
       const firstResult = page.locator('[cmdk-item]').first();
-      await expect(firstResult).toBeVisible();
+      await expect(firstResult).toBeVisible({ timeout: 10000 });
 
       // Click the result
       await firstResult.click();
@@ -44,9 +40,9 @@ test.describe('Global Search', () => {
       await searchInput.click();
       await searchInput.fill('Costa');
 
-      // Wait for results
-      const resultsList = page.locator('[cmdk-list]');
-      await expect(resultsList).toBeVisible({ timeout: 5000 });
+      // Wait for results - need to wait for debounce (300ms) + API call
+      const firstResult = page.locator('[cmdk-item]').first();
+      await expect(firstResult).toBeVisible({ timeout: 10000 });
 
       // Use keyboard to select first result
       await searchInput.press('ArrowDown');
