@@ -17,7 +17,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-medium mb-4">Navegação</h3>
+            <h3 className="font-medium mb-4 text-white">Navegação</h3>
             <ul className="space-y-2">
               <li>
                 <Link
@@ -55,7 +55,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-medium mb-4">Recursos</h3>
+            <h3 className="font-medium mb-4 text-white">Recursos</h3>
             <ul className="space-y-2">
               <li>
                 <a
@@ -91,7 +91,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-medium mb-4">Dados</h3>
+            <h3 className="font-medium mb-4 text-white">Dados</h3>
             <ul className="space-y-2">
               <li>
                 <span className="text-sm text-neutral-400">Fonte: Dados públicos da AR</span>
