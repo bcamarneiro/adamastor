@@ -15,7 +15,8 @@ test.describe('Global Search', () => {
       await searchInput.click();
 
       // Type a search query (need at least 2 chars to trigger search)
-      await searchInput.fill('Costa');
+      // Use "Alpha" - a deputy name from E2E seed data
+      await searchInput.fill('Alpha');
 
       // Wait for results to appear - need to wait for debounce (300ms) + API call
       const firstResult = page.locator('[cmdk-item]').first();
@@ -38,7 +39,8 @@ test.describe('Global Search', () => {
       const searchInput = page.getByTestId('global-search-input');
       await expect(searchInput).toBeVisible({ timeout: 5000 });
       await searchInput.click();
-      await searchInput.fill('Costa');
+      // Use "Alpha" - a deputy name from E2E seed data
+      await searchInput.fill('Alpha');
 
       // Wait for results - need to wait for debounce (300ms) + API call
       const firstResult = page.locator('[cmdk-item]').first();
