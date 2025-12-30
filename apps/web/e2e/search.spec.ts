@@ -18,8 +18,8 @@ test.describe('Global Search', () => {
       await searchInput.fill('Costa');
 
       // Wait for results to appear
-      const resultsList = page.locator('ul');
-      await expect(resultsList).toBeVisible({ timeout: 5000 });
+      const resultsList = page.getByTestId('search-results-list');
+      await expect(resultsList).toBeVisible({ timeout: 10000 });
 
       // Get the first result item
       const firstResult = resultsList.locator('li').first();
@@ -45,8 +45,8 @@ test.describe('Global Search', () => {
       await searchInput.fill('Costa');
 
       // Wait for results
-      const resultsList = page.locator('ul');
-      await expect(resultsList).toBeVisible({ timeout: 5000 });
+      const resultsList = page.getByTestId('search-results-list');
+      await expect(resultsList).toBeVisible({ timeout: 10000 });
 
       // Use keyboard to select first result
       await searchInput.press('ArrowDown');

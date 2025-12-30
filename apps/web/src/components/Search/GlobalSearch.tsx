@@ -106,7 +106,7 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
             </div>
           )}
           {results.length > 0 && (
-            <ul className="py-1">
+            <ul className="py-1" data-testid="search-results-list">
               {results.map((deputy, index) => (
                 <li
                   key={deputy.id}
