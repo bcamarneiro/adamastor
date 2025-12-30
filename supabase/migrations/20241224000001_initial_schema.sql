@@ -1,5 +1,5 @@
 -- ===================
--- GOV-PERF Initial Schema
+-- ADAMASTOR Initial Schema
 -- ===================
 -- Migration: 20241224000001_initial_schema
 -- Description: Core tables for Portuguese Parliament tracker

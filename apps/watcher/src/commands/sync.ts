@@ -27,7 +27,7 @@ async function runSync(options: SyncOptions = {}): Promise<number> {
   const startTime = Date.now();
 
   console.log('╔═══════════════════════════════════════════════════════════╗');
-  console.log('║           GOV-PERF DATA SYNC                              ║');
+  console.log('║           ADAMASTOR DATA SYNC                             ║');
   console.log('╚═══════════════════════════════════════════════════════════╝\n');
 
   if (options.force) {

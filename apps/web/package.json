@@ -4,7 +4,8 @@
   "version": "0.0.4",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "bun vite",
+    "dev:debug": "bun vite --debug --logLevel info",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "bun test",
@@ -12,6 +13,7 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:headed": "playwright test --headed",
+    "e2e:debug": "DEBUG=pw:webserver,pw:browser* playwright test --headed --timeout=0",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },

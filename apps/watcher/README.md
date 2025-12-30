@@ -1,4 +1,4 @@
-# gov-perf-watcher
+# adamastor-watcher
 
 To install dependencies:
 

@@ -1,5 +1,5 @@
 -- ===================
--- GOV-PERF Seed Data
+-- ADAMASTOR Seed Data
 -- ===================
 -- Districts and Parties for Portuguese Parliament
 

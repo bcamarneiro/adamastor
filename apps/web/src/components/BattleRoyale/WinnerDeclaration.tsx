@@ -17,8 +17,8 @@ export function WinnerDeclaration({
 }: WinnerDeclarationProps) {
   const handleShare = async () => {
     const text = isTie
-      ? `Batalha empatada! ${winner.short_name} vs ${loser.short_name} - descobre mais em govperf.pt/batalha`
-      : `${winner.short_name} venceu ${loser.short_name} por ${winsCount} categorias! Descobre mais em govperf.pt/batalha`;
+      ? `Batalha empatada! ${winner.short_name} vs ${loser.short_name} - descobre mais em debaixodolho.pt/batalha`
+      : `${winner.short_name} venceu ${loser.short_name} por ${winsCount} categorias! Descobre mais em debaixodolho.pt/batalha`;
 
     if (navigator.share) {
       try {

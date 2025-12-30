@@ -21,6 +21,8 @@ dist/
 
 # Testing
 coverage/
+test-results/
+**/test-results/
 
 # Logs
 *.log
