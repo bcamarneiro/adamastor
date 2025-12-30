@@ -44,7 +44,7 @@ export function MetricBar({
           title={`Media: ${formatValue(average)}`}
         />
       </div>
-      <div className="flex justify-between text-xs text-neutral-9">
+      <div className="flex justify-between text-xs text-neutral-11">
         <span>{isPercentage ? '0%' : '0'}</span>
         <span className="flex items-center gap-1">
           <span className="w-2 h-0.5 bg-neutral-12 inline-block" />
