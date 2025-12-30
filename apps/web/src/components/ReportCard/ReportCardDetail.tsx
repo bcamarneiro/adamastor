@@ -1,4 +1,5 @@
 import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
+import { useFeatureFlags } from '@/store/useFeatureFlags';
 import {
   ArrowLeftRight,
   Award,
@@ -65,6 +66,7 @@ function formatDate(dateStr: string | null): string {
 }
 
 export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardDetailProps) {
+  const { flags } = useFeatureFlags();
   const avgProposals = averages?.avg_proposals || 0;
   const avgInterventions = averages?.avg_interventions || 0;
   const avgQuestions = averages?.avg_questions || 0;
@@ -180,13 +182,15 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
           <MetricBar label="" value={deputy.intervention_count} average={avgInterventions} />
         </div>
 
-        <div>
-          <div className="flex items-center gap-1 mb-2">
-            <span className="text-sm font-medium text-neutral-11">Perguntas ao Governo</span>
-            <HelpTooltip content={HELP_TEXTS.questions} />
+        {flags.questionCount && (
+          <div>
+            <div className="flex items-center gap-1 mb-2">
+              <span className="text-sm font-medium text-neutral-11">Perguntas ao Governo</span>
+              <HelpTooltip content={HELP_TEXTS.questions} />
+            </div>
+            <MetricBar label="" value={deputy.question_count} average={avgQuestions} />
           </div>
-          <MetricBar label="" value={deputy.question_count} average={avgQuestions} />
-        </div>
+        )}
 
         {/* Attendance Section */}
         {deputy.attendance_rate !== null &&

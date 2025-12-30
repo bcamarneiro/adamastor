@@ -1,3 +1,4 @@
+import { useFeatureFlags } from '@/store/useFeatureFlags';
 import { QRCodeSVG } from 'qrcode.react';
 import { forwardRef } from 'react';
 import type { DeputyDetail } from '../../lib/supabase';
@@ -8,6 +9,7 @@ interface ShareableCardProps {
 }
 
 export const ShareableCard = forwardRef<HTMLDivElement, ShareableCardProps>(({ deputy }, ref) => {
+  const { flags } = useFeatureFlags();
   const profileUrl = `${window.location.origin}/deputado/${deputy.id}`;
 
   return (
@@ -54,7 +56,9 @@ export const ShareableCard = forwardRef<HTMLDivElement, ShareableCardProps>(({ d
         </div>
 
         {/* Metrics */}
-        <div className="grid grid-cols-3 gap-8 w-full max-w-2xl mb-10">
+        <div
+          className={`grid ${flags.questionCount ? 'grid-cols-3' : 'grid-cols-2'} gap-8 w-full max-w-2xl mb-10`}
+        >
           <div className="text-center bg-neutral-2 rounded-xl p-6">
             <div className="text-lg mb-1">Propostas</div>
             <div className="text-4xl font-bold text-neutral-12">{deputy.proposal_count}</div>
@@ -63,10 +67,12 @@ export const ShareableCard = forwardRef<HTMLDivElement, ShareableCardProps>(({ d
             <div className="text-lg mb-1">Intervencoes</div>
             <div className="text-4xl font-bold text-neutral-12">{deputy.intervention_count}</div>
           </div>
-          <div className="text-center bg-neutral-2 rounded-xl p-6">
-            <div className="text-lg mb-1">Perguntas</div>
-            <div className="text-4xl font-bold text-neutral-12">{deputy.question_count}</div>
-          </div>
+          {flags.questionCount && (
+            <div className="text-center bg-neutral-2 rounded-xl p-6">
+              <div className="text-lg mb-1">Perguntas</div>
+              <div className="text-4xl font-bold text-neutral-12">{deputy.question_count}</div>
+            </div>
+          )}
         </div>
 
         {/* Rankings */}
