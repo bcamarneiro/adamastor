@@ -9,8 +9,8 @@
 // LEGISLATURE
 // =============================================================================
 
-/** Current legislature number (XVII = 17) */
-export const CURRENT_LEGISLATURE = 17;
+// Re-export from shared package - single source of truth for legislature config
+export { CURRENT_LEGISLATURE, CURRENT_LEGISLATURE_ROMAN } from 'shared';
 
 // =============================================================================
 // DATA SOURCES

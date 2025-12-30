@@ -8,6 +8,7 @@
  * 4. Update deputy biography_id for future lookups
  */
 
+import { CURRENT_LEGISLATURE } from '../config.js';
 import type { AttendanceRecord, PlenaryMeeting } from '../scrapers/attendance.js';
 import { supabase } from '../supabase.js';
 
@@ -69,7 +70,7 @@ async function upsertMeetings(meetings: PlenaryMeeting[]): Promise<Map<number, s
     const batch = meetings.slice(i, i + batchSize).map((m) => ({
       external_id: m.bid,
       meeting_date: m.date,
-      legislature: 16, // Current legislature
+      legislature: CURRENT_LEGISLATURE,
     }));
 
     const { data, error } = await supabase

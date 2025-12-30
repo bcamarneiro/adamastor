@@ -20,6 +20,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "shared": "workspace:*",
     "@bokuweb/zstd-wasm": "^0.0.27",
     "@sentry/node": "^10.32.1",
     "@supabase/supabase-js": "^2.89.0",

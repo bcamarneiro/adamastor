@@ -1,5 +1,40 @@
 // Core entity types - shared between watcher and web
 
+// ===================
+// LEGISLATURE CONFIGURATION
+// ===================
+// Current Portuguese Parliament legislature
+// Update this when a new legislature begins
+
+/** Current legislature number (XVII = 17, started June 2025) */
+export const CURRENT_LEGISLATURE = 17;
+
+/** Roman numeral representation for display */
+export const CURRENT_LEGISLATURE_ROMAN = 'XVII';
+
+/** Legislature display label */
+export const CURRENT_LEGISLATURE_LABEL = `${CURRENT_LEGISLATURE_ROMAN}ª Legislatura`;
+
+/**
+ * Convert legislature number to Roman numeral
+ */
+export function legislatureToRoman(legislature: number): string {
+  const romanNumerals: Record<number, string> = {
+    14: 'XIV',
+    15: 'XV',
+    16: 'XVI',
+    17: 'XVII',
+    18: 'XVIII',
+    19: 'XIX',
+    20: 'XX',
+  };
+  return romanNumerals[legislature] || legislature.toString();
+}
+
+// ===================
+// ENTITY TYPES
+// ===================
+
 export interface Party {
   id: string;
   externalId: string;
