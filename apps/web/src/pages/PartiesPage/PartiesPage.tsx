@@ -36,7 +36,7 @@ export function PartiesPage() {
             <h1 className="text-3xl font-bold text-neutral-12">Partidos</h1>
             <LegislatureBadge />
           </div>
-          <p className="text-neutral-11">Compara o desempenho dos partidos politicos portugueses</p>
+          <p className="text-neutral-11">Compara o desempenho dos partidos políticos portugueses</p>
         </div>
 
         {/* Quick Actions */}

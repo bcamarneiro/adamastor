@@ -126,6 +126,7 @@ GROUP BY dist.id, dist.name, dist.deputy_count
 ORDER BY avg_work_score DESC NULLS LAST;
 
 -- Deputy attendance summary view - filter by current legislature
+-- Fixed: Move legislature filter to WHERE clause to avoid excluding valid attendance records
 DROP VIEW IF EXISTS deputy_attendance_summary CASCADE;
 CREATE VIEW deputy_attendance_summary AS
 SELECT
@@ -147,10 +148,11 @@ SELECT
   ) as attendance_rate
 FROM deputies d
 LEFT JOIN plenary_attendance pa ON pa.deputy_id = d.id
-LEFT JOIN plenary_meetings pm ON pa.meeting_id = pm.id AND pm.legislature = 17
+LEFT JOIN plenary_meetings pm ON pa.meeting_id = pm.id
 LEFT JOIN parties p ON d.party_id = p.id
 WHERE d.is_active = true
   AND d.legislature = 17
+  AND (pm.legislature = 17 OR pm.id IS NULL)
 GROUP BY d.id, d.name, d.short_name, d.legislature, p.acronym;
 
 -- ===================
@@ -158,7 +160,10 @@ GROUP BY d.id, d.name, d.short_name, d.legislature, p.acronym;
 -- ===================
 
 -- Get national averages - filter by current legislature
-CREATE OR REPLACE FUNCTION get_national_averages()
+-- Must DROP first because return type changed from TABLE to json
+DROP FUNCTION IF EXISTS get_national_averages();
+
+CREATE FUNCTION get_national_averages()
 RETURNS json AS $$
 SELECT json_build_object(
   'legislature', 17,
@@ -177,50 +182,63 @@ WHERE d.legislature = 17;
 $$ LANGUAGE sql STABLE;
 
 -- Recalculate all stats - filter by current legislature
+-- Uses existing data in deputy_stats (populated by transform pipeline)
+-- and adds legislature filtering to rankings
 CREATE OR REPLACE FUNCTION recalculate_all_stats()
 RETURNS void AS $$
+DECLARE
+  avg_proposals DECIMAL;
+  avg_interventions DECIMAL;
+  avg_questions DECIMAL;
 BEGIN
-  -- Update raw counts from views (only for current legislature deputies)
+  -- Step 1: Update attendance stats from plenary attendance summary (filtered by legislature)
   UPDATE deputy_stats ds
   SET
-    proposal_count = COALESCE(v.proposal_count, 0),
-    intervention_count = COALESCE(ds.intervention_count, 0),
-    question_count = COALESCE(ds.question_count, 0),
     meetings_attended = COALESCE(att.meetings_present, 0),
     meetings_total = COALESCE(att.total_meetings, 0),
-    attendance_rate = COALESCE(att.attendance_rate, 0),
-    work_score = ROUND(
-      (
-        COALESCE(v.proposal_count, 0) * 10.0 +
-        COALESCE(ds.intervention_count, 0) * 2.0 +
-        COALESCE(ds.question_count, 0) * 5.0 +
-        COALESCE(att.attendance_rate, 0) * 0.5
-      ) / 10.0,
-      2
-    ),
-    calculated_at = NOW()
-  FROM deputy_proposal_counts v
-  LEFT JOIN deputy_attendance_summary att ON att.deputy_id = ds.deputy_id
+    attendance_rate = COALESCE(att.attendance_rate, 0)
+  FROM deputy_attendance_summary att
   JOIN deputies d ON ds.deputy_id = d.id
-  WHERE v.deputy_id = ds.deputy_id
+  WHERE att.deputy_id = ds.deputy_id
     AND d.legislature = 17;
 
-  -- Update grades based on work score (only for current legislature)
+  -- Step 2: Calculate averages for work score formula (only current legislature)
+  SELECT
+    COALESCE(AVG(ds.proposal_count), 1),
+    COALESCE(AVG(ds.intervention_count), 1),
+    COALESCE(AVG(ds.question_count), 1)
+  INTO avg_proposals, avg_interventions, avg_questions
+  FROM deputy_stats ds
+  JOIN deputies d ON ds.deputy_id = d.id
+  WHERE d.legislature = 17;
+
+  -- Step 3: Calculate work score using the formula (only current legislature)
   UPDATE deputy_stats ds
-  SET grade = CASE
-    WHEN work_score >= 80 THEN 'A'
-    WHEN work_score >= 60 THEN 'B'
-    WHEN work_score >= 40 THEN 'C'
-    WHEN work_score >= 20 THEN 'D'
-    ELSE 'F'
-  END
+  SET
+    work_score = calculate_work_score(
+      ds.attendance_rate,
+      ds.proposal_count,
+      avg_proposals,
+      ds.intervention_count,
+      avg_interventions,
+      ds.question_count,
+      avg_questions
+    ),
+    calculated_at = NOW()
   FROM deputies d
   WHERE ds.deputy_id = d.id
     AND d.legislature = 17;
 
-  -- Update national rankings (only for current legislature)
+  -- Step 4: Update grades based on work score (only current legislature)
+  UPDATE deputy_stats ds
+  SET grade = score_to_grade(ds.work_score)
+  FROM deputies d
+  WHERE ds.deputy_id = d.id
+    AND d.legislature = 17;
+
+  -- Step 5: Update national rankings (only for current legislature)
   WITH ranked AS (
-    SELECT ds.deputy_id, ROW_NUMBER() OVER (ORDER BY ds.work_score DESC) as rank
+    SELECT ds.deputy_id, ROW_NUMBER() OVER (ORDER BY ds.work_score DESC NULLS LAST) as rank
     FROM deputy_stats ds
     JOIN deputies d ON ds.deputy_id = d.id
     WHERE d.legislature = 17
@@ -230,13 +248,13 @@ BEGIN
   FROM ranked r
   WHERE ds.deputy_id = r.deputy_id;
 
-  -- Update district rankings (only for current legislature)
+  -- Step 6: Update district rankings (only for current legislature)
   WITH district_ranked AS (
     SELECT
       ds.deputy_id,
       ROW_NUMBER() OVER (
         PARTITION BY d.district_id
-        ORDER BY ds.work_score DESC
+        ORDER BY ds.work_score DESC NULLS LAST
       ) as rank
     FROM deputy_stats ds
     JOIN deputies d ON ds.deputy_id = d.id
@@ -247,7 +265,10 @@ BEGIN
   FROM district_ranked dr
   WHERE ds.deputy_id = dr.deputy_id;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Grant execute permission
+GRANT EXECUTE ON FUNCTION recalculate_all_stats() TO service_role;
 
 -- ===================
 -- COMMENTS

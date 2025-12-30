@@ -27,7 +27,7 @@ export function LeaderboardPage() {
             <LegislatureBadge />
           </div>
           <p className="text-neutral-11">
-            Descobre quem trabalha mais (e menos) na Assembleia da Republica
+            Descobre quem trabalha mais (e menos) na Assembleia da República
           </p>
         </div>
 
