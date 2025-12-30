@@ -5,7 +5,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandLoading,
 } from '@/components/ui/command';
 import { useDeputySearch } from '@/hooks/useDeputySearch';
 import { cn } from '@/utils/cn';
@@ -80,7 +79,6 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
         {showDropdown && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-neutral-1 border border-neutral-5 rounded-lg shadow-lg overflow-hidden z-50">
             <CommandList>
-              {isLoading && <CommandLoading>A procurar...</CommandLoading>}
               {!isLoading && results.length === 0 && (
                 <CommandEmpty>Nenhum deputado encontrado</CommandEmpty>
               )}
