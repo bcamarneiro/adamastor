@@ -1,20 +1,10 @@
 import { Share2 } from 'lucide-react';
 import { formatCurrency } from '../../services/waste/useCalculateWaste';
-import { ConversionCard } from './ConversionCard';
-
-interface WasteConversion {
-  id: string;
-  icon: string;
-  label: string;
-  quantity: number;
-  unit: string;
-}
 
 interface WasteResultProps {
   irsAmount: number;
   wasteAmount: number;
   parliamentContribution: number;
-  conversions: WasteConversion[];
   lowWorkersPercentage: number;
 }
 
@@ -22,7 +12,6 @@ export function WasteResult({
   irsAmount,
   wasteAmount,
   parliamentContribution,
-  conversions,
   lowWorkersPercentage,
 }: WasteResultProps) {
   const handleShare = async () => {
@@ -73,21 +62,6 @@ export function WasteResult({
             <span className="text-danger-11 font-medium">Vai para baixo desempenho</span>
             <span className="font-bold text-danger-11">{formatCurrency(wasteAmount)}</span>
           </div>
-        </div>
-      </div>
-
-      {/* Conversions Grid */}
-      <div>
-        <h4 className="font-medium text-neutral-12 mb-4">Com esse dinheiro podias comprar...</h4>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {conversions.map((conversion) => (
-            <ConversionCard
-              key={conversion.id}
-              icon={conversion.icon}
-              quantity={conversion.quantity}
-              label={conversion.label}
-            />
-          ))}
         </div>
       </div>
 

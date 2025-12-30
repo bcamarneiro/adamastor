@@ -98,7 +98,6 @@ export function WasteCalculator() {
             irsAmount={calculation.irsAmount}
             wasteAmount={calculation.wasteAmount}
             parliamentContribution={calculation.parliamentContribution}
-            conversions={calculation.conversions}
             lowWorkersPercentage={stats.lowWorkersPercentage}
           />
 
