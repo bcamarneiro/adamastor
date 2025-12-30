@@ -14,12 +14,14 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   // Close dropdown when clicking outside
+  // Issue #44: Use container ref to include dropdown in click detection
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.parentElement?.contains(event.target as Node)) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -63,7 +65,7 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
   const showDropdown = isOpen && hasMinChars;
 
   return (
-    <div className={cn('relative', className)}>
+    <div ref={containerRef} className={cn('relative', className)}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-9" />
         <input
