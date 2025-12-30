@@ -26,7 +26,7 @@ export function WasteResult({
   lowWorkersPercentage,
 }: WasteResultProps) {
   const handleShare = async () => {
-    const text = `Do meu IRS de ${formatCurrency(irsAmount)}, cerca de ${formatCurrency(wasteAmount)} foi para deputados com baixo desempenho. Descobre quanto desperdiçaste em debaixodolho.pt/desperdicio`;
+    const text = `Do meu IRS de ${formatCurrency(irsAmount)}, cerca de ${formatCurrency(wasteAmount)} foi para deputados com baixo desempenho. Descobre quanto desperdiçaste em debaixodolho.pt`;
 
     if (navigator.share) {
       try {

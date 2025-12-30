@@ -391,14 +391,15 @@ p {
   line-height: 1.4;
 }
 
-/* Links - only apply default styling to plain text links, not styled buttons */
-a:not([class*="bg-"]) {
+/* Links - only apply default styling to plain text links in prose content */
+/* Exclude links that have explicit styling (rounded corners, flex, inline-flex, or backgrounds) */
+a:not([class*="bg-"]):not([class*="rounded"]):not([class*="flex"]) {
   color: var(--color-accent-9);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-a:not([class*="bg-"]):hover {
+a:not([class*="bg-"]):not([class*="rounded"]):not([class*="flex"]):hover {
   color: var(--color-accent-10);
   text-decoration: underline;
 }

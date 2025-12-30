@@ -64,7 +64,7 @@ export const ShareableCard = forwardRef<HTMLDivElement, ShareableCardProps>(({ d
             <div className="text-4xl font-bold text-neutral-12">{deputy.proposal_count}</div>
           </div>
           <div className="text-center bg-neutral-2 rounded-xl p-6">
-            <div className="text-lg mb-1">Intervencoes</div>
+            <div className="text-lg mb-1">Intervenções</div>
             <div className="text-4xl font-bold text-neutral-12">{deputy.intervention_count}</div>
           </div>
           {flags.questionCount && (

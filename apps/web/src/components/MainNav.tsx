@@ -1,6 +1,6 @@
 import { GlobalSearch } from '@/components/Search';
 import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
-import { useFeatureFlags } from '@/store/useFeatureFlags';
+import { type FeatureFlags, useFeatureFlags } from '@/store/useFeatureFlags';
 import { Menu, Search, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -12,7 +12,7 @@ interface MainNavProps {
 interface NavItem {
   path: string;
   label: string;
-  featureFlag?: 'wasteCalculator';
+  featureFlag?: keyof FeatureFlags;
 }
 
 const allNavItems: NavItem[] = [

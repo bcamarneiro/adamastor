@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware';
  * Feature flags for toggling features that need work or are in development.
  * These can be toggled off to hide incomplete features from production.
  */
-interface FeatureFlags {
+export interface FeatureFlags {
   /** Issue #49 - Waste calculator needs better explanations */
   wasteCalculator: boolean;
   /** Issue #37 - Download image functionality */
