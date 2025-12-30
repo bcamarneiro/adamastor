@@ -391,14 +391,14 @@ p {
   line-height: 1.4;
 }
 
-/* Links */
-a {
+/* Links - only apply default styling to plain text links, not styled buttons */
+a:not([class*="bg-"]) {
   color: var(--color-accent-9);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-a:hover {
+a:not([class*="bg-"]):hover {
   color: var(--color-accent-10);
   text-decoration: underline;
 }
