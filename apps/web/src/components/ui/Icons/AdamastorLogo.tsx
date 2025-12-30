@@ -1,4 +1,4 @@
-const GovPerfLogo = ({ className }: { className?: string }) => (
+const AdamastorLogo = ({ className }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -17,10 +17,10 @@ const GovPerfLogo = ({ className }: { className?: string }) => (
     data-component-name="Flag"
     data-component-content="%7B%22className%22%3A%22h-5%20w-5%20text-neutral-900%22%7D"
   >
-    <title>Gov Perf Logo</title>
+    <title>Adamastor Logo</title>
     <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
     <line x1="4" x2="4" y1="22" y2="15" />
   </svg>
 );
 
-export default GovPerfLogo;
+export default AdamastorLogo;

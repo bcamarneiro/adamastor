@@ -1,5 +1,5 @@
 -- ===================
--- GOV-PERF Row Level Security
+-- ADAMASTOR Row Level Security
 -- ===================
 -- Migration: 20241224000004_rls
 -- Description: RLS policies for API access control

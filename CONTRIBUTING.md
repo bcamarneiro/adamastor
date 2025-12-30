@@ -1,4 +1,4 @@
-# Contributing to Gov-Perf
+# Contributing to Adamastor
 
 Thank you for your interest in improving transparency in Portuguese politics!
 
@@ -14,8 +14,8 @@ Thank you for your interest in improving transparency in Portuguese politics!
 
 ```bash
 # Clone the repo
-git clone https://github.com/bcamarneiro/gov-perf.git
-cd gov-perf
+git clone https://github.com/bcamarneiro/adamastor.git
+cd adamastor
 
 # Install dependencies
 bun install
@@ -41,7 +41,7 @@ Open http://localhost:3000
 ## Project Structure
 
 ```
-gov-perf/
+adamastor/
 ├── apps/watcher/     # Data pipeline (TypeScript/Bun)
 ├── apps/web/         # Frontend (React/Vite)
 ├── packages/shared/  # Shared types
@@ -212,8 +212,8 @@ Before submitting a PR:
 
 ## Getting Help
 
-- **Questions**: Open a [Discussion](https://github.com/bcamarneiro/gov-perf/discussions)
-- **Bugs**: Open an [Issue](https://github.com/bcamarneiro/gov-perf/issues)
+- **Questions**: Open a [Discussion](https://github.com/bcamarneiro/adamastor/discussions)
+- **Bugs**: Open an [Issue](https://github.com/bcamarneiro/adamastor/issues)
 - **Security**: Email directly (don't open public issue)
 
 ---

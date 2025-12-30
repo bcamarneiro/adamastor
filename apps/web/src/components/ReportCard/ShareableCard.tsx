@@ -20,7 +20,7 @@ export const ShareableCard = forwardRef<HTMLDivElement, ShareableCardProps>(({ d
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <div className="text-4xl font-bold text-accent-9">Gov-Perf</div>
+        <div className="text-4xl font-bold text-accent-9">Debaixo d'olho</div>
         <div className="text-xl text-neutral-9">Report Card</div>
       </div>
 
@@ -92,7 +92,7 @@ export const ShareableCard = forwardRef<HTMLDivElement, ShareableCardProps>(({ d
           />
           <div className="text-lg text-neutral-11">Escaneia para ver mais</div>
         </div>
-        <div className="text-xl text-neutral-9">govperf.pt</div>
+        <div className="text-xl text-neutral-9">debaixodolho.pt</div>
       </div>
     </div>
   );

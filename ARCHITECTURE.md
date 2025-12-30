@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document explains how gov-perf works. Read this first before diving into the code.
+This document explains how Adamastor works. Read this first before diving into the code.
 
 ## The 30-Second Summary
 
@@ -68,7 +68,7 @@ Parliament API → Watcher (fetches + transforms) → Supabase DB → Web App �
 ## Directory Structure
 
 ```
-gov-perf/
+adamastor/
 │
 ├── apps/
 │   ├── watcher/          # Data pipeline (runs on schedule)

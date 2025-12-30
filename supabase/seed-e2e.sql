@@ -1,5 +1,5 @@
 -- ===================
--- GOV-PERF E2E Test Fixtures
+-- ADAMASTOR E2E Test Fixtures
 -- ===================
 -- DETERMINISTIC test data for Playwright E2E tests.
 -- This data is FIXED and predictable for reliable assertions.

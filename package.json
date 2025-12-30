@@ -1,12 +1,16 @@
 {
-  "name": "gov-perf",
+  "name": "adamastor",
   "private": true,
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev": "bun --filter web dev",
+    "dev": "bun run --cwd apps/web vite",
+    "dev:debug": "bun run --cwd apps/web vite --debug --logLevel info",
     "build": "bun --filter web build",
     "sync": "bun --filter watcher start",
     "test": "bun test",
+    "e2e": "bun --filter web e2e",
+    "e2e:ui": "bun --filter web e2e:ui",
+    "e2e:debug": "bun --filter web e2e:debug",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",

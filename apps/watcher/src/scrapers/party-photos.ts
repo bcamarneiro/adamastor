@@ -94,7 +94,7 @@ async function scrapePage(config: PartyPhotoConfig): Promise<ScrapedPhoto[]> {
   try {
     const response = await fetch(config.listPageUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; GovPerfBot/1.0; +https://debaixodolho.pt)',
+        'User-Agent': 'Mozilla/5.0 (compatible; AdamastorBot/1.0; +https://debaixodolho.pt)',
       },
     });
 
@@ -244,7 +244,7 @@ async function downloadAndUploadPhoto(
   try {
     const response = await fetch(photoUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; GovPerfBot/1.0; +https://debaixodolho.pt)',
+        'User-Agent': 'Mozilla/5.0 (compatible; AdamastorBot/1.0; +https://debaixodolho.pt)',
       },
     });
 
