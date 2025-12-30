@@ -62,6 +62,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
                 onClick={() => setSearchOpen(true)}
                 className="p-2 text-neutral-11 hover:text-neutral-12 hover:bg-neutral-3 rounded-lg transition-colors"
                 aria-label="Pesquisar"
+                data-testid="search-toggle"
               >
                 <Search className="w-5 h-5" />
               </button>

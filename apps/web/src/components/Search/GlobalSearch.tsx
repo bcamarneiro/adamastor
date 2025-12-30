@@ -69,6 +69,7 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
             onFocus={() => setIsOpen(true)}
             placeholder="Pesquisar deputado..."
             className="bg-neutral-2 border border-neutral-5 rounded-lg focus:ring-2 focus:ring-accent-7 h-10"
+            data-testid="global-search-input"
           />
           {isLoading && (
             <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-9 animate-spin" />
