@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import { FullRankings } from '@/components/Leaderboard/FullRankings';
+import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { SEO } from '@/components/SEO';
 import { type District, type Party, supabase } from '@/lib/supabase';
@@ -85,7 +86,10 @@ export function FullRankingsPage() {
 
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-neutral-12 mb-2">Ranking Completo</h1>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl font-bold text-neutral-12">Ranking Completo</h1>
+              <LegislatureBadge />
+            </div>
             <p className="text-neutral-11">Todos os 230 deputados ordenados por desempenho</p>
           </div>
 
