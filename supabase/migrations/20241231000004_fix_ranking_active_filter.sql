@@ -130,6 +130,12 @@ SET search_path = pg_catalog, public  -- Security fix: Set search_path for SECUR
 SECURITY DEFINER;
 
 -- ===================
+-- PERMISSIONS
+-- ===================
+-- Grant execute permission to service_role (required for ETL pipeline)
+GRANT EXECUTE ON FUNCTION recalculate_all_stats() TO service_role;
+
+-- ===================
 -- COMMENTS
 -- ===================
 COMMENT ON FUNCTION recalculate_all_stats() IS 'Recalculates all deputy stats including work scores (using calculate_work_score with normalization), grades, and rankings. Rankings only include active deputies.';
