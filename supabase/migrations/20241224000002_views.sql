@@ -1,5 +1,5 @@
 -- ===================
--- GOV-PERF Views
+-- ADAMASTOR Views
 -- ===================
 -- Migration: 20241224000002_views
 -- Description: API views for frontend consumption

@@ -1,10 +1,10 @@
-# Gov-Perf-Frontend
+# Adamastor Web
 
 A modern React application for tracking and analyzing Portuguese parliamentary activities.
 
 ## Overview
 
-Gov-Perf-Frontend is a web application built with React and TypeScript that bridges the gap between parliamentary activities and citizen understanding. While Portugal's Parliament produces extensive documentation of its activities, this information often remains inaccessible to the average citizen - buried in complex documents, technical jargon, and hard-to-navigate official websites. This project transforms this complex parliamentary data into an accessible, easy-to-understand format for everyone.
+Adamastor Web is a web application built with React and TypeScript that bridges the gap between parliamentary activities and citizen understanding. While Portugal's Parliament produces extensive documentation of its activities, this information often remains inaccessible to the average citizen - buried in complex documents, technical jargon, and hard-to-navigate official websites. This project transforms this complex parliamentary data into an accessible, easy-to-understand format for everyone.
 
 ## Why This Matters
 
@@ -63,8 +63,8 @@ The application processes parliamentary data including:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/gov-perf-frontend.git
-   cd gov-perf-frontend
+   git clone https://github.com/bcamarneiro/adamastor.git
+   cd adamastor/apps/web
    Copy
    Insert
    ```
@@ -130,7 +130,7 @@ npm run lint:fix
 ### Project Structure
 
 ```bash
-gov-perf-frontend/
+adamastor-web/
 ├── src/
 │ ├── assets/ # Static assets
 │ ├── components/ # Reusable UI components

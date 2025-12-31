@@ -1,5 +1,5 @@
 -- ===================
--- GOV-PERF Functions
+-- ADAMASTOR Functions
 -- ===================
 -- Migration: 20241224000003_functions
 -- Description: PostgreSQL functions for work score calculation and utilities

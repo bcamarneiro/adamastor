@@ -1,5 +1,5 @@
 -- ===================
--- GOV-PERF Schema Update: Party-Level Votes
+-- ADAMASTOR Schema Update: Party-Level Votes
 -- ===================
 -- Migration: 20241224000005_update_to_party_votes
 -- Description: Updates schema to reflect Parliament API data limitations

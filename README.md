@@ -1,12 +1,12 @@
-# Gov-Perf
+# Adamastor
 
 > Track Portuguese Parliament performance with transparency.
 
-[![CI](https://github.com/bcamarneiro/gov-perf/actions/workflows/ci.yml/badge.svg)](https://github.com/bcamarneiro/gov-perf/actions/workflows/ci.yml)
+[![CI](https://github.com/bcamarneiro/adamastor/actions/workflows/ci.yml/badge.svg)](https://github.com/bcamarneiro/adamastor/actions/workflows/ci.yml)
 
 ## What is this?
 
-Gov-Perf collects public data from the Portuguese Parliament and calculates **performance metrics** for each deputy:
+Adamastor collects public data from the Portuguese Parliament and calculates **performance metrics** for each deputy:
 
 - **Proposals** - Bills and legislative initiatives authored
 - **Interventions** - Speeches and participation in debates
@@ -24,8 +24,8 @@ Each deputy gets a **Work Score** and **letter grade** (A-F) based on their acti
 ```bash
 # Prerequisites: Bun, Docker
 
-git clone https://github.com/bcamarneiro/gov-perf.git
-cd gov-perf
+git clone https://github.com/bcamarneiro/adamastor.git
+cd adamastor
 bun install
 
 # Start local database
@@ -53,7 +53,7 @@ To populate with data, see [CONTRIBUTING.md](CONTRIBUTING.md#running-the-full-pi
 ## Project Structure
 
 ```
-gov-perf/
+adamastor/
 ├── apps/
 │   ├── watcher/     # Data pipeline - fetches & transforms Parliament data
 │   └── web/         # React frontend - displays deputy performance

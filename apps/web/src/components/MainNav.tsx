@@ -1,18 +1,25 @@
 import { GlobalSearch } from '@/components/Search';
 import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
+import { type FeatureFlags, useFeatureFlags } from '@/store/useFeatureFlags';
 import { Menu, Search, X } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface MainNavProps {
   scrollY: number;
 }
 
-const navItems = [
+interface NavItem {
+  path: string;
+  label: string;
+  featureFlag?: keyof FeatureFlags;
+}
+
+const allNavItems: NavItem[] = [
   { path: '/report-card', label: 'Deputados' },
   { path: '/partidos', label: 'Partidos' },
   { path: '/ranking', label: 'Ranking' },
-  { path: '/desperdicio', label: 'Calculadora' },
+  { path: '/desperdicio', label: 'Calculadora', featureFlag: 'wasteCalculator' },
   { path: '/batalha', label: 'Battle Royale' },
   { path: '/about', label: 'Sobre' },
 ];
@@ -21,8 +28,17 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { flags } = useFeatureFlags();
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Filter nav items based on feature flags
+  const navItems = useMemo(() => {
+    return allNavItems.filter((item) => {
+      if (!item.featureFlag) return true;
+      return flags[item.featureFlag];
+    });
+  }, [flags]);
 
   return (
     <header
@@ -62,6 +78,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
                 onClick={() => setSearchOpen(true)}
                 className="p-2 text-neutral-11 hover:text-neutral-12 hover:bg-neutral-3 rounded-lg transition-colors"
                 aria-label="Pesquisar"
+                data-testid="search-toggle"
               >
                 <Search className="w-5 h-5" />
               </button>
