@@ -43,3 +43,9 @@ bun.lockb
 supabase/.temp/
 apps/web/playwright-report/
 .vercel
+
+# Editor-specific folders
+.superdesign/
+.cursor/
+.windsurfrules
+CLAUDE.md
