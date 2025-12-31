@@ -55,6 +55,9 @@ const MethodologyPage = lazy(() =>
 const ContributePage = lazy(() =>
   import('./pages/ContributePage').then((m) => ({ default: m.ContributePage }))
 );
+const MissionPage = lazy(() =>
+  import('./pages/MissionPage').then((m) => ({ default: m.MissionPage }))
+);
 
 function PageLoader() {
   return (
@@ -96,6 +99,7 @@ const App = () => {
             <Route path="about" element={<AboutPage />} />
             <Route path="metodologia" element={<MethodologyPage />} />
             <Route path="contribuir" element={<ContributePage />} />
+            <Route path="missao" element={<MissionPage />} />
 
             {/* Report Card Feature */}
             <Route path="report-card" element={<HomePage />} />

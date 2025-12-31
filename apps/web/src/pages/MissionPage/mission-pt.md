@@ -1,0 +1,78 @@
+# A Nossa Missão
+
+## Democracia precisa de transparência
+
+Acreditamos que uma democracia saudável exige cidadãos informados. Não basta votar de quatro em quatro anos - é preciso acompanhar o trabalho dos eleitos entre eleições. O nosso objetivo é simples: **tornar a informação parlamentar acessível a todos**.
+
+---
+
+## Os Nossos Valores
+
+### Transparência Total
+
+Somos um projeto **open source**. Todo o nosso código está disponível no [GitHub](https://github.com/bcamarneiro/adamastor). Qualquer pessoa pode verificar como calculamos as métricas, de onde vêm os dados, e sugerir melhorias.
+
+### Imparcialidade
+
+**Este projeto não apoia nenhum partido.** Embora os autores possam ter as suas afiliações políticas pessoais, o projeto em si é apartidário. Não recebemos financiamento de partidos ou organizações políticas, e contribuições de todas as orientações são bem-vindas. Apresentamos os dados de forma objetiva, sem favorecer ou prejudicar nenhum deputado ou partido. Transparência é boa para todos.
+
+### Factos, não opiniões
+
+Trabalhamos com **dados públicos** disponibilizados pela Assembleia da República. Não editamos, filtramos ou manipulamos a informação - apenas a organizamos de forma mais acessível.
+
+### Privacidade
+
+Respeitamos a privacidade dos utilizadores. Não rastreamos comportamentos individuais nem vendemos dados. Consulta a nossa [política de privacidade](/privacidade) para mais detalhes.
+
+---
+
+## O Que NÃO Somos
+
+Para evitar mal-entendidos, queremos ser claros:
+
+- **Não somos um partido político** - o projeto é apartidário, independentemente das afiliações pessoais dos contribuidores
+- **Não fazemos recomendações de voto** - apresentamos dados para que cada cidadão tire as suas conclusões
+- **Não somos jornalistas** - não produzimos notícias nem opinião editorial
+- **Não somos financiados** por partidos, empresas ou organizações políticas - os custos são atualmente suportados pelo autor, mas em breve abriremos uma forma transparente para contribuições de infraestrutura
+- **Não pretendemos substituir** os canais oficiais da Assembleia da República
+
+---
+
+## Limitações
+
+Somos um projeto voluntário, desenvolvido por cidadãos no seu tempo livre. Reconhecemos as nossas limitações:
+
+- **Dados podem ter atrasos** - dependemos da atualização das fontes oficiais
+- **Métricas são simplificações** - nenhum número único captura a totalidade do trabalho de um deputado
+- **Erros podem acontecer** - se encontrares algum, [reporta aqui](/contribuir)
+
+Valorizamos a honestidade intelectual. Se descobrirmos erros, corrigimo-los publicamente.
+
+### Desenvolvido com ajuda de IA
+
+Grande parte deste projeto foi desenvolvida com recurso a ferramentas de inteligência artificial. Acreditamos que a IA é uma ferramenta poderosa que, usada de forma responsável, permite a pequenas equipas criar projetos que de outra forma seriam impossíveis.
+
+Nem humanos nem máquinas são infalíveis. Por isso, em vez de questionar a legitimidade do projeto com base nas ferramentas usadas, encorajamos todos a **reportar problemas** que encontrem. Todo o código está aberto para escrutínio - o que importa é o resultado final e a sua utilidade para os cidadãos.
+
+---
+
+## Porquê "Debaixo d'Olho"?
+
+O nome reflete a nossa missão: manter a atividade parlamentar **debaixo d'olho** - visível, acompanhada e escrutinada pelos cidadãos.
+
+Não se trata de vigilância hostil, mas de cidadania ativa. Os deputados trabalham em nosso nome; temos o direito e o dever de acompanhar esse trabalho.
+
+---
+
+## Junta-te a Nós
+
+Este projeto só faz sentido se for útil para os cidadãos. Se partilhas da nossa visão:
+
+- **Reporta problemas** que encontres na plataforma
+- **Sugere melhorias** que tornem a informação mais clara
+- **Contribui com código** se tiveres conhecimentos técnicos
+- **Partilha** o projeto com quem possa ter interesse
+
+Juntos, podemos tornar a democracia portuguesa mais transparente.
+
+[Como Contribuir](/contribuir) | [Metodologia](/metodologia) | [GitHub](https://github.com/bcamarneiro/adamastor)

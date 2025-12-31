@@ -124,6 +124,11 @@ export const SEO_CONFIGS = {
     description:
       "O Debaixo d'olho é uma plataforma independente que monitoriza o trabalho dos deputados portugueses usando dados públicos do Parlamento.",
   },
+  mission: {
+    title: 'A Nossa Missão',
+    description:
+      'Somos um projeto apartidário, open source, focado em tornar a informação parlamentar acessível a todos. Transparência, imparcialidade e factos.',
+  },
   reportCard: {
     title: 'Descobre o Teu Deputado',
     description:
