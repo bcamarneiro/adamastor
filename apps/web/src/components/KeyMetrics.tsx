@@ -2,20 +2,20 @@ import { motion } from 'framer-motion';
 
 const metrics = [
   {
-    value: '230+',
-    label: 'Members of Parliament',
+    value: '230',
+    label: 'Deputados',
   },
   {
     value: '1,500+',
-    label: 'Initiatives Tracked',
+    label: 'Iniciativas',
   },
   {
-    value: '95%',
-    label: 'Data Accuracy',
+    value: 'XVII',
+    label: 'Legislatura',
   },
   {
-    value: '24/7',
-    label: 'Real-time Updates',
+    value: 'Diário',
+    label: 'Atualização',
   },
 ];
 
