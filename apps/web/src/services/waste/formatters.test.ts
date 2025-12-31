@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCurrency, formatNumber } from './useCalculateWaste';
+import { formatCurrency } from './useCalculateWaste';
 
 describe('formatCurrency', () => {
   it('should format a number as Portuguese EUR currency', () => {
@@ -35,37 +35,5 @@ describe('formatCurrency', () => {
     expect(result).toContain('1');
     expect(result).toContain('000');
     expect(result).toContain('€');
-  });
-});
-
-describe('formatNumber', () => {
-  it('should format a number with Portuguese locale', () => {
-    const result = formatNumber(1234);
-    // Portuguese uses space or dot as thousands separator
-    expect(result).toContain('1');
-    expect(result).toContain('234');
-  });
-
-  it('should handle zero', () => {
-    expect(formatNumber(0)).toBe('0');
-  });
-
-  it('should handle negative numbers', () => {
-    const result = formatNumber(-1000);
-    expect(result).toContain('1');
-    expect(result).toContain('000');
-  });
-
-  it('should format large numbers with thousand separators', () => {
-    const result = formatNumber(1000000);
-    // Should contain grouping for million
-    expect(result).toContain('1');
-    expect(result).toContain('000');
-  });
-
-  it('should handle decimal numbers', () => {
-    const result = formatNumber(1234.56);
-    expect(result).toContain('1');
-    expect(result).toContain('234');
   });
 });
