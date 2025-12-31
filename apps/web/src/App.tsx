@@ -52,6 +52,9 @@ const DistrictComparisonPage = lazy(() =>
 const MethodologyPage = lazy(() =>
   import('./pages/MethodologyPage').then((m) => ({ default: m.MethodologyPage }))
 );
+const ContributePage = lazy(() =>
+  import('./pages/ContributePage').then((m) => ({ default: m.ContributePage }))
+);
 
 function PageLoader() {
   return (
@@ -92,6 +95,7 @@ const App = () => {
 
             <Route path="about" element={<AboutPage />} />
             <Route path="metodologia" element={<MethodologyPage />} />
+            <Route path="contribuir" element={<ContributePage />} />
 
             {/* Report Card Feature */}
             <Route path="report-card" element={<HomePage />} />
