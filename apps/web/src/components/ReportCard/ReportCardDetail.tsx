@@ -72,10 +72,17 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
   const avgQuestions = averages?.avg_questions || 0;
   const avgAttendance = averages?.avg_attendance || 0;
 
-  const totalVotes = deputy.party_total_votes || 1;
-  const favorPercent = ((deputy.party_votes_favor / totalVotes) * 100).toFixed(1);
-  const againstPercent = ((deputy.party_votes_against / totalVotes) * 100).toFixed(1);
-  const abstainPercent = ((deputy.party_votes_abstain / totalVotes) * 100).toFixed(1);
+  const totalVotes = deputy.party_total_votes || 0;
+  const hasVoteData = totalVotes > 0;
+  const favorPercent = hasVoteData
+    ? (((deputy.party_votes_favor || 0) / totalVotes) * 100).toFixed(1)
+    : '0.0';
+  const againstPercent = hasVoteData
+    ? (((deputy.party_votes_against || 0) / totalVotes) * 100).toFixed(1)
+    : '0.0';
+  const abstainPercent = hasVoteData
+    ? (((deputy.party_votes_abstain || 0) / totalVotes) * 100).toFixed(1)
+    : '0.0';
 
   return (
     <div className="bg-neutral-1 rounded-xl shadow-lg overflow-hidden">

@@ -1,13 +1,12 @@
 -- ===================
--- Fix deputy_details view - restore all columns with legislature filter
+-- Restore deputy_details view - add missing columns
 -- ===================
--- Migration: 20241231000001_fix_deputy_details_district_id
+-- Migration: 20241231000002_restore_deputy_details_columns
 -- Description: Restore full deputy_details view with all columns from 20241226000006
 --              while maintaining legislature filtering from 20241230000001
 -- Fixes:
---   - 400 errors on district pages (missing district_id)
 --   - NaN% display in party votes (missing party vote columns)
---   - Missing biography data, source tracking, etc.
+--   - Missing biography data, source tracking, district_slug, etc.
 
 DROP VIEW IF EXISTS deputy_details CASCADE;
 
