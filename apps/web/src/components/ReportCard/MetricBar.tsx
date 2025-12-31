@@ -1,3 +1,5 @@
+import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
+
 interface MetricBarProps {
   label: string;
   value: number;
@@ -6,65 +8,35 @@ interface MetricBarProps {
   isPercentage?: boolean;
 }
 
-export function MetricBar({
-  label,
-  value,
-  average,
-  maxValue,
-  isPercentage = false,
-}: MetricBarProps) {
-  // Scale: 0 to max, where max = provided maxValue, or 2x average (so average is at 50%), minimum 1
-  const effectiveMax = isPercentage ? 100 : maxValue || Math.max(average * 2, 1);
-  const valuePercent = Math.min((value / effectiveMax) * 100, 100);
-  const averagePercent = Math.min((average / effectiveMax) * 100, 100);
-
-  const isAboveAverage = value >= average;
-
+export function MetricBar({ label, value, average, isPercentage = false }: MetricBarProps) {
   const formatValue = (v: number) => (isPercentage ? `${v.toFixed(1)}%` : Math.round(v).toString());
 
+  const diff = average > 0 ? ((value - average) / average) * 100 : 0;
+  const isAboveAverage = value > average;
+  const isEqual = value === average;
+
   return (
-    <div className="space-y-1">
-      {label && (
-        <div className="flex justify-between text-sm">
-          <span className="font-medium text-neutral-11">{label}</span>
-        </div>
-      )}
-      <div className="relative">
-        {/* Value label - top right */}
-        <div className="flex justify-end mb-1">
-          <span
-            className={`text-sm font-semibold ${isAboveAverage ? 'text-accent-11' : 'text-neutral-11'}`}
-          >
-            {formatValue(value)}
-          </span>
-        </div>
-        {/* Bar container */}
-        <div className="relative h-4 bg-neutral-4 rounded-full overflow-hidden">
-          {/* Value bar */}
-          <div
-            className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${
-              isAboveAverage ? 'bg-accent-9' : 'bg-accent-7'
-            }`}
-            style={{ width: `${valuePercent}%` }}
-          />
-          {/* Average marker line */}
-          {average > 0 && (
-            <div
-              className="absolute top-0 h-full w-0.5 bg-neutral-12 z-10"
-              style={{ left: `${averagePercent}%` }}
-              title={`Media nacional: ${formatValue(average)}`}
-            />
-          )}
-        </div>
-        {/* Scale labels */}
-        <div className="flex justify-between text-xs text-neutral-9 mt-1">
-          <span>0</span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-0.5 bg-neutral-12 inline-block" />
-            {formatValue(average)}
-          </span>
-          <span>{formatValue(effectiveMax)}</span>
-        </div>
+    <div className="p-4 bg-neutral-2 rounded-lg border border-neutral-4">
+      <div className="text-sm text-neutral-11 mb-1">{label}</div>
+      <div className="text-3xl font-bold text-neutral-12">{formatValue(value)}</div>
+      <div className="flex items-center gap-2 mt-1">
+        {isEqual ? (
+          <Minus className="w-4 h-4 text-neutral-9" />
+        ) : isAboveAverage ? (
+          <TrendingUp className="w-4 h-4 text-success-9" />
+        ) : (
+          <TrendingDown className="w-4 h-4 text-danger-9" />
+        )}
+        <span
+          className={`text-sm font-medium ${
+            isEqual ? 'text-neutral-9' : isAboveAverage ? 'text-success-9' : 'text-danger-9'
+          }`}
+        >
+          {isEqual
+            ? 'Na media'
+            : `${Math.abs(diff).toFixed(0)}% ${isAboveAverage ? 'acima' : 'abaixo'}`}
+        </span>
+        <span className="text-sm text-neutral-9">da media ({formatValue(average)})</span>
       </div>
     </div>
   );
