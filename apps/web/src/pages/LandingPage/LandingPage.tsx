@@ -216,7 +216,7 @@ const LandingPage = () => {
               </p>
               <Link to="/contribuir">
                 <Button className="rounded-full h-12 px-8 bg-accent-9 hover:bg-accent-10 transition-all duration-300">
-                  Comecar Agora
+                  Começar Agora
                 </Button>
               </Link>
             </div>
