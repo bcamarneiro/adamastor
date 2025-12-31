@@ -1,3 +1,5 @@
+import { useFeatureFlags } from '@/store/useFeatureFlags';
+
 interface MetricBarProps {
   label: string;
   value: number;
@@ -13,6 +15,8 @@ export function MetricBar({
   maxValue,
   isPercentage = false,
 }: MetricBarProps) {
+  const { flags } = useFeatureFlags();
+
   // For percentages, max is always 100
   const effectiveMax = isPercentage ? 100 : maxValue || Math.max(value, average) * 1.5 || 1;
   const valuePercent = Math.min((value / effectiveMax) * 100, 100);
@@ -38,18 +42,22 @@ export function MetricBar({
           style={{ width: `${valuePercent}%` }}
         />
         {/* Average marker */}
-        <div
-          className="absolute top-0 h-full w-0.5 bg-neutral-12"
-          style={{ left: `${averagePercent}%` }}
-          title={`Media: ${formatValue(average)}`}
-        />
+        {flags.averageDisplay && (
+          <div
+            className="absolute top-0 h-full w-0.5 bg-neutral-12"
+            style={{ left: `${averagePercent}%` }}
+            title={`Media: ${formatValue(average)}`}
+          />
+        )}
       </div>
-      <div className="flex justify-between text-xs text-neutral-9">
+      <div className="flex justify-between text-xs text-neutral-11">
         <span>{isPercentage ? '0%' : '0'}</span>
-        <span className="flex items-center gap-1">
-          <span className="w-2 h-0.5 bg-neutral-12 inline-block" />
-          Media: {formatValue(average)}
-        </span>
+        {flags.averageDisplay && (
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-0.5 bg-neutral-12 inline-block" />
+            Media: {formatValue(average)}
+          </span>
+        )}
       </div>
     </div>
   );

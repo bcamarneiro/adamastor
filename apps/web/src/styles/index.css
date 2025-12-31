@@ -391,14 +391,17 @@ p {
   line-height: 1.4;
 }
 
-/* Links - only apply default styling to plain text links, not styled buttons */
-a:not([class*="bg-"]) {
+/* Links - default styling for plain text links */
+/* Use .link class or rely on parent .prose container for inline links */
+.link,
+.prose a:not(.btn) {
   color: var(--color-accent-9);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-a:not([class*="bg-"]):hover {
+.link:hover,
+.prose a:not(.btn):hover {
   color: var(--color-accent-10);
   text-decoration: underline;
 }
