@@ -1,3 +1,4 @@
+import { useFeatureFlags } from '@/store/useFeatureFlags';
 import { toPng } from 'html-to-image';
 import { Check, Copy, Download, Share2, X } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -13,6 +14,7 @@ export function ShareButton({ deputy }: ShareButtonProps) {
   const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const { flags } = useFeatureFlags();
 
   const generateImage = async (): Promise<string | null> => {
     if (!cardRef.current) return null;
@@ -120,19 +122,21 @@ export function ShareButton({ deputy }: ShareButtonProps) {
             </div>
 
             <div className="space-y-3">
-              <button
-                onClick={handleDownload}
-                disabled={isGenerating}
-                className="w-full flex items-center gap-3 p-4 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors text-left"
-              >
-                <Download className="w-5 h-5 text-accent-9" />
-                <div>
-                  <div className="font-medium text-neutral-12">Descarregar imagem</div>
-                  <div className="text-sm text-neutral-11">
-                    Guarda a imagem para partilhar nas redes sociais
+              {flags.downloadImage && (
+                <button
+                  onClick={handleDownload}
+                  disabled={isGenerating}
+                  className="w-full flex items-center gap-3 p-4 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors text-left"
+                >
+                  <Download className="w-5 h-5 text-accent-9" />
+                  <div>
+                    <div className="font-medium text-neutral-12">Descarregar imagem</div>
+                    <div className="text-sm text-neutral-11">
+                      Guarda a imagem para partilhar nas redes sociais
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
+              )}
 
               <button
                 onClick={handleCopyLink}

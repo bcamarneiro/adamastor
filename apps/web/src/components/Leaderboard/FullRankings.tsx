@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getPartyBadgeBackground } from '../../lib/colors';
 import type { DeputyDetail } from '../../lib/supabase';
 import { useFullRankings } from '../../services/leaderboard/useFullRankings';
 import { GradeCircle } from '../ReportCard/GradeCircle';
@@ -111,9 +112,7 @@ export function FullRankings({ partyId, districtId, grade }: FullRankingsProps) 
                     <span
                       className="px-2 py-0.5 rounded-full text-xs font-medium"
                       style={{
-                        backgroundColor: deputy.party_color
-                          ? `${deputy.party_color}20`
-                          : 'var(--color-neutral-4)',
+                        backgroundColor: getPartyBadgeBackground(deputy.party_color),
                         color: deputy.party_color || 'var(--color-neutral-11)',
                       }}
                     >
