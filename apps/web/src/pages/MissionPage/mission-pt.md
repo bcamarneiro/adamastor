@@ -48,6 +48,12 @@ Somos um projeto voluntário, desenvolvido por cidadãos no seu tempo livre. Rec
 
 Valorizamos a honestidade intelectual. Se descobrirmos erros, corrigimo-los publicamente.
 
+### Desenvolvido com ajuda de IA
+
+Grande parte deste projeto foi desenvolvida com recurso a ferramentas de inteligência artificial. Acreditamos que a IA é uma ferramenta poderosa que, usada de forma responsável, permite a pequenas equipas criar projetos que de outra forma seriam impossíveis.
+
+Nem humanos nem máquinas são infalíveis. Por isso, em vez de questionar a legitimidade do projeto com base nas ferramentas usadas, encorajamos todos a **reportar problemas** que encontrem. Todo o código está aberto para escrutínio - o que importa é o resultado final e a sua utilidade para os cidadãos.
+
 ---
 
 ## Porquê "Debaixo d'Olho"?
