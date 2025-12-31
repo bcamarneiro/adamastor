@@ -43,3 +43,7 @@ bun.lockb
 supabase/.temp/
 apps/web/playwright-report/
 .vercel
+.superdesign/
+.cursor/
+.windsurfrules
+CLAUDE.md
