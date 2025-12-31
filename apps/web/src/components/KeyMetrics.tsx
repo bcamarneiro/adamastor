@@ -14,8 +14,8 @@ const metrics = [
     label: 'Legislatura',
   },
   {
-    value: 'Diário',
-    label: 'Atualização',
+    value: 'Diariamente',
+    label: 'Atualizações',
   },
 ];
 
