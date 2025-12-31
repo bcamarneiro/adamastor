@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import { Leaderboard } from '@/components/Leaderboard';
+import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { ArrowLeft } from 'lucide-react';
@@ -21,9 +22,12 @@ export function LeaderboardPage() {
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-12 mb-2">Ranking de Trabalho</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-bold text-neutral-12">Ranking de Trabalho</h1>
+            <LegislatureBadge />
+          </div>
           <p className="text-neutral-11">
-            Descobre quem trabalha mais (e menos) na Assembleia da Republica
+            Descobre quem trabalha mais (e menos) na Assembleia da República
           </p>
         </div>
 

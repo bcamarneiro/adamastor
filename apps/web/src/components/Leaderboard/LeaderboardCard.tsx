@@ -66,7 +66,7 @@ export function LeaderboardCard({ deputy, position, isTop = true }: LeaderboardC
             </span>
           )}
           {deputy.district_name && (
-            <span className="text-neutral-9 text-sm">{deputy.district_name}</span>
+            <span className="text-neutral-11 text-sm">{deputy.district_name}</span>
           )}
         </div>
       </div>

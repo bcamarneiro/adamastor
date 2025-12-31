@@ -48,9 +48,9 @@ export const DeputyCard = memo(function DeputyCard({ deputy }: DeputyCardProps) 
               {deputy.party_acronym}
             </span>
           )}
-          {deputy.district_name && <span className="text-neutral-9">{deputy.district_name}</span>}
+          {deputy.district_name && <span className="text-neutral-11">{deputy.district_name}</span>}
         </div>
-        <div className="flex items-center gap-3 mt-1 text-xs text-neutral-9">
+        <div className="flex items-center gap-3 mt-1 text-xs text-neutral-11">
           <span>#{deputy.national_rank} nacional</span>
           <span>#{deputy.district_rank} distrito</span>
         </div>
