@@ -208,11 +208,11 @@ const LandingPage = () => {
                 Objectivos do Projecto
               </span>
               <h2 className="text-3xl md:text-4xl font-light mb-6 tracking-tight text-neutral-12">
-                Aumentar a Participacao Civica
+                Aumentar a Participação Civica
               </h2>
               <p className="text-neutral-11 mb-8">
                 Junta-te a nossa missao de democratizar o acesso aos dados parlamentares, aumentar a
-                participacao civica e garantir a transparencia na governacao portuguesa.
+                participação civica e garantir a transparencia na governacao portuguesa.
               </p>
               <Link to="/contribuir">
                 <Button className="rounded-full h-12 px-8 bg-accent-9 hover:bg-accent-10 transition-all duration-300">
