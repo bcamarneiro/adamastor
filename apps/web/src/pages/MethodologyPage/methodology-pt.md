@@ -95,4 +95,4 @@ Qualquer pessoa pode verificar e auditar a metodologia.
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
