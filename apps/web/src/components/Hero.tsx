@@ -14,7 +14,7 @@ const Hero = () => {
       <div className="container px-6 md:px-8 z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-medium mb-6 tracking-tight text-neutral-900">
-            Fiscaliza o Teu Deputado
+            Acompanha o Teu Deputado
           </h1>
 
           <p className="text-lg md:text-xl text-neutral-800 mb-8 leading-relaxed font-medium">
