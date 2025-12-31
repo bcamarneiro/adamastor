@@ -1,5 +1,6 @@
 import { DistrictCard, PortugalMap } from '@/components/Districts';
 import Footer from '@/components/Footer';
+import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { SEO } from '@/components/SEO';
 import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
@@ -20,7 +21,7 @@ export function DistrictsPage() {
     <div className="min-h-screen bg-neutral-2 flex flex-col">
       <SEO
         title="Distritos"
-        description="Compara o desempenho dos circulos eleitorais portugueses. Ve qual distrito tem os deputados mais trabalhadores."
+        description="Compara o desempenho dos círculos eleitorais portugueses. Vê qual distrito tem os deputados mais trabalhadores."
         url="/distritos"
       />
       <MainNav scrollY={0} />
@@ -35,9 +36,12 @@ export function DistrictsPage() {
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-12 mb-2">Distritos</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-bold text-neutral-12">Distritos</h1>
+            <LegislatureBadge />
+          </div>
           <p className="text-neutral-11">
-            Compara o desempenho dos circulos eleitorais portugueses
+            Compara o desempenho dos círculos eleitorais portugueses
           </p>
         </div>
 

@@ -1,4 +1,5 @@
 import Footer from '@/components/Footer';
+import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { PartyCard } from '@/components/Parties';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
@@ -31,8 +32,11 @@ export function PartiesPage() {
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-12 mb-2">Partidos</h1>
-          <p className="text-neutral-11">Compara o desempenho dos partidos politicos portugueses</p>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-bold text-neutral-12">Partidos</h1>
+            <LegislatureBadge />
+          </div>
+          <p className="text-neutral-11">Compara o desempenho dos partidos políticos portugueses</p>
         </div>
 
         {/* Quick Actions */}
