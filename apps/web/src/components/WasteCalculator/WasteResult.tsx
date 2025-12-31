@@ -31,7 +31,7 @@ export function WasteResult({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Calculadora de Desperdicio',
+          title: 'Calculadora de Desperdício',
           text,
           url: window.location.href,
         });
@@ -48,7 +48,7 @@ export function WasteResult({
     <div className="space-y-6">
       {/* Main Result */}
       <div className="bg-danger-3 rounded-xl p-6 border border-danger-6">
-        <h3 className="text-lg font-medium text-danger-11 mb-2">O teu desperdicio estimado</h3>
+        <h3 className="text-lg font-medium text-danger-11 mb-2">O teu desperdício estimado</h3>
         <div className="text-4xl font-bold text-danger-12 mb-2">{formatCurrency(wasteAmount)}</div>
         <p className="text-sm text-danger-11">
           {lowWorkersPercentage.toFixed(1)}% dos deputados tem nota D ou F
