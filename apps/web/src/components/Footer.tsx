@@ -21,10 +21,26 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
+                  to="/missao"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  A Nossa Missão
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/about"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
                   Sobre
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contribuir"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Contribuir
                 </Link>
               </li>
               <li>
@@ -93,6 +109,14 @@ const Footer = () => {
           <div>
             <h3 className="font-medium mb-4 text-white">Dados</h3>
             <ul className="space-y-2">
+              <li>
+                <Link
+                  to="/metodologia"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Metodologia
+                </Link>
+              </li>
               <li>
                 <span className="text-sm text-neutral-400">Fonte: Dados públicos da AR</span>
               </li>
