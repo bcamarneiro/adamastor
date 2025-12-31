@@ -14,7 +14,7 @@ Somos um projeto **open source**. Todo o nosso código está disponível no [Git
 
 ### Imparcialidade
 
-**Não apoiamos nenhum partido.** Não temos filiação política nem recebemos financiamento de partidos ou organizações políticas. Apresentamos os dados de forma objetiva, sem favorecer ou prejudicar nenhum deputado ou partido.
+**Este projeto não apoia nenhum partido.** Embora os autores possam ter as suas afiliações políticas pessoais, o projeto em si é apartidário. Não recebemos financiamento de partidos ou organizações políticas, e contribuições de todas as orientações são bem-vindas. Apresentamos os dados de forma objetiva, sem favorecer ou prejudicar nenhum deputado ou partido. Transparência é boa para todos.
 
 ### Factos, não opiniões
 
@@ -30,10 +30,10 @@ Respeitamos a privacidade dos utilizadores. Não rastreamos comportamentos indiv
 
 Para evitar mal-entendidos, queremos ser claros:
 
-- **Não somos um partido político** nem temos qualquer afiliação partidária
+- **Não somos um partido político** - o projeto é apartidário, independentemente das afiliações pessoais dos contribuidores
 - **Não fazemos recomendações de voto** - apresentamos dados para que cada cidadão tire as suas conclusões
 - **Não somos jornalistas** - não produzimos notícias nem opinião editorial
-- **Não somos financiados** por partidos, empresas ou organizações políticas
+- **Não somos financiados** por partidos, empresas ou organizações políticas - os custos são atualmente suportados pelo autor, mas em breve abriremos uma forma transparente para contribuições de infraestrutura
 - **Não pretendemos substituir** os canais oficiais da Assembleia da República
 
 ---
