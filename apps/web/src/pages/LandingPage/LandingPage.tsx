@@ -211,7 +211,7 @@ const LandingPage = () => {
                 Aumentar a Participação Civica
               </h2>
               <p className="text-neutral-11 mb-8">
-                Junta-te a nossa missao de democratizar o acesso aos dados parlamentares, aumentar a
+                Junta-te a nossa missão de democratizar o acesso aos dados parlamentares, aumentar a
                 participação civica e garantir a transparencia na governacao portuguesa.
               </p>
               <Link to="/contribuir">
