@@ -1,5 +1,3 @@
-import { useFeatureFlags } from '@/store/useFeatureFlags';
-
 interface MetricBarProps {
   label: string;
   value: number;
@@ -15,49 +13,58 @@ export function MetricBar({
   maxValue,
   isPercentage = false,
 }: MetricBarProps) {
-  const { flags } = useFeatureFlags();
-
-  // For percentages, max is always 100
-  const effectiveMax = isPercentage ? 100 : maxValue || Math.max(value, average) * 1.5 || 1;
+  // Scale: 0 to max, where max = provided maxValue, or 2x average (so average is at 50%), minimum 1
+  const effectiveMax = isPercentage ? 100 : maxValue || Math.max(average * 2, 1);
   const valuePercent = Math.min((value / effectiveMax) * 100, 100);
   const averagePercent = Math.min((average / effectiveMax) * 100, 100);
 
   const isAboveAverage = value >= average;
-  const barColor = isAboveAverage ? 'bg-accent-9' : 'bg-neutral-8';
 
-  const formatValue = (v: number) => (isPercentage ? `${v.toFixed(1)}%` : v.toString());
+  const formatValue = (v: number) => (isPercentage ? `${v.toFixed(1)}%` : Math.round(v).toString());
 
   return (
     <div className="space-y-1">
-      <div className="flex justify-between text-sm">
-        <span className="font-medium text-neutral-11">{label}</span>
-        <span className={`font-semibold ${isAboveAverage ? 'text-accent-11' : 'text-neutral-11'}`}>
-          {formatValue(value)}
-        </span>
-      </div>
-      <div className="relative h-4 bg-neutral-4 rounded-full overflow-hidden">
-        {/* Value bar */}
-        <div
-          className={`absolute top-0 left-0 h-full ${barColor} rounded-full transition-all duration-500`}
-          style={{ width: `${valuePercent}%` }}
-        />
-        {/* Average marker */}
-        {flags.averageDisplay && (
+      {label && (
+        <div className="flex justify-between text-sm">
+          <span className="font-medium text-neutral-11">{label}</span>
+        </div>
+      )}
+      <div className="relative">
+        {/* Value label - top right */}
+        <div className="flex justify-end mb-1">
+          <span
+            className={`text-sm font-semibold ${isAboveAverage ? 'text-accent-11' : 'text-neutral-11'}`}
+          >
+            {formatValue(value)}
+          </span>
+        </div>
+        {/* Bar container */}
+        <div className="relative h-4 bg-neutral-4 rounded-full overflow-hidden">
+          {/* Value bar */}
           <div
-            className="absolute top-0 h-full w-0.5 bg-neutral-12"
-            style={{ left: `${averagePercent}%` }}
-            title={`Media: ${formatValue(average)}`}
+            className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${
+              isAboveAverage ? 'bg-accent-9' : 'bg-accent-7'
+            }`}
+            style={{ width: `${valuePercent}%` }}
           />
-        )}
-      </div>
-      <div className="flex justify-between text-xs text-neutral-11">
-        <span>{isPercentage ? '0%' : '0'}</span>
-        {flags.averageDisplay && (
+          {/* Average marker line */}
+          {average > 0 && (
+            <div
+              className="absolute top-0 h-full w-0.5 bg-neutral-12 z-10"
+              style={{ left: `${averagePercent}%` }}
+              title={`Media nacional: ${formatValue(average)}`}
+            />
+          )}
+        </div>
+        {/* Scale labels */}
+        <div className="flex justify-between text-xs text-neutral-9 mt-1">
+          <span>0</span>
           <span className="flex items-center gap-1">
             <span className="w-2 h-0.5 bg-neutral-12 inline-block" />
-            Media: {formatValue(average)}
+            {formatValue(average)}
           </span>
-        )}
+          <span>{formatValue(effectiveMax)}</span>
+        </div>
       </div>
     </div>
   );
