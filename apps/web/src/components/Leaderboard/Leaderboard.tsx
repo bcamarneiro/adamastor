@@ -59,7 +59,7 @@ export function Leaderboard() {
           </h2>
         </div>
         <p className="text-neutral-11 mb-4">
-          Os deputados com menos atividade registada em plenário
+          Os deputados com menos atividade registada na Assembleia da República
         </p>
         <div className="space-y-3">
           {bottomWorkers.map((deputy, index) => (

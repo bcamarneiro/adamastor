@@ -21,7 +21,7 @@ export function WasteCalculatorPage() {
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-12 mb-2">Calculadora de Desperdicio</h1>
+          <h1 className="text-3xl font-bold text-neutral-12 mb-2">Calculadora de Desperdício</h1>
           <p className="text-neutral-11">
             Calcula quanto do teu IRS vai para deputados com baixa assiduidade registada
           </p>

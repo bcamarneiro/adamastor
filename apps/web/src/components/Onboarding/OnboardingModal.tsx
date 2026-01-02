@@ -46,7 +46,7 @@ const ONBOARDING_STEPS = [
   {
     id: 'calculator',
     icon: Calculator,
-    title: 'Calculadora de Desperdicio',
+    title: 'Calculadora de Desperdício',
     description: 'Calcula quanto do teu IRS vai para deputados com baixa assiduidade registada.',
     link: '/desperdicio',
   },
