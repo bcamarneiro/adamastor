@@ -21,7 +21,7 @@ export function DistrictsPage() {
     <div className="min-h-screen bg-neutral-2 flex flex-col">
       <SEO
         title="Distritos"
-        description="Compara o desempenho dos círculos eleitorais portugueses. Vê qual distrito tem os deputados mais trabalhadores."
+        description="Compara o desempenho dos círculos eleitorais portugueses. Analisa a atividade média de cada distrito."
         url="/distritos"
       />
       <MainNav scrollY={0} />
