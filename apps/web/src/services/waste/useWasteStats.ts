@@ -20,7 +20,7 @@ async function fetchWasteStats(): Promise<WasteStats> {
 
   if (lowError) {
     console.error('Error fetching low performers:', lowError);
-    throw new Error('Erro ao calcular desperdicio');
+    throw new Error('Erro ao calcular desperdício');
   }
 
   // Get total active deputies and average work score
@@ -31,7 +31,7 @@ async function fetchWasteStats(): Promise<WasteStats> {
 
   if (allError) {
     console.error('Error fetching all deputies:', allError);
-    throw new Error('Erro ao calcular desperdicio');
+    throw new Error('Erro ao calcular desperdício');
   }
 
   const totalDeputies = allDeputies?.length || TOTAL_DEPUTIES;

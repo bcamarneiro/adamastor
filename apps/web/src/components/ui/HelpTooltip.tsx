@@ -91,5 +91,5 @@ export const HELP_TEXTS = {
   districtRanking:
     'Ranking calculado com base na media de pontuacao de todos os deputados ativos eleitos por cada circulo eleitoral.',
   fullRanking:
-    'Lista completa de todos os deputados ordenados por pontuacao de trabalho parlamentar. Podes filtrar por partido, distrito ou nota.',
+    'Lista completa de todos os deputados ordenados por pontuação de atividade parlamentar. Podes filtrar por partido, distrito ou nota.',
 };
