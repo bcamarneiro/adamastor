@@ -1,6 +1,8 @@
 import { expect, test } from './fixtures';
 
 test.describe('Home Page', () => {
+  // Run tests serially to share browser context and reduce startup overhead
+  test.describe.configure({ mode: 'serial' });
   test('should load the home page', async ({ page }) => {
     await page.goto('/');
 
