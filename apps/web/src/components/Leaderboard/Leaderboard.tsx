@@ -35,11 +35,13 @@ export function Leaderboard() {
         <div className="flex items-center gap-3 mb-4">
           <Trophy className="w-6 h-6 text-success-9" />
           <h2 className="text-xl font-bold text-neutral-12 flex items-center gap-1">
-            Top Trabalhadores
+            Maior Atividade Parlamentar
             <HelpTooltip content={HELP_TEXTS.topWorkers} />
           </h2>
         </div>
-        <p className="text-neutral-11 mb-4">Os deputados mais ativos na Assembleia da Republica</p>
+        <p className="text-neutral-11 mb-4">
+          Os deputados com mais atividade registada na Assembleia da República
+        </p>
         <div className="space-y-3">
           {topWorkers.map((deputy, index) => (
             <LeaderboardCard key={deputy.id} deputy={deputy} position={index + 1} isTop={true} />
@@ -52,12 +54,12 @@ export function Leaderboard() {
         <div className="flex items-center gap-3 mb-4">
           <AlertTriangle className="w-6 h-6 text-danger-9" />
           <h2 className="text-xl font-bold text-neutral-12 flex items-center gap-1">
-            Ranking de Preguica
+            Menor Atividade Parlamentar
             <HelpTooltip content={HELP_TEXTS.bottomWorkers} />
           </h2>
         </div>
         <p className="text-neutral-11 mb-4">
-          Os deputados menos ativos - sera que merecem o salario?
+          Os deputados com menos atividade registada na Assembleia da República
         </p>
         <div className="space-y-3">
           {bottomWorkers.map((deputy, index) => (

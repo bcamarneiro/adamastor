@@ -8,20 +8,20 @@ test.describe('Leaderboard Page', () => {
     await expect(page).toHaveURL(/\/ranking/);
   });
 
-  test('should display top workers section', async ({ page }) => {
+  test('should display high activity section', async ({ page }) => {
     await page.goto('/ranking');
     await page.waitForLoadState('networkidle');
 
-    // Should have a section for top workers - actual text is "Top Trabalhadores"
-    await expect(page.getByText(/top trabalhadores/i).first()).toBeVisible();
+    // Should have a section for high activity deputies
+    await expect(page.getByText(/maior atividade parlamentar/i).first()).toBeVisible();
   });
 
-  test('should display bottom workers section', async ({ page }) => {
+  test('should display low activity section', async ({ page }) => {
     await page.goto('/ranking');
     await page.waitForLoadState('networkidle');
 
-    // Should have a section for bottom workers - actual text is "Ranking de Preguica"
-    await expect(page.getByText(/ranking de preguica|preguica/i).first()).toBeVisible();
+    // Should have a section for low activity deputies
+    await expect(page.getByText(/menor atividade parlamentar/i).first()).toBeVisible();
   });
 
   test('should be able to switch between tabs', async ({ page }) => {
