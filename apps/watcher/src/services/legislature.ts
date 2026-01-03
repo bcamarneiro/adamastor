@@ -89,4 +89,3 @@ export function validateLegislature(detected: LegislatureDetectionResult): {
     warnings,
   };
 }
-

@@ -50,9 +50,7 @@ export function detectLegislatureFromData(
 
     // Validate that parsing succeeded (not fallback value)
     if (detectedNumber === 17 && sigla !== 'XVII' && sigla !== '17') {
-      warnings.push(
-        `Failed to parse legislature from "${sigla}", using fallback value 17`
-      );
+      warnings.push(`Failed to parse legislature from "${sigla}", using fallback value 17`);
     }
   } else {
     warnings.push('DetalheLegislatura.sigla not found in API data');
@@ -80,9 +78,7 @@ export function detectLegislatureFromData(
     detectedNumber = CURRENT_LEGISLATURE;
     detectedRoman = CURRENT_LEGISLATURE_ROMAN;
     source = 'fallback (CURRENT_LEGISLATURE constant)';
-    warnings.push(
-      'Could not detect legislature from API data, using hardcoded constant'
-    );
+    warnings.push('Could not detect legislature from API data, using hardcoded constant');
   }
 
   // Validate against constant
@@ -101,4 +97,3 @@ export function detectLegislatureFromData(
     warnings,
   };
 }
-
