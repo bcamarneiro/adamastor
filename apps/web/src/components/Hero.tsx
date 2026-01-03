@@ -18,8 +18,8 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-neutral-800 mb-8 leading-relaxed font-medium">
-            Acompanha o trabalho dos deputados portugueses com dados reais do Parlamento. Descobre
-            quem trabalha mais, quem falta e quanto do teu IRS paga salários.
+            Acompanha a atividade dos deputados portugueses com dados reais do Parlamento. Descobre
+            quem participa mais, quem falta e quanto do teu IRS paga salários.
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 justify-center">

@@ -99,6 +99,7 @@ jobs:
 
       - name: Start Supabase local
         run: |
+          npx supabase stop --no-backup 2>/dev/null || true
           npx supabase start
           npx supabase db reset
         env:

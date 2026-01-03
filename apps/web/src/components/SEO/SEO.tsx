@@ -37,7 +37,7 @@ interface SEOProps {
  */
 export function SEO({
   title,
-  description = 'Acompanha o trabalho dos deputados portugueses. Descobre quem trabalha mais, quem falta às sessões, e quanto do teu IRS vai para salários de deputados pouco produtivos.',
+  description = 'Acompanha a atividade dos deputados portugueses com dados reais do Parlamento. Descobre quem participa mais, quem falta às sessões, e quanto do teu IRS paga salários.',
   image = DEFAULT_OG_IMAGE,
   url,
   type = 'website',
@@ -92,32 +92,32 @@ export const SEO_CONFIGS = {
   landing: {
     title: undefined, // Uses default with site name
     description:
-      'Acompanha o trabalho dos deputados portugueses. Descobre quem trabalha mais, quem falta às sessões, e quanto do teu IRS vai para salários de deputados pouco produtivos.',
+      'Acompanha a atividade dos deputados portugueses com dados reais do Parlamento. Descobre quem participa mais, quem falta às sessões, e quanto do teu IRS paga salários.',
   },
   leaderboard: {
-    title: 'Ranking de Trabalho',
+    title: 'Ranking de Atividade',
     description:
-      'Ranking completo dos 230 deputados portugueses ordenados por produtividade. Descobre quem são os mais e menos trabalhadores da Assembleia da República.',
+      'Ranking completo dos 230 deputados portugueses ordenados por atividade parlamentar registada.',
   },
   battle: {
     title: 'Battle Royale',
     description:
-      'Compara dois deputados portugueses lado a lado. Vê quem trabalha mais, quem falta menos, e quem te representa melhor.',
+      'Compara dois deputados portugueses lado a lado. Analisa a atividade parlamentar de quem te representa.',
   },
   waste: {
     title: 'Calculadora de Desperdício',
     description:
-      'Descobre quanto do teu IRS vai para salários de deputados pouco produtivos. Calcula o impacto real da falta de trabalho parlamentar.',
+      'Calcula quanto do teu IRS vai para deputados com baixa assiduidade. Vê o impacto da falta de participação parlamentar.',
   },
   parties: {
     title: 'Partidos',
     description:
-      'Compara o desempenho dos partidos políticos portugueses. Vê qual partido tem os deputados mais trabalhadores.',
+      'Compara o desempenho dos partidos políticos portugueses. Analisa a atividade média de cada grupo parlamentar.',
   },
   districts: {
     title: 'Círculos Eleitorais',
     description:
-      'Descobre como trabalham os deputados do teu círculo eleitoral. Compara o desempenho entre distritos.',
+      'Analisa a atividade dos deputados do teu círculo eleitoral. Compara o desempenho entre distritos.',
   },
   about: {
     title: 'Sobre',

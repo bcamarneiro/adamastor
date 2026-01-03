@@ -23,11 +23,11 @@ export function LeaderboardPage() {
 
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold text-neutral-12">Ranking de Trabalho</h1>
+            <h1 className="text-3xl font-bold text-neutral-12">Ranking de Atividade</h1>
             <LegislatureBadge />
           </div>
           <p className="text-neutral-11">
-            Descobre quem trabalha mais (e menos) na Assembleia da República
+            Compara a atividade parlamentar registada de todos os deputados
           </p>
         </div>
 

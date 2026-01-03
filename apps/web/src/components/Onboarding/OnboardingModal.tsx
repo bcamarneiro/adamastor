@@ -25,8 +25,7 @@ const ONBOARDING_STEPS = [
     id: 'ranking',
     icon: Trophy,
     title: 'Ranking de Deputados',
-    description:
-      'Ve quem sao os deputados mais e menos trabalhadores, ordenados por pontuacao de trabalho.',
+    description: 'Compara a atividade parlamentar de todos os deputados, ordenados por pontuação.',
     link: '/ranking',
   },
   {
@@ -47,8 +46,8 @@ const ONBOARDING_STEPS = [
   {
     id: 'calculator',
     icon: Calculator,
-    title: 'Calculadora de Desperdicio',
-    description: 'Descobre quanto do teu IRS vai para deputados que nao comparecem as sessoes.',
+    title: 'Calculadora de Desperdício',
+    description: 'Calcula quanto do teu IRS vai para deputados com baixa assiduidade registada.',
     link: '/desperdicio',
   },
 ];
