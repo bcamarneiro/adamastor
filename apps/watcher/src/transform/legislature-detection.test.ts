@@ -195,4 +195,3 @@ describe('detectLegislatureFromData', () => {
     expect(result.warnings.filter((w) => w.includes('mismatch'))).toHaveLength(0);
   });
 });
-
