@@ -60,8 +60,11 @@ const DISTRICT_SLUGS: Record<string, string> = {
 };
 
 // Postal prefixes for each district
+// IMPORTANT: Each postal code prefix must belong to exactly ONE district
+// Based on official CTT data and concelho (municipality) boundaries
 const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
   Aveiro: [
+    '3750',
     '3800',
     '3810',
     '3830',
@@ -73,9 +76,8 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '4505',
     '4520',
     '4535',
-    '4540',
+    '4540', // Arouca
     '4550',
-    '3750',
   ],
   Beja: [
     '7700',
@@ -104,14 +106,14 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '4740',
     '4750',
     '4755',
-    '4760',
+    '4760', // V.N. Famalicão
     '4765',
     '4775',
     '4800',
     '4805',
     '4810',
-    '4815',
-    '4820',
+    '4815', // Vizela
+    '4820', // Guimarães
     '4825',
     '4830',
     '4835',
@@ -125,24 +127,9 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '4875',
     '4880',
     '4890',
-    '4905',
-    '4910',
-    '4920',
-    '4930',
-    '4940',
-    '4950',
-    '4960',
-    '4970',
-    '4980',
-    '4990',
+    '4905', // Barcelos
   ],
   Bragança: [
-    '5000',
-    '5030',
-    '5040',
-    '5050',
-    '5060',
-    '5070',
     '5085',
     '5090',
     '5100',
@@ -168,14 +155,13 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '5360',
     '5370',
     '5385',
-    '5400',
   ],
   'Castelo Branco': [
     '6000',
     '6005',
     '6030',
     '6040',
-    '6050',
+    // 6050 belongs to Portalegre (Nisa)
     '6060',
     '6100',
     '6110',
@@ -192,9 +178,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '6270',
     '6280',
     '6290',
-    '6300',
-    '6305',
-    '6320',
+    // 6300, 6305, 6320 belong to Guarda
   ],
   Coimbra: [
     '3000',
@@ -208,8 +192,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '3070',
     '3080',
     '3090',
-    '3100',
-    '3105',
+    // 3100, 3105 belong to Leiria (Pombal)
     '3130',
     '3140',
     '3150',
@@ -231,7 +214,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '3405',
     '3420',
     '3430',
-    '3440',
+    // 3440 belongs to Viseu (Santa Comba Dão)
   ],
   Évora: [
     '7000',
@@ -275,6 +258,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
   ],
   Guarda: [
     '6300',
+    '6305',
     '6320',
     '6350',
     '6355',
@@ -284,21 +268,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '6420',
     '6430',
     '6440',
-    '3550',
-    '3560',
-    '3570',
-    '3580',
-    '3590',
-    '3600',
-    '3610',
-    '3620',
-    '3630',
-    '3640',
-    '3650',
-    '3660',
-    '3670',
-    '3680',
-    '3690',
+    // 3550-3690 belong to Viseu (Penalva do Castelo, Mangualde, etc.)
   ],
   Leiria: [
     '2400',
@@ -323,11 +293,9 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2525',
     '2530',
     '2540',
-    '3100',
-    '3105',
-    '3220',
-    '3230',
-    '3240',
+    '3100', // Pombal
+    '3105', // Pombal
+    // 3220-3240 belong to Coimbra
   ],
   Lisboa: [
     '1000',
@@ -429,14 +397,13 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2829',
     '2830',
     '2835',
-    '2840',
-    '2845',
+    // 2840, 2845 belong to Setúbal (Seixal)
     '2855',
     '2860',
     '2870',
   ],
   Portalegre: [
-    '6050',
+    '6050', // Nisa
     '7300',
     '7320',
     '7330',
@@ -450,11 +417,8 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '7460',
     '7470',
     '7480',
-    '7500',
-    '7540',
+    // 7500, 7540, 7570, 7580 belong to Setúbal (Santiago do Cacém)
     '7550',
-    '7570',
-    '7580',
     '7595',
     '7600',
   ],
@@ -516,26 +480,22 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '4645',
     '4650',
     '4655',
-    '4660',
+    // 4660 belongs to Viseu (Resende, Cinfães)
     '4665',
     '4670',
     '4680',
     '4685',
-    '4690',
+    // 4690 belongs to Viseu (Cinfães)
     '4695',
     '4745',
-    '4760',
+    // 4760 belongs to Braga (V.N. Famalicão)
     '4780',
     '4785',
     '4795',
-    '4815',
-    '4820',
-    '4825',
-    '4830',
-    '4835',
-    '4905',
+    // 4815, 4820, 4825, 4830, 4835 belong to Braga (Vizela, Guimarães)
+    // 4905 belongs to Braga (Barcelos)
     '4915',
-    '4990',
+    // 4990 belongs to Viana do Castelo (Ponte de Lima)
   ],
   Santarém: [
     '2000',
@@ -619,7 +579,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '5470',
   ],
   Viseu: [
-    '3440',
+    '3440', // Santa Comba Dão
     '3460',
     '3465',
     '3475',
@@ -632,20 +592,27 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '3530',
     '3535',
     '3540',
-    '3550',
+    '3550', // Penalva do Castelo, Mangualde area
     '3560',
     '3570',
-    '3610',
+    '3580',
+    '3590',
+    '3600',
+    '3610', // Tarouca
     '3620',
+    '3630',
+    '3640',
     '3650',
     '3660',
+    '3670',
     '3680',
+    '3690',
     '3700',
     '3720',
     '3730',
-    '4540',
-    '4660',
-    '4690',
+    // 4540 belongs to Aveiro (Arouca)
+    '4660', // Resende, Cinfães
+    '4690', // Cinfães
   ],
   Açores: [], // Use IP geolocation or explicit selection
   Madeira: [], // Use IP geolocation or explicit selection
