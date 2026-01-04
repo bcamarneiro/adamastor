@@ -10,6 +10,7 @@
 
 -- Postal prefixes based on CTT data and concelho boundaries
 -- IMPORTANT: Each postal code must belong to exactly ONE district
+-- Note: Açores, Madeira, Europa, and Fora da Europa have no postal prefixes (use explicit selection)
 INSERT INTO districts (name, slug, postal_prefixes, deputy_count) VALUES
 ('Aveiro', 'aveiro', ARRAY['3750', '3800', '3810', '3830', '3840', '3850', '3860', '3870', '3880', '4505', '4520', '4535', '4540', '4550'], 16),
 ('Beja', 'beja', ARRAY['7700', '7750', '7780', '7800', '7830', '7860', '7870', '7875', '7880', '7885', '7920', '7940', '7960', '7970'], 3),
@@ -29,10 +30,10 @@ INSERT INTO districts (name, slug, postal_prefixes, deputy_count) VALUES
 ('Viana do Castelo', 'viana-do-castelo', ARRAY['4900', '4910', '4920', '4925', '4930', '4935', '4939', '4940', '4950', '4960', '4970', '4980', '4990'], 6),
 ('Vila Real', 'vila-real', ARRAY['5000', '5030', '5040', '5050', '5060', '5070', '5400', '5425', '5430', '5445', '5450', '5460', '5470'], 5),
 ('Viseu', 'viseu', ARRAY['3440', '3460', '3465', '3475', '3500', '3505', '3510', '3515', '3520', '3525', '3530', '3535', '3540', '3550', '3560', '3570', '3580', '3590', '3600', '3610', '3620', '3630', '3640', '3650', '3660', '3670', '3680', '3690', '3700', '3720', '3730', '4660', '4690'], 8),
-('Açores', 'acores', ARRAY[]::TEXT[], 5),  -- Diaspora - no postal codes
-('Madeira', 'madeira', ARRAY[]::TEXT[], 6),  -- Diaspora - no postal codes
-('Europa', 'europa', ARRAY[]::TEXT[], 2),  -- Emigration circle - no postal codes
-('Fora da Europa', 'fora-da-europa', ARRAY[]::TEXT[], 2);  -- Emigration circle - no postal codes
+('Açores', 'acores', ARRAY[]::TEXT[], 5),  -- Autonomous region - no postal prefixes
+('Madeira', 'madeira', ARRAY[]::TEXT[], 6),  -- Autonomous region - no postal prefixes
+('Europa', 'europa', ARRAY[]::TEXT[], 2),  -- Emigration circle - no postal prefixes
+('Fora da Europa', 'fora-da-europa', ARRAY[]::TEXT[], 2);  -- Emigration circle - no postal prefixes
 
 -- ===================
 -- PARTIES

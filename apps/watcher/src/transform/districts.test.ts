@@ -1,87 +1,8 @@
 import { describe, expect, it } from 'bun:test';
 
-// Import the postal prefixes from districts.ts
-// We need to read the file and extract the data since it's not exported
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
-// Parse the DISTRICT_POSTAL_PREFIXES from districts.ts
-function parseDistrictPostalPrefixes(): Record<string, string[]> {
-  const filePath = join(import.meta.dir, 'districts.ts');
-  const content = readFileSync(filePath, 'utf-8');
-
-  // Find the DISTRICT_POSTAL_PREFIXES object
-  const startMarker = 'const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {';
-  const startIndex = content.indexOf(startMarker);
-  if (startIndex === -1) {
-    throw new Error('Could not find DISTRICT_POSTAL_PREFIXES in districts.ts');
-  }
-
-  // Find the matching closing brace
-  let braceCount = 0;
-  let endIndex = startIndex + startMarker.length;
-  for (let i = startIndex + startMarker.length - 1; i < content.length; i++) {
-    if (content[i] === '{') braceCount++;
-    if (content[i] === '}') {
-      braceCount--;
-      if (braceCount === 0) {
-        endIndex = i + 1;
-        break;
-      }
-    }
-  }
-
-  const objectString = content.substring(startIndex + startMarker.length - 1, endIndex);
-
-  // Parse each district block - look for patterns like "DistrictName: [" or "'District Name': ["
-  const result: Record<string, string[]> = {};
-
-  // Match district entries: either unquoted identifiers or quoted strings followed by : [
-  const lines = objectString.split('\n');
-  let currentDistrict: string | null = null;
-  let currentPostals: string[] = [];
-  let inArray = false;
-
-  for (const line of lines) {
-    // Check for district name pattern: "Name: [" or "'Name': ["
-    const districtMatch = line.match(/^\s*'([^']+)':\s*\[|^\s*([A-Za-zÀ-ÿ]+):\s*\[/);
-    if (districtMatch) {
-      // Save previous district if any
-      if (currentDistrict) {
-        result[currentDistrict] = currentPostals;
-      }
-      currentDistrict = districtMatch[1] ?? districtMatch[2] ?? null;
-      currentPostals = [];
-      inArray = true;
-    }
-
-    // Extract postal codes from current line
-    if (inArray) {
-      const postalMatches = line.matchAll(/'(\d{4})'/g);
-      for (const m of postalMatches) {
-        if (m[1]) {
-          currentPostals.push(m[1]);
-        }
-      }
-    }
-
-    // Check for array end
-    if (inArray && line.includes('],')) {
-      inArray = false;
-    }
-  }
-
-  // Save last district
-  if (currentDistrict) {
-    result[currentDistrict] = currentPostals;
-  }
-
-  return result;
-}
+import { DISTRICT_POSTAL_PREFIXES } from './district-data.js';
 
 describe('District Postal Prefixes', () => {
-  const DISTRICT_POSTAL_PREFIXES = parseDistrictPostalPrefixes();
-
   it('should have no duplicate postal codes across districts', () => {
     const postalToDistricts = new Map<string, string[]>();
 
@@ -117,7 +38,7 @@ describe('District Postal Prefixes', () => {
 
   it('should have Guarda postal codes 6300, 6305, 6320 only in Guarda district', () => {
     const guardaPostals = DISTRICT_POSTAL_PREFIXES.Guarda || [];
-    const casteloPostals = DISTRICT_POSTAL_PREFIXES['Castelo Branco'] || []; // Needs bracket notation for space
+    const casteloPostals = DISTRICT_POSTAL_PREFIXES['Castelo Branco'] || [];
 
     // These should be in Guarda
     expect(guardaPostals).toContain('6300');

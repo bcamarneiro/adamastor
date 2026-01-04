@@ -92,7 +92,8 @@ WHERE slug = 'vila-real';
 UPDATE districts SET postal_prefixes = ARRAY['3440', '3460', '3465', '3475', '3500', '3505', '3510', '3515', '3520', '3525', '3530', '3535', '3540', '3550', '3560', '3570', '3580', '3590', '3600', '3610', '3620', '3630', '3640', '3650', '3660', '3670', '3680', '3690', '3700', '3720', '3730', '4660', '4690']
 WHERE slug = 'viseu';
 
--- Açores, Madeira, Europa, Fora da Europa - diaspora circles with no postal codes
+-- Açores, Madeira - Autonomous regions (no postal prefixes in this seed)
+-- Europa, Fora da Europa - Emigration circles (no postal prefixes)
 UPDATE districts SET postal_prefixes = ARRAY[]::TEXT[] WHERE slug IN ('acores', 'madeira', 'europa', 'fora-da-europa');
 
 -- =========================================
