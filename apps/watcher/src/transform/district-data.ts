@@ -12,6 +12,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '3860',
     '3870',
     '3880',
+    '4500', // Espinho (electoral circle: Aveiro)
     '4505',
     '4520',
     '4535',
@@ -327,19 +328,9 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2790',
     '2795',
     '2799',
-    '2800',
-    '2805',
-    '2810',
-    '2815',
-    '2820',
-    '2825',
-    '2829',
-    '2830',
-    '2835',
-    // 2840, 2845 belong to Setúbal (Seixal)
-    '2855',
-    '2860',
-    '2870',
+    // 2800-2870 belong to Setúbal (Almada electoral circle)
+    '2050', // Azambuja (electoral circle: Lisboa)
+    '2065', // Azambuja (electoral circle: Lisboa)
   ],
   Portalegre: [
     '6050', // Nisa
@@ -399,7 +390,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '4485',
     '4490',
     '4495',
-    '4500',
+    // 4500 belongs to Aveiro (Espinho electoral circle)
     '4510',
     '4515',
     '4560',
@@ -443,9 +434,8 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2030',
     '2035',
     '2040',
-    '2050',
+    // 2050, 2065 belong to Lisboa (Azambuja electoral circle)
     '2060',
-    '2065',
     '2070',
     '2080',
     '2090',
@@ -465,8 +455,20 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2260',
   ],
   Setúbal: [
+    '2800', // Almada (electoral circle: Setúbal)
+    '2805',
+    '2810',
+    '2815',
+    '2820',
+    '2825',
+    '2829',
+    '2830',
+    '2835',
     '2840',
     '2845',
+    '2855',
+    '2860',
+    '2870',
     '2900',
     '2910',
     '2920',
