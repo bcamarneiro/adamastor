@@ -56,8 +56,8 @@ function parseGeoNames(data: string): PostalEntry[] {
     const district = parts[3]; // e.g., "Aveiro"
     const placeName = parts[2]; // Place name
 
-    // Extract 4-digit prefix
-    const prefix = postalCode.replace('-', '').substring(0, 4);
+    // Extract 4-digit prefix (handle all hyphens)
+    const prefix = postalCode.replaceAll('-', '').substring(0, 4);
 
     entries.push({ postalCode, prefix, district, placeName });
   }
@@ -81,15 +81,38 @@ function validatePostalCodes() {
   console.log('🔍 Validating postal codes against GeoNames...\n');
 
   // Download and parse GeoNames
-  Bun.spawnSync([
+  const curlResult = Bun.spawnSync([
     'curl',
     '-s',
+    '-f', // Fail on HTTP errors
     'http://download.geonames.org/export/zip/PT.zip',
     '-o',
     '/tmp/PT.zip',
   ]);
-  execSync('unzip -o /tmp/PT.zip -d /tmp/geonames_pt 2>/dev/null || true');
-  const rawData = readFileSync('/tmp/geonames_pt/PT.txt', 'utf-8');
+
+  if (curlResult.exitCode !== 0) {
+    console.error('❌ Failed to download GeoNames data');
+    console.error('   Check your network connection and try again');
+    process.exit(1);
+  }
+
+  try {
+    execSync('unzip -o /tmp/PT.zip -d /tmp/geonames_pt 2>/dev/null');
+  } catch {
+    console.error('❌ Failed to extract GeoNames zip file');
+    console.error('   The downloaded file may be corrupted');
+    process.exit(1);
+  }
+
+  let rawData: string;
+  try {
+    rawData = readFileSync('/tmp/geonames_pt/PT.txt', 'utf-8');
+  } catch {
+    console.error('❌ Failed to read GeoNames data file');
+    console.error('   Expected file at /tmp/geonames_pt/PT.txt');
+    process.exit(1);
+  }
+
   const geoEntries = parseGeoNames(rawData);
 
   console.log(`📊 GeoNames has ${geoEntries.length} postal code entries\n`);
