@@ -17,8 +17,10 @@ interface NavItem {
 
 const allNavItems: NavItem[] = [
   { path: '/report-card', label: 'Deputados' },
+  { path: '/parliament', label: 'Parlamento' },
   { path: '/partidos', label: 'Partidos' },
   { path: '/ranking', label: 'Ranking' },
+  { path: '/initiatives', label: 'Iniciativas' },
   { path: '/desperdicio', label: 'Calculadora', featureFlag: 'wasteCalculator' },
   { path: '/batalha', label: 'Battle Royale' },
   { path: '/about', label: 'Sobre' },
