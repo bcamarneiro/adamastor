@@ -61,6 +61,22 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/parliament"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Parlamento
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/initiatives"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Iniciativas
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/desperdicio"
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
