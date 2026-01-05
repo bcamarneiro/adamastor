@@ -69,6 +69,24 @@ This document provides guidelines for AI agents (Cursor, GitHub Copilot, Claude 
 - Link related issues
 - Highlight risks and breaking changes
 
+### Responding to PR Review Comments
+
+When reviewing PRs or addressing Copilot comments, **always leave a reply** on each comment:
+
+1. **Reply format for addressed comments**:
+
+   ```text
+   Fixed in commit <sha>. <brief description of the fix>
+   ```
+
+2. **Reply format for intentionally skipped comments**:
+
+   ```text
+   Intentionally not addressed: <reasoning why the current approach is correct>
+   ```
+
+3. **Never silently skip comments** - Every Copilot comment must have a response so the user knows the status
+
 ---
 
 ## Critical Paths (Handle with Extra Care)
