@@ -276,6 +276,8 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '1959',
     '1990',
     '1998',
+    '2050', // Azambuja (electoral circle: Lisboa)
+    '2065', // Azambuja (electoral circle: Lisboa)
     '2580',
     '2590',
     '2600',
@@ -329,8 +331,6 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2795',
     '2799',
     // 2800-2870 belong to Setúbal (Almada electoral circle)
-    '2050', // Azambuja (electoral circle: Lisboa)
-    '2065', // Azambuja (electoral circle: Lisboa)
   ],
   Portalegre: [
     '6050', // Nisa
