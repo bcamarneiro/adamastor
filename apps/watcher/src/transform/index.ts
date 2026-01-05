@@ -65,6 +65,13 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
         for (const warning of validation.warnings) {
           console.log(`     - ${warning}`);
         }
+
+        // If validation failed and warnOnly is disabled, throw error to stop pipeline
+        if (!validation.isValid && !FEATURES.legislatureValidationWarnOnly) {
+          throw new Error(
+            'Legislature validation failed. Set LEGISLATURE_VALIDATION_WARN_ONLY=true to continue anyway.'
+          );
+        }
       }
 
       // Store in database

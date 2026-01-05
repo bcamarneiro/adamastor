@@ -7,7 +7,7 @@
  * Related Issue: #6
  */
 
-import { CURRENT_LEGISLATURE, CURRENT_LEGISLATURE_ROMAN } from 'shared';
+import { CURRENT_LEGISLATURE } from 'shared';
 import { supabase } from '../supabase.js';
 import type { LegislatureDetectionResult } from '../transform/legislature-detection.js';
 
@@ -73,19 +73,9 @@ export function validateLegislature(detected: LegislatureDetectionResult): {
   isValid: boolean;
   warnings: string[];
 } {
-  const warnings: string[] = [];
-
-  if (!detected.matchesConstant) {
-    warnings.push(
-      `Legislature mismatch: Detected ${detected.number} (${detected.roman}) but constant is ${CURRENT_LEGISLATURE} (${CURRENT_LEGISLATURE_ROMAN})`
-    );
-  }
-
-  // Add any warnings from detection
-  warnings.push(...detected.warnings);
-
+  // Just return the warnings from detection - they already include mismatch info
   return {
     isValid: detected.matchesConstant && detected.warnings.length === 0,
-    warnings,
+    warnings: detected.warnings,
   };
 }

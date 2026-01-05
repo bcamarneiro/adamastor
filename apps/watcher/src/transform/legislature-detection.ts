@@ -8,8 +8,26 @@
  */
 
 import { CURRENT_LEGISLATURE, CURRENT_LEGISLATURE_ROMAN } from 'shared';
-import { parseLegislature } from './deputies/helpers.js';
 import type { ParliamentInformacaoBase } from './types.js';
+
+// Roman numeral mapping (subset needed for legislatures)
+const romanNumerals: Record<string, number> = {
+  XV: 15,
+  XVI: 16,
+  XVII: 17,
+  XVIII: 18,
+  XIX: 19,
+  XX: 20,
+};
+
+/**
+ * Parse legislature from Roman numeral string.
+ * Returns null if parsing fails (unlike helpers.ts version which returns 17).
+ */
+function parseLegislatureOrNull(legDes: string): number | null {
+  const trimmed = legDes.trim().toUpperCase();
+  return romanNumerals[trimmed] ?? null;
+}
 
 export interface LegislatureDetectionResult {
   /** Detected legislature number (e.g., 17) */
@@ -44,31 +62,32 @@ export function detectLegislatureFromData(
   // Try to detect from DetalheLegislatura.sigla
   if (infoBase.DetalheLegislatura?.sigla) {
     const sigla = infoBase.DetalheLegislatura.sigla.trim();
-    source = 'DetalheLegislatura.sigla';
-    detectedRoman = sigla;
-    detectedNumber = parseLegislature(sigla);
+    const parsed = parseLegislatureOrNull(sigla);
 
-    // Validate that parsing succeeded (not fallback value)
-    if (detectedNumber === 17 && sigla !== 'XVII' && sigla !== '17') {
-      warnings.push(`Failed to parse legislature from "${sigla}", using fallback value 17`);
+    if (parsed !== null) {
+      source = 'DetalheLegislatura.sigla';
+      detectedRoman = sigla.toUpperCase();
+      detectedNumber = parsed;
+    } else {
+      warnings.push(`Failed to parse legislature from "${sigla}"`);
     }
   } else {
     warnings.push('DetalheLegislatura.sigla not found in API data');
   }
 
   // Fallback: try to detect from first deputy's LegDes
-  if (!detectedNumber && infoBase.Deputados?.length > 0) {
+  if (detectedNumber === null && infoBase.Deputados?.length > 0) {
     const firstDeputy = infoBase.Deputados[0];
     if (firstDeputy?.LegDes) {
       const legDes = firstDeputy.LegDes.trim();
-      source = 'Deputados[0].LegDes';
-      detectedRoman = legDes;
-      detectedNumber = parseLegislature(legDes);
+      const parsed = parseLegislatureOrNull(legDes);
 
-      if (detectedNumber === 17 && legDes !== 'XVII' && legDes !== '17') {
-        warnings.push(
-          `Failed to parse legislature from deputy LegDes "${legDes}", using fallback value 17`
-        );
+      if (parsed !== null) {
+        source = 'Deputados[0].LegDes';
+        detectedRoman = legDes.toUpperCase();
+        detectedNumber = parsed;
+      } else {
+        warnings.push(`Failed to parse legislature from deputy LegDes "${legDes}"`);
       }
     }
   }
