@@ -3,6 +3,9 @@
 // Based on official CTT data and concelho (municipality) boundaries
 export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
   Aveiro: [
+    '3700', // São João da Madeira (electoral circle: Aveiro)
+    '3720', // Oliveira de Azeméis (electoral circle: Aveiro)
+    '3730', // Vale de Cambra (electoral circle: Aveiro)
     '3750',
     '3800',
     '3810',
@@ -548,9 +551,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '3670',
     '3680',
     '3690',
-    '3700',
-    '3720',
-    '3730',
+    // 3700, 3720, 3730 belong to Aveiro (São João da Madeira, Oliveira de Azeméis, Vale de Cambra)
     // 4540 belongs to Aveiro (Arouca)
     '4660', // Resende, Cinfães
     '4690', // Cinfães
