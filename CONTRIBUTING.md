@@ -210,11 +210,64 @@ Before submitting a PR:
 
 ---
 
+## Using AI Assistance
+
+This repository is optimized for AI collaboration (Cursor, GitHub Copilot, Claude Code, GitHub Copilot Reviews). When using AI assistance:
+
+### Principles
+
+- **Keep changes small and focused** - One feature, one bug fix per PR
+- **Write clear prompts** - Be specific about what you want to change
+- **Always run tests** - `bun test` before committing
+- **Update tests when behavior changes** - Tests are safety nets
+- **Never commit secrets** - No API keys, tokens, or sensitive data
+
+### Writing Good Prompts
+
+**✅ Good:**
+- "Add unit tests for `transformParties()` in `apps/watcher/src/transform/parties.ts`"
+- "Fix TypeScript error in `apps/web/src/services/reportCard/useDeputy.ts` line 45"
+- "Refactor `DeputyCard` component: extract `GradeCircle` into separate file, add tests"
+
+**❌ Bad:**
+- "Fix the transform" (too vague)
+- "Make the UI better" (no scope)
+- "Add tests" (for what? where?)
+
+### Monorepo Considerations
+
+When using AI to change code:
+
+1. **If touching `packages/shared/`**: Test in both `watcher` and `web`
+   ```bash
+   bun --filter watcher test
+   bun --filter web test
+   ```
+
+2. **Use workspace commands**: `bun --filter watcher build`, `bun --filter web dev`
+
+3. **Be aware of cross-app dependencies**: Changes to shared types affect both apps
+
+### PR Descriptions for AI Reviewers
+
+When submitting a PR, write a clear description to help AI reviewers (especially GitHub Copilot Reviews):
+
+- **What** changed (summary)
+- **Why** it changed (context/motivation)
+- **How** it works (implementation details)
+- **Risks** (breaking changes, performance, data consistency)
+- **Testing** (what was tested, coverage added)
+
+See [docs/AI_AGENTS.md](docs/AI_AGENTS.md) for detailed guidelines and examples.
+
+---
+
 ## Getting Help
 
 - **Questions**: Open a [Discussion](https://github.com/bcamarneiro/adamastor/discussions)
 - **Bugs**: Open an [Issue](https://github.com/bcamarneiro/adamastor/issues)
 - **Security**: Email directly (don't open public issue)
+- **AI assistance**: See [docs/AI_AGENTS.md](docs/AI_AGENTS.md)
 
 ---
 
