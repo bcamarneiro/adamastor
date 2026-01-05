@@ -20,8 +20,6 @@ const InitiativeList = lazy(() => import('./pages/InitiativesPage/InitiativeList
 const InitiativesPage = lazy(() => import('./pages/InitiativesPage/InitiativesPage'));
 const ParliamentList = lazy(() => import('./pages/ParliamentPage/ParliamentList/ParliamentList'));
 const ParliamentPage = lazy(() => import('./pages/ParliamentPage/ParliamentPage'));
-const WhatHappened = lazy(() => import('./pages/WhatHappenedPage/WhatHappened'));
-const WhatHappenedPage = lazy(() => import('./pages/WhatHappenedPage/WhatHappenedPage'));
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 const DistrictPage = lazy(() => import('./pages/DistrictPage/DistrictPage'));
 const DeputyPage = lazy(() => import('./pages/DeputyPage/DeputyPage'));
@@ -82,10 +80,6 @@ const App = () => {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-
-            <Route path="what-happened" element={<WhatHappenedPage />}>
-              <Route index element={<WhatHappened />} />
-            </Route>
 
             <Route path="initiatives" element={<InitiativesPage />}>
               <Route index element={<InitiativeList />} />
