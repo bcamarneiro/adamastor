@@ -25,10 +25,10 @@ export default defineConfig({
 
   webServer: {
     // In CI, serve the pre-built static files; locally, use dev server
-    command: process.env.CI ? 'bunx serve dist -l 3000' : 'bun run dev',
+    command: process.env.CI ? 'npx serve@latest dist -l 3000' : 'bun run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 60000, // 1 minute - static serve is much faster than dev server
+    timeout: process.env.CI ? 60000 : 180000, // 1 minute in CI, 3 minutes locally for slower dev server startups
     stdout: 'pipe',
     stderr: 'pipe',
   },
