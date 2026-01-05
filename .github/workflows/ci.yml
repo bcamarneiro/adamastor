@@ -107,8 +107,10 @@ jobs:
         run: bun run build
         working-directory: apps/web
         env:
-          VITE_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          # Build with local Supabase URLs for E2E tests
+          # (E2E tests run against local Supabase instance)
+          VITE_SUPABASE_URL: http://127.0.0.1:54321
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -175,10 +177,7 @@ jobs:
       - name: Run E2E tests
         run: bun run e2e
         working-directory: apps/web
-        env:
-          VITE_SUPABASE_URL: http://127.0.0.1:54321
-          # Standard local Supabase demo anon key (always the same for local dev)
-          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+        # Note: VITE_SUPABASE_* are baked into the build at compile time
 
       - uses: actions/upload-artifact@v4
         if: failure()
