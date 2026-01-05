@@ -186,7 +186,7 @@ jobs:
           path: apps/web/playwright-report/
           retention-days: 7
 
-  # Supabase migrations check - only runs when supabase files change
+  # Supabase migrations check - steps conditionally run when supabase files change
   db-migrations:
     runs-on: ubuntu-latest
     steps:
