@@ -129,17 +129,6 @@ jobs:
         with:
           bun-version: latest
 
-      # Start Supabase EARLY in background while other setup happens (~60-90s saved)
-      # This runs in parallel with bun install, playwright install, and artifact download
-      - name: Start Supabase (background)
-        run: |
-          npx supabase stop --no-backup 2>/dev/null || true
-          nohup npx supabase start > /tmp/supabase.log 2>&1 &
-          echo $! > /tmp/supabase.pid
-          echo "Supabase starting in background (PID: $(cat /tmp/supabase.pid))"
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
       - name: Cache bun dependencies
         uses: actions/cache@v4
         with:
@@ -168,26 +157,11 @@ jobs:
           name: web-build
           path: apps/web/dist
 
-      # Wait for Supabase to be ready (it was starting in background)
-      - name: Wait for Supabase
+      # Start Supabase fresh - db reset runs synchronously and creates clean state
+      - name: Start Supabase local
         run: |
-          echo "Waiting for Supabase to be ready..."
-          # Wait up to 120s for Supabase to start
-          for i in {1..24}; do
-            if curl -s http://127.0.0.1:54321/rest/v1/ > /dev/null 2>&1; then
-              echo "Supabase is ready!"
-              break
-            fi
-            echo "Waiting... ($i/24)"
-            sleep 5
-          done
-          # Show logs if it failed
-          if ! curl -s http://127.0.0.1:54321/rest/v1/ > /dev/null 2>&1; then
-            echo "Supabase failed to start. Logs:"
-            cat /tmp/supabase.log || true
-            exit 1
-          fi
-          # Reset database
+          npx supabase stop --no-backup 2>/dev/null || true
+          npx supabase start
           npx supabase db reset
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
