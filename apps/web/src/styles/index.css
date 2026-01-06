@@ -392,18 +392,18 @@ p {
 }
 
 /* Links - default styling for plain text links */
-/* Use .link class or rely on parent .prose container for inline links */
-.link,
-.prose a:not(.btn) {
+/* Use .link class for inline links outside of prose containers */
+.link {
   color: var(--color-accent-9);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent-6);
+  text-underline-offset: 2px;
   transition: color 0.2s ease;
 }
 
-.link:hover,
-.prose a:not(.btn):hover {
+.link:hover {
   color: var(--color-accent-10);
-  text-decoration: underline;
+  text-decoration-color: var(--color-accent-9);
 }
 
 a:focus {
@@ -523,7 +523,8 @@ blockquote {
 }
 
 code {
-  font-family: monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   background-color: var(--color-neutral-3);
   padding: var(--spacing-1) var(--spacing-2);
   border-radius: var(--radius-sm);
@@ -575,6 +576,7 @@ pre code {
   color: var(--color-neutral-12);
   max-width: 65ch;
   line-height: 1.75;
+  margin-top: 0;
 }
 
 .prose h1,
@@ -609,6 +611,14 @@ pre code {
   font-size: 1.125rem;
 }
 
+.prose h5 {
+  font-size: 1rem;
+}
+
+.prose h6 {
+  font-size: 0.875rem;
+}
+
 .prose p {
   color: var(--color-neutral-11);
   margin-bottom: 1.25em;
@@ -621,13 +631,15 @@ pre code {
 
 .prose a {
   color: var(--color-accent-9);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent-6);
+  text-underline-offset: 2px;
   font-weight: 500;
 }
 
 .prose a:hover {
   color: var(--color-accent-10);
-  text-decoration: underline;
+  text-decoration-color: var(--color-accent-9);
 }
 
 .prose ul,
@@ -645,6 +657,15 @@ pre code {
   color: var(--color-neutral-9);
 }
 
+/* Nested lists */
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 .prose blockquote {
   border-left: 4px solid var(--color-accent-6);
   padding-left: 1em;
@@ -655,12 +676,13 @@ pre code {
 }
 
 .prose code {
-  color: var(--color-accent-11);
+  color: var(--color-neutral-12);
   background-color: var(--color-neutral-3);
   padding: 0.125em 0.375em;
   border-radius: 0.25rem;
   font-size: 0.875em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
 .prose pre {
