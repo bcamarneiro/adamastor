@@ -145,14 +145,20 @@ jobs:
         working-directory: apps/watcher
 
       - name: Sync photos to Supabase Storage
-        if: inputs.sync_photos == true && (needs.determine-environment.outputs.environment != 'production' || steps.latest_release.outputs.skip != 'true')
+        if: needs.determine-environment.outputs.environment != 'production' || steps.latest_release.outputs.skip != 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           ENVIRONMENT: ${{ needs.determine-environment.outputs.environment }}
         run: |
           echo "Syncing photos for $ENVIRONMENT..."
-          bun run src/sync-photos.ts --force
+          # Only use --force if explicitly requested, otherwise incremental sync
+          # (skips deputies that already have Supabase Storage URLs)
+          if [ "${{ inputs.sync_photos }}" = "true" ]; then
+            bun run src/sync-photos.ts --force
+          else
+            bun run src/sync-photos.ts
+          fi
         working-directory: apps/watcher
 
       # Smoke test for production
