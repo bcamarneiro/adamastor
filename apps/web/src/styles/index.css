@@ -567,6 +567,153 @@ pre code {
   color: var(--color-accent-8);
 }
 
+/* Prose/Markdown Content Styling
+ * Custom prose styles that use the site's design system colors
+ * instead of default Tailwind typography plugin colors
+ */
+.prose {
+  color: var(--color-neutral-12);
+  max-width: 65ch;
+  line-height: 1.75;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: var(--color-neutral-12);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose h1 {
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--color-neutral-5);
+  padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+}
+
+.prose h4 {
+  font-size: 1.125rem;
+}
+
+.prose p {
+  color: var(--color-neutral-11);
+  margin-bottom: 1.25em;
+}
+
+.prose strong {
+  color: var(--color-neutral-12);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--color-accent-9);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.prose a:hover {
+  color: var(--color-accent-10);
+  text-decoration: underline;
+}
+
+.prose ul,
+.prose ol {
+  color: var(--color-neutral-11);
+  padding-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+
+.prose li {
+  margin-bottom: 0.5em;
+}
+
+.prose li::marker {
+  color: var(--color-neutral-9);
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--color-accent-6);
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  color: var(--color-neutral-11);
+  font-style: italic;
+}
+
+.prose code {
+  color: var(--color-accent-11);
+  background-color: var(--color-neutral-3);
+  padding: 0.125em 0.375em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.prose pre {
+  background-color: var(--color-neutral-3);
+  border: 1px solid var(--color-neutral-5);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1.25em;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  color: var(--color-neutral-12);
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-neutral-5);
+  margin: 2em 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.25em;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--color-neutral-5);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.prose th {
+  background-color: var(--color-neutral-3);
+  color: var(--color-neutral-12);
+  font-weight: 600;
+}
+
+.prose td {
+  color: var(--color-neutral-11);
+}
+
+.prose img {
+  border-radius: 0.5rem;
+  margin: 1.5em 0;
+}
+
+/* Dark mode prose adjustments are handled by CSS variables */
+
 /* Responsive Typography */
 @media (max-width: 768px) {
   html {
