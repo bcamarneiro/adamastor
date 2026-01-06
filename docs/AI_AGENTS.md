@@ -25,6 +25,12 @@ This document provides guidelines for AI agents (Cursor, GitHub Copilot, Claude 
 - **Clear commit messages** - Describe what changed and why
 - **Incremental improvements** - Build up complex features in small steps
 
+### Branching Strategy
+
+- **All PRs target `staging`** - Never create PRs directly to `main`
+- **Create feature branches from `staging`** - `git checkout staging && git pull && git checkout -b <type>/issue-<n>-<desc>`
+- **Branch naming**: `fix/`, `feat/`, `refactor/`, `docs/`, `chore/` + issue number + short description
+
 ---
 
 ## Tool-Specific Guidance
@@ -342,6 +348,40 @@ export const mockParties = [
 // In test file
 import { mockParties } from './__fixtures__/parties';
 ```
+
+### E2E Regression Tests for Bug Fixes
+
+**Location:** Add tests to the appropriate thematic spec file in `apps/web/e2e/`:
+
+- `home.spec.ts` - Homepage-related bugs
+- `navigation.spec.ts` - Navigation and page accessibility bugs
+- `leaderboard.spec.ts` - Ranking page bugs
+- `postal-codes.spec.ts` - Postal code mapping bugs
+- `parties.spec.ts` - Party page bugs
+
+When fixing user-reported bugs, **always add an E2E regression test** to prevent the bug from returning:
+
+```typescript
+// Issue #116: Postal code 3700 shows wrong district
+// @see https://github.com/bcamarneiro/adamastor/issues/116
+test('postal code 3700 should map to Aveiro district', async ({ page }) => {
+  await page.goto('/');
+  // ... test implementation
+});
+```
+
+**Pattern:**
+
+1. Add a comment with `// Issue #XX: Title` and `// @see <github-url>`
+2. Test the specific user flow that was broken
+3. Skip tests gracefully if prerequisite UI elements don't exist
+
+**Bug-fixing workflow checklist:**
+
+- [ ] Fix the bug
+- [ ] Add E2E test to the appropriate spec file referencing the issue
+- [ ] Verify test passes locally: `cd apps/web && npx playwright test <spec-file>`
+- [ ] Create PR targeting `staging` and linking to the issue
 
 ---
 
