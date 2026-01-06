@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { DISTRICT_POSTAL_PREFIXES } from './districts.js';
+import { DISTRICT_POSTAL_PREFIXES } from './district-postal-prefixes.js';
 
 describe('District Postal Prefixes', () => {
   it('should have Guarda postal codes 6300, 6305, 6320 only in Guarda district', () => {
