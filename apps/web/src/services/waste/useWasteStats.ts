@@ -34,10 +34,12 @@ async function fetchWasteStats(): Promise<WasteStats> {
     throw new Error('Erro ao calcular desperdício');
   }
 
-  const totalDeputies = allDeputies?.length || TOTAL_DEPUTIES;
+  // Use constitutional total (230) for percentage calculation, not DB count
+  // DB may have more deputies due to substitutes during the legislature
+  const totalDeputies = TOTAL_DEPUTIES;
   const lowWorkDeputies = lowPerformers?.length || 0;
   const avgWorkScore =
-    allDeputies?.reduce((sum, d) => sum + (d.work_score || 0), 0) / totalDeputies || 0;
+    allDeputies?.reduce((sum, d) => sum + (d.work_score || 0), 0) / (allDeputies?.length || 1) || 0;
   const lowWorkersPercentage = (lowWorkDeputies / totalDeputies) * 100;
 
   // Calculate estimated salary waste (salary of D/F deputies)
@@ -56,6 +58,6 @@ export function useWasteStats() {
   return useQuery({
     queryKey: ['waste', 'stats'],
     queryFn: fetchWasteStats,
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
