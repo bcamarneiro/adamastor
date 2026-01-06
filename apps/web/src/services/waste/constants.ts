@@ -1,5 +1,5 @@
 // Re-export shared parliament constant for backwards compatibility
-export { TOTAL_DEPUTIES } from '@/constants/parliament';
+export { TOTAL_DEPUTIES } from 'shared';
 
 // Constants for Portuguese Parliament deputy salary calculations
 export const DEPUTY_MONTHLY_SALARY = 4021; // euros

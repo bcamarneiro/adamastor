@@ -3,12 +3,12 @@ import { FullRankings } from '@/components/Leaderboard/FullRankings';
 import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { SEO } from '@/components/SEO';
-import { TOTAL_DEPUTIES } from '@/constants/parliament';
 import { type District, type Party, supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Filter, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TOTAL_DEPUTIES } from 'shared';
 
 const GRADES = ['A', 'B', 'C', 'D', 'F'] as const;
 
