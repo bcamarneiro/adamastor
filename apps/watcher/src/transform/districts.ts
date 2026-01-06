@@ -59,8 +59,8 @@ const DISTRICT_SLUGS: Record<string, string> = {
   Viseu: 'viseu',
 };
 
-// Postal prefixes for each district
-const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
+// Postal prefixes for each district (exported for testing)
+export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
   Aveiro: [
     '3800',
     '3810',
@@ -192,9 +192,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '6270',
     '6280',
     '6290',
-    '6300',
-    '6305',
-    '6320',
+    // Note: 6300, 6305, 6320 belong to Guarda, not Castelo Branco
   ],
   Coimbra: [
     '3000',
@@ -275,6 +273,7 @@ const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
   ],
   Guarda: [
     '6300',
+    '6305',
     '6320',
     '6350',
     '6355',
