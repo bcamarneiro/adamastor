@@ -1,8 +1,9 @@
+import { CURRENT_LEGISLATURE_ROMAN, TOTAL_DEPUTIES } from '@/constants/parliament';
 import { motion } from 'framer-motion';
 
 const metrics = [
   {
-    value: '230',
+    value: String(TOTAL_DEPUTIES),
     label: 'Deputados',
   },
   {
@@ -10,7 +11,7 @@ const metrics = [
     label: 'Iniciativas',
   },
   {
-    value: 'XVII',
+    value: CURRENT_LEGISLATURE_ROMAN,
     label: 'Legislatura',
   },
   {
