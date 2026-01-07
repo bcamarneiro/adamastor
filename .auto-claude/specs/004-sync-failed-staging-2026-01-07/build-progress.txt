@@ -90,3 +90,66 @@ Expected Workflow Files to Review:
 - apps/watcher/index.ts (if sync script issue)
 
 === END SESSION 1 ===
+
+=== SESSION 2-6 (Investigation & Fix Implementation) ===
+
+Completed Subtasks:
+✅ subtask-1-1: Fetched and analyzed failed workflow run logs
+✅ subtask-1-2: Compared staging vs production workflow configurations
+✅ subtask-2-1: Analyzed recent commits for workflow/watcher changes
+✅ subtask-2-2: Validated staging environment secrets and configuration
+✅ subtask-2-3: Formulated root cause hypothesis and documented findings
+✅ subtask-3-1: Applied fix to sync-data.yml (commit b19800e)
+
+Root Cause Identified:
+- External Parliament API unavailability during scheduled sync run
+- Both staging AND production failed with identical pattern
+- No code changes in 7+ days ruled out regression
+- Short execution time (~6s) indicated early fetch-phase failure
+
+Fix Applied (commit b19800e):
+- Added "Verify Parliament API availability" step to sync-data.yml
+- Implements 3 retry attempts with exponential backoff (5s→10s→20s)
+- Provides clear error messaging via GitHub Actions annotations
+- Fast failure detection when API is unavailable
+
+=== MANUAL VERIFICATION REQUIRED (subtask-3-2) ===
+
+⚠️  This subtask requires manual user action to verify the fix works.
+
+Prerequisites:
+1. Push this branch to remote:
+   git push -u origin auto-claude/004-sync-failed-staging-2026-01-07
+
+2. Create PR and merge to staging branch, OR
+   Manually update staging branch with the workflow fix
+
+Verification Steps:
+1. Navigate to: https://github.com/bcamarneiro/adamastor/actions/workflows/sync-data.yml
+
+2. Click "Run workflow" dropdown
+
+3. Select settings:
+   - Branch: staging (after merge)
+   - Target environment: staging
+   - Force full sync: false (default)
+   - Sync photos: false (default)
+
+4. Click "Run workflow" button
+
+5. Monitor the workflow run and verify:
+   ✓ "Verify Parliament API availability" step runs
+   ✓ API health check shows "✅ Parliament API is available (HTTP 200)"
+   ✓ "Sync data" step completes successfully
+   ✓ Overall workflow completes with green checkmark
+
+Expected Outcome:
+- If Parliament API is available: Workflow should complete successfully
+- If Parliament API is unavailable: Workflow should fail fast with clear error:
+  "Parliament API is unavailable. The sync cannot proceed."
+
+After successful verification:
+- Mark subtask-3-2 as completed
+- Proceed to Phase 4 (Verification & Prevention)
+
+=== END SESSION 6 ===
