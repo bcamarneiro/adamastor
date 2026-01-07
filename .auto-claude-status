@@ -1,25 +1,25 @@
 {
   "active": true,
   "spec": "003-enhancement-add-sentry-source-maps-for-production-",
-  "state": "building",
+  "state": "complete",
   "subtasks": {
-    "completed": 0,
+    "completed": 8,
     "total": 8,
-    "in_progress": 1,
+    "in_progress": 0,
     "failed": 0
   },
   "phase": {
-    "current": "Package Installation",
+    "current": "Build and Upload Verification",
     "id": null,
-    "total": 1
+    "total": 2
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 1,
+    "number": 8,
     "started_at": "2026-01-07T16:03:13.645304"
   },
-  "last_update": "2026-01-07T16:03:13.652627"
+  "last_update": "2026-01-07T16:17:44.146432"
 }

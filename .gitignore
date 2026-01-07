@@ -49,4 +49,6 @@ apps/web/playwright-report/
 .cursor/
 .windsurfrules
 CLAUDE.md
+
+# Auto Claude data directory
 .auto-claude/
