@@ -108,17 +108,18 @@
   ],
   "qa_signoff": {
     "status": "fixes_applied",
-    "timestamp": "2026-01-07T19:30:00.000Z",
-    "fix_session": 0,
+    "timestamp": "2026-01-07T20:20:00.000Z",
+    "fix_session": 1,
     "issues_fixed": [
       {
         "title": "Rebase branch onto staging",
-        "description": "Branch was rebased onto origin/staging to include latest 5 commits"
+        "description": "Branch rebased onto latest origin/staging (ca4c89c). All 6 commits cleanly applied on top.",
+        "fix_commit": "60a8e64"
       }
     ],
     "tests_passed": "N/A - rebasing only, no code changes",
     "issues": "",
     "ready_for_qa_revalidation": true
   },
-  "last_updated": "2026-01-07T19:30:00.000Z"
+  "last_updated": "2026-01-07T20:20:00.000Z"
 }
