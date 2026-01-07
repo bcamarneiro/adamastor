@@ -1,14 +1,18 @@
 import { useMemo } from 'react';
 import type { DistrictStats } from '../../lib/supabase';
+import type { ComparisonMetric } from '@/types/comparison';
 import {
   useComparison,
   type MetricConfig,
-  type ComparisonMetric,
 } from '../../hooks/useComparison';
+
+// Re-export for backward compatibility
+export type { ComparisonMetric };
 
 /**
  * Type alias for backward compatibility.
  * DistrictComparisonMetric is identical to the shared ComparisonMetric type.
+ * @deprecated Use ComparisonMetric from @/types/comparison instead
  */
 export type DistrictComparisonMetric = ComparisonMetric;
 
@@ -19,7 +23,7 @@ export type DistrictComparisonMetric = ComparisonMetric;
 export interface DistrictComparisonResult {
   districtA: DistrictStats;
   districtB: DistrictStats;
-  metrics: DistrictComparisonMetric[];
+  metrics: ComparisonMetric[];
   winsA: number;
   winsB: number;
   ties: number;
