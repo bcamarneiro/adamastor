@@ -171,9 +171,25 @@
   ],
   "spec_file": "spec.md",
   "qa_signoff": {
-    "status": "pending",
-    "tests_passed": "",
-    "issues": ""
+    "status": "fixes_applied",
+    "timestamp": "2026-01-07T20:20:00.000Z",
+    "fix_session": 0,
+    "issues_fixed": [
+      {
+        "title": "Needs rebase - branch rebased onto origin/main",
+        "fix_description": "Cherry-picked 9 feature commits onto current origin/main (d012917)"
+      }
+    ],
+    "ready_for_qa_revalidation": true
   },
-  "last_updated": "2026-01-07T17:57:30.481444+00:00"
+  "last_updated": "2026-01-07T20:20:00.000Z",
+  "qa_iteration_history": [
+    {
+      "iteration": 0,
+      "status": "fixes_applied",
+      "timestamp": "2026-01-07T20:20:00.000Z",
+      "issues": ["needs rebase"],
+      "fix_applied": "rebased branch onto origin/main"
+    }
+  ]
 }
