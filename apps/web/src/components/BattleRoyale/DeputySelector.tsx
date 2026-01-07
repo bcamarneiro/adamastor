@@ -51,6 +51,7 @@ export function DeputySelector({ label, selected, onSelect, excludeId }: DeputyS
             <img
               src={selected.photo_url}
               alt={selected.short_name}
+              loading="lazy"
               className="w-12 h-12 rounded-full object-cover bg-neutral-4"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
@@ -116,6 +117,7 @@ export function DeputySelector({ label, selected, onSelect, excludeId }: DeputyS
                   <img
                     src={deputy.photo_url}
                     alt={deputy.short_name}
+                    loading="lazy"
                     className="w-10 h-10 rounded-full object-cover bg-neutral-4"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
