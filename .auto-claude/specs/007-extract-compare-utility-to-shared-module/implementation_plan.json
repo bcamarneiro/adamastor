@@ -60,7 +60,7 @@
           "subtask_id": "2.2",
           "title": "Update useCompareParties.ts",
           "description": "Import compare from 'shared' package and remove the local compare function definition (lines 24-42). Update the import statement at the top of the file.",
-          "status": "pending",
+          "status": "completed",
           "file_path": "apps/web/src/services/parties/useCompareParties.ts",
           "estimated_loc": -18
         }

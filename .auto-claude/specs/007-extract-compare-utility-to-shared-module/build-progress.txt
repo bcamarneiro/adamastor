@@ -6,11 +6,11 @@ Extract the duplicate `compare()` function from `useCompareDistricts.ts` and `us
 ## Phase 1: Create shared utility
 - [x] 1.1 Create compare utility file (`packages/shared/src/compare.ts`)
 - [x] 1.2 Export from shared index (`packages/shared/src/index.ts`)
-- [ ] 1.3 Add unit tests (`packages/shared/src/compare.test.ts`)
+- [x] 1.3 Add unit tests (`packages/shared/src/compare.test.ts`)
 
 ## Phase 2: Update consumers
-- [ ] 2.1 Update useCompareDistricts.ts to use shared compare
-- [ ] 2.2 Update useCompareParties.ts to use shared compare
+- [x] 2.1 Update useCompareDistricts.ts to use shared compare
+- [x] 2.2 Update useCompareParties.ts to use shared compare
 
 ## Phase 3: Verification
 - [ ] 3.1 Run shared package tests
