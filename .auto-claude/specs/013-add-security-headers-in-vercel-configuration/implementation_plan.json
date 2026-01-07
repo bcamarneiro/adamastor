@@ -85,7 +85,7 @@
           "id": "2.1",
           "title": "Configure Content-Security-Policy header",
           "description": "Add CSP header with appropriate directives for: self, Google Fonts (fonts.googleapis.com, fonts.gstatic.com), Sentry (*.sentry.io), Vercel Analytics (*.vercel-scripts.com, *.vercel-insights.com), Supabase (*.supabase.co), inline styles for Radix UI, and blob: URLs for image generation",
-          "status": "pending",
+          "status": "completed",
           "files": [
             "apps/web/vercel.json"
           ],
@@ -98,7 +98,9 @@
             "connect-src allows self, Supabase, Sentry, and Vercel analytics",
             "frame-ancestors is set to 'none'",
             "Header applies to all routes"
-          ]
+          ],
+          "notes": "Added Content-Security-Policy header to vercel.json with comprehensive directives: default-src 'self'; script-src 'self' https://*.vercel-scripts.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co https://*.sentry.io https://*.ingest.sentry.io https://*.vercel-insights.com; frame-ancestors 'none'. JSON validation passed.",
+          "updated_at": "2026-01-07T17:46:04.580809+00:00"
         }
       ]
     },
@@ -112,14 +114,16 @@
           "id": "3.1",
           "title": "Validate vercel.json syntax",
           "description": "Ensure the vercel.json file has valid JSON syntax and follows Vercel's configuration schema",
-          "status": "pending",
+          "status": "completed",
           "files": [
             "apps/web/vercel.json"
           ],
           "acceptance_criteria": [
             "vercel.json passes JSON validation",
             "Configuration follows Vercel schema"
-          ]
+          ],
+          "notes": "Validated vercel.json: (1) JSON syntax validated with jq and Python json module, (2) Schema structure verified - all 9 top-level keys are valid Vercel configuration options, (3) Framework 'vite' is valid, (4) 2 header rules with proper source/headers structure validated, (5) 1 rewrite rule with proper source/destination structure validated, (6) All 5 security headers present with correct values: X-Frame-Options=DENY, X-Content-Type-Options=nosniff, Referrer-Policy=strict-origin-when-cross-origin, Permissions-Policy with camera/microphone/geolocation restrictions, and Content-Security-Policy with all required directives (default-src, script-src, style-src, font-src, img-src, connect-src, frame-ancestors).",
+          "updated_at": "2026-01-07T17:49:18.665221+00:00"
         },
         {
           "id": "3.2",
@@ -181,5 +185,5 @@
       "data_urls": "Used for inline images and icons"
     }
   },
-  "last_updated": "2026-01-07T17:44:19.104176+00:00"
+  "last_updated": "2026-01-07T17:49:18.665228+00:00"
 }
