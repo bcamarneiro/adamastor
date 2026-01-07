@@ -1,11 +1,13 @@
 import { Spinner } from '@/components/Spinner';
 import { useInitiatives } from '@/services/initiatives/useInitiatives';
 import * as Accordion from '@radix-ui/react-accordion';
-import { Table } from '@radix-ui/themes';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import InitiativeRow, { type InitiativeData, type RelatedInitiativeData } from './InitiativeRow';
+
+// Grid column classes for consistent layout (matching InitiativeRow)
+const gridColsClass = 'grid grid-cols-[48px_auto_auto_1fr_96px] items-center';
 
 const InitiativeList = () => {
   const { initiatives, metadata, isLoading, isError, error } = useInitiatives();
@@ -164,47 +166,56 @@ const InitiativeList = () => {
             <Spinner size="lg" />
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <Table.Root>
-              <Table.Header>
-                <Table.Row className="bg-neutral-2">
-                  <Table.ColumnHeaderCell scope="col" className="w-12" />
-                  <Table.ColumnHeaderCell scope="col">#</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col">Phase</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col">Title</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col" className="w-24">
-                    Actions
-                  </Table.ColumnHeaderCell>
-                </Table.Row>
-              </Table.Header>
+          <div className="bg-white rounded-lg shadow overflow-hidden" role="table" aria-label="Initiatives list">
+            {/* Sticky Header */}
+            <div
+              role="rowgroup"
+              className="sticky top-0 z-10 bg-neutral-2 border-b border-neutral-3"
+            >
+              <div role="row" className={gridColsClass}>
+                <div role="columnheader" className="p-3" aria-label="Expand/collapse">
+                  <span className="sr-only">Expand</span>
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  #
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  Phase
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  Title
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  Actions
+                </div>
+              </div>
+            </div>
 
-              <Table.Body>
-                {filteredInitiatives.length === 0 ? (
-                  <Table.Row>
-                    <Table.Cell colSpan={5} className="text-center py-8 text-neutral-11">
-                      <div className="flex flex-col items-center gap-2">
-                        <FaSearch className="w-6 h-6" aria-hidden="true" />
-                        <p>
-                          {debouncedFilterText || selectedPhase
-                            ? 'No initiatives found matching your criteria.'
-                            : 'No initiatives available.'}
-                        </p>
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                ) : (
-                  filteredInitiatives.map((initiative) => (
-                    <InitiativeRow
-                      key={initiative.IniId}
-                      initiative={initiative as InitiativeData}
-                      isExpanded={expandedRows.has(initiative.IniId)}
-                      onToggle={toggleRow}
-                      relatedInitiatives={getRelatedInitiatives(initiative as InitiativeData)}
-                    />
-                  ))
-                )}
-              </Table.Body>
-            </Table.Root>
+            {/* Table Body */}
+            <div role="rowgroup">
+              {filteredInitiatives.length === 0 ? (
+                <div role="row" className="text-center py-8 text-neutral-11">
+                  <div role="cell" className="flex flex-col items-center gap-2">
+                    <FaSearch className="w-6 h-6" aria-hidden="true" />
+                    <p>
+                      {debouncedFilterText || selectedPhase
+                        ? 'No initiatives found matching your criteria.'
+                        : 'No initiatives available.'}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                filteredInitiatives.map((initiative) => (
+                  <InitiativeRow
+                    key={initiative.IniId}
+                    initiative={initiative as InitiativeData}
+                    isExpanded={expandedRows.has(initiative.IniId)}
+                    onToggle={toggleRow}
+                    relatedInitiatives={getRelatedInitiatives(initiative as InitiativeData)}
+                  />
+                ))
+              )}
+            </div>
           </div>
         )}
       </div>

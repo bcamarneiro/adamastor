@@ -1,5 +1,4 @@
 import { formatDate } from '@/utils/dateUtils';
-import { Table } from '@radix-ui/themes';
 import { memo } from 'react';
 import { FaChevronDown, FaChevronRight, FaClock, FaVoteYea } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -52,9 +51,13 @@ export const calcularDuracao = (inicio: string, fim?: string): number => {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
+// Grid column classes for consistent layout (matching header)
+const gridColsClass = 'grid grid-cols-[48px_auto_auto_1fr_96px] items-center';
+
 /**
  * InitiativeRow component - displays a single initiative row with expandable content
  * Supports both collapsed (summary) and expanded (detailed) states
+ * Uses div-based layout for virtualization compatibility
  */
 const InitiativeRow = memo(function InitiativeRow({
   initiative,
@@ -76,20 +79,32 @@ const InitiativeRow = memo(function InitiativeRow({
   );
 
   return (
-    <>
-      <Table.Row
-        className="hover:bg-neutral-1 transition-colors cursor-pointer"
+    <div role="rowgroup">
+      {/* Main Row */}
+      <div
+        role="row"
+        className={`${gridColsClass} hover:bg-neutral-1 transition-colors cursor-pointer border-b border-neutral-3`}
         onClick={() => onToggle(initiative.IniId)}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onToggle(initiative.IniId);
+          }
+        }}
+        aria-expanded={isExpanded}
       >
-        <Table.Cell className="w-12">
+        <div role="cell" className="p-3 flex items-center justify-center">
           {isExpanded ? (
-            <FaChevronDown className="text-neutral-11" />
+            <FaChevronDown className="text-neutral-11" aria-hidden="true" />
           ) : (
-            <FaChevronRight className="text-neutral-11" />
+            <FaChevronRight className="text-neutral-11" aria-hidden="true" />
           )}
-        </Table.Cell>
-        <Table.RowHeaderCell>{initiative.IniNr}</Table.RowHeaderCell>
-        <Table.Cell>
+        </div>
+        <div role="rowheader" className="p-3 font-medium">
+          {initiative.IniNr}
+        </div>
+        <div role="cell" className="p-3">
           <div className="flex items-center gap-2">
             <span className="inline-flex px-2 py-1 rounded-full text-sm bg-neutral-2">
               {initiative.latestEvent.Fase?.trim()}
@@ -101,9 +116,11 @@ const InitiativeRow = memo(function InitiativeRow({
               <FaClock className="text-neutral-11" title="Long running initiative" />
             )}
           </div>
-        </Table.Cell>
-        <Table.Cell>{initiative.IniTitulo}</Table.Cell>
-        <Table.Cell>
+        </div>
+        <div role="cell" className="p-3 truncate">
+          {initiative.IniTitulo}
+        </div>
+        <div role="cell" className="p-3">
           <Link
             to={`/initiatives/${initiative.IniId}/details`}
             className="inline-block px-3 py-1 text-sm text-blue-600 hover:text-blue-700 hover:underline rounded transition-colors"
@@ -112,12 +129,13 @@ const InitiativeRow = memo(function InitiativeRow({
           >
             Details
           </Link>
-        </Table.Cell>
-      </Table.Row>
+        </div>
+      </div>
 
+      {/* Expanded Content Row */}
       {isExpanded && (
-        <Table.Row className="bg-neutral-1">
-          <Table.Cell colSpan={5} className="p-4">
+        <div role="row" className="bg-neutral-1 border-b border-neutral-3">
+          <div role="cell" className="p-4">
             <div className="space-y-6">
               {/* Description Section */}
               {initiative.description && (
@@ -271,10 +289,10 @@ const InitiativeRow = memo(function InitiativeRow({
                 </div>
               )}
             </div>
-          </Table.Cell>
-        </Table.Row>
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 });
 
