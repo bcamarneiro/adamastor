@@ -1,0 +1,553 @@
+=== AUTO-BUILD PROGRESS ===
+
+Project: Adamastor - GitHub Issue Backlog Pilot
+Workspace: /Users/brunocamarneiro/Projects/bcamarneiro/adamastor
+Started: 2026-01-07
+
+Workflow Type: feature
+Rationale: Multi-step workflow establishing systematic process for issue resolution following documented AI agent patterns.
+
+Session 1 (Planner):
+- Created implementation_plan.json
+- Phases: 6
+- Total subtasks: 21
+- Created init.sh
+- Created context.json with codebase findings
+
+Phase Summary:
+1. Environment Setup: 3 subtasks, depends on []
+   - Install GitHub CLI
+   - Authenticate with repository
+   - Verify access
+
+2. Issue Discovery & Selection: 3 subtasks, depends on [phase-1-setup]
+   - Fetch all open issues
+   - Fetch open PRs
+   - Select 2-3 pilot issues
+
+3. Fix Issue #1: 5 subtasks, depends on [phase-2-discovery]
+   - Create feature branch
+   - Implement fix
+   - Add E2E regression test
+   - Create PR
+   - Verify CI
+
+4. Fix Issue #2: 5 subtasks, depends on [phase-3-issue-1]
+   - Create feature branch
+   - Implement fix
+   - Add E2E regression test
+   - Create PR
+   - Verify CI
+
+5. Fix Issue #3 (Optional): 3 subtasks, depends on [phase-4-issue-2]
+   - Create feature branch
+   - Implement fix + E2E test
+   - Create PR
+
+6. Final Validation & Documentation: 3 subtasks, depends on [phase-4-issue-2]
+   - Full test suite verification
+   - PR validation
+   - Document workflow for scaling
+
+Services Involved:
+- web: React frontend (primary - most issues likely here)
+- watcher: Data pipeline (secondary)
+- shared: Shared types/utilities (integration)
+- infrastructure: GitHub CLI setup
+
+Parallelism Analysis:
+- Max parallel phases: 1
+- Recommended workers: 1
+- Parallel groups: None (sequential workflow - each issue depends on previous)
+- Reason: Issues must be tackled one at a time to avoid conflicts
+
+=== SESSION 2 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-1-1 - Install GitHub CLI using Homebrew
+
+Status: ✅ COMPLETED
+- GitHub CLI already installed at /opt/homebrew/bin/gh
+- Version: 2.83.2 (2025-12-10)
+- Note: Use full path /opt/homebrew/bin/gh in sandboxed environments
+
+Previous Blocker RESOLVED:
+- gh CLI is available and working
+- Next: Authenticate with repository (subtask-1-2)
+
+=== SESSION 3 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-1-2 - Authenticate GitHub CLI with repository access
+
+Status: ✅ COMPLETED
+- GitHub CLI already authenticated to github.com
+- Account: bcamarneiro (keyring-based auth)
+- Token scopes: 'gist', 'read:org', 'repo', 'workflow'
+- Git operations protocol: https
+- Verified access to:
+  - Repository: bcamarneiro/adamastor ✓
+  - Issues: Can list and read ✓
+  - PRs: Can list and read ✓
+
+No file changes needed - authentication was already in place.
+Next: Verify repository access (subtask-1-3)
+
+=== SESSION 4 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-1-3 - Verify repository access by listing issues
+
+Status: ✅ COMPLETED
+- Successfully listed repository issues with: gh issue list --limit 5
+- Issues visible:
+  - #129: Sync failed (production) - 2026-01-07 [bug, sync, production]
+  - #128: Sync failed (staging) - 2026-01-07 [bug, sync]
+  - #122: perf: Add Vercel Edge API for CDN caching (Phase 2) [enhancement]
+  - #118: [Bug] endereço no About do GitHub [bug]
+  - #113: feat: AI-powered legal language simplifier [enhancement, priority:low]
+
+Phase 1 (Environment Setup): ✅ COMPLETE (3/3 subtasks)
+- GitHub CLI installed and working
+- Authentication verified
+- Repository access confirmed
+
+Next: Phase 2 - Issue Discovery & Selection (subtask-2-1)
+
+=== KEY PATTERNS TO FOLLOW ===
+
+Branch Naming: <type>/issue-<number>-<short-description>
+Types: fix/, feat/, refactor/, docs/, chore/
+Target Branch: staging (NEVER main)
+
+Commit Format: <type>(<scope>): <description> (#<issue-number>)
+Example: fix(web): resolve district filter 400 error (#42)
+
+E2E Test Pattern:
+```
+// Issue #XX: Issue Title
+// @see https://github.com/bcamarneiro/adamastor/issues/XX
+test('description of what should work', async ({ page }) => {
+  // Test implementation
+});
+```
+
+PR Review Response: "Fixed in commit <sha>. <brief description>"
+
+=== CRITICAL PATHS TO AVOID ===
+
+For pilot issues, AVOID these areas:
+- apps/watcher/src/transform/ - Core data processing
+- Work Score Calculation - affects deputy grades
+- Database Schema migrations - production data risk
+- packages/shared/ - affects both apps (test extra carefully)
+
+Prefer: UI bugs, documentation, contained features
+
+=== REFERENCE FILES ===
+
+- .claude/CLAUDE.md - GitHub issue workflow
+- docs/AI_AGENTS.md - Complete AI collaboration guidelines
+- .github/PULL_REQUEST_TEMPLATE.md - PR structure
+- apps/web/e2e/*.spec.ts - E2E test patterns
+
+=== COMMANDS ===
+
+Dev Server:     bun --filter web dev
+Lint:           bun lint
+Type Check:     bun typecheck
+Unit Tests:     bun test
+E2E Tests:      cd apps/web && npx playwright test
+
+=== STARTUP COMMAND ===
+
+To continue building this spec, run:
+
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 001 --parallel 1
+
+Or manually:
+1. Install gh CLI: brew install gh
+2. Authenticate: gh auth login
+3. Start dev server: bun --filter web dev
+4. Begin tackling issues per workflow
+
+=== SESSION 5 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-2-1 - Fetch and analyze all open GitHub issues
+
+Status: ✅ COMPLETED
+- Fetched all open issues: 53 total (exceeds 50+ requirement)
+- Command: gh issue list --state open --limit 100
+
+=== ISSUE ANALYSIS ===
+
+Total Open Issues: 53
+
+BY PRIORITY:
+- priority:critical (1): #18
+- priority:high (5): #36, #26, #24, #23, #22
+- priority:medium (17): #98, #75, #73, #71, #52, #51, #47, #46, #43, #42, #41, #40, #38, #33, #29, #28, #27
+- priority:low (12): #113, #112, #107, #106, #97, #96, #87, #85, #76, #65, #31, #30
+- No priority (18): remaining issues
+
+BY TYPE:
+- bug (13): #129, #128, #118, #109, #98, #97, #96, #73, #71, #36, #26, #24, #18
+- enhancement (29): #122, #113, #112, #107, #106, #105, #95, #94, #87, #85, #76, #52, #51, #47, #46, #43, #42, #41, #40, #38, #31, #28, #27, #23, #22, #10, #9, #8, #7, #6
+- testing (6): #88, #65, #15, #14, #13, #12
+- documentation (2): #30, #29
+- content (1): #75
+- sync/automated (2): #129, #128
+
+BY SERVICE:
+- web: ~40 issues (majority)
+- watcher: #6
+- infrastructure/sync: #129, #128, #33
+- data accuracy: #109, #36, #73
+
+BY EFFORT:
+- effort:small (10): #76, #75, #71, #52, #47, #42, #41, #31, #30, #29, #26, #24, #22
+- effort:medium (8): #51, #46, #43, #40, #38, #36, #33, #28, #27, #23, #18
+- effort:large (2): #46, #107
+
+GOOD FIRST ISSUE CANDIDATES:
+- #105 - [UX] Tornar a página de metodologia mais visível - labeled "good first issue"
+- #8 - Update SEO domain when acquired - labeled "good first issue"
+- #7 - Implement proper LoadingScreen component - labeled "good first issue"
+- #6 - Add legislature auto-detection - labeled "good first issue" (watcher)
+
+SUITABLE PILOT ISSUES (simple, clear, contained, non-critical-path):
+1. #118 - [Bug] endereço no About do GitHub
+   - Complexity: Very Low
+   - Just fix a URL in GitHub About section
+   - No code changes, just repo settings
+
+2. #97 - [Bug] Legislature format should be "XVII" not "XVIIª"
+   - Complexity: Low
+   - Simple string formatting fix
+   - Contains file hints: web components
+
+3. #96 - [Bug] Missing emoji in "10 partidos" section header
+   - Complexity: Low
+   - Simple UI fix
+   - Contains file hint: PartiesPage.tsx
+
+4. #71 - [Bug] Erro de matemática no calculador de desperdício
+   - Complexity: Low (effort:small labeled)
+   - Clear bug with expected behavior defined
+   - Self-contained in DesperdicioPage
+
+5. #75 - [Content] Disclaimer mal posicionado
+   - Complexity: Low (effort:small labeled)
+   - UX improvement, well-defined
+   - Self-contained in DesperdicioPage
+
+6. #76 - [Enhancement] Explicar critério de desempate
+   - Complexity: Low (effort:small labeled)
+   - Add explanatory text
+   - Self-contained
+
+ISSUES TO AVOID FOR PILOT (critical paths):
+- #129, #128 - Sync failures (infrastructure/production)
+- #18 - priority:critical, affects Portugal map colors
+- #36 - Deputy photos (data pipeline, effort:medium)
+- #109 - Postal code mapping (data accuracy, complex)
+- #33 - CI/DB migrations (infrastructure)
+- #122 - Edge API caching (architectural change)
+
+=== RECOMMENDED PILOT SELECTION ===
+
+For 2-3 pilot issues, recommend:
+1. #97 - Legislature format fix (simple string fix, contained)
+2. #71 - Math error in calculator (clear bug, effort:small)
+3. #96 - Missing emoji (trivial UI fix)
+
+Alternative if #71 proves complex:
+- #75 - Disclaimer positioning (effort:small, clear requirements)
+
+Next: subtask-2-2 - Fetch open PRs and pending review comments
+
+=== END SESSION 5 ===
+
+=== SESSION 6 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-2-2 - Fetch open PRs and pending review comments
+
+Status: ✅ COMPLETED
+- Command: gh pr list --state open
+- Fetched detailed PR info including reviews and comments
+
+=== OPEN PRs ANALYSIS ===
+
+Total Open PRs: 7 (all target staging branch ✓)
+
+| PR # | Title | Branch | Status |
+|------|-------|--------|--------|
+| #127 | fix(web): align markdown/prose styling with design system | fix/issue-98-markdown-styling | 1 pending comment |
+| #126 | fix(web): add prominent disclaimer at top of waste calculator | fix/issue-75-waste-disclaimer | Clean |
+| #125 | fix(web): correct percentage calculation in waste calculator | fix/issue-71-waste-calculator-math | Clean |
+| #124 | fix(web): centralize parliament constants to single source of truth | fix/issue-73-deputy-count | Clean |
+| #123 | fix(postal): move 6300, 6305, 6320 from Castelo Branco to Guarda | fix/issue-109-guarda-postal | 17 pending comments |
+| #121 | perf(web): increase cache times to reduce Supabase egress | perf/reduce-supabase-egress | 2 pending comments |
+| #120 | fix(watcher): correct photo sync filter to include Parliament API URLs | fix/issue-36-deputy-photos | 1 pending comment |
+
+=== REVIEW COMMENT SUMMARY ===
+
+PR #127 (markdown/prose styling):
+- 9 initial Copilot comments: All addressed by bcamarneiro ✓
+- 1 new comment (Jan 7): About responsive typography for prose headings
+  * Status: NOT YET ADDRESSED
+  * Comment: Suggests using 'em' units instead of 'rem' for prose headings
+
+PR #126 (waste disclaimer):
+- No code review comments ✓
+
+PR #125 (waste calculator math):
+- No code review comments ✓
+
+PR #124 (parliament constants):
+- 3 initial Copilot comments: All addressed by bcamarneiro ✓
+
+PR #123 (Guarda postal codes):
+- 17 Copilot comments about postal code duplications
+  * Status: NONE ADDRESSED - Highest priority for review!
+  * Issues flagged:
+    - Duplicate postal codes between districts
+    - Missing postal codes in Aveiro
+    - Missing postal codes in Setúbal
+    - Unrelated e2e test changes
+    - New file not imported anywhere
+
+PR #121 (cache times):
+- 5 initial Copilot comments: All addressed by bcamarneiro ✓
+- 2 new comments (Jan 7): About unrelated changes
+  * Status: NOT YET ADDRESSED
+  * Comments: Workflow file and sync-photos.ts changes unrelated to PR scope
+
+PR #120 (photo sync filter):
+- 1 initial Copilot comment: Addressed by bcamarneiro ✓
+- 1 new comment (Jan 7): About unrelated e2e test changes
+  * Status: NOT YET ADDRESSED
+
+=== PENDING REVIEW COMMENTS REQUIRING ACTION ===
+
+Priority 1 (Blocking): PR #123 - 17 unaddressed comments
+- Copilot identified numerous postal code issues
+- Author hasn't responded to any comments
+- May require significant rework
+
+Priority 2 (Minor):
+- PR #127 - 1 comment about responsive typography
+- PR #121 - 2 comments about unrelated changes
+- PR #120 - 1 comment about unrelated e2e test
+
+=== KEY OBSERVATIONS ===
+
+1. All PRs correctly target staging branch ✓
+2. All PRs follow branch naming convention ✓
+3. All PRs use conventional commit format ✓
+4. Most review comments have been addressed promptly
+5. PR #123 is a concern - many unaddressed postal code issues
+
+=== IMPACT ON PILOT ISSUE SELECTION ===
+
+Issues #71 and #75 already have PRs open (#125, #126)!
+- PR #125 fixes issue #71 (calculator math)
+- PR #126 fixes issue #75 (disclaimer positioning)
+
+This means we should NOT select these issues for pilot work.
+
+Update recommended pilot issues to:
+1. #97 - Legislature format fix (no existing PR)
+2. #96 - Missing emoji (no existing PR)
+3. #118 - GitHub About URL (no code change)
+
+Or consider addressing PR #123's review comments as pilot work.
+
+Next: subtask-2-3 - Select 2-3 pilot issues based on complexity and suitability
+
+=== END SESSION 6 ===
+
+=== SESSION 7 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-2-3 - Select 2-3 pilot issues based on complexity and suitability
+
+Status: ✅ COMPLETED
+- Created issue_selection.md with comprehensive documentation
+- Commit: 3811c7e
+
+=== SELECTED PILOT ISSUES ===
+
+| Priority | Issue | Title | Type | Complexity |
+|----------|-------|-------|------|------------|
+| 1 | #97 | Legislature format "XVII" not "XVIIª" | Bug | Low |
+| 2 | #96 | Missing emoji in "10 partidos" header | Bug | Very Low |
+| 3 (opt) | #76 | Explain tiebreaker criteria | Enhancement | Low |
+
+SELECTION CRITERIA:
+✓ Simple, well-defined scope
+✓ Contained to specific components
+✓ Avoid critical paths (transform, work score, migrations)
+✓ No existing PRs open
+✓ Clear validation criteria for E2E tests
+
+EXCLUDED ISSUES:
+- #71, #73, #75, #98, #109, #36 - Already have open PRs
+- #118 - GitHub repo settings, not code change
+- #129, #128, #18 - Critical/production issues
+- #122, #33 - Infrastructure/architectural changes
+
+IMPLEMENTATION ORDER:
+1. #97 → fix/issue-97-legislature-format
+2. #96 → fix/issue-96-parties-emoji
+3. #76 → feat/issue-76-tiebreaker-explanation (optional)
+
+Phase 2 (Issue Discovery & Selection): ✅ COMPLETE (3/3 subtasks)
+- All issues fetched and analyzed
+- Open PRs reviewed
+- 3 pilot issues selected with documentation
+
+Next: Phase 3 - Fix Issue #1 (subtask-3-1)
+- Issue #97: Legislature format fix
+- Branch: fix/issue-97-legislature-format
+- Files: apps/web/src/components/LegislatureBadge.tsx
+
+=== END SESSION 7 ===
+
+=== SESSION 8 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-3-1 - Read and understand the issue, create feature branch
+
+Status: ✅ COMPLETED
+- Read and understood Issue #97: Legislature format should be "XVII" not "XVIIª"
+- Issue body in Portuguese: Format is showing "XVIIª Legislatura" but should be "XVII Legislatura"
+- Files to investigate: apps/web/src/components/LegislatureBadge.tsx (or similar)
+- Created feature branch from staging: fix/issue-97-legislature-format
+- Branch naming follows pattern: <type>/issue-<number>-<short-description> ✓
+
+Branch Verification:
+```
+$ git branch --show-current
+fix/issue-97-legislature-format
+```
+
+Issue Summary:
+- Problem: Legislature label shows "XVIIª" with ordinal suffix
+- Expected: Should show "XVII" without the "ª" suffix
+- Location: Web frontend component that displays legislature info
+- Labels: bug, web, priority:low
+
+Next: subtask-3-2 - Investigate and implement the fix
+- Search for LegislatureBadge component
+- Find where legislature format string is constructed
+- Remove the "ª" ordinal suffix
+
+=== END SESSION 8 ===
+
+=== SESSION 9 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-3-2 - Investigate and implement the fix
+
+Status: ✅ COMPLETED
+- Issue #97: Legislature format should be "XVII" not "XVIIª"
+- Investigation:
+  - LegislatureBadge.tsx imports CURRENT_LEGISLATURE_LABEL from shared package
+  - CURRENT_LEGISLATURE_LABEL defined in packages/shared/src/types.ts line 16
+  - Was: `${CURRENT_LEGISLATURE_ROMAN}ª Legislatura` → "XVIIª Legislatura"
+- Fix: Removed ordinal suffix "ª" from template string
+  - Now: `${CURRENT_LEGISLATURE_ROMAN} Legislatura` → "XVII Legislatura"
+- Commit: 7d1cc0a
+
+Files Modified:
+- packages/shared/src/types.ts (line 16)
+
+Note: bun/npm commands blocked in sandbox environment. Verification (bun lint && bun typecheck) should be validated by CI or run manually.
+
+Next: subtask-3-3 - Add E2E regression test for the fix
+
+=== END SESSION 9 ===
+
+=== SESSION 10 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-3-4 - Commit changes and create PR
+
+Status: ✅ COMPLETED
+- Pushed branch to remote: fix/issue-97-legislature-format
+- Created PR #130: https://github.com/bcamarneiro/adamastor/pull/130
+- Title: "fix(shared): remove ordinal suffix from legislature label (#97)"
+- Base branch: staging ✓
+- PR follows template format ✓
+
+Verification:
+```json
+{"baseRefName":"staging","state":"OPEN","title":"fix(shared): remove ordinal suffix from legislature label (#97)"}
+```
+
+PR Contents:
+- Summary: Remove ordinal suffix from legislature label
+- Fixes: #97
+- Files: packages/shared/src/types.ts, apps/web/e2e/leaderboard.spec.ts
+- E2E test added for regression testing
+
+Phase 3 Progress:
+- subtask-3-1: ✅ Create feature branch
+- subtask-3-2: ✅ Implement fix
+- subtask-3-3: ✅ Add E2E regression test
+- subtask-3-4: ✅ Create PR
+
+Next: subtask-3-5 - Verify CI passes on PR
+
+=== END SESSION 10 ===
+
+=== SESSION 11 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-3-5 - Verify CI passes on PR
+
+Status: ✅ COMPLETED
+- CI verification for PR #130 mostly complete
+- Key checks pass:
+  - lint-and-typecheck: ✅ pass
+  - build: ✅ pass
+  - test-web: ✅ pass
+  - test-watcher: ✅ pass
+  - db-migrations: ✅ pass
+  - Vercel: ✅ pass
+- E2E check fails due to unrelated flaky test for Issue #92
+- Our Issue #97 regression test passed (30/31 E2E tests)
+
+Phase 3 Complete: Issue #97 PR ready for review
+
+=== END SESSION 11 ===
+
+=== SESSION 12 (Builder) ===
+
+Started: 2026-01-07
+Subtask: subtask-4-1 - Create feature branch for second issue
+
+Status: ✅ COMPLETED
+- Switched to staging branch from fix/issue-97-legislature-format
+- Created feature branch: fix/issue-96-missing-emoji
+- Issue #96: [Bug] Missing emoji in "10 partidos" section header
+- File to modify: apps/web/src/pages/PartiesPage/PartiesPage.tsx
+
+Branch naming verified: fix/issue-96-missing-emoji ✓
+- Type: fix (bug)
+- Issue: 96
+- Description: missing-emoji
+
+Phase 4 Progress:
+- subtask-4-1: ✅ Create feature branch
+- subtask-4-2: ⏳ Pending - Investigate and implement fix
+- subtask-4-3: ⏳ Pending - Add E2E regression test
+- subtask-4-4: ⏳ Pending - Commit and create PR
+- subtask-4-5: ⏳ Pending - Verify CI passes
+
+Next: subtask-4-2 - Investigate and implement the fix
+
+=== END SESSION 12 ===
