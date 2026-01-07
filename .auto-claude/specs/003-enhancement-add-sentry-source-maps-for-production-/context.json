@@ -1,0 +1,51 @@
+{
+  "task_description": "Add Sentry source maps for production debugging - Enable automatic source map uploads to Sentry during production builds to make error stack traces readable",
+  "scoped_services": ["web"],
+  "files_to_modify": {
+    "web": [
+      "apps/web/package.json",
+      "apps/web/vite.config.ts",
+      "apps/web/.env.example"
+    ],
+    "infrastructure": [
+      "Vercel Dashboard - Environment Variables"
+    ]
+  },
+  "files_to_reference": [
+    "apps/web/src/lib/sentry.ts",
+    "apps/web/vite.config.ts"
+  ],
+  "patterns": {
+    "vite_plugin_pattern": "Vite uses plugins array with react() and tailwindcss(). New plugins should follow same import/configuration pattern.",
+    "environment_variable_pattern": "Uses import.meta.env.VITE_* for client-side vars. Build-time vars use process.env directly.",
+    "sentry_configuration": "Sentry SDK already configured with DSN, ErrorBoundary, and Session Replay in src/lib/sentry.ts",
+    "conditional_plugins": "Should use process.env.NODE_ENV === 'production' check with .filter(Boolean) to remove false values"
+  },
+  "existing_implementations": {
+    "description": "Sentry runtime SDK (@sentry/react v10.32.1) already installed and configured. Missing only build-time source map upload capability.",
+    "relevant_files": [
+      "apps/web/src/lib/sentry.ts - Shows DSN usage pattern",
+      "apps/web/vite.config.ts - Shows plugin configuration pattern"
+    ],
+    "current_plugins": [
+      "@vitejs/plugin-react",
+      "@tailwindcss/vite",
+      "custom markdown-loader"
+    ]
+  },
+  "environment_variables": {
+    "existing": [
+      "VITE_INITIATIVES_URL",
+      "VITE_BASE_INFO_URL",
+      "VITE_SUPABASE_URL",
+      "VITE_SUPABASE_ANON_KEY"
+    ],
+    "to_add": [
+      "VITE_SENTRY_DSN (runtime, client-side)",
+      "SENTRY_AUTH_TOKEN (build-time only)",
+      "SENTRY_ORG (build-time only)",
+      "SENTRY_PROJECT (build-time only)"
+    ]
+  },
+  "created_at": "2026-01-07T15:52:37.423665"
+}

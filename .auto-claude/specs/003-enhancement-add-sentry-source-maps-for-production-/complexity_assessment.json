@@ -1,0 +1,70 @@
+{
+  "complexity": "standard",
+  "workflow_type": "feature",
+  "confidence": 0.90,
+  "reasoning": "Adding Sentry Vite plugin for source map uploads. Well-documented official plugin with clear integration path. Requires package installation, build configuration changes, and environment variable management. Standard complexity due to multiple files and platform configuration needs.",
+
+  "analysis": {
+    "scope": {
+      "estimated_files": 3,
+      "estimated_services": 1,
+      "is_cross_cutting": false,
+      "notes": "Localized to build configuration: vite.config.ts, package.json, and possibly .env.example for documentation"
+    },
+    "integrations": {
+      "external_services": ["Sentry"],
+      "new_dependencies": ["@sentry/vite-plugin"],
+      "research_needed": false,
+      "notes": "Sentry SDK already integrated. Official Vite plugin is well-documented with clear setup instructions. Minimal research needed."
+    },
+    "infrastructure": {
+      "docker_changes": false,
+      "database_changes": false,
+      "config_changes": true,
+      "notes": "Environment variables required: VITE_SENTRY_DSN (client-side) and SENTRY_AUTH_TOKEN (build-time). Configuration in Vercel dashboard needed."
+    },
+    "knowledge": {
+      "patterns_exist": true,
+      "research_required": false,
+      "unfamiliar_tech": [],
+      "notes": "Sentry already configured in apps/web/src/lib/sentry.ts. Vite config in apps/web/vite.config.ts is straightforward. Standard plugin integration pattern."
+    },
+    "risk": {
+      "level": "medium",
+      "concerns": [
+        "Build process modification could break deployments if misconfigured",
+        "Requires secrets management (SENTRY_AUTH_TOKEN) in Vercel",
+        "Production-only feature requires testing in production-like environment",
+        "Source map uploads could slow down build process"
+      ],
+      "notes": "Medium risk due to build process changes and secrets handling. However, impact is limited - misconfiguration would only prevent source map uploads, not break the application runtime."
+    }
+  },
+
+  "recommended_phases": [
+    "discovery",
+    "requirements",
+    "context",
+    "spec_writing",
+    "planning",
+    "validation"
+  ],
+
+  "flags": {
+    "needs_research": false,
+    "needs_self_critique": false,
+    "needs_infrastructure_setup": false
+  },
+
+  "validation_recommendations": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "minimal_mode": false,
+    "test_types_required": ["integration"],
+    "security_scan_required": true,
+    "staging_deployment_required": false,
+    "reasoning": "Build configuration change requires integration testing to ensure builds succeed and source maps upload correctly. Security scan needed for auth token handling. Staging deployment not required as source maps don't affect runtime behavior and can be verified in production."
+  },
+
+  "created_at": "2026-01-07T00:00:00Z"
+}

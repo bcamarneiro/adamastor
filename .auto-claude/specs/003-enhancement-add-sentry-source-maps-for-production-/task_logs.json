@@ -1,0 +1,843 @@
+{
+  "spec_id": "003-enhancement-add-sentry-source-maps-for-production-",
+  "created_at": "2026-01-07T15:50:44.967664+00:00",
+  "updated_at": "2026-01-07T16:03:55.253079+00:00",
+  "phases": {
+    "planning": {
+      "phase": "planning",
+      "status": "completed",
+      "started_at": "2026-01-07T15:50:44.967798+00:00",
+      "completed_at": "2026-01-07T16:03:12.723547+00:00",
+      "entries": [
+        {
+          "timestamp": "2026-01-07T15:50:44.967821+00:00",
+          "type": "phase_start",
+          "content": "Starting spec creation process",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:50:44.968555+00:00",
+          "type": "info",
+          "content": "Starting phase 1: PROJECT DISCOVERY",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:50:45.327372+00:00",
+          "type": "success",
+          "content": "Discovered 64 files in project",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:50:45.328141+00:00",
+          "type": "info",
+          "content": "Starting phase 2: REQUIREMENTS GATHERING",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:01.849927+00:00",
+          "type": "info",
+          "content": "Starting phase 3: COMPLEXITY ASSESSMENT",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:01.850829+00:00",
+          "type": "info",
+          "content": "Analyzing task complexity with AI...",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:06.370362+00:00",
+          "type": "text",
+          "content": "I'll analyze the requirements to assess the complexity of this Sentry source maps integration task.",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:07.077818+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...y-source-maps-for-production-/requirements.json",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...y-source-maps-for-production-/requirements.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:07.103989+00:00",
+          "type": "tool_end",
+          "content": "[Read] Done",
+          "phase": "planning",
+          "tool_name": "Read",
+          "detail": "     1→{\n     2→  \"task_description\": \"Investigate GitHub Issue #9: [Enhancement] Add Sentry source maps for production debugging\\n\\n\\n# GitHub Issue #9: [Enhancement] Add Sentry source maps for production debugging\\n\\n## Problem\\nSentry is configured but source maps aren't being uploaded, making production errors harder to debug.\\n\\n## Current State\\n- Sentry SDK is installed and configured in `apps/web/src/lib/sentry.ts`\\n- ErrorBoundary captures exceptions\\n- Session replay is enabled\\n- Missing: `VITE_SENTRY_DSN` environment variable in Vercel\\n\\n## Proposed Solution\\n1. Add `VITE_SENTRY_DSN` to Vercel environment variables\\n2. Install `@sentry/vite-plugin` for source map uploads\\n3. Configure the plugin in `vite.config.ts`\\n\\n## Files\\n- `apps/web/vite.config.ts`\\n- Vercel dashboard (environment variables)\\n\\n\\n\\n**Labels:** enhancement, web\\n**URL:** https://github.com/bcamarneiro/adamastor/issues/9\\n\\n\\nPlease analyze this issue and provide:\\n1. A brief summary of what the issue is about\\n2. A proposed solution approach\\n3. The files that would likely need to be modified\\n4. Estimated complexity (simple/standard/complex)\\n5. Acceptance criteria for resolving this issue\",\n     3→  \"workflow_type\": \"feature\"\n     4→}\n\n<system-reminder>\nWhenever you read a file, you should consider whether it would be considered malware. You CAN and SHOULD provide analysis of malware, what it is doing. But you MUST refuse to improve or augment the code. You can still analyze existing code, write reports, or answer questions about the code behavior.\n</system-reminder>\n",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:51:35.461074+00:00",
+          "type": "text",
+          "content": "Now I'll analyze the project structure to better understand the scope:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:35.599578+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...s/bcamarneiro/adamastor/apps/web/vite.config.ts",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...s/bcamarneiro/adamastor/apps/web/vite.config.ts"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:35.737166+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...camarneiro/adamastor/apps/web/src/lib/sentry.ts",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...camarneiro/adamastor/apps/web/src/lib/sentry.ts"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:35.962106+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...cts/bcamarneiro/adamastor/apps/web/package.json",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...cts/bcamarneiro/adamastor/apps/web/package.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:51:35.982001+00:00",
+          "type": "tool_end",
+          "content": "[Read] Done",
+          "phase": "planning",
+          "tool_name": "Read",
+          "detail": "     1→import path from 'node:path';\n     2→import tailwindcss from '@tailwindcss/vite';\n     3→import react from '@vitejs/plugin-react';\n     4→import { defineConfig } from 'vite';\n     5→import pkg from './package.json';\n     6→\n     7→const port = (process.env.PUBLIC_DEV_PORT as unknown as number) || 3000;\n     8→\n     9→export default defineConfig({\n    10→  define: {\n    11→    __APP_VERSION__: JSON.stringify(pkg.version),\n    12→  },\n    13→  server: {\n    14→    port,\n    15→  },\n    16→  resolve: {\n    17→    alias: {\n    18→      '@': path.resolve(__dirname, './src/'),\n    19→      '@assets': path.resolve(__dirname, './src/assets/'),\n    20→      '@components': path.resolve(__dirname, './src/components/'),\n    21→      '@pages': path.resolve(__dirname, './src/pages/'),\n    22→      '@services': path.resolve(__dirname, './src/services/'),\n    23→      '@store': path.resolve(__dirname, './src/store/'),\n    24→      '@styles': path.resolve(__dirname, './src/styles/'),\n    25→      '@utils': path.resolve(__dirname, './src/utils/'),\n    26→    },\n    27→  },\n    28→  plugins: [\n    29→    react(),\n    30→    tailwindcss(),\n    31→    {\n    32→      name: 'markdown-loader',\n    33→      transform(code, id) {\n    34→        if (id.slice(-3) === '.md') {\n    35→          // For .md files, get the raw content\n    36→          return `export default ${JSON.stringify(code)};`;\n    37→        }\n    38→      },\n    39→    },\n    40→  ],\n    41→});\n    42→\n\n<system-reminder>\nWhenever you read a file, you should consider whether it would be considered malware. You CAN and SHOULD provide analysis of malware, what it is doing. But you MUST refuse to improve or augment the code. You can still analyze existing code, write reports, or answer questions about the code behavior.\n</system-reminder>\n",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:51:58.567560+00:00",
+          "type": "text",
+          "content": "Based on my analysis of the requirements and codebase, I'll now create the complexity assessment:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:52:18.179093+00:00",
+          "type": "tool_start",
+          "content": "[Write] ...maps-for-production-/complexity_assessment.json",
+          "phase": "planning",
+          "tool_name": "Write",
+          "tool_input": "...maps-for-production-/complexity_assessment.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:52:18.607461+00:00",
+          "type": "tool_end",
+          "content": "[Write] Done",
+          "phase": "planning",
+          "tool_name": "Write",
+          "detail": "File created successfully at: /Users/brunocamarneiro/Projects/bcamarneiro/adamastor/.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/complexity_assessment.json",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:52:37.104791+00:00",
+          "type": "text",
+          "content": "## Complexity Assessment Complete\n\nI've analyzed the Sentry source maps integration task and created the complexity assessment. Here's my evaluation:\n\n### **Complexity: STANDARD**\n\n**Confidence: 90%**\n\nThis task involves adding the official Sentry Vite plugin to enable source map uploads during production builds. While straightforward, it's not \"simple\" due to multiple configuration touchpoints.\n\n### Key Factors:\n\n**Scope:**\n- 3 files to modify: `vite.config.ts`, `package.json`, and potentially `.env.example`\n- Single service (web app)\n- Localized to build configuration\n\n**Integrations:**\n- Sentry SDK already integrated and working\n- Adding official `@sentry/vite-plugin` (well-documented)\n- No research needed - clear documentation available\n\n**Infrastructure:**\n- No Docker or database changes\n- Environment variable configuration in Vercel required\n- Build-time secrets management (SENTRY_AUTH_TOKEN)\n\n**Risk Assessment: MEDIUM**\n- Build process modification could break deployments if misconfigured\n- Requires secrets management in Vercel\n- Production testing needed to verify source map uploads\n- Low runtime impact (only affects debugging capability)\n\n### Recommended Workflow:\nStandard 6-phase pipeline (no research phase needed):\n1. ✅ Discovery (complete)\n2. ✅ Requirements (complete)\n3. Context (understand existing Sentry setup and build process)\n4. Spec Writing\n5. Planning\n6. Validation (integration tests + security scan for auth token handling)\n\n### Validation Recommendations:\n- **Integration tests** to verify builds succeed and source maps upload\n- **Security scan** for auth token handling\n- **No staging deployment** needed (can verify in production)\n\nThe assessment file has been created at:\n`/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/complexity_assessment.json`",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:52:37.422811+00:00",
+          "type": "info",
+          "content": "Starting phase 4: CONTEXT DISCOVERY",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:52:52.429071+00:00",
+          "type": "info",
+          "content": "Starting phase 5: SPEC DOCUMENT CREATION",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:53:00.473399+00:00",
+          "type": "text",
+          "content": "I'll read all input files and create a complete `spec.md` document. Let me start by loading the context files.",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:53:01.121553+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...-source-maps-for-production-/project_index.json",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...-source-maps-for-production-/project_index.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:53:01.596650+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...y-source-maps-for-production-/requirements.json",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...y-source-maps-for-production-/requirements.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:53:02.033150+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...sentry-source-maps-for-production-/context.json",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...sentry-source-maps-for-production-/context.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:53:02.055980+00:00",
+          "type": "tool_end",
+          "content": "[Read] Done",
+          "phase": "planning",
+          "tool_name": "Read",
+          "detail": "     1→{\n     2→  \"project_root\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor\",\n     3→  \"project_type\": \"monorepo\",\n     4→  \"services\": {\n     5→    \"shared\": {\n     6→      \"name\": \"shared\",\n     7→      \"path\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/packages/shared\",\n     8→      \"language\": \"JavaScript\",\n     9→      \"framework\": null,\n    10→      \"type\": \"library\",\n    11→      \"package_manager\": \"npm\",\n    12→      \"key_directories\": {\n    13→        \"src\": {\n    14→          \"path\": \"src\",\n    15→          \"purpose\": \"Source code\"\n    16→        }\n    17→      },\n    18→      \"entry_point\": \"src/index.ts\",\n    19→      \"dependencies\": [],\n    20→      \"dev_dependencies\": [\n    21→        \"@types/bun\"\n    22→      ]\n    23→    },\n    24→    \"watcher\": {\n    25→      \"name\": \"watcher\",\n    26→      \"path\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/apps/watcher\",\n    27→      \"language\": \"JavaScript\",\n    28→      \"framework\": null,\n    29→      \"type\": \"unknown\",\n    30→      \"package_manager\": \"npm\",\n    31→      \"dev_command\": \"npm run start\",\n    32→      \"key_directories\": {\n    33→        \"src\": {\n    34→          \"path\": \"src\",\n    35→          \"purpose\": \"Source code\"\n    36→        },\n    37→        \"schemas\": {\n    38→          \"path\": \"schemas\",\n    39→          \"purpose\": \"Schemas/DTOs\"\n    40→        }\n    41→      },\n    42→      \"entry_point\": \"index.ts\",\n    43→      \"dependencies\": [\n    44→        \"shared\",\n    45→        \"@bokuweb/zstd-wasm\",\n    46→        \"@sentry/node\",\n    47→        \"@supabase/supabase-js\",\n    48→        \"@types/backblaze-b2\",\n    49→        \"@types/deep-diff\",\n    50→        \"@vercel/blob\",\n    51→        \"ajv\",\n    52→        \"backblaze-b2\",\n    53→        \"date-fns\",\n    54→        \"deep-diff\",\n    55→        \"generate-schema\",\n    56→        \"minimist\",\n    57→        \"sharp\",\n    58→        \"zstd-codec\"\n    59→      ],\n    60→      \"dev_dependencies\": [\n    61→        \"@types/bun\",\n    62→        \"@types/minimist\",\n    63→        \"@types/sharp\"\n    64→      ],\n    65→      \"environment\": {\n    66→        \"variables\": {\n    67→          \"SUPABASE_URL\": {\n    68→            \"value\": \"http://127.0.0.1:54321\",\n    69→            \"source\": \".env\",\n    70→            \"type\": \"url\",\n    71→            \"sensitive\": false,\n    72→            \"required\": false\n    73→          },\n    74→          \"SUPABASE_SERVICE_ROLE_KEY\": {\n    75→            \"value\": \"<REDACTED>\",\n    76→            \"source\": \".env\",\n    77→            \"type\": \"string\",\n    78→            \"sensitive\": true,\n    79→            \"required\": false\n    80→          }\n    81→        },\n    82→        \"required_count\": 0,\n    83→        \"optional_count\": 0,\n    84→        \"detected_count\": 2\n    85→      },\n    86→      \"services\": {\n    87→        \"monitoring\": [\n    88→          {\n    89→            \"type\": \"sentry\",\n    90→            \"client\": \"@sentry/node\"\n    91→          }\n    92→        ]\n    93→      },\n    94→      \"monitoring\": {\n    95→        \"apm_tools\": [\n    96→          \"sentry\"\n    97→        ]\n    98→      },\n    99→      \"consumes\": [\n   100→        \"shared\"\n   101→      ]\n   102→    },\n   103→    \"web\": {\n   104→      \"name\": \"web\",\n   105→      \"path\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/apps/web\",\n   106→      \"language\": \"TypeScript\",\n   107→      \"framework\": \"React\",\n   108→      \"type\": \"frontend\",\n   109→      \"package_manager\": \"npm\",\n   110→      \"default_port\": 3000,\n   111→      \"build_tool\": \"Vite\",\n   112→      \"styling\": \"Tailwind CSS\",\n   113→      \"state_management\": \"Zustand\",\n   114→      \"dev_command\": \"npm run dev\",\n   115→      \"key_directories\": {\n   116→        \"src\": {\n   117→          \"path\": \"src\",\n   118→          \"purpose\": \"Source code\"\n   119→        }\n   120→      },\n   121→      \"entry_point\": \"src/App.tsx\",\n   122→      \"dependencies\": [\n   123→        \"shared\",\n   124→        \"@headlessui/react\",\n   125→        \"@radix-ui/react-tabs\",\n   126→        \"@radix-ui/themes\",\n   127→        \"@sentry/react\",\n   128→        \"@supabase/supabase-js\",\n   129→        \"@tailwindcss/vite\",\n   130→        \"@tanstack/react-query\",\n   131→        \"@types/lodash\",\n   132→        \"@vercel/analytics\",\n   133→        \"@vercel/blob\",\n   134→        \"@vercel/speed-insights\",\n   135→        \"@xyflow/react\",\n   136→        \"clsx\",\n   137→        \"cmdk\",\n   138→        \"framer-motion\",\n   139→        \"html-to-image\",\n   140→        \"lodash\",\n   141→        \"lucide-react\",\n   142→        \"qrcode.react\"\n   143→      ],\n   144→      \"dev_dependencies\": [\n   145→        \"@happy-dom/global-registrator\",\n   146→        \"@playwright/test\",\n   147→        \"@testing-library/jest-dom\",\n   148→        \"@testing-library/react\",\n   149→        \"@testing-library/user-event\",\n   150→        \"@types/node\",\n   151→        \"@types/react\",\n   152→        \"@types/react-dom\",\n   153→        \"@vitejs/plugin-react\",\n   154→        \"happy-dom\"\n   155→      ],\n   156→      \"testing\": \"Vitest\",\n   157→      \"e2e_testing\": \"Playwright\",\n   158→      \"environment\": {\n   159→        \"variables\": {\n   160→          \"VITE_INITIATIVES_URL\": {\n   161→            \"value\": \"https://ydfwrfxg9t0mujvy.public.blob.vercel-storage.com/latest/iniciativas.json\",\n   162→            \"source\": \".env\",\n   163→            \"type\": \"url\",\n   164→            \"sensitive\": false,\n   165→            \"required\": false\n   166→          },\n   167→          \"VITE_BASE_INFO_URL\": {\n   168→            \"value\": \"https://ydfwrfxg9t0mujvy.public.blob.vercel-storage.com/latest/informacao_base.json\",\n   169→            \"source\": \".env\",\n   170→            \"type\": \"url\",\n   171→            \"sensitive\": false,\n   172→            \"required\": false\n   173→          },\n   174→          \"VITE_SUPABASE_URL\": {\n   175→            \"value\": \"http://127.0.0.1:54321\",\n   176→            \"source\": \".env.local\",\n   177→            \"type\": \"url\",\n   178→            \"sensitive\": false,\n   179→            \"required\": false\n   180→          },\n   181→          \"VITE_SUPABASE_ANON_KEY\": {\n   182→            \"value\": \"<REDACTED>\",\n   183→            \"source\": \".env.local\",\n   184→            \"type\": \"string\",\n   185→            \"sensitive\": true,\n   186→            \"required\": false\n   187→          }\n   188→        },\n   189→        \"required_count\": 0,\n   190→        \"optional_count\": 0,\n   191→        \"detected_count\": 4\n   192→      },\n   193→      \"consumes\": [\n   194→        \"shared\"\n   195→      ]\n   196→    }\n   197→  },\n   198→  \"infrastructure\": {\n   199→    \"ci\": \"GitHub Actions\",\n   200→    \"ci_workflows\": [\n   201→      \"release-production.yml\",\n   202→      \"sync-photos.yml\",\n   203→      \"sync-data.yml\",\n   204→      \"deploy-staging.yml\",\n   205→      \"ci.yml\"\n   206→    ]\n   207→  },\n   208→  \"conventions\": {\n   209→    \"typescript\": true,\n   210→    \"git_hooks\": \"Husky\"\n   211→  }\n   212→}\n\n<system-reminder>\nWhenever you read a file, you should consider whether it would be considered malware. You CAN and SHOULD provide analysis of malware, what it is doing. But you MUST refuse to improve or augment the code. You can still analyze existing code, write reports, or answer questions about the code behavior.\n</system-reminder>\n",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:53:13.157704+00:00",
+          "type": "text",
+          "content": "Now I'll create the complete `spec.md` document based on all the gathered context.",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:54:40.625128+00:00",
+          "type": "tool_start",
+          "content": "[Write] ...-add-sentry-source-maps-for-production-/spec.md",
+          "phase": "planning",
+          "tool_name": "Write",
+          "tool_input": "...-add-sentry-source-maps-for-production-/spec.md"
+        },
+        {
+          "timestamp": "2026-01-07T15:54:41.036229+00:00",
+          "type": "tool_end",
+          "content": "[Write] Done",
+          "phase": "planning",
+          "tool_name": "Write",
+          "detail": "File created successfully at: .auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/spec.md",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:54:45.741951+00:00",
+          "type": "text",
+          "content": "Now let me verify the spec has all required sections:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:54:47.010596+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cd .auto-claude/specs/003-enhancement-add-sentr...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "cd .auto-claude/specs/003-enhancement-add-sentr..."
+        },
+        {
+          "timestamp": "2026-01-07T15:54:47.783261+00:00",
+          "type": "tool_start",
+          "content": "[Bash] wc -l .auto-claude/specs/003-enhancement-add-se...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "wc -l .auto-claude/specs/003-enhancement-add-se..."
+        },
+        {
+          "timestamp": "2026-01-07T15:54:47.976455+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "     394 .auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/spec.md",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:54:52.276714+00:00",
+          "type": "text",
+          "content": "Perfect! Let me verify the required sections are present:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:54:55.583072+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cd .auto-claude/specs/003-enhancement-add-sentr...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "cd .auto-claude/specs/003-enhancement-add-sentr..."
+        },
+        {
+          "timestamp": "2026-01-07T15:57:11.507109+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Error",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "Exit code 1\n(eval):cd:1: no such file or directory: .auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:57:15.354682+00:00",
+          "type": "tool_start",
+          "content": "[Bash] ls -la .auto-claude/specs/",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "ls -la .auto-claude/specs/"
+        },
+        {
+          "timestamp": "2026-01-07T15:57:15.514425+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Error",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "Exit code 1\nls: .auto-claude/specs/: No such file or directory",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:57:20.613915+00:00",
+          "type": "tool_start",
+          "content": "[Bash] pwd && ls -la | head -20",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "pwd && ls -la | head -20"
+        },
+        {
+          "timestamp": "2026-01-07T15:57:21.384697+00:00",
+          "type": "tool_start",
+          "content": "[Bash] find . -name \"spec.md\" -type f 2>/dev/null | he...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "find . -name \"spec.md\" -type f 2>/dev/null | he..."
+        },
+        {
+          "timestamp": "2026-01-07T15:57:21.542556+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "./spec.md",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:57:25.236858+00:00",
+          "type": "text",
+          "content": "Perfect! I'm in the spec directory. Let me verify the sections:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:57:29.376660+00:00",
+          "type": "tool_start",
+          "content": "[Bash] echo \"Checking required sections...\" && grep -q...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "echo \"Checking required sections...\" && grep -q..."
+        },
+        {
+          "timestamp": "2026-01-07T15:57:29.541243+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "Checking required sections...\n✓ Overview\n✓ Workflow Type\n✓ Task Scope\n✓ Success Criteria\n✓ QA Acceptance Criteria\n✓ Service Context\n✓ Files to Modify\n✓ Requirements",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:57:37.382683+00:00",
+          "type": "tool_start",
+          "content": "[Bash] echo \"=== SPEC SECTIONS ===\" && grep \"^## \" spe...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "echo \"=== SPEC SECTIONS ===\" && grep \"^## \" spe..."
+        },
+        {
+          "timestamp": "2026-01-07T15:57:37.690132+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "=== SPEC SECTIONS ===\n## Overview\n## Workflow Type\n## Task Scope\n## Service Context\n## Files to Modify\n## Files to Reference\n## Patterns to Follow\n## Requirements\n## Implementation Notes\n## Development Environment\n## Success Criteria\n## QA Acceptance Criteria\n## Implementation Strategy\n## Risk Assessment\n## Troubleshooting Guide\n\n=== FILE STATS ===\n     394 spec.md\n-rw-------@ 1 brunocamarneiro  staff    17K Jan  7 15:54 spec.md",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:57:52.360517+00:00",
+          "type": "text",
+          "content": "```\n=== SPEC DOCUMENT CREATED ===\n\nFile: spec.md\nLocation: /Users/brunocamarneiro/Projects/bcamarneiro/adamastor/.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/spec.md\n\nSections: 15 total\n✓ Required Sections (8/8):\n  - Overview\n  - Workflow Type\n  - Task Scope\n  - Service Context\n  - Files to Modify\n  - Files to Reference\n  - Requirements\n  - Success Criteria\n  - QA Acceptance Criteria\n\n✓ Additional Value-Add Sections (7):\n  - Patterns to Follow\n  - Implementation Notes\n  - Development Environment\n  - Implementation Strategy\n  - Risk Assessment\n  - Troubleshooting Guide\n\nLength: 394 lines (17KB)\n\nQuality Checks:\n✓ All required sections present\n✓ Comprehensive coverage (394 lines)\n✓ Valid markdown structure\n✓ Specific file paths from context\n✓ Detailed QA acceptance criteria\n✓ Implementation strategy included\n✓ Risk assessment provided\n✓ Troubleshooting guide included\n\nKey Specifications:\n- Workflow Type: feature\n- Primary Service: web (React + Vite + TypeScript)\n- Main Changes: Install @sentry/vite-plugin, configure vite.config.ts, add environment variables\n- Files to Modify: apps/web/vite.config.ts, apps/web/package.json, Vercel dashboard\n- Reference Files: apps/web/src/lib/sentry.ts\n- Success Criteria: 11 checkpoints defined\n- QA Requirements: 14 sign-off criteria specified\n\nNext Phase: Implementation Planning\nStatus: READY FOR IMPLEMENTATION\n```\n\n---\n\n**SPEC WRITER AGENT: TASK COMPLETE**\n\nThe specification document has been successfully created with all required sections and comprehensive details. The spec provides:\n\n1. **Clear scope**: Add Sentry source map uploads for production debugging\n2. **Specific implementation guidance**: Install plugin, configure Vite, set environment variables\n3. **Detailed QA criteria**: 14 sign-off requirements covering unit tests, integration, E2E, and verification\n4. **Risk mitigation**: Security concerns addressed, troubleshooting guide included\n5. **Implementation strategy**: 4-phase approach from local setup to QA\n\nThe document is ready for the implementation phase.",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:09.910050+00:00",
+          "type": "info",
+          "content": "Starting phase 6: IMPLEMENTATION PLANNING",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:21.532521+00:00",
+          "type": "text",
+          "content": "I'll act as the Planner Agent and create a comprehensive implementation plan for adding Sentry source maps. Let me start with the mandatory deep codebase investigation.\n\n## PHASE 0: DEEP CODEBASE INVESTIGATION",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:23.121709+00:00",
+          "type": "tool_start",
+          "content": "[Bash] find . -type f \\( -name \"*.ts\" -o -name \"*.tsx\"...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "find . -type f \\( -name \"*.ts\" -o -name \"*.tsx\"..."
+        },
+        {
+          "timestamp": "2026-01-07T15:58:23.813388+00:00",
+          "type": "tool_start",
+          "content": "[Bash] ls -la",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "ls -la"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:24.628049+00:00",
+          "type": "tool_start",
+          "content": "[Bash] ls -la apps/web/ 2>/dev/null || echo \"apps/web ...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "ls -la apps/web/ 2>/dev/null || echo \"apps/web ..."
+        },
+        {
+          "timestamp": "2026-01-07T15:58:24.847114+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "total 760\ndrwxr-xr-x@ 28 brunocamarneiro  staff     896 Jan  7 13:46 .\ndrwxr-xr-x@  4 brunocamarneiro  staff     128 Dec 24 17:03 ..\n-rw-r--r--@  1 brunocamarneiro  staff    6148 Dec 24 17:03 .DS_Store\n-rw-r--r--@  1 brunocamarneiro  staff     445 Dec 26 12:07 .env\n-rw-------@  1 brunocamarneiro  staff     218 Dec 25 21:39 .env.local\n-rw-r--r--@  1 brunocamarneiro  staff     267 Dec 28 09:35 .gitignore\ndrwxr-xr-x@  3 brunocamarneiro  staff      96 Dec 24 17:03 .qodo\ndrwxr-xr-x@  4 brunocamarneiro  staff     128 Dec 29 11:31 .vercel\n-rw-r--r--@  1 brunocamarneiro  staff     689 Dec 24 17:03 LICENSE.md\n-rw-r--r--@  1 brunocamarneiro  staff    6314 Dec 31 01:40 README.md\n-rw-r--r--@  1 brunocamarneiro  staff     168 Dec 29 15:11 bunfig.toml\ndrwxr-xr-x@ 13 brunocamarneiro  staff     416 Jan  6 17:51 dist\ndrwxr-xr-x@ 11 brunocamarneiro  staff     352 Jan  7 13:55 e2e\n-rw-r--r--@  1 brunocamarneiro  staff    2577 Jan  5 16:45 index.html\ndrwxr-xr-x@  8 brunocamarneiro  staff     256 Dec 25 21:46 node_modules\n-rw-r--r--@  1 brunocamarneiro  staff  313662 Dec 24 17:03 package-lock.json\n-rw-r--r--@  1 brunocamarneiro  staff    2230 Jan  5 16:45 package.json\ndrwxr-xr-x@  3 brunocamarneiro  staff      96 Dec 30 18:42 playwright-report\n-rw-r--r--@  1 brunocamarneiro  staff    1045 Jan  7 13:46 playwright.config.ts\ndrwxr-xr-x@ 11 brunocamarneiro  staff     352 Dec 28 09:35 public\ndrwxr-xr-x@ 18 brunocamarneiro  staff     576 Jan  7 13:46 src\ndrwxr-xr-x@  3 brunocamarneiro  staff      96 Jan  6 11:27 test-results\n-rw-r--r--@  1 brunocamarneiro  staff     994 Dec 24 17:03 tsconfig.app.json\n-rw-r--r--@  1 brunocamarneiro  staff     107 Dec 26 14:49 tsconfig.json\n-rw-r--r--@  1 brunocamarneiro  staff     922 Dec 24 17:03 tsconfig.node.json\n-rw-r--r--@  1 brunocamarneiro  staff     638 Jan  7 13:46 vercel.json\n-rw-r--r--@  1 brunocamarneiro  staff    1181 Dec 29 15:11 vite.config.ts\n-rw-r--r--@  1 brunocamarneiro  staff     202 Dec 28 09:35 vitest.config.ts",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:58:31.225823+00:00",
+          "type": "tool_start",
+          "content": "[Read] ./apps/web/vite.config.ts",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "./apps/web/vite.config.ts"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:31.567783+00:00",
+          "type": "tool_start",
+          "content": "[Read] ./apps/web/package.json",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "./apps/web/package.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:32.158002+00:00",
+          "type": "tool_start",
+          "content": "[Read] ./apps/web/src/lib/sentry.ts",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "./apps/web/src/lib/sentry.ts"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:33.102443+00:00",
+          "type": "tool_start",
+          "content": "[Grep] pattern: @sentry",
+          "phase": "planning",
+          "tool_name": "Grep",
+          "tool_input": "pattern: @sentry"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:33.228134+00:00",
+          "type": "tool_end",
+          "content": "[Grep] Done",
+          "phase": "planning",
+          "tool_name": "Grep",
+          "detail": "     1→import path from 'node:path';\n     2→import tailwindcss from '@tailwindcss/vite';\n     3→import react from '@vitejs/plugin-react';\n     4→import { defineConfig } from 'vite';\n     5→import pkg from './package.json';\n     6→\n     7→const port = (process.env.PUBLIC_DEV_PORT as unknown as number) || 3000;\n     8→\n     9→export default defineConfig({\n    10→  define: {\n    11→    __APP_VERSION__: JSON.stringify(pkg.version),\n    12→  },\n    13→  server: {\n    14→    port,\n    15→  },\n    16→  resolve: {\n    17→    alias: {\n    18→      '@': path.resolve(__dirname, './src/'),\n    19→      '@assets': path.resolve(__dirname, './src/assets/'),\n    20→      '@components': path.resolve(__dirname, './src/components/'),\n    21→      '@pages': path.resolve(__dirname, './src/pages/'),\n    22→      '@services': path.resolve(__dirname, './src/services/'),\n    23→      '@store': path.resolve(__dirname, './src/store/'),\n    24→      '@styles': path.resolve(__dirname, './src/styles/'),\n    25→      '@utils': path.resolve(__dirname, './src/utils/'),\n    26→    },\n    27→  },\n    28→  plugins: [\n    29→    react(),\n    30→    tailwindcss(),\n    31→    {\n    32→      name: 'markdown-loader',\n    33→      transform(code, id) {\n    34→        if (id.slice(-3) === '.md') {\n    35→          // For .md files, get the raw content\n    36→          return `export default ${JSON.stringify(code)};`;\n    37→        }\n    38→      },\n    39→    },\n    40→  ],\n    41→});\n    42→\n\n<system-reminder>\nWhenever you read a file, you should consider whether it would be considered malware. You CAN and SHOULD provide analysis of malware, what it is doing. But you MUST refuse to improve or augment the code. You can still analyze existing code, write reports, or answer questions about the code behavior.\n</system-reminder>\n",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:58:43.102571+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...-add-sentry-source-maps-for-production-/spec.md",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...-add-sentry-source-maps-for-production-/spec.md"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:43.543181+00:00",
+          "type": "tool_start",
+          "content": "[Read] ./apps/web/.env",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "./apps/web/.env"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:44.642903+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cat ./.env.example 2>/dev/null || echo \"Root .e...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "cat ./.env.example 2>/dev/null || echo \"Root .e..."
+        },
+        {
+          "timestamp": "2026-01-07T15:58:44.823702+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "     1→# Specification: Add Sentry Source Maps for Production Debugging\n     2→\n     3→## Overview\n     4→\n     5→Enable automatic source map uploads to Sentry during production builds to make error stack traces readable and debuggable. Currently, the Sentry SDK is configured and operational with ErrorBoundary and Session Replay, but production errors show minified/obfuscated code locations instead of original TypeScript source positions. This enhancement will integrate the `@sentry/vite-plugin` into the build pipeline and configure the necessary environment variables to enable source map uploads to Sentry during Vercel deployments.\n     6→\n     7→## Workflow Type\n     8→\n     9→**Type**: feature\n    10→\n    11→**Rationale**: This task adds new build-time tooling and capabilities to the existing Sentry integration. While Sentry runtime monitoring already exists, we're implementing a new feature (source map upload mechanism) that requires package installation, build configuration changes, and environment setup across development and production environments.\n    12→\n    13→## Task Scope\n    14→\n    15→### Services Involved\n    16→- **web** (primary) - Frontend React application requiring source map uploads for production error debugging\n    17→- **Vercel** (infrastructure) - Deployment platform requiring environment variable configuration\n    18→\n    19→### This Task Will:\n    20→- [x] Install `@sentry/vite-plugin` package in the web application\n    21→- [x] Configure the Sentry Vite plugin in `vite.config.ts` for production builds\n    22→- [x] Add `VITE_SENTRY_DSN` environment variable to Vercel deployment settings\n    23→- [x] Add `SENTRY_AUTH_TOKEN` for build-time authentication with Sentry API\n    24→- [x] Configure plugin to upload source maps only during production builds\n    25→- [x] Verify source maps appear in Sentry dashboard after deployment\n    26→- [x] Ensure production error stack traces show original source code locations\n    27→\n    28→### Out of Scope:\n    29→- Modifying existing Sentry SDK runtime configuration\n    30→- Changing ErrorBoundary or Session Replay behavior\n    31→- Adding new Sentry features beyond source map uploads\n    32→- Modifying Sentry configuration for other services (watcher)\n    33→- Creating custom source map generation logic (using Vite's built-in capabilities)\n    34→\n    35→## Service Context\n    36→\n    37→### web\n    38→\n    39→**Tech Stack:**\n    40→- Language: TypeScript\n    41→- Framework: React\n    42→- Build Tool: Vite\n    43→- Styling: Tailwind CSS\n    44→- State Management: Zustand\n    45→- Testing: Vitest\n    46→- E2E Testing: Playwright\n    47→- Package Manager: npm\n    48→\n    49→**Key directories:**\n    50→- `src/` - Source code\n    51→- `src/lib/` - Library utilities and service configurations\n    52→\n    53→**Entry Point:** `src/App.tsx`\n    54→\n    55→**How to Run:**\n    56→```bash\n    57→cd apps/web\n    58→npm run dev\n    59→```\n    60→\n    61→**Port:** 3000\n    62→\n    63→**Current Sentry Integration:**\n    64→- SDK Package: `@sentry/react` (already installed)\n    65→- Configuration File: `src/lib/sentry.ts`\n    66→- Features: ErrorBoundary, Session Replay\n    67→- Missing: Source map uploads\n    68→\n    69→## Files to Modify\n    70→\n    71→| File | Service | What to Change |\n    72→|------|---------|---------------|\n    73→| `apps/web/package.json` | web | Add `@sentry/vite-plugin` to devDependencies |\n    74→| `apps/web/vite.config.ts` | web | Import and configure Sentry plugin with conditional production-only execution |\n    75→| `apps/web/.env.example` | web | Add `VITE_SENTRY_DSN` and `SENTRY_AUTH_TOKEN` placeholders for documentation |\n    76→| Vercel Dashboard | infrastructure | Add `VITE_SENTRY_DSN` and `SENTRY_AUTH_TOKEN` environment variables |\n    77→\n    78→## Files to Reference\n    79→\n    80→These files show patterns to follow:\n    81→\n    82→| File | Pattern to Copy |\n    83→|------|----------------|\n    84→| `apps/web/src/lib/sentry.ts` | Existing Sentry configuration structure (initialization, options, DSN usage) |\n    85→| `apps/web/vite.config.ts` | Current Vite plugin configuration pattern (how plugins are imported and configured) |\n    86→\n    87→## Patterns to Follow\n    88→\n    89→### Existing Sentry Configuration Pattern\n    90→\n    91→From `apps/web/src/lib/sentry.ts`:\n    92→\n    93→```typescript\n    94→// Expected pattern for Sentry initialization\n    95→import * as Sentry from \"@sentry/react\";\n    96→\n    97→Sentry.init({\n    98→  dsn: import.meta.env.VITE_SENTRY_DSN,\n    99→  integrations: [\n   100→    // ErrorBoundary integration\n   101→    // Session Replay integration\n   102→  ],\n   103→  // Additional configuration options\n   104→});\n   105→```\n   106→\n   107→**Key Points:**\n   108→- DSN is loaded from environment variable `VITE_SENTRY_DSN`\n   109→- Uses Vite's `import.meta.env` for environment variable access\n   110→- Configuration is centralized in lib/sentry.ts\n   111→\n   112→### Vite Plugin Configuration Pattern\n   113→\n   114→Expected pattern in `vite.config.ts`:\n   115→\n   116→```typescript\n   117→import { defineConfig } from 'vite';\n   118→import react from '@vitejs/plugin-react';\n   119→import { sentryVitePlugin } from '@sentry/vite-plugin';\n   120→\n   121→export default defineConfig({\n   122→  plugins: [\n   123→    react(),\n   124→    // Conditionally add Sentry plugin only for production builds\n   125→    process.env.NODE_ENV === 'production' && sentryVitePlugin({\n   126→      org: process.env.SENTRY_ORG,\n   127→      project: process.env.SENTRY_PROJECT,\n   128→      authToken: process.env.SENTRY_AUTH_TOKEN,\n   129→    }),\n   130→  ].filter(Boolean), // Remove falsy values\n   131→  build: {\n   132→    sourcemap: true, // Enable source map generation\n   133→  },\n   134→});\n   135→```\n   136→\n   137→**Key Points:**\n   138→- Plugin should only run during production builds (conditional check)\n   139→- Requires authentication token from environment\n   140→- Needs Sentry organization and project identifiers\n   141→- Must enable sourcemap generation in build config\n   142→- Use `.filter(Boolean)` to remove conditional false values from plugins array\n   143→\n   144→## Requirements\n   145→\n   146→### Functional Requirements\n   147→\n   148→1. **Source Map Upload During Build**\n   149→   - Description: Automatically upload generated source maps to Sentry during Vercel production builds\n   150→   - Acceptance: Build logs show successful source map upload to Sentry, Sentry dashboard displays uploaded artifacts\n   151→\n   152→2. **Readable Production Stack Traces**\n   153→   - Description: Production errors in Sentry should display original TypeScript source code locations instead of minified code\n   154→   - Acceptance: Trigger a test error in production, verify stack trace shows original file paths and line numbers (e.g., `App.tsx:42` instead of `bundle.js:1234`)\n   155→\n   156→3. **Environment Variable Configuration**\n   157→   - Description: Add missing `VITE_SENTRY_DSN` and `SENTRY_AUTH_TOKEN` to Vercel deployment environment\n   158→   - Acceptance: Vercel dashboard shows both variables configured for production environment, build process can access them\n   159→\n   160→4. **Production-Only Execution**\n   161→   - Description: Source map uploads should only occur during production builds, not development or preview builds\n   162→   - Acceptance: Local `npm run dev` does not attempt uploads, Vercel production builds show upload activity\n   163→\n   164→### Non-Functional Requirements\n   165→\n   166→1. **Build Performance**\n   167→   - Description: Source map upload should not significantly increase build time\n   168→   - Acceptance: Production build time increases by less than 30 seconds\n   169→\n   170→2. **Security**\n   171→   - Description: Sensitive tokens must not be exposed in client-side code or public repositories\n   172→   - Acceptance: `SENTRY_AUTH_TOKEN` only used at build time, not included in client bundle; no tokens committed to Git\n   173→\n   174→3. **Backward Compatibility**\n   175→   - Description: Existing Sentry runtime functionality must remain operational\n   176→   - Acceptance: ErrorBoundary and Session Replay continue working after plugin integration\n   177→\n   178→### Edge Cases\n   179→\n   180→1. **Missing Environment Variables** - Plugin should gracefully handle missing `SENTRY_AUTH_TOKEN` in development, log warning instead of failing build\n   181→2. **Upload Failures** - If Sentry API is unreachable, build should complete successfully with warning (not block deployment)\n   182→3. **Large Source Maps** - Handle projects with large bundle sizes without timeout issues during upload\n   183→4. **Monorepo Source Paths** - Ensure source maps correctly map to monorepo file structure (`apps/web/src/...`)\n   184→\n   185→## Implementation Notes\n   186→\n   187→### DO\n   188→- Install `@sentry/vite-plugin` as a devDependency in `apps/web/package.json`\n   189→- Use conditional logic (`process.env.NODE_ENV === 'production'`) to only activate plugin in production\n   190→- Enable `sourcemap: true` in Vite build configuration\n   191→- Configure plugin with organization and project identifiers from environment variables\n   192→- Add comprehensive environment variable documentation to `.env.example`\n   193→- Test source map uploads in a Vercel preview deployment before merging to production\n   194→- Verify existing Sentry runtime features still work after integration\n   195→\n   196→### DON'T\n   197→- Don't hardcode Sentry credentials in vite.config.ts or commit them to Git\n   198→- Don't enable source map uploads for development or preview environments (cost and unnecessary)\n   199→- Don't expose the `SENTRY_AUTH_TOKEN` in client-side code (it's build-time only)\n   200→- Don't modify the existing `apps/web/src/lib/sentry.ts` runtime configuration\n   201→- Don't include source maps in the production client bundle (they should only be uploaded to Sentry)\n   202→- Don't create custom source map generation logic when Vite provides it built-in\n   203→\n   204→## Development Environment\n   205→\n   206→### Start Services\n   207→\n   208→```bash\n   209→# Install dependencies (run from project root)\n   210→npm install\n   211→\n   212→# Start web application\n  \n\n... [truncated - full output was 20478 chars]",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:58:52.403667+00:00",
+          "type": "text",
+          "content": "Now let me check for existing context files:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:58:54.465502+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cat ./.auto-claude/specs/003-enhancement-add-se...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "cat ./.auto-claude/specs/003-enhancement-add-se..."
+        },
+        {
+          "timestamp": "2026-01-07T15:58:55.225556+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cat ./.auto-claude/specs/003-enhancement-add-se...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "cat ./.auto-claude/specs/003-enhancement-add-se..."
+        },
+        {
+          "timestamp": "2026-01-07T15:58:56.537063+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cat ./.auto-claude/specs/003-enhancement-add-se...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "cat ./.auto-claude/specs/003-enhancement-add-se..."
+        },
+        {
+          "timestamp": "2026-01-07T15:58:58.710293+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "{\n  \"project_root\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor\",\n  \"project_type\": \"monorepo\",\n  \"services\": {\n    \"shared\": {\n      \"name\": \"shared\",\n      \"path\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/packages/shared\",\n      \"language\": \"JavaScript\",\n      \"framework\": null,\n      \"type\": \"library\",\n      \"package_manager\": \"npm\",\n      \"key_directories\": {\n        \"src\": {\n          \"path\": \"src\",\n          \"purpose\": \"Source code\"\n        }\n      },\n      \"entry_point\": \"src/index.ts\",\n      \"dependencies\": [],\n      \"dev_dependencies\": [\n        \"@types/bun\"\n      ]\n    },\n    \"watcher\": {\n      \"name\": \"watcher\",\n      \"path\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/apps/watcher\",\n      \"language\": \"JavaScript\",\n      \"framework\": null,\n      \"type\": \"unknown\",\n      \"package_manager\": \"npm\",\n      \"dev_command\": \"npm run start\",\n      \"key_directories\": {\n        \"src\": {\n          \"path\": \"src\",\n          \"purpose\": \"Source code\"\n        },\n        \"schemas\": {\n          \"path\": \"schemas\",\n          \"purpose\": \"Schemas/DTOs\"\n        }\n      },\n      \"entry_point\": \"index.ts\",\n      \"dependencies\": [\n        \"shared\",\n        \"@bokuweb/zstd-wasm\",\n        \"@sentry/node\",\n        \"@supabase/supabase-js\",\n        \"@types/backblaze-b2\",\n        \"@types/deep-diff\",\n        \"@vercel/blob\",\n        \"ajv\",\n        \"backblaze-b2\",\n        \"date-fns\",\n        \"deep-diff\",\n        \"generate-schema\",\n        \"minimist\",\n        \"sharp\",\n        \"zstd-codec\"\n      ],\n      \"dev_dependencies\": [\n        \"@types/bun\",\n        \"@types/minimist\",\n        \"@types/sharp\"\n      ],\n      \"environment\": {\n        \"variables\": {\n          \"SUPABASE_URL\": {\n            \"value\": \"http://127.0.0.1:54321\",\n            \"source\": \".env\",\n            \"type\": \"url\",\n            \"sensitive\": false,\n            \"required\": false\n          },\n          \"SUPABASE_SERVICE_ROLE_KEY\": {\n            \"value\": \"<REDACTED>\",\n            \"source\": \".env\",\n            \"type\": \"string\",\n            \"sensitive\": true,\n            \"required\": false\n          }\n        },\n        \"required_count\": 0,\n        \"optional_count\": 0,\n        \"detected_count\": 2\n      },\n      \"services\": {\n        \"monitoring\": [\n          {\n            \"type\": \"sentry\",\n            \"client\": \"@sentry/node\"\n          }\n        ]\n      },\n      \"monitoring\": {\n        \"apm_tools\": [\n          \"sentry\"\n        ]\n      },\n      \"consumes\": [\n        \"shared\"\n      ]\n    },\n    \"web\": {\n      \"name\": \"web\",\n      \"path\": \"/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/apps/web\",\n      \"language\": \"TypeScript\",\n      \"framework\": \"React\",\n      \"type\": \"frontend\",\n      \"package_manager\": \"npm\",\n      \"default_port\": 3000,\n      \"build_tool\": \"Vite\",\n      \"styling\": \"Tailwind CSS\",\n      \"state_management\": \"Zustand\",\n      \"dev_command\": \"npm run dev\",\n      \"key_directories\": {\n        \"src\": {\n          \"path\": \"src\",\n          \"purpose\": \"Source code\"\n        }\n      },\n      \"entry_point\": \"src/App.tsx\",\n      \"dependencies\": [\n        \"shared\",\n        \"@headlessui/react\",\n        \"@radix-ui/react-tabs\",\n        \"@radix-ui/themes\",\n        \"@sentry/react\",\n        \"@supabase/supabase-js\",\n        \"@tailwindcss/vite\",\n        \"@tanstack/react-query\",\n        \"@types/lodash\",\n        \"@vercel/analytics\",\n        \"@vercel/blob\",\n        \"@vercel/speed-insights\",\n        \"@xyflow/react\",\n        \"clsx\",\n        \"cmdk\",\n        \"framer-motion\",\n        \"html-to-image\",\n        \"lodash\",\n        \"lucide-react\",\n        \"qrcode.react\"\n      ],\n      \"dev_dependencies\": [\n        \"@happy-dom/global-registrator\",\n        \"@playwright/test\",\n        \"@testing-library/jest-dom\",\n        \"@testing-library/react\",\n        \"@testing-library/user-event\",\n        \"@types/node\",\n        \"@types/react\",\n        \"@types/react-dom\",\n        \"@vitejs/plugin-react\",\n        \"happy-dom\"\n      ],\n      \"testing\": \"Vitest\",\n      \"e2e_testing\": \"Playwright\",\n      \"environment\": {\n        \"variables\": {\n          \"VITE_INITIATIVES_URL\": {\n            \"value\": \"https://ydfwrfxg9t0mujvy.public.blob.vercel-storage.com/latest/iniciativas.json\",\n            \"source\": \".env\",\n            \"type\": \"url\",\n            \"sensitive\": false,\n            \"required\": false\n          },\n          \"VITE_BASE_INFO_URL\": {\n            \"value\": \"https://ydfwrfxg9t0mujvy.public.blob.vercel-storage.com/latest/informacao_base.json\",\n            \"source\": \".env\",\n            \"type\": \"url\",\n            \"sensitive\": false,\n            \"required\": false\n          },\n          \"VITE_SUPABASE_URL\": {\n            \"value\": \"http://127.0.0.1:54321\",\n            \"source\": \".env.local\",\n            \"type\": \"url\",\n            \"sensitive\": false,\n            \"required\": false\n          },\n          \"VITE_SUPABASE_ANON_KEY\": {\n            \"value\": \"<REDACTED>\",\n            \"source\": \".env.local\",\n            \"type\": \"string\",\n            \"sensitive\": true,\n            \"required\": false\n          }\n        },\n        \"required_count\": 0,\n        \"optional_count\": 0,\n        \"detected_count\": 4\n      },\n      \"consumes\": [\n        \"shared\"\n      ]\n    }\n  },\n  \"infrastructure\": {\n    \"ci\": \"GitHub Actions\",\n    \"ci_workflows\": [\n      \"release-production.yml\",\n      \"sync-photos.yml\",\n      \"sync-data.yml\",\n      \"deploy-staging.yml\",\n      \"ci.yml\"\n    ]\n  },\n  \"conventions\": {\n    \"typescript\": true,\n    \"git_hooks\": \"Husky\"\n  }\n}",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:59:09.914625+00:00",
+          "type": "text",
+          "content": "Excellent! I've completed Phase 0 investigation. Now let me update the context file with better information based on my findings:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T15:59:22.431146+00:00",
+          "type": "tool_start",
+          "content": "[Write] ...sentry-source-maps-for-production-/context.json",
+          "phase": "planning",
+          "tool_name": "Write",
+          "tool_input": "...sentry-source-maps-for-production-/context.json"
+        },
+        {
+          "timestamp": "2026-01-07T15:59:22.454526+00:00",
+          "type": "tool_end",
+          "content": "[Write] Done",
+          "phase": "planning",
+          "tool_name": "Write",
+          "detail": "The file ./.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/context.json has been updated. Here's the result of running `cat -n` on a snippet of the edited file:\n     1→{\n     2→  \"task_description\": \"Add Sentry source maps for production debugging - Enable automatic source map uploads to Sentry during production builds to make error stack traces readable\",\n     3→  \"scoped_services\": [\"web\"],\n     4→  \"files_to_modify\": {\n     5→    \"web\": [\n     6→      \"apps/web/package.json\",\n     7→      \"apps/web/vite.config.ts\",\n     8→      \"apps/web/.env.example\"\n     9→    ],\n    10→    \"infrastructure\": [\n    11→      \"Vercel Dashboard - Environment Variables\"\n    12→    ]\n    13→  },\n    14→  \"files_to_reference\": [\n    15→    \"apps/web/src/lib/sentry.ts\",\n    16→    \"apps/web/vite.config.ts\"\n    17→  ],\n    18→  \"patterns\": {\n    19→    \"vite_plugin_pattern\": \"Vite uses plugins array with react() and tailwindcss(). New plugins should follow same import/configuration pattern.\",\n    20→    \"environment_variable_pattern\": \"Uses import.meta.env.VITE_* for client-side vars. Build-time vars use process.env directly.\",\n    21→    \"sentry_configuration\": \"Sentry SDK already configured with DSN, ErrorBoundary, and Session Replay in src/lib/sentry.ts\",\n    22→    \"conditional_plugins\": \"Should use process.env.NODE_ENV === 'production' check with .filter(Boolean) to remove false values\"\n    23→  },\n    24→  \"existing_implementations\": {\n    25→    \"description\": \"Sentry runtime SDK (@sentry/react v10.32.1) already installed and configured. Missing only build-time source map upload capability.\",\n    26→    \"relevant_files\": [\n    27→      \"apps/web/src/lib/sentry.ts - Shows DSN usage pattern\",\n    28→      \"apps/web/vite.config.ts - Shows plugin configuration pattern\"\n    29→    ],\n    30→    \"current_plugins\": [\n    31→      \"@vitejs/plugin-react\",\n    32→      \"@tailwindcss/vite\",\n    33→      \"custom markdown-loader\"\n    34→    ]\n    35→  },\n    36→  \"environment_variables\": {\n    37→    \"existing\": [\n    38→      \"VITE_INITIATIVES_URL\",\n    39→      \"VITE_BASE_INFO_URL\",\n    40→      \"VITE_SUPABASE_URL\",\n    41→      \"VITE_SUPABASE_ANON_KEY\"\n    42→    ],\n    43→    \"to_add\": [\n    44→      \"VITE_SENTRY_DSN (runtime, client-side)\",\n    45→      \"SENTRY_AUTH_TOKEN (build-time only)\",\n    46→      \"SENTRY_ORG (build-time only)\",\n    47→      \"SENTRY_PROJECT (build-time only)\"\n    48→    ]\n    49→  },\n    50→  \"created_at\": \"2026-01-07T15:52:37.423665\"\n    51→}\n    52→",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T15:59:29.107241+00:00",
+          "type": "text",
+          "content": "Now let me create the comprehensive implementation plan:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T16:00:25.317030+00:00",
+          "type": "tool_start",
+          "content": "[Write] ...e-maps-for-production-/implementation_plan.json",
+          "phase": "planning",
+          "tool_name": "Write",
+          "tool_input": "...e-maps-for-production-/implementation_plan.json"
+        },
+        {
+          "timestamp": "2026-01-07T16:00:25.328404+00:00",
+          "type": "tool_end",
+          "content": "[Write] Error",
+          "phase": "planning",
+          "tool_name": "Write",
+          "detail": "<tool_use_error>File has not been read yet. Read it first before writing to it.</tool_use_error>",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:00:31.362400+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cat ./.auto-claude/specs/003-enhancement-add-se...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "cat ./.auto-claude/specs/003-enhancement-add-se..."
+        },
+        {
+          "timestamp": "2026-01-07T16:00:32.768581+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "{\n  \"feature\": \"[Enhancement] Add Sentry source maps for production debugging\",\n  \"description\": \"Investigate GitHub Issue #9: [Enhancement] Add Sentry source maps for production debugging\\n\\n\\n# GitHub Issue #9: [Enhancement] Add Sentry source maps for production debugging\\n\\n## Problem\\nSentry is configured but source maps aren't being uploaded, making production errors harder to debug.\\n\\n## Current State\\n- Sentry SDK is installed and configured in `apps/web/src/lib/sentry.ts`\\n- ErrorBoundary captures exceptions\\n- Session replay is enabled\\n- Missing: `VITE_SENTRY_DSN` environment variable in Vercel\\n\\n## Proposed Solution\\n1. Add `VITE_SENTRY_DSN` to Vercel environment variables\\n2. Install `@sentry/vite-plugin` for source map uploads\\n3. Configure the plugin in `vite.config.ts`\\n\\n## Files\\n- `apps/web/vite.config.ts`\\n- Vercel dashboard (environment variables)\\n\\n\\n\\n**Labels:** enhancement, web\\n**URL:** https://github.com/bcamarneiro/adamastor/issues/9\\n\\n\\nPlease analyze this issue and provide:\\n1. A brief summary of what the issue is about\\n2. A proposed solution approach\\n3. The files that would likely need to be modified\\n4. Estimated complexity (simple/standard/complex)\\n5. Acceptance criteria for resolving this issue\",\n  \"created_at\": \"2026-01-07T15:49:54.277Z\",\n  \"updated_at\": \"2026-01-07T15:49:54.277Z\",\n  \"status\": \"pending\",\n  \"phases\": []\n}",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:00:37.928251+00:00",
+          "type": "tool_start",
+          "content": "[Read] ...e-maps-for-production-/implementation_plan.json",
+          "phase": "planning",
+          "tool_name": "Read",
+          "tool_input": "...e-maps-for-production-/implementation_plan.json"
+        },
+        {
+          "timestamp": "2026-01-07T16:00:37.942951+00:00",
+          "type": "tool_end",
+          "content": "[Read] Done",
+          "phase": "planning",
+          "tool_name": "Read",
+          "detail": "     1→{\n     2→  \"feature\": \"[Enhancement] Add Sentry source maps for production debugging\",\n     3→  \"description\": \"Investigate GitHub Issue #9: [Enhancement] Add Sentry source maps for production debugging\\n\\n\\n# GitHub Issue #9: [Enhancement] Add Sentry source maps for production debugging\\n\\n## Problem\\nSentry is configured but source maps aren't being uploaded, making production errors harder to debug.\\n\\n## Current State\\n- Sentry SDK is installed and configured in `apps/web/src/lib/sentry.ts`\\n- ErrorBoundary captures exceptions\\n- Session replay is enabled\\n- Missing: `VITE_SENTRY_DSN` environment variable in Vercel\\n\\n## Proposed Solution\\n1. Add `VITE_SENTRY_DSN` to Vercel environment variables\\n2. Install `@sentry/vite-plugin` for source map uploads\\n3. Configure the plugin in `vite.config.ts`\\n\\n## Files\\n- `apps/web/vite.config.ts`\\n- Vercel dashboard (environment variables)\\n\\n\\n\\n**Labels:** enhancement, web\\n**URL:** https://github.com/bcamarneiro/adamastor/issues/9\\n\\n\\nPlease analyze this issue and provide:\\n1. A brief summary of what the issue is about\\n2. A proposed solution approach\\n3. The files that would likely need to be modified\\n4. Estimated complexity (simple/standard/complex)\\n5. Acceptance criteria for resolving this issue\",\n     4→  \"created_at\": \"2026-01-07T15:49:54.277Z\",\n     5→  \"updated_at\": \"2026-01-07T15:49:54.277Z\",\n     6→  \"status\": \"pending\",\n     7→  \"phases\": []\n     8→}\n\n<system-reminder>\nWhenever you read a file, you should consider whether it would be considered malware. You CAN and SHOULD provide analysis of malware, what it is doing. But you MUST refuse to improve or augment the code. You can still analyze existing code, write reports, or answer questions about the code behavior.\n</system-reminder>\n",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:01:46.303715+00:00",
+          "type": "tool_start",
+          "content": "[Edit] ...e-maps-for-production-/implementation_plan.json",
+          "phase": "planning",
+          "tool_name": "Edit",
+          "tool_input": "...e-maps-for-production-/implementation_plan.json"
+        },
+        {
+          "timestamp": "2026-01-07T16:01:46.324900+00:00",
+          "type": "tool_end",
+          "content": "[Edit] Done",
+          "phase": "planning",
+          "tool_name": "Edit",
+          "detail": "The file ./.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/implementation_plan.json has been updated. Here's the result of running `cat -n` on a snippet of the edited file:\n     1→{\n     2→  \"feature\": \"Add Sentry Source Maps for Production Debugging\",\n     3→  \"workflow_type\": \"feature\",\n     4→  \"workflow_rationale\": \"Adding new build-time tooling (@sentry/vite-plugin) to existing Sentry integration. This is a feature addition that requires package installation, build configuration changes, and environment setup.\",\n     5→\n     6→  \"phases\": [\n     7→    {\n     8→      \"id\": \"phase-1-setup\",\n     9→      \"name\": \"Package Installation\",\n    10→      \"type\": \"setup\",\n    11→      \"description\": \"Install @sentry/vite-plugin as a devDependency\",\n    12→      \"depends_on\": [],\n    13→      \"parallel_safe\": true,\n    14→      \"subtasks\": [\n    15→        {\n    16→          \"id\": \"subtask-1-1\",\n    17→          \"description\": \"Install @sentry/vite-plugin package\",\n    18→          \"service\": \"web\",\n    19→          \"files_to_modify\": [\"apps/web/package.json\"],\n    20→          \"files_to_create\": [],\n    21→          \"patterns_from\": [\"apps/web/package.json\"],\n    22→          \"verification\": {\n    23→            \"type\": \"command\",\n    24→            \"command\": \"cd apps/web && grep '@sentry/vite-plugin' package.json\",\n    25→            \"expected\": \"@sentry/vite-plugin should appear in devDependencies\"\n    26→          },\n    27→          \"status\": \"pending\",\n    28→          \"notes\": \"Add @sentry/vite-plugin to devDependencies. Use npm install --save-dev @sentry/vite-plugin\"\n    29→        }\n    30→      ]\n    31→    },\n    32→    {\n    33→      \"id\": \"phase-2-implementation\",\n    34→      \"name\": \"Vite Configuration\",\n    35→      \"type\": \"implementation\",\n    36→      \"description\": \"Configure Sentry plugin in vite.config.ts with production-only conditional\",\n    37→      \"depends_on\": [\"phase-1-setup\"],\n    38→      \"parallel_safe\": false,\n    39→      \"subtasks\": [\n    40→        {\n    41→          \"id\": \"subtask-2-1\",\n    42→          \"description\": \"Import sentryVitePlugin in vite.config.ts\",\n    43→          \"service\": \"web\",\n    44→          \"files_to_modify\": [\"apps/web/vite.config.ts\"],\n    45→          \"files_to_create\": [],\n    46→          \"patterns_from\": [\"apps/web/vite.config.ts\"],\n    47→          \"verification\": {\n    48→            \"type\": \"command\",\n    49→            \"command\": \"cd apps/web && grep 'sentryVitePlugin' vite.config.ts\",\n    50→            \"expected\": \"Import statement for sentryVitePlugin should exist\"\n    51→          },\n    52→          \"status\": \"pending\",\n    53→          \"notes\": \"Add: import { sentryVitePlugin } from '@sentry/vite-plugin';\"\n    54→        },\n    55→        {\n    56→          \"id\": \"subtask-2-2\",\n    57→          \"description\": \"Add Sentry plugin to plugins array with production conditional\",\n    58→          \"service\": \"web\",\n    59→          \"files_to_modify\": [\"apps/web/vite.config.ts\"],\n    60→          \"files_to_create\": [],\n    61→          \"patterns_from\": [\"apps/web/vite.config.ts\"],\n    62→          \"verification\": {\n    63→            \"type\": \"command\",\n    64→            \"command\": \"cd apps/web && node -e \\\"const config = require('./vite.config.ts'); process.exit(0)\\\"\",\n    65→            \"expected\": \"Vite config should have valid syntax\"\n    66→          },\n    67→          \"status\": \"pending\",\n    68→          \"notes\": \"Add sentryVitePlugin to plugins array with: process.env.NODE_ENV === 'production' && sentryVitePlugin({org: process.env.SENTRY_ORG, project: process.env.SENTRY_PROJECT, authToken: process.env.SENTRY_AUTH_TOKEN}). Use .filter(Boolean) on plugins array.\"\n    69→        },\n    70→        {\n    71→          \"id\": \"subtask-2-3\",\n    72→          \"description\": \"Enable sourcemap generation in build config\",\n    73→          \"service\": \"web\",\n    74→          \"files_to_modify\": [\"apps/web/vite.config.ts\"],\n    75→          \"files_to_create\": [],\n    76→          \"patterns_from\": [\"apps/web/vite.config.ts\"],\n    77→          \"verification\": {\n    78→            \"type\": \"command\",\n    79→            \"command\": \"cd apps/web && grep -A 2 'build:' vite.config.ts | grep 'sourcemap'\",\n    80→            \"expected\": \"build config should include sourcemap: true\"\n    81→          },\n    82→          \"status\": \"pending\",\n    83→          \"notes\": \"Add build: { sourcemap: true } to defineConfig if not already present\"\n    84→        }\n    85→      ]\n    86→    },\n    87→    {\n    88→      \"id\": \"phase-3-documentation\",\n    89→      \"name\": \"Environment Documentation\",\n    90→      \"type\": \"implementation\",\n    91→      \"description\": \"Document required environment variables in .env.example\",\n    92→      \"depends_on\": [\"phase-2-implementation\"],\n    93→      \"parallel_safe\": true,\n    94→      \"subtasks\": [\n    95→        {\n    96→          \"id\": \"subtask-3-1\",\n    97→          \"description\": \"Create or update .env.example with Sentry variables\",\n    98→          \"service\": \"web\",\n    99→          \"files_to_modify\": [],\n   100→          \"files_to_create\": [\"apps/web/.env.example\"],\n   101→          \"patterns_from\": [\".env.example\"],\n   102→          \"verification\": {\n   103→            \"type\": \"command\",\n   104→            \"command\": \"cd apps/web && grep 'SENTRY' .env.example\",\n   105→            \"expected\": \".env.example should contain VITE_SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT\"\n   106→          },\n   107→          \"status\": \"pending\",\n   108→          \"notes\": \"Add documentation for: VITE_SENTRY_DSN (runtime), SENTRY_AUTH_TOKEN (build-time), SENTRY_ORG (build-time), SENTRY_PROJECT (build-time). Include comments about where to obtain each value.\"\n   109→        }\n   110→      ]\n   111→    },\n   112→    {\n   113→      \"id\": \"phase-4-infrastructure\",\n   114→      \"name\": \"Vercel Configuration\",\n   115→      \"type\": \"setup\",\n   116→      \"description\": \"Configure environment variables in Vercel dashboard (manual step)\",\n   117→      \"depends_on\": [\"phase-3-documentation\"],\n   118→      \"parallel_safe\": true,\n   119→      \"subtasks\": [\n   120→        {\n   121→          \"id\": \"subtask-4-1\",\n   122→          \"description\": \"Document Vercel environment variable configuration steps\",\n   123→          \"all_services\": true,\n   124→          \"files_to_modify\": [],\n   125→          \"files_to_create\": [],\n   126→          \"patterns_from\": [],\n   127→          \"verification\": {\n   128→            \"type\": \"manual\",\n   129→            \"instructions\": \"Verify that VITE_SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, and SENTRY_PROJECT are added to Vercel production environment variables. SENTRY_AUTH_TOKEN should be marked as sensitive.\"\n   130→          },\n   131→          \"status\": \"pending\",\n   132→          \"notes\": \"MANUAL STEP: User must add environment variables to Vercel dashboard. Document the steps: 1) Go to Vercel project settings, 2) Navigate to Environment Variables, 3) Add all 4 Sentry variables for Production environment, 4) Mark SENTRY_AUTH_TOKEN as sensitive.\"\n   133→        }\n   134→      ]\n   135→    },\n   136→    {\n   137→      \"id\": \"phase-5-verification\",\n   138→      \"name\": \"Build and Upload Verification\",\n   139→      \"type\": \"integration\",\n   140→      \"description\": \"Verify source map uploads work in production builds\",\n   141→      \"depends_on\": [\"phase-2-implementation\", \"phase-4-infrastructure\"],\n   142→      \"parallel_safe\": false,\n   143→      \"subtasks\": [\n   144→        {\n   145→          \"id\": \"subtask-5-1\",\n   146→          \"description\": \"Test local production build\",\n   147→          \"service\": \"web\",\n   148→          \"files_to_modify\": [],\n   149→          \"files_to_create\": [],\n   150→          \"patterns_from\": [],\n   151→          \"verification\": {\n   152→            \"type\": \"command\",\n   153→            \"command\": \"cd apps/web && NODE_ENV=production npm run build\",\n   154→            \"expected\": \"Build should complete successfully and generate source maps in dist/\"\n   155→          },\n   156→          \"status\": \"pending\",\n   157→          \"notes\": \"Run production build locally to verify: 1) Build completes without errors, 2) Source maps are generated (check dist/ for .map files), 3) Plugin only runs when NODE_ENV=production\"\n   158→        },\n   159→        {\n   160→          \"id\": \"subtask-5-2\",\n   161→          \"description\": \"Verify Vercel deployment with source map upload\",\n   162→          \"all_services\": true,\n   163→          \"files_to_modify\": [],\n   164→          \"files_to_create\": [],\n   165→          \"patterns_from\": [],\n   166→          \"verification\": {\n   167→            \"type\": \"manual\",\n   168→            \"instructions\": \"Deploy to Vercel and verify: 1) Build logs show 'Uploading source maps to Sentry' message, 2) Sentry dashboard shows uploaded source maps under Releases, 3) Trigger test error and verify stack trace shows original file paths (e.g., App.tsx:42)\"\n   169→          },\n   170→          \"status\": \"pending\",\n   171→          \"notes\": \"VERIFICATION STEP: After Vercel deployment, check build logs for source map upload confirmation, verify in Sentry dashboard, and test with a production error.\"\n   172→        }\n   173→      ]\n   174→    }\n   175→  ],\n   176→\n   177→  \"verification_strategy\": {\n   178→    \"risk_level\": \"medium\",\n   179→    \"skip_validation\": false,\n   180→    \"test_creation_phase\": \"post_implementation\",\n   181→    \"test_types_required\": [\"integration\"],\n   182→    \"security_scanning_required\": true,\n   183→    \"staging_deployment_required\": false,\n   184→    \"acceptance_criteria\": [\n   185→      \"@sentry/vite-plugin installed in devDependencies\",\n   186→      \"vite.config.ts includes Sentry plugin with production conditional\",\n   187→      \"sourcemap: true in build config\",\n   188→      \".env.example documents all 4 Sentry environment variables\",\n   189→      \"Vercel environment variables configured\",\n   190→      \"Production build completes successfully\",\n   191→      \"Source maps uploaded to Sentry (verified in dashboard)\",\n   192→      \"Production error stack traces show original source locations\",\n   193→      \"Development builds do not attempt source map uploads\",\n   194→  \n\n... [truncated - full output was 15367 chars]",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:01:50.963353+00:00",
+          "type": "text",
+          "content": "Excellent! Now let me create the `init.sh` script:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T16:02:00.670690+00:00",
+          "type": "tool_start",
+          "content": "[Write] ...-add-sentry-source-maps-for-production-/init.sh",
+          "phase": "planning",
+          "tool_name": "Write",
+          "tool_input": "...-add-sentry-source-maps-for-production-/init.sh"
+        },
+        {
+          "timestamp": "2026-01-07T16:02:01.095508+00:00",
+          "type": "tool_end",
+          "content": "[Write] Done",
+          "phase": "planning",
+          "tool_name": "Write",
+          "detail": "File created successfully at: ./.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/init.sh",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:02:04.457181+00:00",
+          "type": "tool_start",
+          "content": "[Bash] chmod +x ./.auto-claude/specs/003-enhancement-a...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "chmod +x ./.auto-claude/specs/003-enhancement-a..."
+        },
+        {
+          "timestamp": "2026-01-07T16:02:06.465907+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:02:09.714159+00:00",
+          "type": "text",
+          "content": "Now let me create the `build-progress.txt` file:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T16:02:24.289381+00:00",
+          "type": "tool_start",
+          "content": "[Write] ...-source-maps-for-production-/build-progress.txt",
+          "phase": "planning",
+          "tool_name": "Write",
+          "tool_input": "...-source-maps-for-production-/build-progress.txt"
+        },
+        {
+          "timestamp": "2026-01-07T16:02:24.304414+00:00",
+          "type": "tool_end",
+          "content": "[Write] Done",
+          "phase": "planning",
+          "tool_name": "Write",
+          "detail": "File created successfully at: ./.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/build-progress.txt",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:02:30.693747+00:00",
+          "type": "text",
+          "content": "Perfect! Let me verify all the planning files are in place:",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T16:02:31.390374+00:00",
+          "type": "tool_start",
+          "content": "[Bash] ls -la ./.auto-claude/specs/003-enhancement-add...",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "tool_input": "ls -la ./.auto-claude/specs/003-enhancement-add..."
+        },
+        {
+          "timestamp": "2026-01-07T16:02:31.648411+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "planning",
+          "tool_name": "Bash",
+          "detail": "total 296\ndrwxr-xr-x@ 12 brunocamarneiro  staff    384 Jan  7 16:02 .\ndrwxr-xr-x@  8 brunocamarneiro  staff    256 Jan  7 15:50 ..\n-rw-------@  1 brunocamarneiro  staff   2008 Jan  7 16:02 build-progress.txt\n-rw-------@  1 brunocamarneiro  staff   2915 Jan  7 15:52 complexity_assessment.json\n-rw-r--r--@  1 brunocamarneiro  staff   1972 Jan  7 15:59 context.json\n-rw-r--r--@  1 brunocamarneiro  staff  12963 Jan  7 16:01 implementation_plan.json\n-rwx--x--x@  1 brunocamarneiro  staff   1567 Jan  7 16:02 init.sh\n-rw-r--r--@  1 brunocamarneiro  staff   5462 Jan  7 15:50 project_index.json\n-rw-r--r--@  1 brunocamarneiro  staff   1213 Jan  7 15:49 requirements.json\n-rw-------@  1 brunocamarneiro  staff  17391 Jan  7 15:54 spec.md\n-rw-------@  1 brunocamarneiro  staff  81058 Jan  7 16:02 task_logs.json\n-rw-r--r--@  1 brunocamarneiro  staff    147 Jan  7 15:49 task_metadata.json",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:02:51.784668+00:00",
+          "type": "text",
+          "content": "Perfect! All planning files have been successfully created. Let me provide a summary of what was accomplished:\n\n## ✅ PLANNING SESSION COMPLETE\n\n### Files Created/Updated:\n\n1. **implementation_plan.json** (12.9 KB)\n   - 5 phases with 8 subtasks total\n   - Complete verification strategy\n   - QA acceptance criteria\n   - Security scanning requirements\n\n2. **context.json** (2.0 KB)\n   - Updated with codebase investigation findings\n   - Existing patterns documented\n   - Files to modify and reference identified\n\n3. **init.sh** (1.6 KB)\n   - Executable setup script for web development environment\n   - Service startup commands\n   - Port 3000 for web app\n\n4. **build-progress.txt** (2.0 KB)\n   - Progress tracking document\n   - Startup commands\n   - Critical notes and warnings\n\n### Implementation Plan Overview:\n\n**Workflow Type:** Feature (build-time tooling addition)\n\n**Phases:**\n1. **Package Installation** - Install `@sentry/vite-plugin`\n2. **Vite Configuration** - Configure plugin with production-only conditional\n3. **Environment Documentation** - Update `.env.example`\n4. **Vercel Configuration** - Configure env vars (MANUAL STEP)\n5. **Build and Upload Verification** - Test and verify\n\n**Services:** web only\n\n**Recommended Workers:** 1 (sequential execution required)\n\n**Critical Security Notes:**\n- `SENTRY_AUTH_TOKEN` must NEVER be committed to git\n- Source map uploads only occur when `NODE_ENV=production`\n- Token must be marked as sensitive in Vercel\n\n### Investigation Findings:\n\n✅ **Existing Sentry Setup:**\n- `@sentry/react` v10.32.1 already installed\n- Configuration in `apps/web/src/lib/sentry.ts`\n- ErrorBoundary and Session Replay already operational\n\n✅ **Vite Configuration Pattern:**\n- Current plugins: `react()`, `tailwindcss()`, custom markdown loader\n- Should use `.filter(Boolean)` for conditional plugins\n\n✅ **Environment Variables:**\n- Uses `import.meta.env.VITE_*` for client-side vars\n- Build-time vars use `process.env` directly\n\n### Next Steps:\n\n**To start implementation:**\n```bash\nsource auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 003 --parallel 1\n```\n\n**IMPORTANT:** \n- Planning files are gitignored and NOT committed\n- A separate coder agent will handle implementation\n- Phase 4 (Vercel configuration) requires manual user action\n- Verification includes security scanning for auth token exposure\n\n---\n\n**PLANNER SESSION ENDS HERE** - Ready for coder agent to begin implementation.",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T16:03:12.719599+00:00",
+          "type": "info",
+          "content": "Starting phase 7: FINAL VALIDATION",
+          "phase": "planning"
+        },
+        {
+          "timestamp": "2026-01-07T16:03:12.723571+00:00",
+          "type": "phase_end",
+          "content": "Spec creation complete",
+          "phase": "planning"
+        }
+      ]
+    },
+    "coding": {
+      "phase": "coding",
+      "status": "active",
+      "started_at": "2026-01-07T16:03:13.646865+00:00",
+      "completed_at": null,
+      "entries": [
+        {
+          "timestamp": "2026-01-07T16:03:13.647298+00:00",
+          "type": "phase_start",
+          "content": "Continuing implementation...",
+          "phase": "coding"
+        },
+        {
+          "timestamp": "2026-01-07T16:03:30.421456+00:00",
+          "type": "text",
+          "content": "I'll implement this subtask to add the `@sentry/vite-plugin` package to the devDependencies. Let me first read the current file and then make the edit.",
+          "phase": "coding",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        },
+        {
+          "timestamp": "2026-01-07T16:03:30.450378+00:00",
+          "type": "tool_start",
+          "content": "[Read] ./apps/web/package.json",
+          "phase": "coding",
+          "tool_name": "Read",
+          "tool_input": "./apps/web/package.json",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        },
+        {
+          "timestamp": "2026-01-07T16:03:30.470962+00:00",
+          "type": "tool_end",
+          "content": "[Read] Done",
+          "phase": "coding",
+          "tool_name": "Read",
+          "subtask_id": "subtask-1-1",
+          "session": 1,
+          "detail": "     1→{\n     2→  \"name\": \"web\",\n     3→  \"private\": true,\n     4→  \"version\": \"0.1.2\",\n     5→  \"type\": \"module\",\n     6→  \"scripts\": {\n     7→    \"dev\": \"bun vite\",\n     8→    \"dev:debug\": \"bun vite --debug --logLevel info\",\n     9→    \"build\": \"tsc -b && vite build\",\n    10→    \"preview\": \"vite preview\",\n    11→    \"test\": \"bun test\",\n    12→    \"test:ci\": \"bun test\",\n    13→    \"e2e\": \"playwright test\",\n    14→    \"e2e:ui\": \"playwright test --ui\",\n    15→    \"e2e:headed\": \"playwright test --headed\",\n    16→    \"e2e:debug\": \"DEBUG=pw:webserver,pw:browser* playwright test --headed --timeout=0\",\n    17→    \"typecheck\": \"tsc --noEmit\",\n    18→    \"prepare\": \"husky\"\n    19→  },\n    20→  \"dependencies\": {\n    21→    \"shared\": \"workspace:*\",\n    22→    \"@headlessui/react\": \"^2.2.0\",\n    23→    \"@radix-ui/react-tabs\": \"^1.1.3\",\n    24→    \"@radix-ui/themes\": \"^3.2.1\",\n    25→    \"@sentry/react\": \"^10.32.1\",\n    26→    \"@supabase/supabase-js\": \"^2.89.0\",\n    27→    \"@tailwindcss/vite\": \"^4.0.7\",\n    28→    \"@tanstack/react-query\": \"^5.66.11\",\n    29→    \"@types/lodash\": \"^4.17.16\",\n    30→    \"@vercel/analytics\": \"^1.6.1\",\n    31→    \"@vercel/blob\": \"^0.27.3\",\n    32→    \"@vercel/speed-insights\": \"^1.3.1\",\n    33→    \"@xyflow/react\": \"^12.4.4\",\n    34→    \"clsx\": \"^2.1.1\",\n    35→    \"cmdk\": \"^1.1.1\",\n    36→    \"framer-motion\": \"^12.5.0\",\n    37→    \"html-to-image\": \"^1.11.13\",\n    38→    \"lodash\": \"^4.17.21\",\n    39→    \"lucide-react\": \"^0.483.0\",\n    40→    \"qrcode.react\": \"^4.2.0\",\n    41→    \"radix-ui\": \"^1.1.3\",\n    42→    \"react\": \"^19.0.0\",\n    43→    \"react-dom\": \"^19.0.0\",\n    44→    \"react-helmet-async\": \"^2.0.5\",\n    45→    \"react-icons\": \"^5.5.0\",\n    46→    \"react-markdown\": \"^10.0.1\",\n    47→    \"react-minimal-pie-chart\": \"^9.1.0\",\n    48→    \"react-router-dom\": \"^7.1.5\",\n    49→    \"reactflow\": \"^11.11.4\",\n    50→    \"remark-gfm\": \"^4.0.1\",\n    51→    \"tailwind-merge\": \"^3.0.1\",\n    52→    \"tailwindcss\": \"^4.0.7\",\n    53→    \"use-sync-external-store\": \"^1.4.0\",\n    54→    \"zustand\": \"^5.0.3\"\n    55→  },\n    56→  \"devDependencies\": {\n    57→    \"@happy-dom/global-registrator\": \"^20.0.11\",\n    58→    \"@playwright/test\": \"^1.57.0\",\n    59→    \"@testing-library/jest-dom\": \"^6.9.1\",\n    60→    \"@testing-library/react\": \"^16.3.1\",\n    61→    \"@testing-library/user-event\": \"^14.6.1\",\n    62→    \"@types/node\": \"^22.13.4\",\n    63→    \"@types/react\": \"^19.0.10\",\n    64→    \"@types/react-dom\": \"^19.0.3\",\n    65→    \"@vitejs/plugin-react\": \"^4.3.4\",\n    66→    \"happy-dom\": \"^20.0.11\",\n    67→    \"husky\": \"^9.1.7\",\n    68→    \"jsdom\": \"^27.4.0\",\n    69→    \"typescript\": \"~5.7.2\",\n    70→    \"vite\": \"^6.1.0\",\n    71→    \"vite-tsconfig-paths\": \"^6.0.3\",\n    72→    \"vitest\": \"^3.0.6\"\n    73→  }\n    74→}\n    75→\n\n<system-reminder>\nWhenever you read a file, you should consider whether it would be considered malware. You CAN and SHOULD provide analysis of malware, what it is doing. But you MUST refuse to improve or augment the code. You can still analyze existing code, write reports, or answer questions about the code behavior.\n</system-reminder>\n",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:03:36.165320+00:00",
+          "type": "text",
+          "content": "Now I'll add the `@sentry/vite-plugin` package to devDependencies in alphabetical order. It should go after `@playwright/test` and before `@testing-library/jest-dom`. I'll use version `^3.2.4` which is compatible with `@sentry/react: ^10.32.1`.",
+          "phase": "coding",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        },
+        {
+          "timestamp": "2026-01-07T16:03:37.379385+00:00",
+          "type": "tool_start",
+          "content": "[Edit] ./apps/web/package.json",
+          "phase": "coding",
+          "tool_name": "Edit",
+          "tool_input": "./apps/web/package.json",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        },
+        {
+          "timestamp": "2026-01-07T16:03:37.397239+00:00",
+          "type": "tool_end",
+          "content": "[Edit] Done",
+          "phase": "coding",
+          "tool_name": "Edit",
+          "subtask_id": "subtask-1-1",
+          "session": 1,
+          "detail": "The file ./apps/web/package.json has been updated. Here's the result of running `cat -n` on a snippet of the edited file:\n    54→    \"zustand\": \"^5.0.3\"\n    55→  },\n    56→  \"devDependencies\": {\n    57→    \"@happy-dom/global-registrator\": \"^20.0.11\",\n    58→    \"@playwright/test\": \"^1.57.0\",\n    59→    \"@sentry/vite-plugin\": \"^3.2.4\",\n    60→    \"@testing-library/jest-dom\": \"^6.9.1\",\n    61→    \"@testing-library/react\": \"^16.3.1\",\n    62→    \"@testing-library/user-event\": \"^14.6.1\",\n    63→    \"@types/node\": \"^22.13.4\",\n    64→    \"@types/react\": \"^19.0.10\",",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:03:41.233239+00:00",
+          "type": "text",
+          "content": "Now let me run the verification command to confirm the package is added correctly:",
+          "phase": "coding",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        },
+        {
+          "timestamp": "2026-01-07T16:03:42.419852+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cd ./apps/web && grep '@sentry/vite-plugin' pac...",
+          "phase": "coding",
+          "tool_name": "Bash",
+          "tool_input": "cd ./apps/web && grep '@sentry/vite-plugin' pac...",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        },
+        {
+          "timestamp": "2026-01-07T16:03:42.670627+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "coding",
+          "tool_name": "Bash",
+          "subtask_id": "subtask-1-1",
+          "session": 1,
+          "detail": "    \"@sentry/vite-plugin\": \"^3.2.4\",",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-07T16:03:48.843906+00:00",
+          "type": "text",
+          "content": "Verification passed. Now let me commit the changes and update the subtask status:",
+          "phase": "coding",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        },
+        {
+          "timestamp": "2026-01-07T16:03:55.253050+00:00",
+          "type": "tool_start",
+          "content": "[Bash] cd /Users/brunocamarneiro/Projects/bcamarneiro/...",
+          "phase": "coding",
+          "tool_name": "Bash",
+          "tool_input": "cd /Users/brunocamarneiro/Projects/bcamarneiro/...",
+          "subtask_id": "subtask-1-1",
+          "session": 1
+        }
+      ]
+    },
+    "validation": {
+      "phase": "validation",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "entries": []
+    }
+  }
+}

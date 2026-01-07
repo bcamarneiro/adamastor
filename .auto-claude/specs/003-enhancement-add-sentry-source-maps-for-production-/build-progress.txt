@@ -1,0 +1,53 @@
+=== AUTO-BUILD PROGRESS ===
+
+Project: Adamastor - Add Sentry Source Maps for Production Debugging
+Workspace: 003-enhancement-add-sentry-source-maps-for-production-
+Started: 2026-01-07
+
+Workflow Type: feature
+Rationale: Adding new build-time tooling (@sentry/vite-plugin) to existing Sentry integration. Requires package installation, build configuration changes, and environment setup.
+
+Session 1 (Planner):
+- Created implementation_plan.json
+- Phases: 5
+- Total subtasks: 8
+- Created init.sh
+- Updated context.json with investigation findings
+
+Phase Summary:
+- Phase 1 (Package Installation): 1 subtask, no dependencies
+- Phase 2 (Vite Configuration): 3 subtasks, depends on Phase 1
+- Phase 3 (Environment Documentation): 1 subtask, depends on Phase 2
+- Phase 4 (Vercel Configuration): 1 subtask (MANUAL), depends on Phase 3
+- Phase 5 (Build and Upload Verification): 2 subtasks, depends on Phases 2 & 4
+
+Services Involved:
+- web: Frontend React application (Vite build system)
+
+Parallelism Analysis:
+- Max parallel phases: 1
+- Recommended workers: 1
+- Parallel groups: None (sequential execution required due to phase dependencies)
+
+Key Files:
+- apps/web/package.json - Add @sentry/vite-plugin to devDependencies
+- apps/web/vite.config.ts - Configure Sentry plugin with production conditional
+- apps/web/.env.example - Document environment variables
+- Vercel Dashboard - Configure environment variables (MANUAL)
+
+Critical Notes:
+- Phase 4 (Vercel configuration) is a MANUAL step requiring user action
+- Source map uploads only occur when NODE_ENV=production
+- SENTRY_AUTH_TOKEN must NEVER be committed to git or exposed client-side
+- Verify existing Sentry features (ErrorBoundary, Session Replay) still work after changes
+
+=== STARTUP COMMAND ===
+
+To continue building this spec, run:
+
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 003 --parallel 1
+
+Example:
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 003 --parallel 1
+
+=== END SESSION 1 ===

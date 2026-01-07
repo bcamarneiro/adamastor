@@ -1,0 +1,315 @@
+{
+  "feature": "Add Sentry Source Maps for Production Debugging",
+  "workflow_type": "feature",
+  "workflow_rationale": "Adding new build-time tooling (@sentry/vite-plugin) to existing Sentry integration. This is a feature addition that requires package installation, build configuration changes, and environment setup.",
+
+  "phases": [
+    {
+      "id": "phase-1-setup",
+      "name": "Package Installation",
+      "type": "setup",
+      "description": "Install @sentry/vite-plugin as a devDependency",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Install @sentry/vite-plugin package",
+          "service": "web",
+          "files_to_modify": ["apps/web/package.json"],
+          "files_to_create": [],
+          "patterns_from": ["apps/web/package.json"],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/web && grep '@sentry/vite-plugin' package.json",
+            "expected": "@sentry/vite-plugin should appear in devDependencies"
+          },
+          "status": "pending",
+          "notes": "Add @sentry/vite-plugin to devDependencies. Use npm install --save-dev @sentry/vite-plugin"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-implementation",
+      "name": "Vite Configuration",
+      "type": "implementation",
+      "description": "Configure Sentry plugin in vite.config.ts with production-only conditional",
+      "depends_on": ["phase-1-setup"],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Import sentryVitePlugin in vite.config.ts",
+          "service": "web",
+          "files_to_modify": ["apps/web/vite.config.ts"],
+          "files_to_create": [],
+          "patterns_from": ["apps/web/vite.config.ts"],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/web && grep 'sentryVitePlugin' vite.config.ts",
+            "expected": "Import statement for sentryVitePlugin should exist"
+          },
+          "status": "pending",
+          "notes": "Add: import { sentryVitePlugin } from '@sentry/vite-plugin';"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Add Sentry plugin to plugins array with production conditional",
+          "service": "web",
+          "files_to_modify": ["apps/web/vite.config.ts"],
+          "files_to_create": [],
+          "patterns_from": ["apps/web/vite.config.ts"],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/web && node -e \"const config = require('./vite.config.ts'); process.exit(0)\"",
+            "expected": "Vite config should have valid syntax"
+          },
+          "status": "pending",
+          "notes": "Add sentryVitePlugin to plugins array with: process.env.NODE_ENV === 'production' && sentryVitePlugin({org: process.env.SENTRY_ORG, project: process.env.SENTRY_PROJECT, authToken: process.env.SENTRY_AUTH_TOKEN}). Use .filter(Boolean) on plugins array."
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Enable sourcemap generation in build config",
+          "service": "web",
+          "files_to_modify": ["apps/web/vite.config.ts"],
+          "files_to_create": [],
+          "patterns_from": ["apps/web/vite.config.ts"],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/web && grep -A 2 'build:' vite.config.ts | grep 'sourcemap'",
+            "expected": "build config should include sourcemap: true"
+          },
+          "status": "pending",
+          "notes": "Add build: { sourcemap: true } to defineConfig if not already present"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-documentation",
+      "name": "Environment Documentation",
+      "type": "implementation",
+      "description": "Document required environment variables in .env.example",
+      "depends_on": ["phase-2-implementation"],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Create or update .env.example with Sentry variables",
+          "service": "web",
+          "files_to_modify": [],
+          "files_to_create": ["apps/web/.env.example"],
+          "patterns_from": [".env.example"],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/web && grep 'SENTRY' .env.example",
+            "expected": ".env.example should contain VITE_SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT"
+          },
+          "status": "pending",
+          "notes": "Add documentation for: VITE_SENTRY_DSN (runtime), SENTRY_AUTH_TOKEN (build-time), SENTRY_ORG (build-time), SENTRY_PROJECT (build-time). Include comments about where to obtain each value."
+        }
+      ]
+    },
+    {
+      "id": "phase-4-infrastructure",
+      "name": "Vercel Configuration",
+      "type": "setup",
+      "description": "Configure environment variables in Vercel dashboard (manual step)",
+      "depends_on": ["phase-3-documentation"],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Document Vercel environment variable configuration steps",
+          "all_services": true,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify that VITE_SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, and SENTRY_PROJECT are added to Vercel production environment variables. SENTRY_AUTH_TOKEN should be marked as sensitive."
+          },
+          "status": "pending",
+          "notes": "MANUAL STEP: User must add environment variables to Vercel dashboard. Document the steps: 1) Go to Vercel project settings, 2) Navigate to Environment Variables, 3) Add all 4 Sentry variables for Production environment, 4) Mark SENTRY_AUTH_TOKEN as sensitive."
+        }
+      ]
+    },
+    {
+      "id": "phase-5-verification",
+      "name": "Build and Upload Verification",
+      "type": "integration",
+      "description": "Verify source map uploads work in production builds",
+      "depends_on": ["phase-2-implementation", "phase-4-infrastructure"],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Test local production build",
+          "service": "web",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cd apps/web && NODE_ENV=production npm run build",
+            "expected": "Build should complete successfully and generate source maps in dist/"
+          },
+          "status": "pending",
+          "notes": "Run production build locally to verify: 1) Build completes without errors, 2) Source maps are generated (check dist/ for .map files), 3) Plugin only runs when NODE_ENV=production"
+        },
+        {
+          "id": "subtask-5-2",
+          "description": "Verify Vercel deployment with source map upload",
+          "all_services": true,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Deploy to Vercel and verify: 1) Build logs show 'Uploading source maps to Sentry' message, 2) Sentry dashboard shows uploaded source maps under Releases, 3) Trigger test error and verify stack trace shows original file paths (e.g., App.tsx:42)"
+          },
+          "status": "pending",
+          "notes": "VERIFICATION STEP: After Vercel deployment, check build logs for source map upload confirmation, verify in Sentry dashboard, and test with a production error."
+        }
+      ]
+    }
+  ],
+
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": ["integration"],
+    "security_scanning_required": true,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "@sentry/vite-plugin installed in devDependencies",
+      "vite.config.ts includes Sentry plugin with production conditional",
+      "sourcemap: true in build config",
+      ".env.example documents all 4 Sentry environment variables",
+      "Vercel environment variables configured",
+      "Production build completes successfully",
+      "Source maps uploaded to Sentry (verified in dashboard)",
+      "Production error stack traces show original source locations",
+      "Development builds do not attempt source map uploads",
+      "No security issues (auth token not exposed client-side)",
+      "Existing Sentry features (ErrorBoundary, Session Replay) still work"
+    ],
+    "verification_steps": [
+      {
+        "name": "TypeScript Compilation",
+        "command": "cd apps/web && npm run typecheck",
+        "expected_outcome": "No TypeScript errors in vite.config.ts",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Build Test",
+        "command": "cd apps/web && npm run build",
+        "expected_outcome": "Build completes successfully with source maps generated",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Secrets Scan",
+        "command": "python auto-claude/scan_secrets.py --all-files --json",
+        "expected_outcome": "No SENTRY_AUTH_TOKEN found in source files or committed code",
+        "type": "security",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Production Error Test",
+        "command": "Manual: Deploy to production, trigger test error, verify stack trace in Sentry",
+        "expected_outcome": "Stack trace shows original TypeScript file paths (e.g., App.tsx:42)",
+        "type": "e2e",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Medium risk due to build process changes and secrets management. Integration testing required to verify builds succeed. Security scan needed for auth token handling. Staging deployment not required as source maps don't affect runtime behavior."
+  },
+
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [],
+      "minimum_coverage": null,
+      "notes": "No unit tests needed - configuration change only"
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": ["cd apps/web && npm run build"],
+      "services_to_test": ["web"],
+      "notes": "Verify build completes successfully with Sentry plugin"
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": [],
+      "notes": "Manual verification in production after deployment"
+    },
+    "browser_verification": {
+      "required": true,
+      "pages": [
+        {
+          "url": "http://localhost:3000/",
+          "checks": [
+            "Application loads without errors",
+            "No console errors related to Sentry",
+            "ErrorBoundary still functional"
+          ]
+        }
+      ]
+    },
+    "database_verification": {
+      "required": false,
+      "checks": [],
+      "notes": "No database changes in this task"
+    },
+    "build_verification": {
+      "required": true,
+      "checks": [
+        "Package.json contains @sentry/vite-plugin in devDependencies",
+        "vite.config.ts imports sentryVitePlugin",
+        "vite.config.ts has production conditional for plugin",
+        "build config includes sourcemap: true",
+        ".env.example documents SENTRY_* variables",
+        "TypeScript compilation succeeds",
+        "Production build generates .map files in dist/",
+        "Vercel build logs show source map upload (post-deployment)"
+      ]
+    },
+    "security_verification": {
+      "required": true,
+      "checks": [
+        "SENTRY_AUTH_TOKEN not committed to repository",
+        "SENTRY_AUTH_TOKEN not in client-side bundle",
+        "SENTRY_AUTH_TOKEN marked as sensitive in Vercel",
+        "No hardcoded credentials in vite.config.ts"
+      ]
+    }
+  },
+
+  "qa_signoff": null,
+
+  "summary": {
+    "total_phases": 5,
+    "total_subtasks": 8,
+    "services_involved": ["web"],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution required due to dependencies"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 003 --parallel 1",
+    "critical_notes": [
+      "Phase 4 (Vercel configuration) is a MANUAL step requiring user action",
+      "Source map uploads only occur when NODE_ENV=production",
+      "SENTRY_AUTH_TOKEN must NEVER be committed to git or exposed client-side",
+      "Verify existing Sentry features (ErrorBoundary, Session Replay) still work after changes"
+    ]
+  }
+}
