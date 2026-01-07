@@ -3,7 +3,7 @@ import { useInitiatives } from '@/services/initiatives/useInitiatives';
 import { buildRelatedInitiativesMap } from '@/utils/relatedInitiatives';
 import * as Accordion from '@radix-ui/react-accordion';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import InitiativeRow, { type InitiativeData, type RelatedInitiativeData } from './InitiativeRow';
