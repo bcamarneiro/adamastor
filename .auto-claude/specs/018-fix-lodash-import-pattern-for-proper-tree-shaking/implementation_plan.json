@@ -144,12 +144,12 @@
   "last_updated": "2026-01-07T20:20:00.000000+00:00",
   "qa_signoff": {
     "status": "fixes_applied",
-    "timestamp": "2026-01-07T20:20:00.000000+00:00",
-    "fix_session": 0,
+    "timestamp": "2026-01-07T21:45:00.000000+00:00",
+    "fix_session": 1,
     "issues_fixed": [
       {
-        "title": "Branch needs rebase onto staging",
-        "fix_commit": "9a7d1ae"
+        "title": "Rebase branch onto origin/staging",
+        "fix_commit": "8c3d9ce"
       }
     ],
     "ready_for_qa_revalidation": true
