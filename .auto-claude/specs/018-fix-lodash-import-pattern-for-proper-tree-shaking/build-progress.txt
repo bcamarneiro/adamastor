@@ -27,7 +27,13 @@ Implementation plan created and ready for execution.
   - **Function used**: Only `debounce`
   - **Dependencies**: `lodash ^4.17.21` and `@types/lodash ^4.17.16` in apps/web/package.json
   - **No lodash-es or require() patterns found**
-- [ ] 1.2 Verify debounce API usage
+- [x] 1.2 Verify debounce API usage ✓
+  - **Location**: Lines 26-36 in InitiativeList.tsx
+  - **Creation**: `debounce((value: string) => setDebouncedFilterText(value), 300)`
+  - **Arguments used**: callback function, 300ms wait time
+  - **.cancel() usage**: YES - called in useEffect cleanup (line 34)
+  - **Compatibility**: Path import `lodash/debounce` fully supports all used features
+  - **Type safety**: @types/lodash provides types for path imports via debounce.d.ts
 
 ### Phase 2: Implementation
 - [ ] 2.1 Update lodash import to path import

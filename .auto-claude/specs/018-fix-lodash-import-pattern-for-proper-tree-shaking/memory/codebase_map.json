@@ -1,10 +1,10 @@
 {
   "discovered_files": {
     "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx": {
-      "description": "Only ONE lodash import exists in the entire codebase: `import { debounce } from 'lodash'` at line 6. Only the `debounce` function is used. Dependencies: lodash ^4.17.21 and @types/lodash ^4.17.16 in apps/web/package.json.",
-      "category": "dependency",
-      "discovered_at": "2026-01-07T17:33:33.754565+00:00"
+      "description": "Debounce usage verified: (1) debounce(fn, 300) creates debounced function, (2) .cancel() method is used in useEffect cleanup, (3) both patterns are fully compatible with lodash/debounce path import",
+      "category": "api-usage",
+      "discovered_at": "2026-01-07T17:35:18.352852+00:00"
     }
   },
-  "last_updated": "2026-01-07T17:33:33.754576+00:00"
+  "last_updated": "2026-01-07T17:35:18.352861+00:00"
 }
