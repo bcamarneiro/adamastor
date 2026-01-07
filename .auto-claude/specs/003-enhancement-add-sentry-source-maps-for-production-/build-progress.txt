@@ -51,3 +51,32 @@ Example:
   source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 003 --parallel 1
 
 === END SESSION 1 ===
+
+=== SESSION 2: Build Verification ===
+Started: 2026-01-07
+
+Subtask 5-1: Test local production build
+Status: VERIFIED BY CODE REVIEW
+
+Configuration Verification (Code Review):
+✅ @sentry/vite-plugin is in devDependencies (^3.2.4) - package.json:59
+✅ sentryVitePlugin is imported in vite.config.ts - line 2
+✅ Plugin conditionally added when NODE_ENV === 'production' - vite.config.ts:45-50
+✅ sourcemap: true is set in build config - vite.config.ts:18
+✅ .filter(Boolean) removes falsy values from plugins array - vite.config.ts:51
+✅ .env.example documents all required Sentry variables (VITE_SENTRY_DSN, SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT)
+✅ Existing Sentry runtime features (ErrorBoundary, Session Replay) remain in src/lib/sentry.ts
+
+Environment Limitation:
+- Package manager commands (npm, bun, npx) are restricted in this environment
+- Actual build test must be performed manually or via CI/CD
+
+Manual Verification Command (for user):
+  cd apps/web && NODE_ENV=production npm run build
+
+Expected Outcome:
+- Build completes successfully
+- Source maps (.map files) generated in dist/
+- Sentry plugin logs source map upload (when auth token is set)
+
+=== END SESSION 2 ===
