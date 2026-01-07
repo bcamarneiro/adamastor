@@ -49,3 +49,4 @@ apps/web/playwright-report/
 .cursor/
 .windsurfrules
 CLAUDE.md
+.auto-claude/
