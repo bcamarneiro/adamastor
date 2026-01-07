@@ -50,3 +50,5 @@ apps/web/playwright-report/
 .windsurfrules
 CLAUDE.md
 .auto-claude/
+.worktrees/
+.claude_settings.json

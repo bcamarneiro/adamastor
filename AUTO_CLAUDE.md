@@ -80,16 +80,42 @@ gh pr create --base staging --title "..." --body "Closes #<number>
 
 **CRITICAL**: Use `--base staging`, NOT `--base main`.
 
-### 7. Wait for CI
+### 7. Wait for CI and Check for Copilot Comments
+
+#### Step 7a: Wait for CI to complete
+
 ```bash
 gh run watch <run-id>
 ```
+
 - All checks must pass: lint, typecheck, test-watcher, test-web, e2e, build
 - If CI fails, fix and push again
-- **Do NOT request review until CI is green**
+
+#### Step 7b: Check for GitHub Copilot review comments
+
+**CRITICAL**: Before marking as ready for human review, check if Copilot already left comments:
+
+```bash
+# Check for any review comments
+gh pr view <number> --json reviews,comments --jq '.reviews[], .comments[]'
+```
+
+If Copilot (or any automated reviewer) left comments:
+
+1. Address ALL comments following step 8 below
+2. Push fixes
+3. Wait for CI to pass again
+4. Verify all comments have replies
+5. Only then mark as ready for human review
+
+**Never send a PR to human review with:**
+
+- ❌ Failing CI checks
+- ❌ Unaddressed Copilot comments
+- ❌ Review comments without replies
 
 ### 8. Address PR Review Comments
-If the PR receives review comments:
+If the PR receives review comments (from Copilot or humans):
 
 1. Check for comments:
    ```bash
