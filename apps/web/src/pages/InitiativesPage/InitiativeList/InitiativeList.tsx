@@ -121,6 +121,28 @@ const InitiativeList = () => {
     }
   }, [filteredInitiatives, expandedRows]);
 
+  // Track previous filter values to detect meaningful changes
+  const prevFilterRef = useRef({ filterText: debouncedFilterText, phase: selectedPhase });
+
+  // Reset scroll position to top when filters change
+  // This provides a consistent UX when searching or filtering
+  useEffect(() => {
+    const prevFilter = prevFilterRef.current;
+    const filterChanged =
+      prevFilter.filterText !== debouncedFilterText || prevFilter.phase !== selectedPhase;
+
+    if (filterChanged && scrollContainerRef.current) {
+      // Use smooth scrolling for a polished feel
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+
+    // Update the ref for next comparison
+    prevFilterRef.current = { filterText: debouncedFilterText, phase: selectedPhase };
+  }, [debouncedFilterText, selectedPhase]);
+
   // Set up the virtualizer for efficient rendering of large lists
   // Only enable when we have data to virtualize
   const virtualizer = useVirtualizer({
