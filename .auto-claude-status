@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "004-sync-failed-staging-2026-01-07",
+  "state": "building",
+  "subtasks": {
+    "completed": 2,
+    "total": 10,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Root Cause Analysis",
+    "id": null,
+    "total": 3
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 3,
+    "started_at": "2026-01-07T16:00:40.260882"
+  },
+  "last_update": "2026-01-07T16:08:10.656442"
+}
