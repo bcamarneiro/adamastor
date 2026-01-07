@@ -95,6 +95,7 @@ export function GlobalSearch({ className, onClose }: GlobalSearchProps) {
                         <img
                           src={deputy.photo_url}
                           alt=""
+                          loading="lazy"
                           className="w-8 h-8 rounded-full object-cover bg-neutral-4"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
