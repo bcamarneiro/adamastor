@@ -1,0 +1,163 @@
+{
+  "feature": "Standardize focus ring colors across all form inputs",
+  "description": "Form inputs across the application use inconsistent focus ring colors - some use blue-500, others use accent-9 or accent-7. This creates visual inconsistency and a disjointed user experience. All form inputs should use focus:ring-accent-9 for consistency with the design system.",
+  "created_at": "2026-01-07T17:27:50.348Z",
+  "updated_at": "2026-01-07T17:27:50.348Z",
+  "status": "planning",
+  "planStatus": "complete",
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Replace blue-500 with accent-9",
+      "description": "Replace all instances of focus:ring-blue-500 (raw Tailwind color outside design system) with focus:ring-accent-9",
+      "subtasks": [
+        {
+          "id": "1.1",
+          "title": "Update InitiativeList.tsx focus ring colors",
+          "description": "Replace focus:ring-blue-500 with focus:ring-accent-9 on lines 122 and 133 (search input and filter select)",
+          "file": "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx",
+          "status": "in_progress",
+          "changes": [
+            "Line 122: Change focus:ring-blue-500 to focus:ring-accent-9",
+            "Line 133: Change focus:ring-blue-500 to focus:ring-accent-9"
+          ],
+          "notes": "Starting to replace focus:ring-blue-500 with focus:ring-accent-9 on lines 122 and 133",
+          "updated_at": "2026-01-07T17:42:46.635625+00:00"
+        },
+        {
+          "id": "1.2",
+          "title": "Update ParliamentList.tsx focus ring colors",
+          "description": "Replace focus:ring-blue-500 with focus:ring-accent-9 on lines 138, 149, and 162 (search input and filter selects)",
+          "file": "apps/web/src/pages/ParliamentPage/ParliamentList/ParliamentList.tsx",
+          "status": "pending",
+          "changes": [
+            "Line 138: Change focus:ring-blue-500 to focus:ring-accent-9",
+            "Line 149: Change focus:ring-blue-500 to focus:ring-accent-9",
+            "Line 162: Change focus:ring-blue-500 to focus:ring-accent-9"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "Standardize accent-7 to accent-9",
+      "description": "Update components using focus:ring-accent-7 to use focus:ring-accent-9 for consistency. accent-9 is the primary accent color in the design system.",
+      "subtasks": [
+        {
+          "id": "2.1",
+          "title": "Update GlobalSearch.tsx focus ring color",
+          "description": "Replace focus:ring-accent-7 with focus:ring-accent-9 on line 70 (search input)",
+          "file": "apps/web/src/components/Search/GlobalSearch.tsx",
+          "status": "pending",
+          "changes": [
+            "Line 70: Change focus:ring-accent-7 to focus:ring-accent-9"
+          ]
+        },
+        {
+          "id": "2.2",
+          "title": "Update PartySelector.tsx focus ring color",
+          "description": "Replace focus:ring-accent-7 with focus:ring-accent-9 on line 87 (selector input)",
+          "file": "apps/web/src/components/Parties/PartySelector.tsx",
+          "status": "pending",
+          "changes": [
+            "Line 87: Change focus:ring-accent-7 to focus:ring-accent-9"
+          ]
+        },
+        {
+          "id": "2.3",
+          "title": "Update DistrictSelector.tsx focus ring color",
+          "description": "Replace focus:ring-accent-7 with focus:ring-accent-9 on line 83 (selector input)",
+          "file": "apps/web/src/components/Districts/DistrictSelector.tsx",
+          "status": "pending",
+          "changes": [
+            "Line 83: Change focus:ring-accent-7 to focus:ring-accent-9"
+          ]
+        },
+        {
+          "id": "2.4",
+          "title": "Update HelpTooltip.tsx focus ring color",
+          "description": "Replace focus:ring-accent-7 with focus:ring-accent-9 on line 33 (tooltip trigger button)",
+          "file": "apps/web/src/components/ui/HelpTooltip.tsx",
+          "status": "pending",
+          "changes": [
+            "Line 33: Change focus:ring-accent-7 to focus:ring-accent-9"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Update tabs component (optional)",
+      "description": "The tabs.tsx component uses focus-visible:ring-neutral-400. This may be intentional to have a subtler focus for navigation elements vs form inputs. This phase can be skipped if the neutral style is preferred for tabs.",
+      "subtasks": [
+        {
+          "id": "3.1",
+          "title": "Update tabs.tsx focus ring color",
+          "description": "Replace focus-visible:ring-neutral-400 with focus-visible:ring-accent-9 on lines 29 and 44 (TabsTrigger and TabsContent). This is optional if neutral focus is preferred for tabs.",
+          "file": "apps/web/src/components/ui/tabs.tsx",
+          "status": "pending",
+          "changes": [
+            "Line 29: Change focus-visible:ring-neutral-400 to focus-visible:ring-accent-9",
+            "Line 44: Change focus-visible:ring-neutral-400 to focus-visible:ring-accent-9"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "name": "Verification and Testing",
+      "description": "Build the project and run tests to ensure all changes work correctly",
+      "subtasks": [
+        {
+          "id": "4.1",
+          "title": "Run build and type check",
+          "description": "Run bun run build and bun run typecheck to verify no errors",
+          "status": "pending"
+        },
+        {
+          "id": "4.2",
+          "title": "Run tests",
+          "description": "Run bun run test to ensure existing tests pass",
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "workflow_type": "development",
+  "services_involved": [
+    "web"
+  ],
+  "files_affected": [
+    "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx",
+    "apps/web/src/pages/ParliamentPage/ParliamentList/ParliamentList.tsx",
+    "apps/web/src/components/Search/GlobalSearch.tsx",
+    "apps/web/src/components/Parties/PartySelector.tsx",
+    "apps/web/src/components/Districts/DistrictSelector.tsx",
+    "apps/web/src/components/ui/HelpTooltip.tsx",
+    "apps/web/src/components/ui/tabs.tsx"
+  ],
+  "files_already_correct": [
+    "apps/web/src/pages/LeaderboardPage/FullRankingsPage.tsx",
+    "apps/web/src/components/BattleRoyale/DeputySelector.tsx",
+    "apps/web/src/components/ReportCard/PostalCodeInput.tsx",
+    "apps/web/src/components/WasteCalculator/WasteCalculator.tsx"
+  ],
+  "standard": {
+    "focus_ring_color": "accent-9",
+    "focus_ring_style": "focus:ring-2 focus:ring-accent-9",
+    "rationale": "accent-9 is the primary accent color in the design system (#0090ff). Using this consistently for focus rings creates a cohesive visual language and improves accessibility by providing predictable focus indicators."
+  },
+  "final_acceptance": [
+    "All form inputs use focus:ring-accent-9",
+    "No instances of focus:ring-blue-500 remain",
+    "Build passes without errors",
+    "All tests pass"
+  ],
+  "spec_file": "spec.md",
+  "qa_signoff": {
+    "status": "pending",
+    "tests_passed": "",
+    "issues": ""
+  },
+  "last_updated": "2026-01-07T17:42:46.635635+00:00"
+}

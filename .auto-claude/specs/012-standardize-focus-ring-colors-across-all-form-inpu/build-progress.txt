@@ -1,0 +1,42 @@
+# Build Progress: Standardize Focus Ring Colors
+
+## Status: Planning Complete
+
+## Analysis Summary (2026-01-07)
+
+### Current State
+The codebase has inconsistent focus ring colors across form inputs:
+
+**Using `focus:ring-blue-500` (raw Tailwind - needs update):**
+- InitiativeList.tsx (lines 122, 133)
+- ParliamentList.tsx (lines 138, 149, 162)
+
+**Using `focus:ring-accent-9` (correct):**
+- FullRankingsPage.tsx (lines 129, 151)
+- DeputySelector.tsx (line 96)
+- PostalCodeInput.tsx (lines 53, 61)
+- WasteCalculator.tsx (line 78)
+
+**Using `focus:ring-accent-7` (lighter variant - needs update):**
+- GlobalSearch.tsx (line 70)
+- PartySelector.tsx (line 87)
+- DistrictSelector.tsx (line 83)
+- HelpTooltip.tsx (line 33)
+
+**Using `focus-visible:ring-neutral-400` (tabs - optional update):**
+- tabs.tsx (lines 29, 44)
+
+### Standard Defined
+- Focus ring color: `accent-9` (#0090ff)
+- Focus ring style: `focus:ring-2 focus:ring-accent-9`
+- Rationale: accent-9 is the primary accent color in the design system
+
+### Implementation Plan
+4 phases with 8 subtasks total:
+1. Replace blue-500 with accent-9 (2 files)
+2. Standardize accent-7 to accent-9 (4 files)
+3. Update tabs component (optional - 1 file)
+4. Verification and testing
+
+## Next Steps
+- Review plan and begin implementation

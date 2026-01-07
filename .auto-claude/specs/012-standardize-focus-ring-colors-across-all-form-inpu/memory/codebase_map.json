@@ -1,0 +1,10 @@
+{
+  "discovered_files": {
+    "apps/web/src/styles/index.css": {
+      "description": "Design system uses accent-9 (#0090ff) as primary accent color. All focus rings should use focus:ring-accent-9 for consistency. The CSS already defines a:focus with accent-7 outline.",
+      "category": "design-system",
+      "discovered_at": "2026-01-07T17:41:41.148559+00:00"
+    }
+  },
+  "last_updated": "2026-01-07T17:41:41.148567+00:00"
+}

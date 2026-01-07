@@ -1,0 +1,17 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-003",
+  "rationale": "Consistent visual language across the application helps users build mental models and reduces cognitive load. Focus indicators are especially important for accessibility and should be predictable throughout the application.",
+  "category": "ui_ux",
+  "uiuxCategory": "visual",
+  "affectedFiles": [
+    "apps/web/src/pages/ParliamentPage/ParliamentList/ParliamentList.tsx",
+    "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx",
+    "apps/web/src/components/Search/GlobalSearch.tsx",
+    "apps/web/src/components/BattleRoyale/DeputySelector.tsx",
+    "apps/web/src/components/Districts/DistrictSelector.tsx",
+    "apps/web/src/components/Parties/PartySelector.tsx"
+  ],
+  "problemSolved": "ParliamentList and InitiativeList use `focus:ring-blue-500` (raw Tailwind color). GlobalSearch uses `focus:ring-accent-7`. DeputySelector uses `focus:ring-accent-9`. DistrictSelector and PartySelector use `focus:ring-accent-7`. This inconsistency is confusing for users."
+}
