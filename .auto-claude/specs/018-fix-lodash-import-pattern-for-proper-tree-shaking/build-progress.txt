@@ -1,0 +1,45 @@
+# Build Progress: Fix lodash import pattern for proper tree-shaking
+
+## Summary
+Fix the lodash import pattern in InitiativeList.tsx to enable proper tree-shaking,
+reducing bundle size from ~70KB (full lodash) to ~1KB (just debounce).
+
+## Current Status
+Implementation plan created and ready for execution.
+
+## Analysis Findings
+- **Affected File**: `apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx`
+- **Current Import**: `import { debounce } from 'lodash'` (line 6)
+- **Issue**: Named imports from lodash don't tree-shake properly
+- **Solution**: Change to path import: `import debounce from 'lodash/debounce'`
+
+## Debounce Usage in Codebase
+- Single file uses lodash: InitiativeList.tsx
+- Uses `debounce()` function with 300ms delay
+- Uses `.cancel()` method for cleanup in useEffect
+
+## Implementation Plan
+### Phase 1: Analysis & Preparation
+- [x] 1.1 Confirm all lodash imports in codebase ✓
+  - **Found**: Only ONE lodash import in the entire codebase
+  - **Location**: `apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx` (line 6)
+  - **Import**: `import { debounce } from 'lodash'`
+  - **Function used**: Only `debounce`
+  - **Dependencies**: `lodash ^4.17.21` and `@types/lodash ^4.17.16` in apps/web/package.json
+  - **No lodash-es or require() patterns found**
+- [ ] 1.2 Verify debounce API usage
+
+### Phase 2: Implementation
+- [ ] 2.1 Update lodash import to path import
+
+### Phase 3: Verification
+- [ ] 3.1 Run TypeScript type checking
+- [ ] 3.2 Run linting
+- [ ] 3.3 Run tests
+- [ ] 3.4 Run build to verify bundle optimization
+
+## Notes
+- The lodash package is already installed (`lodash: ^4.17.21`)
+- TypeScript types are available (`@types/lodash: ^4.17.16`)
+- Path imports have full TypeScript support
+- No new dependencies needed

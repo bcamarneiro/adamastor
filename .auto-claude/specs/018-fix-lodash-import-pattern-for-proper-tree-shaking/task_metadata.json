@@ -1,0 +1,9 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "performance_optimizations",
+  "ideaId": "perf-002",
+  "rationale": "Lodash is a large utility library and the current import pattern prevents tree-shaking. Only the debounce function is used in the entire codebase, but the full lodash library may be bundled. Using path imports or a dedicated package would reduce this to ~1KB.",
+  "category": "performance",
+  "performanceCategory": "bundle_size",
+  "impact": "medium"
+}

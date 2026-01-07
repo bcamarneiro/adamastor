@@ -1,0 +1,133 @@
+{
+  "feature": "Fix lodash import pattern for proper tree-shaking",
+  "description": "The InitiativeList component imports debounce using `import { debounce } from 'lodash'` which includes the entire lodash library (~70KB). Named imports from lodash don't tree-shake properly. Should use path import `import debounce from 'lodash/debounce'` or switch to a dedicated debounce package (~1KB).",
+  "created_at": "2026-01-07T17:29:02.630Z",
+  "updated_at": "2026-01-07T18:00:00.000Z",
+  "status": "in_progress",
+  "planStatus": "approved",
+  "workflow_type": "development",
+  "services_involved": [
+    "web"
+  ],
+  "spec_file": "spec.md",
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Analysis & Preparation",
+      "description": "Verify the lodash usage and ensure we understand the full scope of the change",
+      "subtasks": [
+        {
+          "id": "1.1",
+          "title": "Confirm all lodash imports in codebase",
+          "description": "Search for any other lodash imports across the entire codebase to ensure we fix all instances",
+          "status": "completed",
+          "files": [],
+          "acceptance_criteria": [
+            "All lodash imports are identified",
+            "Document which lodash functions are used"
+          ],
+          "notes": "Found only ONE lodash import in the entire codebase at apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx line 6. Only the debounce function is used. Dependencies are lodash ^4.17.21 and @types/lodash ^4.17.16 in apps/web/package.json. No other lodash patterns (lodash-es, require) were found.",
+          "updated_at": "2026-01-07T17:33:48.935856+00:00"
+        },
+        {
+          "id": "1.2",
+          "title": "Verify debounce API usage",
+          "description": "Confirm the debounce function usage including .cancel() method to ensure path import maintains compatibility",
+          "status": "pending",
+          "files": [
+            "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx"
+          ],
+          "acceptance_criteria": [
+            "Document debounce usage patterns",
+            "Confirm .cancel() method is used"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "Implementation",
+      "description": "Update the lodash import to use path import pattern for tree-shaking",
+      "subtasks": [
+        {
+          "id": "2.1",
+          "title": "Update lodash import to path import",
+          "description": "Change `import { debounce } from 'lodash'` to `import debounce from 'lodash/debounce'` in InitiativeList.tsx",
+          "status": "pending",
+          "files": [
+            "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx"
+          ],
+          "acceptance_criteria": [
+            "Import changed to path import pattern",
+            "TypeScript types still work correctly",
+            "No compilation errors"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Verification",
+      "description": "Verify the change works correctly and provides the expected bundle size benefits",
+      "subtasks": [
+        {
+          "id": "3.1",
+          "title": "Run TypeScript type checking",
+          "description": "Run `bun typecheck` to ensure TypeScript is happy with the new import",
+          "status": "pending",
+          "files": [],
+          "acceptance_criteria": [
+            "No TypeScript errors related to debounce usage",
+            "All type inference works correctly"
+          ]
+        },
+        {
+          "id": "3.2",
+          "title": "Run linting",
+          "description": "Run `bun lint` to ensure the code follows project style guidelines",
+          "status": "pending",
+          "files": [],
+          "acceptance_criteria": [
+            "No lint errors",
+            "Code passes all lint rules"
+          ]
+        },
+        {
+          "id": "3.3",
+          "title": "Run tests",
+          "description": "Run tests to ensure the change doesn't break existing functionality",
+          "status": "pending",
+          "files": [],
+          "acceptance_criteria": [
+            "All tests pass",
+            "No regressions in functionality"
+          ]
+        },
+        {
+          "id": "3.4",
+          "title": "Run build to verify bundle optimization",
+          "description": "Run production build and verify it completes successfully with tree-shaking applied",
+          "status": "pending",
+          "files": [],
+          "acceptance_criteria": [
+            "Build completes successfully",
+            "No runtime errors related to debounce"
+          ]
+        }
+      ]
+    }
+  ],
+  "final_acceptance": [
+    "lodash/debounce path import is used instead of named import from lodash",
+    "All TypeScript types work correctly",
+    "All tests pass",
+    "Build completes successfully",
+    "Bundle size reduced (only debounce included, not full lodash)"
+  ],
+  "qa_sign_off": {
+    "status": "pending",
+    "tests_passed": false,
+    "issues": []
+  },
+  "last_updated": "2026-01-07T17:33:48.935875+00:00"
+}

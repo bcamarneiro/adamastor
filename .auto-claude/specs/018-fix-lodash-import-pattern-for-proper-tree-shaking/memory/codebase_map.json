@@ -1,0 +1,10 @@
+{
+  "discovered_files": {
+    "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx": {
+      "description": "Only ONE lodash import exists in the entire codebase: `import { debounce } from 'lodash'` at line 6. Only the `debounce` function is used. Dependencies: lodash ^4.17.21 and @types/lodash ^4.17.16 in apps/web/package.json.",
+      "category": "dependency",
+      "discovered_at": "2026-01-07T17:33:33.754565+00:00"
+    }
+  },
+  "last_updated": "2026-01-07T17:33:33.754576+00:00"
+}
