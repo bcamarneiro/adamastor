@@ -1,16 +1,21 @@
 import { useMemo } from 'react';
 import type { DistrictStats } from '../../lib/supabase';
+import {
+  useComparison,
+  type MetricConfig,
+  type ComparisonMetric,
+} from '../../hooks/useComparison';
 
-export interface DistrictComparisonMetric {
-  label: string;
-  valueA: number;
-  valueB: number;
-  winnerA: boolean;
-  winnerB: boolean;
-  tie: boolean;
-  higherIsBetter: boolean;
-}
+/**
+ * Type alias for backwards compatibility.
+ * DistrictComparisonMetric is now the same as the generic ComparisonMetric.
+ */
+export type DistrictComparisonMetric = ComparisonMetric;
 
+/**
+ * Result of comparing two districts across multiple metrics.
+ * Preserves backwards compatibility with districtA/districtB naming.
+ */
 export interface DistrictComparisonResult {
   districtA: DistrictStats;
   districtB: DistrictStats;
@@ -21,95 +26,57 @@ export interface DistrictComparisonResult {
   winner: 'A' | 'B' | 'tie';
 }
 
-function compare(
-  a: number | null,
-  b: number | null,
-  higherIsBetter = true
-): { winnerA: boolean; winnerB: boolean; tie: boolean } {
-  const valA = a ?? 0;
-  const valB = b ?? 0;
+/**
+ * Metric configurations for district comparison.
+ * Defined outside hook to maintain stable references.
+ */
+const districtMetricsConfig: MetricConfig<DistrictStats>[] = [
+  {
+    label: 'Pontuacao Media',
+    getValue: (d) => d.avg_work_score,
+    higherIsBetter: true,
+  },
+  {
+    label: 'Assiduidade Media',
+    getValue: (d) => d.avg_attendance_rate,
+    higherIsBetter: true,
+  },
+  {
+    label: 'Deputados Ativos',
+    getValue: (d) => d.active_deputies,
+    higherIsBetter: true,
+  },
+];
 
-  if (valA === valB) {
-    return { winnerA: false, winnerB: false, tie: true };
-  }
-
-  const aWins = higherIsBetter ? valA > valB : valA < valB;
-  return {
-    winnerA: aWins,
-    winnerB: !aWins,
-    tie: false,
-  };
-}
-
+/**
+ * Hook for comparing two districts across multiple metrics.
+ *
+ * Compares districts on: avg_work_score, avg_attendance_rate, and active_deputies.
+ *
+ * @param districtA - First district to compare
+ * @param districtB - Second district to compare
+ * @returns DistrictComparisonResult with metrics, win counts, and overall winner; or null if either district is null
+ */
 export function useCompareDistricts(
   districtA: DistrictStats | null,
   districtB: DistrictStats | null
 ): DistrictComparisonResult | null {
+  const genericResult = useComparison(districtA, districtB, {
+    metrics: districtMetricsConfig,
+  });
+
+  // Transform generic result to district-specific format for backwards compatibility
   return useMemo(() => {
-    if (!districtA || !districtB) return null;
-
-    const metricsConfig: {
-      label: string;
-      getA: () => number | null;
-      getB: () => number | null;
-      higherIsBetter: boolean;
-    }[] = [
-      {
-        label: 'Pontuacao Media',
-        getA: () => districtA.avg_work_score,
-        getB: () => districtB.avg_work_score,
-        higherIsBetter: true,
-      },
-      {
-        label: 'Assiduidade Media',
-        getA: () => districtA.avg_attendance_rate,
-        getB: () => districtB.avg_attendance_rate,
-        higherIsBetter: true,
-      },
-      {
-        label: 'Deputados Ativos',
-        getA: () => districtA.active_deputies,
-        getB: () => districtB.active_deputies,
-        higherIsBetter: true,
-      },
-    ];
-
-    const metrics: DistrictComparisonMetric[] = metricsConfig.map((m) => {
-      const valueA = m.getA() ?? 0;
-      const valueB = m.getB() ?? 0;
-      const { winnerA, winnerB, tie } = compare(valueA, valueB, m.higherIsBetter);
-      return {
-        label: m.label,
-        valueA,
-        valueB,
-        winnerA,
-        winnerB,
-        tie,
-        higherIsBetter: m.higherIsBetter,
-      };
-    });
-
-    const winsA = metrics.filter((m) => m.winnerA).length;
-    const winsB = metrics.filter((m) => m.winnerB).length;
-    const ties = metrics.filter((m) => m.tie).length;
-
-    let winner: 'A' | 'B' | 'tie';
-    if (winsA > winsB) {
-      winner = 'A';
-    } else if (winsB > winsA) {
-      winner = 'B';
-    } else {
-      winner = 'tie';
-    }
+    if (!genericResult) return null;
 
     return {
-      districtA,
-      districtB,
-      metrics,
-      winsA,
-      winsB,
-      ties,
-      winner,
+      districtA: genericResult.entityA,
+      districtB: genericResult.entityB,
+      metrics: genericResult.metrics,
+      winsA: genericResult.winsA,
+      winsB: genericResult.winsB,
+      ties: genericResult.ties,
+      winner: genericResult.winner,
     };
-  }, [districtA, districtB]);
+  }, [genericResult]);
 }
