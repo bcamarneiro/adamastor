@@ -184,3 +184,40 @@ uses the same conditional patterns as existing production-specific steps. The fi
 actually BENEFITS production by providing early API availability detection.
 
 === END SESSION 3 ===
+
+=== SESSION 4 (Documentation) ===
+
+Subtask 4-2: Update Issue #128 with root cause and solution
+Status: COMPLETED (manual action required)
+
+Actions Taken:
+1. Created comprehensive issue comment documenting:
+   - Root cause analysis (Parliament API unavailability)
+   - Evidence table with 6 supporting data points
+   - Fix applied (commit b19800e - Parliament API health check)
+   - Verification steps taken
+   - Prevention measures (implemented and recommended)
+   - Next steps for completing the fix
+
+2. Comment saved to: .auto-claude/specs/004-sync-failed-staging-2026-01-07/issue-128-comment.md
+
+NOTE: gh CLI not available in this environment. Manual action required:
+
+To post the comment to Issue #128:
+1. Navigate to: https://github.com/bcamarneiro/adamastor/issues/128
+2. Scroll to bottom of the issue
+3. Copy the contents of: .auto-claude/specs/004-sync-failed-staging-2026-01-07/issue-128-comment.md
+4. Paste into the comment box
+5. Click "Comment"
+
+Alternatively, use gh CLI if available:
+  gh issue comment 128 -F .auto-claude/specs/004-sync-failed-staging-2026-01-07/issue-128-comment.md
+
+Comment Contents Summary:
+- Root Cause: External Parliament API unavailability (85% confidence)
+- Fix: Added pre-sync API health check with 3 retry attempts and exponential backoff
+- Verification: Workflow syntax validated, production regression check passed
+- Prevention: Health check, retry logic, clear annotations implemented
+- Recommendations: Monitoring alerts, API status page monitoring
+
+=== END SESSION 4 ===
