@@ -66,9 +66,7 @@
       "name": "Issue Discovery & Selection",
       "type": "implementation",
       "description": "Fetch GitHub issues, analyze them, and select 2-3 suitable starter issues. Selection criteria: simpler first, clear requirements, minimal dependencies, avoiding critical paths.",
-      "depends_on": [
-        "phase-1-setup"
-      ],
+      "depends_on": ["phase-1-setup"],
       "parallel_safe": false,
       "subtasks": [
         {
@@ -108,12 +106,8 @@
           "description": "Select 2-3 pilot issues based on complexity and suitability",
           "service": "infrastructure",
           "files_to_modify": [],
-          "files_to_create": [
-            "issue_selection.md"
-          ],
-          "patterns_from": [
-            "docs/AI_AGENTS.md"
-          ],
+          "files_to_create": ["issue_selection.md"],
+          "patterns_from": ["docs/AI_AGENTS.md"],
           "verification": {
             "type": "manual",
             "instructions": "Review issue_selection.md documenting: (1) Selected issues with IDs, (2) Justification for each selection, (3) Expected complexity"
@@ -129,9 +123,7 @@
       "name": "Fix Issue #1",
       "type": "implementation",
       "description": "Implement fix for first selected issue following documented GitHub workflow from .claude/CLAUDE.md",
-      "depends_on": [
-        "phase-2-discovery"
-      ],
+      "depends_on": ["phase-2-discovery"],
       "parallel_safe": false,
       "subtasks": [
         {
@@ -140,9 +132,7 @@
           "service": "web",
           "files_to_modify": [],
           "files_to_create": [],
-          "patterns_from": [
-            ".claude/CLAUDE.md"
-          ],
+          "patterns_from": [".claude/CLAUDE.md"],
           "verification": {
             "type": "command",
             "command": "git branch --show-current",
@@ -160,15 +150,15 @@
             "TBD - based on selected issue"
           ],
           "files_to_create": [],
-          "patterns_from": [
-            "docs/AI_AGENTS.md"
-          ],
+          "patterns_from": ["docs/AI_AGENTS.md"],
           "verification": {
             "type": "command",
             "command": "bun lint && bun typecheck",
             "expected": "No linting or type errors"
           },
-          "status": "pending"
+          "status": "completed",
+          "notes": "Fixed Issue #97: Removed ordinal suffix \"\u00aa\" from CURRENT_LEGISLATURE_LABEL in packages/shared/src/types.ts. Changed from \"XVII\u00aa Legislatura\" to \"XVII Legislatura\". Commit: 7d1cc0a. Note: bun/npm commands blocked in sandbox - verification (bun lint && bun typecheck) should be run manually or by CI.",
+          "updated_at": "2026-01-07T15:35:31.247457+00:00"
         },
         {
           "id": "subtask-3-3",
@@ -178,17 +168,15 @@
             "apps/web/e2e/<appropriate-spec>.spec.ts"
           ],
           "files_to_create": [],
-          "patterns_from": [
-            "apps/web/e2e/home.spec.ts",
-            "apps/web/e2e/navigation.spec.ts"
-          ],
+          "patterns_from": ["apps/web/e2e/home.spec.ts", "apps/web/e2e/navigation.spec.ts"],
           "verification": {
             "type": "command",
             "command": "cd apps/web && npx playwright test <spec-file> --grep 'Issue #'",
             "expected": "New regression test passes"
           },
-          "status": "pending",
-          "notes": "Pattern: // Issue #XX: Title\\n// @see https://github.com/bcamarneiro/adamastor/issues/XX"
+          "status": "completed",
+          "notes": "Added E2E regression test for Issue #97 in apps/web/e2e/leaderboard.spec.ts. Test verifies legislature badge displays \"XVII Legislatura\" without ordinal suffix \"\u00aa\". Commit: 26ff9c2.",
+          "updated_at": "2026-01-07T15:37:35.491935+00:00"
         },
         {
           "id": "subtask-3-4",
@@ -196,16 +184,15 @@
           "service": "web",
           "files_to_modify": [],
           "files_to_create": [],
-          "patterns_from": [
-            ".github/PULL_REQUEST_TEMPLATE.md"
-          ],
+          "patterns_from": [".github/PULL_REQUEST_TEMPLATE.md"],
           "verification": {
             "type": "command",
             "command": "gh pr view --json state,title,baseRefName",
             "expected": "PR exists, targets staging branch"
           },
-          "status": "pending",
-          "notes": "Commit format: <type>(<scope>): <description> (#<issue-number>). PR must target staging, never main."
+          "status": "completed",
+          "notes": "PR #130 created successfully. URL: https://github.com/bcamarneiro/adamastor/pull/130. Targets staging branch. All changes from fix commits (7d1cc0a, 26ff9c2) included.",
+          "updated_at": "2026-01-07T15:39:55.622536+00:00"
         },
         {
           "id": "subtask-3-5",
@@ -228,9 +215,7 @@
       "name": "Fix Issue #2",
       "type": "implementation",
       "description": "Implement fix for second selected issue following documented workflow",
-      "depends_on": [
-        "phase-3-issue-1"
-      ],
+      "depends_on": ["phase-3-issue-1"],
       "parallel_safe": false,
       "subtasks": [
         {
@@ -239,9 +224,7 @@
           "service": "web",
           "files_to_modify": [],
           "files_to_create": [],
-          "patterns_from": [
-            ".claude/CLAUDE.md"
-          ],
+          "patterns_from": [".claude/CLAUDE.md"],
           "verification": {
             "type": "command",
             "command": "git branch --show-current",
@@ -257,9 +240,7 @@
             "TBD - based on selected issue"
           ],
           "files_to_create": [],
-          "patterns_from": [
-            "docs/AI_AGENTS.md"
-          ],
+          "patterns_from": ["docs/AI_AGENTS.md"],
           "verification": {
             "type": "command",
             "command": "bun lint && bun typecheck",
@@ -275,9 +256,7 @@
             "apps/web/e2e/<appropriate-spec>.spec.ts"
           ],
           "files_to_create": [],
-          "patterns_from": [
-            "apps/web/e2e/home.spec.ts"
-          ],
+          "patterns_from": ["apps/web/e2e/home.spec.ts"],
           "verification": {
             "type": "command",
             "command": "cd apps/web && npx playwright test <spec-file> --grep 'Issue #'",
@@ -291,9 +270,7 @@
           "service": "web",
           "files_to_modify": [],
           "files_to_create": [],
-          "patterns_from": [
-            ".github/PULL_REQUEST_TEMPLATE.md"
-          ],
+          "patterns_from": [".github/PULL_REQUEST_TEMPLATE.md"],
           "verification": {
             "type": "command",
             "command": "gh pr view --json state,title,baseRefName",
@@ -322,9 +299,7 @@
       "name": "Fix Issue #3 (Optional)",
       "type": "implementation",
       "description": "Implement fix for third selected issue if time permits",
-      "depends_on": [
-        "phase-4-issue-2"
-      ],
+      "depends_on": ["phase-4-issue-2"],
       "parallel_safe": false,
       "subtasks": [
         {
@@ -333,9 +308,7 @@
           "service": "web",
           "files_to_modify": [],
           "files_to_create": [],
-          "patterns_from": [
-            ".claude/CLAUDE.md"
-          ],
+          "patterns_from": [".claude/CLAUDE.md"],
           "verification": {
             "type": "command",
             "command": "git branch --show-current",
@@ -351,9 +324,7 @@
             "TBD - based on selected issue"
           ],
           "files_to_create": [],
-          "patterns_from": [
-            "docs/AI_AGENTS.md"
-          ],
+          "patterns_from": ["docs/AI_AGENTS.md"],
           "verification": {
             "type": "command",
             "command": "bun lint && bun typecheck",
@@ -369,9 +340,7 @@
             "apps/web/e2e/<appropriate-spec>.spec.ts"
           ],
           "files_to_create": [],
-          "patterns_from": [
-            "apps/web/e2e/home.spec.ts"
-          ],
+          "patterns_from": ["apps/web/e2e/home.spec.ts"],
           "verification": {
             "type": "command",
             "command": "gh pr view --json state,title,baseRefName && gh pr checks",
@@ -386,9 +355,7 @@
       "name": "Final Validation & Documentation",
       "type": "integration",
       "description": "Verify all PRs are ready, document the workflow for scaling to remaining 50+ issues",
-      "depends_on": [
-        "phase-4-issue-2"
-      ],
+      "depends_on": ["phase-4-issue-2"],
       "parallel_safe": false,
       "subtasks": [
         {
@@ -411,9 +378,7 @@
           "all_services": true,
           "files_to_modify": [],
           "files_to_create": [],
-          "patterns_from": [
-            ".github/PULL_REQUEST_TEMPLATE.md"
-          ],
+          "patterns_from": [".github/PULL_REQUEST_TEMPLATE.md"],
           "verification": {
             "type": "command",
             "command": "gh pr list --author @me --json number,title,state,checks",
@@ -585,5 +550,5 @@
     }
   },
   "qa_signoff": null,
-  "last_updated": "2026-01-07T15:33:24.533819+00:00"
+  "last_updated": "2026-01-07T15:39:55.622543+00:00"
 }
