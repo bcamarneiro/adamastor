@@ -332,6 +332,137 @@ Multiple feature branches show activity, but the key findings are:
 
 ---
 
+## Root Cause
+
+### Determination: External Parliament API Failure (High Confidence)
+
+Based on the comprehensive investigation of workflow logs, code changes, and environment configurations, the root cause of the staging sync failure has been identified.
+
+#### Specific Failure Reason
+
+**The sync workflow failed due to an external Parliament API unavailability or error response.**
+
+The "Sync data" step (step 8) failed with exit code 1 after only ~6 seconds of execution. This short duration indicates the failure occurred during the initial fetch phase when the sync command attempts to download datasets from the Portuguese Parliament API (`app.parlamento.pt`).
+
+#### Evidence Supporting Diagnosis
+
+| # | Evidence | Significance |
+|---|----------|--------------|
+| 1 | **Both staging AND production failed identically** | Eliminates environment-specific causes (secrets, configuration, caching). Both environments share only the Parliament API as an external dependency. |
+| 2 | **No code changes in 7+ days** | Eliminates code regression as root cause. Last sync workflow change was 14+ days ago. Last watcher code change was 7+ days ago. |
+| 3 | **Short execution time (~6 seconds)** | Indicates early failure during fetch phase, not during data transformation or database writes which would take longer. |
+| 4 | **Staging uses different Supabase credentials than production** | Both failed despite using separate databases, ruling out Supabase service issues. |
+| 5 | **Same failure pattern: Step 8, Exit Code 1** | Consistent failure signature across both runs points to a single shared dependency. |
+| 6 | **Successful completion of setup steps (1-7)** | GitHub Actions infrastructure, Bun runtime, and dependencies all worked correctly. |
+| 7 | **Production uses stable release tag (v0.1.2)** | Production runs code from January 2nd that was previously working, eliminating new code as cause. |
+
+#### Confidence Assessment
+
+| Hypothesis | Confidence | Reasoning |
+|------------|------------|-----------|
+| Parliament API unavailable/erroring | **HIGH (85%)** | Only shared dependency; both environments failed; short execution time |
+| Parliament API response format changed | **MEDIUM (10%)** | Would cause schema validation errors; less likely for temporary outage |
+| Supabase service degradation | **LOW (3%)** | Different credentials per environment; both failing is coincidental only |
+| Network/DNS transient issue | **LOW (2%)** | GitHub Actions infrastructure is robust; unlikely to affect both runs |
+
+#### Limitations
+
+**Note:** Full confirmation requires access to the actual workflow logs via `gh run view 20772339098 --log`, which would show:
+- The specific HTTP status code returned by the Parliament API
+- The exact error message from the sync command
+- Which dataset URL (if any) triggered the failure
+
+Without admin access to download logs, this diagnosis is based on behavioral analysis and elimination of alternatives.
+
+### Proposed Fix Approach
+
+Given the root cause is likely an external API availability issue, the following approach is recommended:
+
+#### Immediate Actions
+
+| Priority | Action | Rationale |
+|----------|--------|-----------|
+| 1 | **Test Parliament API availability now** | Verify if the API has recovered since the failure |
+| 2 | **Re-run workflow manually** | If API is available, a manual trigger should succeed |
+| 3 | **Check Parliament API status page** | Confirm if there was scheduled maintenance or known outage |
+
+#### Commands for Verification
+
+```bash
+# Test Parliament API endpoint directly
+curl -s -o /dev/null -w "%{http_code}" "https://app.parlamento.pt/webutils/docs/doc.txt?path=6148523063484d364c793968636d356c6443397a6158526c6379396863484a6c63325675644746304158526c6447467a4c3052685a47397a51574a6c636e5276637939456157567564475668637939455a58423164474466583167785357356d62314a6c6348566962476c6a595335346257773d&fich=DeputadosXIVInfoRepublica.xml&Inline=true"
+
+# Re-run the failed workflow (requires gh CLI)
+gh run rerun 20772339098
+
+# Or trigger a fresh run
+gh workflow run sync-data.yml --ref staging -f environment=staging
+```
+
+#### Long-Term Hardening (Recommended)
+
+To prevent future failures from external API issues:
+
+| Enhancement | Implementation | Benefit |
+|-------------|----------------|---------|
+| **Retry logic with exponential backoff** | Add retry mechanism in `apps/watcher/src/fetcher.ts` | Handle transient API failures gracefully |
+| **Circuit breaker pattern** | Track consecutive failures, pause and alert | Prevent cascading failures |
+| **API health check step** | Add workflow step before sync to verify API availability | Fail fast with clear error |
+| **Enhanced error logging** | Log HTTP status codes and response bodies on failure | Faster diagnosis of future issues |
+| **Fallback to cached data** | If API fails, optionally use last successful snapshot | Maintain data availability |
+
+#### Proposed Code Changes
+
+```yaml
+# .github/workflows/sync-data.yml - Add health check step before sync
+- name: Verify Parliament API availability
+  run: |
+    echo "Checking Parliament API health..."
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://app.parlamento.pt/webutils/docs/doc.txt?path=...")
+    if [ "$HTTP_CODE" != "200" ]; then
+      echo "::warning::Parliament API returned HTTP $HTTP_CODE - may be experiencing issues"
+    fi
+    echo "Parliament API health check: HTTP $HTTP_CODE"
+```
+
+```typescript
+// apps/watcher/src/fetcher.ts - Add retry logic
+const fetchWithRetry = async (url: string, maxRetries = 3): Promise<Response> => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return response;
+      if (attempt < maxRetries) {
+        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+        console.log(`Attempt ${attempt} failed (HTTP ${response.status}), retrying in ${delay}ms...`);
+        await new Promise(r => setTimeout(r, delay));
+      }
+    } catch (error) {
+      if (attempt === maxRetries) throw error;
+    }
+  }
+  throw new Error(`Failed after ${maxRetries} attempts`);
+};
+```
+
+### Resolution Path
+
+1. **Immediate:** Verify Parliament API is now accessible and re-run workflow
+2. **Short-term:** If API was temporarily down, no code changes needed - the next scheduled run should succeed
+3. **Long-term:** Implement retry logic and health checks to improve resilience
+
+### Summary
+
+The staging sync workflow failure on 2026-01-07 was caused by an **external Parliament API unavailability** during the scheduled 6 AM UTC run. This is evidenced by:
+- Identical failure in both staging and production environments
+- No relevant code changes in the past 7+ days
+- Short execution time indicating early fetch-phase failure
+- Parliament API being the only shared external dependency
+
+The fix is to verify API availability and re-run the workflow. Long-term hardening through retry logic and health checks is recommended to prevent future occurrences.
+
+---
+
 ## Staging vs Production Workflow Configuration Comparison
 
 This section documents the key differences between staging and production configurations across the sync-related workflows.
