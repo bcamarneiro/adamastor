@@ -107,16 +107,23 @@
     "This is a zero-code-change optimization that will reduce bundle size by ~250KB"
   ],
   "qa_signoff": {
-    "status": "approved",
-    "qa_session": 0,
+    "status": "fixes_applied",
+    "qa_session": 1,
     "issues_found": [
       {
         "description": "Minor: Stale package-lock.json files still contain reactflow references (no impact - project uses bun)"
       }
     ],
     "tests_passed": {},
-    "timestamp": "2026-01-07T20:20:34.095868+00:00",
-    "ready_for_qa_revalidation": false
+    "timestamp": "2026-01-07T21:35:00.000000+00:00",
+    "fix_session": 1,
+    "issues_fixed": [
+      {
+        "title": "Rebase with origin/staging",
+        "fix_commit": "11a6c1a"
+      }
+    ],
+    "ready_for_qa_revalidation": true
   },
   "last_updated": "2026-01-07T20:20:34.095878+00:00",
   "qa_iteration_history": [
