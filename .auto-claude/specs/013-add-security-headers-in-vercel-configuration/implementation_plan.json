@@ -16,19 +16,25 @@
           "id": "1.1",
           "title": "Add X-Frame-Options header",
           "description": "Add X-Frame-Options: DENY to prevent clickjacking attacks by disallowing the page from being displayed in iframes",
-          "status": "pending",
-          "files": ["apps/web/vercel.json"],
+          "status": "completed",
+          "files": [
+            "apps/web/vercel.json"
+          ],
           "acceptance_criteria": [
             "X-Frame-Options header is set to DENY",
             "Header applies to all routes"
-          ]
+          ],
+          "notes": "Added X-Frame-Options: DENY header to vercel.json. Header applies to all routes using /(.*) pattern. JSON validation passed.",
+          "updated_at": "2026-01-07T17:39:27.468353+00:00"
         },
         {
           "id": "1.2",
           "title": "Add X-Content-Type-Options header",
           "description": "Add X-Content-Type-Options: nosniff to prevent MIME type sniffing attacks",
           "status": "pending",
-          "files": ["apps/web/vercel.json"],
+          "files": [
+            "apps/web/vercel.json"
+          ],
           "acceptance_criteria": [
             "X-Content-Type-Options header is set to nosniff",
             "Header applies to all routes"
@@ -39,7 +45,9 @@
           "title": "Add Referrer-Policy header",
           "description": "Add Referrer-Policy: strict-origin-when-cross-origin to control how much referrer information is shared",
           "status": "pending",
-          "files": ["apps/web/vercel.json"],
+          "files": [
+            "apps/web/vercel.json"
+          ],
           "acceptance_criteria": [
             "Referrer-Policy header is set to strict-origin-when-cross-origin",
             "Header applies to all routes"
@@ -50,7 +58,9 @@
           "title": "Add Permissions-Policy header",
           "description": "Add Permissions-Policy to restrict browser features like camera, microphone, geolocation that the app doesn't need",
           "status": "pending",
-          "files": ["apps/web/vercel.json"],
+          "files": [
+            "apps/web/vercel.json"
+          ],
           "acceptance_criteria": [
             "Permissions-Policy header restricts unnecessary browser features",
             "Camera, microphone, geolocation are disabled",
@@ -70,7 +80,9 @@
           "title": "Configure Content-Security-Policy header",
           "description": "Add CSP header with appropriate directives for: self, Google Fonts (fonts.googleapis.com, fonts.gstatic.com), Sentry (*.sentry.io), Vercel Analytics (*.vercel-scripts.com, *.vercel-insights.com), Supabase (*.supabase.co), inline styles for Radix UI, and blob: URLs for image generation",
           "status": "pending",
-          "files": ["apps/web/vercel.json"],
+          "files": [
+            "apps/web/vercel.json"
+          ],
           "acceptance_criteria": [
             "CSP header includes default-src 'self'",
             "script-src allows self and Vercel analytics domains",
@@ -95,7 +107,9 @@
           "title": "Validate vercel.json syntax",
           "description": "Ensure the vercel.json file has valid JSON syntax and follows Vercel's configuration schema",
           "status": "pending",
-          "files": ["apps/web/vercel.json"],
+          "files": [
+            "apps/web/vercel.json"
+          ],
           "acceptance_criteria": [
             "vercel.json passes JSON validation",
             "Configuration follows Vercel schema"
@@ -116,7 +130,10 @@
     }
   ],
   "workflow_type": "development",
-  "services_involved": ["vercel", "web"],
+  "services_involved": [
+    "vercel",
+    "web"
+  ],
   "final_acceptance": [
     "All five security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Content-Security-Policy) are configured in vercel.json",
     "Headers apply to all routes (/*)",
@@ -127,24 +144,36 @@
   "spec_file": "spec.md",
   "external_resources_analysis": {
     "fonts": {
-      "domains": ["fonts.googleapis.com", "fonts.gstatic.com"],
+      "domains": [
+        "fonts.googleapis.com",
+        "fonts.gstatic.com"
+      ],
       "usage": "Google Fonts (Merriweather, Montserrat) loaded in index.html"
     },
     "analytics": {
-      "domains": ["*.vercel-scripts.com", "*.vercel-insights.com"],
+      "domains": [
+        "*.vercel-scripts.com",
+        "*.vercel-insights.com"
+      ],
       "usage": "Vercel Analytics and Speed Insights (@vercel/analytics, @vercel/speed-insights)"
     },
     "error_tracking": {
-      "domains": ["*.ingest.sentry.io", "*.sentry.io"],
+      "domains": [
+        "*.ingest.sentry.io",
+        "*.sentry.io"
+      ],
       "usage": "Sentry error tracking with replay integration (@sentry/react)"
     },
     "database": {
-      "domains": ["*.supabase.co"],
+      "domains": [
+        "*.supabase.co"
+      ],
       "usage": "Supabase for data storage and RPC calls"
     },
     "other": {
       "blob_urls": "Used for image generation (html-to-image, ShareableCard)",
       "data_urls": "Used for inline images and icons"
     }
-  }
+  },
+  "last_updated": "2026-01-07T17:39:27.468359+00:00"
 }
