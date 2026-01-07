@@ -35,11 +35,35 @@
         }
       ],
       "status": "completed"
+    },
+    "2.2": {
+      "attempts": [
+        {
+          "session": 5,
+          "timestamp": "2026-01-07T17:48:14.820888",
+          "approach": "Implemented: Replace focus:ring-accent-7 with focus:ring-accent-9 on line 87 (selector input)",
+          "success": true,
+          "error": null
+        }
+      ],
+      "status": "completed"
+    },
+    "2.3": {
+      "attempts": [
+        {
+          "session": 6,
+          "timestamp": "2026-01-07T17:49:43.265376",
+          "approach": "Implemented: Replace focus:ring-accent-7 with focus:ring-accent-9 on line 83 (selector input)",
+          "success": true,
+          "error": null
+        }
+      ],
+      "status": "completed"
     }
   },
   "stuck_subtasks": [],
   "metadata": {
     "created_at": "2026-01-07T17:35:59.118465",
-    "last_updated": "2026-01-07T17:46:56.512747"
+    "last_updated": "2026-01-07T17:49:43.267099"
   }
 }
