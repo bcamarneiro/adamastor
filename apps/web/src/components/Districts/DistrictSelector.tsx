@@ -80,7 +80,7 @@ export function DistrictSelector({ label, selected, onSelect, excludeId }: Distr
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Procurar distrito..."
-          className="w-full pl-10 pr-4 py-2.5 bg-neutral-2 border border-neutral-5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-7 focus:border-transparent"
+          className="w-full pl-10 pr-4 py-2.5 bg-neutral-2 border border-neutral-5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-9 focus:border-transparent"
         />
       </div>
 
