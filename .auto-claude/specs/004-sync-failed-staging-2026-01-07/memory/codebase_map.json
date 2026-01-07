@@ -1,0 +1,10 @@
+{
+  "discovered_files": {
+    ".github/workflows/sync-data.yml": {
+      "description": "Staging vs Production Workflow Differences: (1) Checkout refs - staging uses 'staging' branch HEAD, production uses latest release tag; (2) Schedules - staging at 6 AM UTC, production at 7 AM UTC; (3) Production-only steps - release tag fetch, smoke tests with SUPABASE_ANON_KEY; (4) Cache isolation via environment-specific keys; (5) Both environments use same secret names but different values. Critical insight: identical failure in both environments indicates shared external dependency issue (Parliament API) not configuration difference.",
+      "category": "workflow-configuration",
+      "discovered_at": "2026-01-07T16:07:26.026821+00:00"
+    }
+  },
+  "last_updated": "2026-01-07T16:07:26.026831+00:00"
+}

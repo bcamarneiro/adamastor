@@ -241,6 +241,87 @@ The fact that both staging AND production failed with identical patterns strongl
 
 ---
 
+## Recent Code Changes Analysis
+
+This section documents the analysis of recent commits to identify any changes that may have caused the sync failure.
+
+### Commit Analysis Window: Last 7 Days (2025-12-31 to 2026-01-07)
+
+**Command executed:**
+```bash
+git log --since='7 days ago' --oneline --name-only -- .github/workflows apps/watcher
+```
+
+**Result:** Only **1 commit** affected the workflows directory:
+
+| Commit | Message | Files Modified | Relevant to Failure? |
+|--------|---------|----------------|---------------------|
+| `0b94dbb` | ci: add supabase stop before start to prevent port conflicts | `.github/workflows/ci.yml` | ❌ No - CI workflow, not sync |
+
+### Sync Workflow History (Last 14 Days)
+
+**Command executed:**
+```bash
+git log --since='14 days ago' --oneline --name-only -- .github/workflows/sync-data.yml .github/workflows/sync-photos.yml
+```
+
+**Result:** The last changes to sync workflows were **14+ days ago**:
+
+| Commit | Message | Files Modified |
+|--------|---------|----------------|
+| `5034d4a` | feat(workflow): add standalone photo sync workflow | `sync-photos.yml` |
+| `390a548` | feat(workflow): add photo sync option to sync-data workflow | `sync-data.yml` |
+| `92bcde5` | ci: simplify workflows from 7 to 4 | `sync-data.yml` |
+
+**Key Finding:** No changes to `sync-data.yml` or `sync-photos.yml` in the last 7 days. The workflows have been stable.
+
+### Watcher Service Changes (Last 14 Days)
+
+**Most recent watcher changes:**
+
+| Commit | Message | Key Files |
+|--------|---------|-----------|
+| `ae442ce` | fix(data): ensure only current legislature (XVII) data is used | `config.ts`, `attendance.ts` |
+| `a7ab734` | fix(watcher): preserve Supabase Storage photo URLs during deputy sync | `transform.ts` |
+| `48a186b` | fix(watcher): extract deputy photos from CSS background-image | `biography.ts` |
+| `ad79f86` | fix(watcher): fix oneOf schema validation for AutoresGP field | `atividades.schema.json` |
+| `7dbf0cb` | fix(watcher): make JSON schemas more permissive for Parliament API data | Multiple schemas |
+
+**Note:** These changes were made more than 7 days ago and the sync workflow has run successfully since then.
+
+### Cross-Branch Commit Analysis
+
+When examining commits across all branches (including feature branches):
+
+```bash
+git log --since='7 days ago' --oneline --all -- .github/workflows apps/watcher
+```
+
+Multiple feature branches show activity, but the key findings are:
+- Photo sync improvements (`feat(ci): run photo sync daily as part of data sync`)
+- Postal code fixes unrelated to sync logic
+- CI optimization changes (parallel tests, caching)
+
+**None of these changes are deployed to staging or production yet**, as they exist in feature branches.
+
+### Conclusion: No Recent Code Changes as Root Cause
+
+| Evidence | Verdict |
+|----------|---------|
+| No sync workflow changes in 7 days | ✅ Confirmed |
+| No watcher code changes in 7 days | ✅ Confirmed |
+| Both staging AND production failed | ✅ Identical pattern |
+| Staging branch last commit: E2E tests | ✅ Unrelated to sync |
+| Production using release tag v0.1.2 | ✅ No recent changes |
+
+**Root cause is NOT a recent code change.** The identical failure in both environments with stable code strongly indicates:
+
+1. **External API issue (Parliament data source)** - Most likely
+2. **Supabase service degradation** - Possible
+3. **Network/infrastructure issue** - Less likely
+
+---
+
 ## Next Steps
 
 1. [ ] Access full workflow logs to identify exact error message

@@ -1,0 +1,342 @@
+{
+  "feature": "Fix Staging Sync Workflow Failure (Issue #128)",
+  "workflow_type": "investigation",
+  "workflow_rationale": "This is a diagnostic task requiring root cause analysis of the failed staging sync workflow (run #20772339098) before implementing a fix. The investigation phase must complete successfully to identify the exact failure point, then the fix can be applied and verified.",
+  "phases": [
+    {
+      "id": "phase-1-reproduce",
+      "name": "Reproduce & Document Failure",
+      "type": "investigation",
+      "description": "Access the failed GitHub Actions run logs and document the exact failure point, error messages, and affected components",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Fetch and analyze failed workflow run logs",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [
+            ".auto-claude/specs/004-sync-failed-staging-2026-01-07/INVESTIGATION.md"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify INVESTIGATION.md contains: (1) Exact error message from run #20772339098, (2) Failing step name, (3) Timestamp of failure, (4) Environment context (staging)"
+          },
+          "expected_output": "INVESTIGATION.md document with: (1) Complete error log excerpt, (2) Failing workflow step identified, (3) Environment and timing context",
+          "status": "completed",
+          "notes": "Created INVESTIGATION.md documenting: (1) Exact error annotation \"Process completed with exit code 1\" from run #20772339098, (2) Failing step name \"Sync data\" (step 8), (3) Timestamp of failure 2026-01-07T06:07:13Z-06:07:19Z, (4) Environment context staging. Critical finding: Both staging AND production runs failed with identical pattern, suggesting external API issue rather than environment-specific configuration problem. Full logs require gh CLI authentication.",
+          "updated_at": "2026-01-07T16:05:18.889020+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Compare staging vs production workflow configurations",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            ".github/workflows/sync-data.yml",
+            ".github/workflows/sync-photos.yml",
+            ".github/workflows/release-production.yml"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify INVESTIGATION.md section documents differences between staging and production configurations (secrets, schedules, checkout refs)"
+          },
+          "expected_output": "Documentation of configuration differences that might cause staging-specific failures",
+          "status": "completed",
+          "notes": "Added comprehensive staging vs production workflow comparison to INVESTIGATION.md documenting: (1) Schedule differences - staging 6 AM UTC, production 7 AM UTC; (2) Checkout ref strategy - staging uses branch HEAD, production uses latest release tag; (3) Environment secrets - same names, different values per environment; (4) Production-only steps - release tag fetch, smoke tests with SUPABASE_ANON_KEY; (5) Cache isolation via environment-specific keys; (6) Analysis conclusion - identical failure pattern in both environments rules out configuration as root cause, points to shared external dependency (Parliament API) or common code bug.",
+          "updated_at": "2026-01-07T16:07:42.816493+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-investigate",
+      "name": "Root Cause Analysis",
+      "type": "investigation",
+      "description": "Identify the root cause of the sync failure through log analysis, recent code changes review, and environment validation",
+      "depends_on": [
+        "phase-1-reproduce"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Analyze recent commits for workflow/watcher changes",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "git log --since='7 days ago' --oneline --name-only -- .github/workflows apps/watcher | head -30",
+            "expected": "List of recent commits affecting workflows or watcher service"
+          },
+          "expected_output": "List of commits that may have introduced the staging sync failure",
+          "status": "pending"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Validate staging environment secrets and configuration",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify staging environment has all required secrets: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, B2_KEY_ID, B2_APP_KEY, B2_BUCKET, SENTRY_DSN"
+          },
+          "expected_output": "Confirmation that all required secrets exist and are accessible to staging environment",
+          "status": "pending"
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Formulate root cause hypothesis and document findings",
+          "service": "github-actions",
+          "files_to_modify": [
+            ".auto-claude/specs/004-sync-failed-staging-2026-01-07/INVESTIGATION.md"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify INVESTIGATION.md contains 'Root Cause' section with: (1) Specific failure reason, (2) Evidence supporting diagnosis, (3) Proposed fix approach"
+          },
+          "expected_output": "Root cause identified with clear evidence and proposed solution strategy",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-fix",
+      "name": "Implement Fix",
+      "type": "implementation",
+      "description": "Apply the identified fix to the affected workflow file(s) or sync script code",
+      "depends_on": [
+        "phase-2-investigate"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Apply fix to affected workflow or code file",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [
+            ".github/workflows/sync-data.yml",
+            ".github/workflows/sync-photos.yml"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "File modified based on root cause - specific file determined in Phase 2"
+          },
+          "notes": "Specific files_to_modify will be determined after Phase 2 completes. Likely candidates: .github/workflows/sync-data.yml or .github/workflows/sync-photos.yml or apps/watcher/index.ts",
+          "status": "pending"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Test fix via manual workflow_dispatch trigger",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Navigate to GitHub Actions, trigger affected workflow manually with environment=staging, verify it completes successfully with green checkmark"
+          },
+          "expected_output": "Manual workflow run completes successfully without errors",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-harden",
+      "name": "Verification & Prevention",
+      "type": "implementation",
+      "description": "Verify the fix works reliably, ensure production is unaffected, and document prevention measures",
+      "depends_on": [
+        "phase-3-fix"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Verify production sync workflows still function correctly",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Check recent production sync workflow runs (last 3) to ensure no regressions introduced by the fix"
+          },
+          "expected_output": "Confirmation that production workflows continue to operate normally",
+          "status": "pending"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Update Issue #128 with root cause and solution",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify Issue #128 has a comment documenting: (1) Root cause, (2) Fix applied, (3) Verification steps taken, (4) Prevention measures"
+          },
+          "expected_output": "GitHub Issue #128 updated with comprehensive solution documentation",
+          "status": "pending"
+        },
+        {
+          "id": "subtask-4-3",
+          "description": "Add monitoring/logging if insufficient for debugging",
+          "service": "github-actions",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "If root cause analysis revealed insufficient logging, verify enhanced error handling or logging has been added to prevent future silent failures"
+          },
+          "notes": "Only required if Phase 2 identified logging gaps that contributed to difficulty diagnosing the issue",
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 4,
+    "total_subtasks": 10,
+    "services_involved": [
+      "github-actions",
+      "watcher"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Not applicable - investigation workflows must be sequential",
+      "rationale": "Investigation workflow requires completing Reproduce \u2192 Investigate \u2192 Fix \u2192 Harden in strict order. Each phase depends on outputs from the previous phase."
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 004 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": true,
+    "acceptance_criteria": [
+      "Root cause documented in INVESTIGATION.md",
+      "Staging sync workflow runs successfully via manual trigger",
+      "Production sync workflows continue to function normally",
+      "Issue #128 updated with solution and closed",
+      "No workflow syntax errors or secret access issues"
+    ],
+    "verification_steps": [
+      {
+        "name": "Manual Staging Sync Trigger",
+        "command": "gh workflow run sync-data.yml --ref staging -f environment=staging",
+        "expected_outcome": "Workflow completes successfully with all steps green",
+        "type": "integration",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Verify Production Sync Unaffected",
+        "command": "gh run list --workflow=sync-data.yml --limit 3 --json status,conclusion",
+        "expected_outcome": "Recent production runs show 'completed' status with 'success' conclusion",
+        "type": "integration",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Workflow Syntax Validation",
+        "command": "yamllint .github/workflows/*.yml || echo 'Install yamllint for validation'",
+        "expected_outcome": "No YAML syntax errors detected",
+        "type": "test",
+        "required": false,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Medium risk investigation task requires manual verification of staging sync fix and confirmation that production workflows remain unaffected. Integration testing via actual workflow runs is critical to validate the fix."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [],
+      "minimum_coverage": null,
+      "notes": "Workflow configuration fixes do not require unit tests. Verification is done via actual workflow execution."
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "gh workflow run sync-data.yml --ref staging -f environment=staging",
+        "gh run view --log [run-id-from-previous-step]"
+      ],
+      "services_to_test": [
+        "github-actions"
+      ],
+      "notes": "Integration test is the manual workflow trigger with staging environment. Must verify successful completion."
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": [],
+      "notes": "E2E testing not applicable for workflow configuration fixes."
+    },
+    "github_actions_verification": {
+      "required": true,
+      "workflows": [
+        {
+          "name": "sync-data.yml (staging)",
+          "trigger": "manual via workflow_dispatch with environment=staging",
+          "checks": [
+            "All steps complete",
+            "No error logs",
+            "Data synced successfully"
+          ]
+        },
+        {
+          "name": "sync-photos.yml (staging)",
+          "trigger": "manual via workflow_dispatch with environment=staging (if photo sync was affected)",
+          "checks": [
+            "All steps complete",
+            "No error logs",
+            "Photos synced successfully"
+          ]
+        },
+        {
+          "name": "Production sync workflows",
+          "trigger": "verify recent runs",
+          "checks": [
+            "Recent runs still successful",
+            "No regressions introduced"
+          ]
+        }
+      ]
+    },
+    "environment_verification": {
+      "required": true,
+      "checks": [
+        {
+          "name": "Staging secrets exist",
+          "command": "gh secret list --env staging",
+          "expected": "All required secrets listed (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, etc.)"
+        },
+        {
+          "name": "Workflow logs clean",
+          "command": "gh run view [successful-run-id] --log",
+          "expected": "No errors, warnings, or authentication failures in logs"
+        }
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "last_updated": "2026-01-07T16:07:42.816499+00:00"
+}

@@ -1,0 +1,92 @@
+=== AUTO-BUILD PROGRESS ===
+
+Project: Adamastor - Fix Staging Sync Workflow Failure (Issue #128)
+Workspace: [managed by orchestrator]
+Started: 2026-01-07
+
+Workflow Type: investigation
+Rationale: This is a diagnostic task requiring root cause analysis of the failed staging sync workflow (run #20772339098) before implementing a fix. The investigation phase must complete successfully to identify the exact failure point, then the fix can be applied and verified.
+
+Session 1 (Planner):
+- Created implementation_plan.json
+- Phases: 4
+- Total subtasks: 10
+- Created init.sh
+- Investigation workflow structure established
+
+Phase Summary:
+- Phase 1 (Reproduce & Document Failure): 2 subtasks, no dependencies
+  * Fetch and analyze failed workflow run logs
+  * Compare staging vs production workflow configurations
+
+- Phase 2 (Root Cause Analysis): 3 subtasks, depends on Phase 1
+  * Analyze recent commits for workflow/watcher changes
+  * Validate staging environment secrets and configuration
+  * Formulate root cause hypothesis and document findings
+
+- Phase 3 (Implement Fix): 2 subtasks, depends on Phase 2
+  * Apply fix to affected workflow or code file
+  * Test fix via manual workflow_dispatch trigger
+
+- Phase 4 (Verification & Prevention): 3 subtasks, depends on Phase 3
+  * Verify production sync workflows still function correctly
+  * Update Issue #128 with root cause and solution
+  * Add monitoring/logging if insufficient for debugging
+
+Services Involved:
+- github-actions: Primary service - GitHub Actions workflows orchestrating sync operations
+- watcher: Potential involvement - May handle data sync operations based on dependencies
+
+Parallelism Analysis:
+- Max parallel phases: 1
+- Recommended workers: 1
+- Parallel groups: None
+- Speedup estimate: Not applicable - investigation workflows must be sequential
+- Rationale: Investigation workflow requires completing Reproduce → Investigate → Fix → Harden in strict order. Each phase depends on outputs from the previous phase.
+
+Verification Strategy:
+- Risk Level: medium
+- Test Types Required: integration
+- Security Scanning: Not required
+- Staging Deployment: Required (must verify fix in actual staging environment)
+
+Key Acceptance Criteria:
+1. Root cause documented in INVESTIGATION.md
+2. Staging sync workflow runs successfully via manual trigger
+3. Production sync workflows continue to function normally
+4. Issue #128 updated with solution and closed
+5. No workflow syntax errors or secret access issues
+
+=== STARTUP COMMAND ===
+
+To continue building this spec, run:
+
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 004 --parallel 1
+
+Example:
+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 004 --parallel 1
+
+=== INVESTIGATION NOTES ===
+
+Failed Run Details:
+- Run ID: 20772339098
+- URL: https://github.com/bcamarneiro/adamastor/actions/runs/20772339098
+- Environment: staging
+- Date: 2026-01-07
+- Issue: #128 (labels: bug, sync)
+
+Key Investigation Steps:
+1. Fetch logs: gh run view 20772339098 --log
+2. Identify failing step and exact error message
+3. Compare staging vs production workflow configurations
+4. Check recent commits (last 7 days) for changes
+5. Validate staging environment secrets exist and are accessible
+6. Document root cause with evidence in INVESTIGATION.md
+
+Expected Workflow Files to Review:
+- .github/workflows/sync-data.yml
+- .github/workflows/sync-photos.yml
+- .github/workflows/deploy-staging.yml
+- apps/watcher/index.ts (if sync script issue)
+
+=== END SESSION 1 ===
