@@ -46,14 +46,16 @@
           "id": "1.3",
           "title": "Add Referrer-Policy header",
           "description": "Add Referrer-Policy: strict-origin-when-cross-origin to control how much referrer information is shared",
-          "status": "pending",
+          "status": "completed",
           "files": [
             "apps/web/vercel.json"
           ],
           "acceptance_criteria": [
             "Referrer-Policy header is set to strict-origin-when-cross-origin",
             "Header applies to all routes"
-          ]
+          ],
+          "notes": "Added Referrer-Policy: strict-origin-when-cross-origin header to vercel.json. Header applies to all routes using /(.*) pattern. JSON validation passed.",
+          "updated_at": "2026-01-07T17:42:19.973986+00:00"
         },
         {
           "id": "1.4",
@@ -177,5 +179,5 @@
       "data_urls": "Used for inline images and icons"
     }
   },
-  "last_updated": "2026-01-07T17:40:53.278956+00:00"
+  "last_updated": "2026-01-07T17:42:19.973993+00:00"
 }
