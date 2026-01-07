@@ -54,12 +54,26 @@ Add to environment secrets (staging/production):
 
 Add these as Vercel environment variables (not GitHub secrets):
 
-| Variable Name | Description | Example |
-|---------------|-------------|---------|
-| `VITE_SENTRY_DSN` | Sentry DSN for the web app | `https://xyz789@o123.ingest.sentry.io/789` |
-| `VITE_ENVIRONMENT` | Environment identifier | `production` or `staging` |
+#### Runtime Variables (Client-Side)
 
-> **Note:** Sentry is automatically disabled if the DSN is not set. This is fine for local development.
+| Variable Name | Description | Example | Sensitive |
+|---------------|-------------|---------|-----------|
+| `VITE_SENTRY_DSN` | Sentry DSN for the web app | `https://xyz789@o123.ingest.sentry.io/789` | No |
+| `VITE_ENVIRONMENT` | Environment identifier | `production` or `staging` | No |
+
+#### Build-Time Variables (Source Map Uploads)
+
+These variables are required for Sentry source map uploads during production builds, enabling readable stack traces in production error reports.
+
+| Variable Name | Description | Example | Sensitive |
+|---------------|-------------|---------|-----------|
+| `SENTRY_AUTH_TOKEN` | Auth token for source map uploads | `sntrys_eyJ...` | **Yes** |
+| `SENTRY_ORG` | Sentry organization slug | `my-org` | No |
+| `SENTRY_PROJECT` | Sentry project slug | `adamastor-web` | No |
+
+> **Security Note:** `SENTRY_AUTH_TOKEN` must be marked as "Sensitive" in Vercel to prevent it from being exposed in build logs.
+
+> **Note:** Sentry is automatically disabled if the DSN is not set. This is fine for local development. Source map uploads only occur during production builds.
 
 ## Repository-Level Secrets
 
@@ -107,6 +121,59 @@ These are used across all workflows:
 4. Add the watcher DSN as `SENTRY_DSN` in GitHub environment secrets
 5. Add the web app DSN as `VITE_SENTRY_DSN` in Vercel environment variables
 
+#### For Source Map Uploads (Web App)
+
+To enable readable stack traces in production errors, configure source map uploads:
+
+1. Go to [Sentry Account Settings > Auth Tokens](https://sentry.io/settings/account/api/auth-tokens/)
+2. Click **Create New Token**
+3. Select the following scopes:
+   - `project:releases` (required for uploading source maps)
+   - `org:read` (required for organization access)
+4. Copy the generated token for `SENTRY_AUTH_TOKEN`
+5. Find your organization and project slugs from the Sentry URL:
+   - URL format: `https://sentry.io/organizations/<SENTRY_ORG>/projects/<SENTRY_PROJECT>/`
+   - Example: `https://sentry.io/organizations/my-org/projects/adamastor-web/`
+6. Add these variables to Vercel:
+   - `SENTRY_AUTH_TOKEN` - mark as **Sensitive**
+   - `SENTRY_ORG` - your organization slug
+   - `SENTRY_PROJECT` - your project slug
+
+### Vercel Dashboard Configuration (Step-by-Step)
+
+Follow these steps to configure Sentry source map environment variables in Vercel:
+
+1. **Navigate to your Vercel project**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Select your project (e.g., `adamastor`)
+
+2. **Open Environment Variables settings**
+   - Click on **Settings** tab
+   - Select **Environment Variables** from the sidebar
+
+3. **Add the required variables** (one at a time):
+
+   | Variable | Value | Environments | Sensitive |
+   |----------|-------|--------------|-----------|
+   | `VITE_SENTRY_DSN` | Your Sentry DSN | Production | No |
+   | `SENTRY_AUTH_TOKEN` | Your auth token | Production | **Yes** |
+   | `SENTRY_ORG` | Your org slug | Production | No |
+   | `SENTRY_PROJECT` | Your project slug | Production | No |
+
+4. **For each variable:**
+   - Enter the **Name** (e.g., `SENTRY_AUTH_TOKEN`)
+   - Enter the **Value**
+   - Select **Production** environment only (source maps are only needed for production)
+   - For `SENTRY_AUTH_TOKEN`: Check the **Sensitive** checkbox
+   - Click **Save**
+
+5. **Verify configuration**
+   - Trigger a new production deployment
+   - Check build logs for "Uploading source maps to Sentry" message
+   - Navigate to Sentry dashboard > Releases to confirm artifacts appear
+
+> **Tip:** After configuration, test by triggering an error in production and verifying the stack trace shows original TypeScript file paths (e.g., `src/App.tsx:42`) instead of minified code.
+
 ## Environment Setup Checklist
 
 ### For Staging
@@ -137,6 +204,16 @@ These are used across all workflows:
 - [ ] Add `VERCEL_PROJECT_ID` as repository secret
 - [ ] (Optional) Add `VITE_SENTRY_DSN` in Vercel environment variables
 - [ ] (Optional) Add `VITE_ENVIRONMENT` in Vercel environment variables
+
+### For Sentry Source Maps (Production Debugging)
+
+Configure these in Vercel to enable readable production stack traces:
+
+- [ ] Add `SENTRY_AUTH_TOKEN` in Vercel - mark as **Sensitive**
+- [ ] Add `SENTRY_ORG` in Vercel
+- [ ] Add `SENTRY_PROJECT` in Vercel
+- [ ] Verify build logs show "Uploading source maps to Sentry"
+- [ ] Verify Sentry dashboard shows uploaded artifacts under Releases
 
 ## Validation
 
