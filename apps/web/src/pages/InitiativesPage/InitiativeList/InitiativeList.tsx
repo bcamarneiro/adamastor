@@ -3,7 +3,7 @@ import { useInitiatives } from '@/services/initiatives/useInitiatives';
 import * as Accordion from '@radix-ui/react-accordion';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { debounce } from 'lodash';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import InitiativeRow, { type InitiativeData, type RelatedInitiativeData } from './InitiativeRow';
 
@@ -12,6 +12,7 @@ const gridColsClass = 'grid grid-cols-[48px_auto_auto_1fr_96px] items-center';
 
 // Estimated row heights for virtualization
 const COLLAPSED_ROW_HEIGHT = 48;
+const EXPANDED_ROW_HEIGHT = 400; // Estimated height for expanded rows
 
 const InitiativeList = () => {
   const { initiatives, metadata, isLoading, isError, error } = useInitiatives();
@@ -97,9 +98,20 @@ const InitiativeList = () => {
   const virtualizer = useVirtualizer({
     count: filteredInitiatives.length,
     getScrollElement: () => scrollContainerRef.current,
-    estimateSize: () => COLLAPSED_ROW_HEIGHT,
+    // Estimate size based on whether the row is expanded
+    estimateSize: (index) => {
+      const initiative = filteredInitiatives[index];
+      return expandedRows.has(initiative.IniId) ? EXPANDED_ROW_HEIGHT : COLLAPSED_ROW_HEIGHT;
+    },
+    // Use initiative ID as stable key for better virtualization
+    getItemKey: (index) => filteredInitiatives[index].IniId,
     overscan: 5, // Render 5 extra rows above/below viewport for smooth scrolling
   });
+
+  // Force remeasurement when expanded rows change
+  useLayoutEffect(() => {
+    virtualizer.measure();
+  }, [expandedRows, virtualizer]);
 
   if (isError) {
     return (
@@ -233,9 +245,12 @@ const InitiativeList = () => {
                 >
                   {virtualizer.getVirtualItems().map((virtualRow) => {
                     const initiative = filteredInitiatives[virtualRow.index];
+                    const isExpanded = expandedRows.has(initiative.IniId);
                     return (
                       <div
                         key={virtualRow.key}
+                        data-index={virtualRow.index}
+                        ref={virtualizer.measureElement}
                         style={{
                           position: 'absolute',
                           top: 0,
@@ -246,7 +261,7 @@ const InitiativeList = () => {
                       >
                         <InitiativeRow
                           initiative={initiative as InitiativeData}
-                          isExpanded={expandedRows.has(initiative.IniId)}
+                          isExpanded={isExpanded}
                           onToggle={toggleRow}
                           relatedInitiatives={getRelatedInitiatives(initiative as InitiativeData)}
                         />
