@@ -146,9 +146,7 @@
           "id": "subtask-3-2",
           "description": "Investigate and implement the fix",
           "service": "web",
-          "files_to_modify": [
-            "TBD - based on selected issue"
-          ],
+          "files_to_modify": ["TBD - based on selected issue"],
           "files_to_create": [],
           "patterns_from": ["docs/AI_AGENTS.md"],
           "verification": {
@@ -164,9 +162,7 @@
           "id": "subtask-3-3",
           "description": "Add E2E regression test for the fix",
           "service": "web",
-          "files_to_modify": [
-            "apps/web/e2e/<appropriate-spec>.spec.ts"
-          ],
+          "files_to_modify": ["apps/web/e2e/<appropriate-spec>.spec.ts"],
           "files_to_create": [],
           "patterns_from": ["apps/web/e2e/home.spec.ts", "apps/web/e2e/navigation.spec.ts"],
           "verification": {
@@ -236,9 +232,7 @@
           "id": "subtask-4-2",
           "description": "Investigate and implement the fix",
           "service": "web",
-          "files_to_modify": [
-            "TBD - based on selected issue"
-          ],
+          "files_to_modify": ["TBD - based on selected issue"],
           "files_to_create": [],
           "patterns_from": ["docs/AI_AGENTS.md"],
           "verification": {
@@ -252,9 +246,7 @@
           "id": "subtask-4-3",
           "description": "Add E2E regression test for the fix",
           "service": "web",
-          "files_to_modify": [
-            "apps/web/e2e/<appropriate-spec>.spec.ts"
-          ],
+          "files_to_modify": ["apps/web/e2e/<appropriate-spec>.spec.ts"],
           "files_to_create": [],
           "patterns_from": ["apps/web/e2e/home.spec.ts"],
           "verification": {
@@ -320,9 +312,7 @@
           "id": "subtask-5-2",
           "description": "Investigate and implement the fix",
           "service": "web",
-          "files_to_modify": [
-            "TBD - based on selected issue"
-          ],
+          "files_to_modify": ["TBD - based on selected issue"],
           "files_to_create": [],
           "patterns_from": ["docs/AI_AGENTS.md"],
           "verification": {
@@ -336,9 +326,7 @@
           "id": "subtask-5-3",
           "description": "Add E2E regression test and create PR",
           "service": "web",
-          "files_to_modify": [
-            "apps/web/e2e/<appropriate-spec>.spec.ts"
-          ],
+          "files_to_modify": ["apps/web/e2e/<appropriate-spec>.spec.ts"],
           "files_to_create": [],
           "patterns_from": ["apps/web/e2e/home.spec.ts"],
           "verification": {
@@ -391,9 +379,7 @@
           "description": "Document process and lessons learned for scaling to remaining issues",
           "all_services": true,
           "files_to_modify": [],
-          "files_to_create": [
-            "workflow_summary.md"
-          ],
+          "files_to_create": ["workflow_summary.md"],
           "patterns_from": [],
           "verification": {
             "type": "manual",
@@ -407,12 +393,7 @@
   "summary": {
     "total_phases": 6,
     "total_subtasks": 21,
-    "services_involved": [
-      "web",
-      "watcher",
-      "shared",
-      "infrastructure"
-    ],
+    "services_involved": ["web", "watcher", "shared", "infrastructure"],
     "parallelism": {
       "max_parallel_phases": 1,
       "parallel_groups": [],
@@ -423,20 +404,14 @@
     "critical_blocker": {
       "description": "GitHub CLI is not installed",
       "resolution": "Run: brew install gh && gh auth login",
-      "blocks": [
-        "All phases after phase-1-setup"
-      ]
+      "blocks": ["All phases after phase-1-setup"]
     }
   },
   "verification_strategy": {
     "risk_level": "medium",
     "skip_validation": false,
     "test_creation_phase": "per_issue",
-    "test_types_required": [
-      "unit",
-      "integration",
-      "e2e"
-    ],
+    "test_types_required": ["unit", "integration", "e2e"],
     "security_scan_required": false,
     "staging_deployment_required": false,
     "acceptance_criteria": [
@@ -496,46 +471,29 @@
   "qa_acceptance": {
     "unit_tests": {
       "required": true,
-      "commands": [
-        "bun --filter web test",
-        "bun --filter watcher test"
-      ],
+      "commands": ["bun --filter web test", "bun --filter watcher test"],
       "minimum_coverage": null
     },
     "integration_tests": {
       "required": true,
-      "commands": [
-        "bun test"
-      ],
-      "services_to_test": [
-        "web",
-        "watcher"
-      ]
+      "commands": ["bun test"],
+      "services_to_test": ["web", "watcher"]
     },
     "e2e_tests": {
       "required": true,
-      "commands": [
-        "cd apps/web && npx playwright test"
-      ],
-      "flows": [
-        "regression tests for each fixed issue"
-      ]
+      "commands": ["cd apps/web && npx playwright test"],
+      "flows": ["regression tests for each fixed issue"]
     },
     "browser_verification": {
       "required": true,
       "pages": [
         {
           "url": "http://localhost:3000/",
-          "checks": [
-            "renders",
-            "no-console-errors"
-          ]
+          "checks": ["renders", "no-console-errors"]
         },
         {
           "url": "Per-issue affected pages",
-          "checks": [
-            "fix works as expected"
-          ]
+          "checks": ["fix works as expected"]
         }
       ]
     },

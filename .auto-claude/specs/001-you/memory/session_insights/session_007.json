@@ -10,10 +10,7 @@
         ".auto-claude/specs/001-you/build-progress.txt",
         ".auto-claude/specs/001-you/implementation_plan.json"
       ],
-      "spec_files_removed": [
-        "complexity_assessment.json",
-        "context.json"
-      ]
+      "spec_files_removed": ["complexity_assessment.json", "context.json"]
     },
     "patterns_discovered": {
       "branch_naming": "fix/issue-<number>-<short-description>",
