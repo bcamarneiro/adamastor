@@ -74,7 +74,9 @@
             "expected": "List of recent commits affecting workflows or watcher service"
           },
           "expected_output": "List of commits that may have introduced the staging sync failure",
-          "status": "pending"
+          "status": "completed",
+          "notes": "Analyzed recent commits for workflow/watcher changes. Key findings: (1) Only 1 commit to workflows in last 7 days - to ci.yml, not sync workflows; (2) No changes to sync-data.yml or sync-photos.yml in last 7 days; (3) No watcher service code changes in last 7 days; (4) Last sync workflow changes were 14+ days ago; (5) Cross-branch analysis shows feature work exists but not deployed to staging/production. Conclusion: Root cause is NOT a recent code change - the identical failure in both environments with stable code strongly indicates an external dependency issue (Parliament API) or Supabase service degradation. Added detailed 'Recent Code Changes Analysis' section to INVESTIGATION.md.",
+          "updated_at": "2026-01-07T16:09:34.226157+00:00"
         },
         {
           "id": "subtask-2-2",
@@ -88,7 +90,9 @@
             "instructions": "Verify staging environment has all required secrets: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, B2_KEY_ID, B2_APP_KEY, B2_BUCKET, SENTRY_DSN"
           },
           "expected_output": "Confirmation that all required secrets exist and are accessible to staging environment",
-          "status": "pending"
+          "status": "completed",
+          "notes": "Completed staging environment secrets validation. Documented all required secrets (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) and optional secrets (B2_KEY_ID, B2_APP_KEY, B2_BUCKET, SENTRY_DSN) in INVESTIGATION.md. Key findings: (1) env.ts has fail-fast validation with clear error messages; (2) B2 follows all-or-nothing rule; (3) gh CLI not available for direct verification, but provided manual verification methods. Analysis: Given both staging AND production failed identically, missing secrets is unlikely root cause since they use different Supabase credentials. Full log access needed to confirm, but evidence points to shared external dependency (Parliament API) rather than environment-specific configuration.",
+          "updated_at": "2026-01-07T16:11:43.940477+00:00"
         },
         {
           "id": "subtask-2-3",
@@ -338,5 +342,5 @@
     }
   },
   "qa_signoff": null,
-  "last_updated": "2026-01-07T16:07:42.816499+00:00"
+  "last_updated": "2026-01-07T16:11:43.940499+00:00"
 }

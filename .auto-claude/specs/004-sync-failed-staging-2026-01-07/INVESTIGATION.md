@@ -513,4 +513,126 @@ Based on this comparison, the following configuration differences are **unlikely
 
 ---
 
+## Staging Environment Secrets Validation
+
+This section documents the required environment secrets for the staging sync workflow and provides verification methods.
+
+### Required Secrets Summary
+
+Based on analysis of `sync-data.yml` workflow and `apps/watcher/src/env.ts` validation logic:
+
+| Secret | Required? | Used In | Failure Mode if Missing |
+|--------|-----------|---------|------------------------|
+| `SUPABASE_URL` | ✅ **REQUIRED** | env.ts validation, Supabase client | Process exits with "SUPABASE_URL is required" |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ **REQUIRED** | env.ts validation, Supabase client | Process exits with "SUPABASE_SERVICE_ROLE_KEY is required" |
+| `B2_KEY_ID` | ⚠️ Optional | B2 archiving (snapshots) | Archiving disabled, sync continues |
+| `B2_APP_KEY` | ⚠️ Optional | B2 archiving (snapshots) | Archiving disabled, sync continues |
+| `B2_BUCKET` | ⚠️ Optional | B2 archiving (snapshots) | Archiving disabled, sync continues |
+| `SENTRY_DSN` | ⚠️ Optional | Error tracking | Sentry disabled, sync continues |
+
+### Critical: All-or-Nothing B2 Configuration
+
+From `apps/watcher/src/env.ts` (lines 43-49):
+
+```typescript
+// B2 validation - all or nothing
+const b2Vars = [process.env.B2_KEY_ID, process.env.B2_APP_KEY, process.env.B2_BUCKET];
+const b2Defined = b2Vars.filter(Boolean).length;
+if (b2Defined > 0 && b2Defined < 3) {
+  errors.push(
+    'B2 configuration incomplete: either set all B2_KEY_ID, B2_APP_KEY, B2_BUCKET or none'
+  );
+}
+```
+
+**Implication:** If staging has partial B2 configuration (1-2 of 3 vars), the sync will fail immediately with a clear error message.
+
+### Expected Console Output on Secrets Issues
+
+If secrets are missing, the env.ts validation would output:
+
+```
+❌ Environment validation failed:
+
+   • SUPABASE_URL is required
+   • SUPABASE_SERVICE_ROLE_KEY is required
+```
+
+**Key Finding:** The workflow run failed after 6 seconds in the "Sync data" step. If secrets were completely missing, we would expect this type of clear validation error. The short execution time (6s) aligns with an early failure during either:
+1. Environment validation (secrets issue)
+2. Initial API request (Parliament API issue)
+
+### Verification Methods
+
+#### Method 1: GitHub CLI (Requires Authentication)
+
+```bash
+# Install and authenticate gh CLI
+brew install gh
+gh auth login
+
+# List staging environment secrets
+gh secret list --env staging
+
+# Expected output should include:
+# B2_APP_KEY        Updated 2026-XX-XX
+# B2_BUCKET         Updated 2026-XX-XX
+# B2_KEY_ID         Updated 2026-XX-XX
+# SENTRY_DSN        Updated 2026-XX-XX
+# SUPABASE_SERVICE_ROLE_KEY  Updated 2026-XX-XX
+# SUPABASE_URL      Updated 2026-XX-XX
+```
+
+#### Method 2: GitHub Web Interface (Manual)
+
+1. Navigate to: https://github.com/bcamarneiro/adamastor/settings/environments
+2. Select "staging" environment
+3. Under "Environment secrets", verify all required secrets exist:
+   - ✅ `SUPABASE_URL`
+   - ✅ `SUPABASE_SERVICE_ROLE_KEY`
+   - ⚠️ `B2_KEY_ID` (optional)
+   - ⚠️ `B2_APP_KEY` (optional)
+   - ⚠️ `B2_BUCKET` (optional)
+   - ⚠️ `SENTRY_DSN` (optional)
+
+#### Method 3: Check Full Workflow Logs
+
+The full workflow logs (accessible via `gh run view 20772339098 --log`) would show:
+- If secrets missing: "❌ Environment validation failed" with specific missing vars
+- If secrets valid: "🔧 Environment: staging" followed by Supabase URL confirmation
+
+### Analysis: Are Missing Secrets the Root Cause?
+
+| Evidence | Supports Missing Secrets? | Reasoning |
+|----------|---------------------------|-----------|
+| Both staging AND production failed | ❌ **No** | Production uses different secrets; both failing suggests shared dependency |
+| Short execution time (6s) | ❔ Maybe | Could be secrets OR early API failure |
+| Step 8 "Sync data" failed | ❔ Maybe | Env validation happens at start of this step |
+| No changes to workflows in 7 days | ❔ Maybe | Secrets could have been rotated externally |
+| Production smoke test has `SUPABASE_ANON_KEY` | ✅ Partial | Shows production has additional secrets configured |
+
+### Verification Status
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Code analysis of required secrets | ✅ Complete | Documented in env.ts |
+| Workflow secret references | ✅ Complete | Documented from sync-data.yml |
+| gh CLI verification | ⏳ **Blocked** | gh CLI not available in current environment |
+| GitHub web verification | ⏳ **Requires manual action** | Admin access to repository settings needed |
+
+### Recommendations
+
+1. **Immediate:** Use GitHub web interface to verify all required secrets exist in staging environment
+2. **If secrets are present:** Focus investigation on Parliament API availability (most likely cause given both environments failed)
+3. **If secrets are missing:** Add the missing secrets and re-run the workflow
+4. **Future:** Add a pre-sync step that validates environment before attempting sync to provide clearer error messages
+
+### Production Environment Comparison
+
+For reference, production workflow also uses additional secrets:
+- `SUPABASE_ANON_KEY` - Used in smoke tests (production only)
+- `DEPLOY_TOKEN` - Used in release workflow (not sync)
+
+---
+
 *Investigation document created by auto-claude agent on 2026-01-07*
