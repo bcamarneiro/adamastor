@@ -123,6 +123,41 @@ jobs:
           restore-keys: |
             sync-snapshots-${{ needs.determine-environment.outputs.environment }}-
 
+      - name: Verify Parliament API availability
+        if: needs.determine-environment.outputs.environment != 'production' || steps.latest_release.outputs.skip != 'true'
+        id: api_health
+        run: |
+          echo "Checking Parliament API availability..."
+          MAX_RETRIES=3
+          RETRY_DELAY=5
+
+          # Test one of the data endpoints (informacao_base - most critical)
+          API_URL="https://app.parlamento.pt/webutils/docs/doc.txt?path=a4zfhVMRlkdx8PM4w%2fg1C1Vt1TLL3nxEyDWBwgqjBdJ7w%2f%2bbRwjvq2lIPr1xRzJ6DBy%2fOxQCKfWDla%2fScSjS6%2f0N3a%2b%2b%2bTVRcUvCJTkFrTAUT%2bpzIFRAScSKhiWv2HGWkAHIxlwTIeOsSOOsrXmbVE%2bHE%2fHLJ6RWbSsJBaLWq70lF4rBy8G6GbdPHdrrdiatO%2fCimTiuyO8Wki6C7zu5Klq5f53YZ%2b4MtX8FF5lC1pyiQrC%2bwSVBcu%2brHigPkI56fz8xBGvxVgoQ0nQdAuby1qmhEyYT6RCxaQAqbqv0m70pJF19SyzE62kUF%2fYRio8PiC5DjRA4%2b2eF1X7FfO4s7Bfcq7lsR9LR2PCbXn9zBNQ9mqEnp0H%2brT%2f5vD%2fgcT%2bzF3SPcKfuZKhhDvK1cBgse9ktAzWSZxzzqgCqsUeQ760%3d&fich=InformacaoBaseXVII_json.txt&Inline=true"
+
+          for attempt in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $attempt/$MAX_RETRIES: Testing Parliament API..."
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$API_URL" || echo "000")
+
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "✅ Parliament API is available (HTTP $HTTP_CODE)"
+              echo "api_available=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+
+            echo "⚠️ Parliament API returned HTTP $HTTP_CODE"
+
+            if [ "$attempt" -lt "$MAX_RETRIES" ]; then
+              echo "Waiting ${RETRY_DELAY}s before retry..."
+              sleep $RETRY_DELAY
+              RETRY_DELAY=$((RETRY_DELAY * 2))
+            fi
+          done
+
+          echo "❌ Parliament API unavailable after $MAX_RETRIES attempts"
+          echo "api_available=false" >> $GITHUB_OUTPUT
+          echo "::error::Parliament API is unavailable. The sync cannot proceed. This may be a temporary outage - please retry later."
+          exit 1
+
       - name: Sync data
         if: needs.determine-environment.outputs.environment != 'production' || steps.latest_release.outputs.skip != 'true'
         env:
