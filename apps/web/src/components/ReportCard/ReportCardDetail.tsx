@@ -93,6 +93,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <img
               src={deputy.photo_url}
               alt={deputy.short_name}
+              loading="lazy"
               className="w-24 h-24 rounded-full object-cover border-4 border-monochrome-white shadow-lg bg-neutral-4"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
