@@ -131,8 +131,20 @@
     "Code duplication eliminated"
   ],
   "qa_sign_off": {
-    "status": "pending",
+    "status": "fixes_applied",
     "issues": "",
     "tests_passed": ""
+  },
+  "qa_signoff": {
+    "status": "fixes_applied",
+    "timestamp": "2026-01-07T20:20:00.000Z",
+    "fix_session": 0,
+    "issues_fixed": [
+      {
+        "title": "Branch needed rebase onto origin/main",
+        "fix_commit": "rebase completed"
+      }
+    ],
+    "ready_for_qa_revalidation": true
   }
 }
