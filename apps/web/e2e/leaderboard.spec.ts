@@ -81,4 +81,27 @@ test.describe('Leaderboard Page', () => {
 
     expect(suspendedCount).toBe(0);
   });
+
+  // Issue #97: Legislature format should be "XVII" not "XVIIª"
+  // @see https://github.com/bcamarneiro/adamastor/issues/97
+  test('legislature badge should display "XVII Legislatura" without ordinal suffix', async ({
+    page,
+  }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    // Find the legislature badge - it should show "XVII Legislatura"
+    const legislatureBadge = page.getByText(/XVII Legislatura/i);
+
+    if ((await legislatureBadge.count()) > 0) {
+      const badgeText = await legislatureBadge.first().textContent();
+
+      // Verify it does NOT contain the ordinal suffix "ª"
+      expect(badgeText).not.toContain('ª');
+      expect(badgeText).not.toContain('XVIIª');
+
+      // Verify it shows the correct format
+      expect(badgeText).toContain('XVII Legislatura');
+    }
+  });
 });
