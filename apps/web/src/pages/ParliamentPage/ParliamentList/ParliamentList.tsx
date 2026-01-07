@@ -135,7 +135,7 @@ const ParliamentList = () => {
               placeholder="Search MPs..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-accent-9 focus:border-transparent transition-all"
               aria-label="Search MPs"
             />
             <FaSearch
@@ -146,7 +146,7 @@ const ParliamentList = () => {
           <select
             value={selectedDistrict}
             onChange={(e) => setSelectedDistrict(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-accent-9 focus:border-transparent transition-all"
             aria-label="Filter by district"
           >
             <option value="">All Districts</option>
@@ -159,7 +159,7 @@ const ParliamentList = () => {
           <select
             value={selectedParty}
             onChange={(e) => setSelectedParty(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-accent-9 focus:border-transparent transition-all"
             aria-label="Filter by party"
           >
             <option value="">All Parties</option>
