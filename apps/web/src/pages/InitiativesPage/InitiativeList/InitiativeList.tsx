@@ -1,5 +1,6 @@
 import { Spinner } from '@/components/Spinner';
 import { useInitiatives } from '@/services/initiatives/useInitiatives';
+import { buildRelatedInitiativesMap } from '@/utils/relatedInitiatives';
 import * as Accordion from '@radix-ui/react-accordion';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { debounce } from 'lodash';
@@ -72,33 +73,12 @@ const InitiativeList = () => {
     return Array.from(phaseSet);
   }, [initiatives]);
 
-  // Pre-compute related initiatives map for O(1) lookup during render
-  // This avoids expensive filtering during scroll when virtualizer re-renders visible items
-  const relatedInitiativesMap = useMemo(() => {
-    const map = new Map<string, RelatedInitiativeData[]>();
-
-    for (const initiative of initiatives) {
-      const related = initiatives
-        .filter(
-          (ini) =>
-            ini.IniId !== initiative.IniId &&
-            (ini.IniTipo === initiative.IniTipo ||
-              initiative.IniTitulo.split(' ').some((word) =>
-                ini.IniTitulo.toLowerCase().includes(word.toLowerCase())
-              ))
-        )
-        .slice(0, 3)
-        .map((ini) => ({
-          IniId: ini.IniId,
-          IniNr: ini.IniNr,
-          IniTitulo: ini.IniTitulo,
-          IniTipo: ini.IniTipo,
-        }));
-      map.set(initiative.IniId, related);
-    }
-
-    return map;
-  }, [initiatives]);
+  // Precompute related initiatives map once when initiatives change
+  // This avoids O(n²) computation on every render
+  const relatedInitiativesMap = useMemo(
+    () => buildRelatedInitiativesMap(initiatives),
+    [initiatives]
+  );
 
   // Clear expanded rows that are no longer in filtered results
   // This prevents stale expanded state for filtered-out items
