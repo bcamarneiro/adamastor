@@ -251,6 +251,148 @@ The fact that both staging AND production failed with identical patterns strongl
 
 ---
 
+## Staging vs Production Workflow Configuration Comparison
+
+This section documents the key differences between staging and production configurations across the sync-related workflows.
+
+### 1. Sync Data Workflow (`sync-data.yml`)
+
+#### Schedule Differences
+
+| Aspect | Staging | Production |
+|--------|---------|------------|
+| **Cron Schedule** | `0 6 * * *` (6 AM UTC) | `0 7 * * *` (7 AM UTC) |
+| **Trigger Method** | Scheduled + Manual + Called | Scheduled + Manual + Called |
+| **Environment Detection** | Hour-based (`06` = staging) | Hour-based (`07` = production) |
+
+#### Checkout Reference Strategy
+
+| Aspect | Staging | Production |
+|--------|---------|------------|
+| **Branch/Tag** | `staging` branch (HEAD) | Latest release tag (e.g., `v0.1.2`) |
+| **Source** | Direct branch checkout | Fetched via `github.rest.repos.listReleases()` |
+| **Skip Logic** | Never skips | Skips if no releases exist |
+
+**Key Finding:** This ref strategy means:
+- **Staging** always runs the latest code from the `staging` branch
+- **Production** runs the code from the most recent tagged release
+
+This is a **safety mechanism** - production only runs tested, released code.
+
+#### Environment Secrets (Both Environments)
+
+| Secret | Purpose | Environment-Specific |
+|--------|---------|---------------------|
+| `B2_KEY_ID` | Backblaze B2 authentication | Yes (different credentials per environment) |
+| `B2_APP_KEY` | Backblaze B2 authentication | Yes |
+| `B2_BUCKET` | Target storage bucket | Yes (staging vs production bucket) |
+| `SUPABASE_URL` | Supabase API endpoint | Yes (different Supabase projects) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase admin access | Yes (different credentials) |
+| `SENTRY_DSN` | Error tracking | Yes (different DSNs per environment) |
+
+#### Production-Only Steps
+
+| Step | Purpose | Why Production-Only |
+|------|---------|---------------------|
+| **Get latest release tag** | Determine which code version to run | Staging uses branch HEAD |
+| **Skip if no release** | Graceful exit if no releases exist | Staging always has code to run |
+| **Smoke test** | Verify Supabase data accessibility | Production needs post-sync validation |
+
+**Production Smoke Test Secrets:**
+- `SUPABASE_ANON_KEY` - Used to query `deputies` and `deputy_stats` tables via REST API
+
+#### Cache Strategy
+
+| Aspect | Staging | Production |
+|--------|---------|------------|
+| **Cache Key** | `sync-snapshots-staging-{run_id}` | `sync-snapshots-production-{run_id}` |
+| **Restore Keys** | `sync-snapshots-staging-` | `sync-snapshots-production-` |
+
+Environments have **isolated snapshot caches** to prevent cross-environment data contamination.
+
+#### Failure Notification
+
+| Aspect | Staging | Production |
+|--------|---------|------------|
+| **Issue Labels** | `bug`, `sync` | `bug`, `sync`, `production` |
+| **Issue Title** | `Sync failed (staging) - {date}` | `Sync failed (production) - {date}` |
+
+---
+
+### 2. Sync Photos Workflow (`sync-photos.yml`)
+
+| Aspect | Staging | Production |
+|--------|---------|------------|
+| **Trigger** | Manual only (`workflow_dispatch`) | Manual only (`workflow_dispatch`) |
+| **Schedule** | None | None |
+| **Checkout Ref** | `staging` branch | Latest release tag |
+| **Secrets** | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Same secret names, different values |
+| **Failure Handling** | `core.setFailed()` if no releases | N/A for staging |
+
+**Key Difference:** Unlike `sync-data.yml`, this workflow has **no scheduled runs** and requires manual triggering.
+
+---
+
+### 3. Release Production Workflow (`release-production.yml`)
+
+This workflow is **production-only** and manages the release process:
+
+| Step | Description |
+|------|-------------|
+| Checkout staging | Gets latest staging code with full git history |
+| Verify CI passed | Checks required CI jobs completed successfully |
+| Bump version | Updates `package.json` version via jq |
+| Merge to main | Fast-forward merge staging → main |
+| Create tag | Creates version tag (e.g., `v0.1.3`) |
+| Push release | Pushes main branch and tag to remote |
+| Create GitHub Release | Uses `softprops/action-gh-release@v2` |
+| Deploy DB | Runs Supabase migrations in production |
+| Trigger sync | Calls `sync-data.yml` with `environment=production` |
+
+**Production-Specific Secrets:**
+
+| Secret | Purpose |
+|--------|---------|
+| `DEPLOY_TOKEN` | Git operations with elevated permissions |
+| `SUPABASE_PROJECT_ID` | Supabase project identifier for migrations |
+| `SUPABASE_ACCESS_TOKEN` | Supabase CLI authentication |
+| `SUPABASE_DB_PASSWORD` | Database password for migrations |
+
+---
+
+### 4. Configuration Differences Summary Table
+
+| Configuration | Staging | Production |
+|--------------|---------|------------|
+| **Code Source** | `staging` branch HEAD | Latest release tag |
+| **Schedule** | 6 AM UTC | 7 AM UTC |
+| **Smoke Tests** | No | Yes |
+| **DB Migrations** | Via Vercel preview deploy | Via release workflow |
+| **Cache Isolation** | Yes (separate cache keys) | Yes (separate cache keys) |
+| **Failure Labels** | `bug`, `sync` | `bug`, `sync`, `production` |
+| **Skip on No Release** | N/A | Yes |
+
+---
+
+### 5. Analysis: Configuration as Root Cause
+
+Based on this comparison, the following configuration differences are **unlikely** to be the root cause of the failure:
+
+| Potential Issue | Verdict | Reasoning |
+|----------------|---------|-----------|
+| **Different checkout refs** | ❌ Not cause | Both staging and production failed, so it's not ref-specific |
+| **Different secrets** | ❔ Possible | If both environments share a dependency (e.g., Parliament API) |
+| **Schedule timing** | ❌ Not cause | Runs are 1 hour apart but both failed identically |
+| **Cache corruption** | ❌ Not cause | Caches are isolated per environment |
+| **Missing secrets** | ❔ Possible | Would cause immediate failure for both environments |
+
+**Conclusion:** The identical failure pattern in both environments strongly suggests the root cause is **not environment-specific configuration** but rather:
+1. A shared external dependency failure (Parliament API)
+2. A common code bug present in both staging branch and latest release
+3. A Supabase service issue affecting both projects
+
+---
+
 ## Appendix: API Response Data
 
 ### Workflow Run Metadata
