@@ -1,32 +1,34 @@
+import { useMemo } from 'react';
 import type { PartyStats } from '../../lib/supabase';
 import {
-  createCompareHook,
-  type ComparisonMetric,
-  type ComparisonResult,
+  useComparison,
   type MetricConfig,
-} from '../compare';
+  type ComparisonMetric,
+} from '../../hooks/useComparison';
 
 /**
- * Type alias for backward compatibility.
- * PartyComparisonMetric is identical to the shared ComparisonMetric type.
+ * Type alias for backwards compatibility.
+ * PartyComparisonMetric is now the same as the generic ComparisonMetric.
  */
 export type PartyComparisonMetric = ComparisonMetric;
 
 /**
- * Party-specific comparison result with legacy property names.
- * Extends ComparisonResult<PartyStats> and adds partyA/partyB aliases.
+ * Result of comparing two parties across multiple metrics.
+ * Preserves backwards compatibility with partyA/partyB naming.
  */
-export interface PartyComparisonResult extends ComparisonResult<PartyStats> {
-  /** Alias for entityA - maintains backward compatibility */
+export interface PartyComparisonResult {
   partyA: PartyStats;
-  /** Alias for entityB - maintains backward compatibility */
   partyB: PartyStats;
+  metrics: PartyComparisonMetric[];
+  winsA: number;
+  winsB: number;
+  ties: number;
+  winner: 'A' | 'B' | 'tie';
 }
 
 /**
- * Metrics configuration for party comparison.
- * Defines the 5 metrics used to compare parties, including the derived
- * "Propostas por Deputado" metric.
+ * Metric configurations for party comparison.
+ * Defined outside hook to maintain stable references.
  */
 const partyMetricsConfig: MetricConfig<PartyStats>[] = [
   {
@@ -51,47 +53,42 @@ const partyMetricsConfig: MetricConfig<PartyStats>[] = [
   },
   {
     label: 'Propostas por Deputado',
-    getValue: (p) => (p.deputy_count > 0 ? (p.total_proposals ?? 0) / p.deputy_count : 0),
+    getValue: (p) =>
+      p.deputy_count > 0 ? (p.total_proposals ?? 0) / p.deputy_count : 0,
     higherIsBetter: true,
   },
 ];
 
 /**
- * Internal hook created by the factory.
- * Returns the generic ComparisonResult<PartyStats>.
- */
-const useComparePartiesBase = createCompareHook<PartyStats>(partyMetricsConfig);
-
-/**
- * Compare two parties and determine which performs better.
+ * Hook for comparing two political parties across multiple metrics.
  *
- * This hook uses the createCompareHook factory internally while maintaining
- * backward compatibility with the original API that uses partyA/partyB
- * property names.
+ * Compares parties on: avg_work_score, total_proposals, total_interventions,
+ * total_questions, and proposals per deputy.
  *
- * @param partyA - First party to compare (or null)
- * @param partyB - Second party to compare (or null)
- * @returns Comparison result with metrics and winner, or null if either party is null
- *
- * @example
- * const comparison = useCompareParties(partyA, partyB);
- * if (comparison) {
- *   console.log(comparison.partyA.name, 'vs', comparison.partyB.name);
- *   console.log('Winner:', comparison.winner);
- * }
+ * @param partyA - First party to compare
+ * @param partyB - Second party to compare
+ * @returns PartyComparisonResult with metrics, win counts, and overall winner; or null if either party is null
  */
 export function useCompareParties(
   partyA: PartyStats | null,
   partyB: PartyStats | null
 ): PartyComparisonResult | null {
-  const baseResult = useComparePartiesBase(partyA, partyB);
+  const genericResult = useComparison(partyA, partyB, {
+    metrics: partyMetricsConfig,
+  });
 
-  if (!baseResult) return null;
+  // Transform generic result to party-specific format for backwards compatibility
+  return useMemo(() => {
+    if (!genericResult) return null;
 
-  // Add legacy property names for backward compatibility
-  return {
-    ...baseResult,
-    partyA: baseResult.entityA,
-    partyB: baseResult.entityB,
-  };
+    return {
+      partyA: genericResult.entityA,
+      partyB: genericResult.entityB,
+      metrics: genericResult.metrics,
+      winsA: genericResult.winsA,
+      winsB: genericResult.winsB,
+      ties: genericResult.ties,
+      winner: genericResult.winner,
+    };
+  }, [genericResult]);
 }
