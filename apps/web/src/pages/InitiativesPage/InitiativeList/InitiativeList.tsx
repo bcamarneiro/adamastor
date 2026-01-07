@@ -100,18 +100,45 @@ const InitiativeList = () => {
     return map;
   }, [initiatives]);
 
+  // Clear expanded rows that are no longer in filtered results
+  // This prevents stale expanded state for filtered-out items
+  useEffect(() => {
+    if (expandedRows.size === 0) return;
+
+    const filteredIds = new Set(filteredInitiatives.map((i) => i.IniId));
+    const hasStaleExpanded = Array.from(expandedRows).some((id) => !filteredIds.has(id));
+
+    if (hasStaleExpanded) {
+      setExpandedRows((prev) => {
+        const newSet = new Set<string>();
+        for (const id of prev) {
+          if (filteredIds.has(id)) {
+            newSet.add(id);
+          }
+        }
+        return newSet;
+      });
+    }
+  }, [filteredInitiatives, expandedRows]);
+
   // Set up the virtualizer for efficient rendering of large lists
+  // Only enable when we have data to virtualize
   const virtualizer = useVirtualizer({
     count: filteredInitiatives.length,
     getScrollElement: () => scrollContainerRef.current,
     // Estimate size based on whether the row is expanded
+    // Defensive check for index bounds to handle race conditions during filter changes
     estimateSize: (index) => {
       const initiative = filteredInitiatives[index];
+      if (!initiative) return COLLAPSED_ROW_HEIGHT;
       return expandedRows.has(initiative.IniId) ? EXPANDED_ROW_HEIGHT : COLLAPSED_ROW_HEIGHT;
     },
     // Use initiative ID as stable key for better virtualization
-    getItemKey: (index) => filteredInitiatives[index].IniId,
+    // Fallback to index if initiative is undefined (edge case during rapid filter changes)
+    getItemKey: (index) => filteredInitiatives[index]?.IniId ?? `fallback-${index}`,
     overscan: 5, // Render 5 extra rows above/below viewport for smooth scrolling
+    // Enable smooth scrolling behavior
+    enabled: !isLoading && filteredInitiatives.length > 0,
   });
 
   // Force remeasurement when expanded rows change
@@ -195,7 +222,11 @@ const InitiativeList = () => {
 
       <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg shadow overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
+          <div
+            className="flex justify-center items-center h-full min-h-64 transition-opacity duration-200"
+            role="status"
+            aria-label="Loading initiatives"
+          >
             <Spinner size="lg" />
           </div>
         ) : (
@@ -231,14 +262,22 @@ const InitiativeList = () => {
               className="flex-1 overflow-auto"
             >
               {filteredInitiatives.length === 0 ? (
-                <div role="row" className="text-center py-8 text-neutral-11">
-                  <div role="cell" className="flex flex-col items-center gap-2">
-                    <FaSearch className="w-6 h-6" aria-hidden="true" />
-                    <p>
+                <div
+                  role="row"
+                  className="flex items-center justify-center h-full min-h-48 text-neutral-11 transition-opacity duration-200"
+                >
+                  <div role="cell" className="flex flex-col items-center gap-3 p-8">
+                    <FaSearch className="w-8 h-8 opacity-50" aria-hidden="true" />
+                    <p className="text-center">
                       {debouncedFilterText || selectedPhase
                         ? 'No initiatives found matching your criteria.'
                         : 'No initiatives available.'}
                     </p>
+                    {(debouncedFilterText || selectedPhase) && (
+                      <p className="text-sm text-neutral-9">
+                        Try adjusting your search or filter settings.
+                      </p>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -251,6 +290,10 @@ const InitiativeList = () => {
                 >
                   {virtualizer.getVirtualItems().map((virtualRow) => {
                     const initiative = filteredInitiatives[virtualRow.index];
+                    // Defensive check: skip rendering if initiative is undefined
+                    // This can happen briefly during rapid filter changes
+                    if (!initiative) return null;
+
                     const isExpanded = expandedRows.has(initiative.IniId);
                     return (
                       <div
