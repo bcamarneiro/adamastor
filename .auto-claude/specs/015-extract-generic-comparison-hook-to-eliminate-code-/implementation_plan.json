@@ -4,8 +4,8 @@
   "description": "Create a generic useComparison hook that consolidates the duplicated comparison logic across useCompareDeputies, useCompareParties, and useCompareDistricts. The compare() function is duplicated verbatim in two hooks, and the winner calculation logic is repeated in all three.",
   "created_at": "2026-01-07T17:28:39.777Z",
   "updated_at": "2026-01-07T17:45:00.000Z",
-  "status": "in_progress",
-  "planStatus": "approved",
+  "status": "human_review",
+  "planStatus": "review",
   "workflow_type": "development",
   "spec_file": "spec.md",
   "phases": [
@@ -292,5 +292,38 @@
     "tests_passed": null,
     "issues": null
   },
-  "last_updated": "2026-01-07T18:03:18.320672+00:00"
+  "last_updated": "2026-01-07T19:30:20.290593+00:00",
+  "qa_signoff": {
+    "status": "fixes_applied",
+    "qa_session": 1,
+    "issues_found": [
+      {
+        "description": "None found in static code review. Environment restricts bun commands - manual test verification recommended before merge."
+      }
+    ],
+    "issues_fixed": [
+      {
+        "title": "needs rebase",
+        "resolution": "Branch verified as already rebased on origin/main (d012917). origin/main is an ancestor of HEAD with 38 commits on top. No conflicts detected."
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-01-07T20:20:00.000Z",
+    "ready_for_qa_revalidation": true
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-01-07T19:30:48.533783+00:00",
+      "issues": [],
+      "duration_seconds": 245.7
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  }
 }
