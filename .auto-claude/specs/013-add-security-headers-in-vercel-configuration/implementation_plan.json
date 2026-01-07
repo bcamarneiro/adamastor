@@ -61,7 +61,7 @@
           "id": "1.4",
           "title": "Add Permissions-Policy header",
           "description": "Add Permissions-Policy to restrict browser features like camera, microphone, geolocation that the app doesn't need",
-          "status": "pending",
+          "status": "completed",
           "files": [
             "apps/web/vercel.json"
           ],
@@ -69,7 +69,9 @@
             "Permissions-Policy header restricts unnecessary browser features",
             "Camera, microphone, geolocation are disabled",
             "Header applies to all routes"
-          ]
+          ],
+          "notes": "Added Permissions-Policy header to vercel.json with camera=(), microphone=(), geolocation=() to restrict these browser features. Header applies to all routes using /(.*) pattern. JSON validation passed.",
+          "updated_at": "2026-01-07T17:44:19.104168+00:00"
         }
       ]
     },
@@ -179,5 +181,5 @@
       "data_urls": "Used for inline images and icons"
     }
   },
-  "last_updated": "2026-01-07T17:42:19.973993+00:00"
+  "last_updated": "2026-01-07T17:44:19.104176+00:00"
 }

@@ -35,11 +35,23 @@
         }
       ],
       "status": "completed"
+    },
+    "1.4": {
+      "attempts": [
+        {
+          "session": 5,
+          "timestamp": "2026-01-07T17:44:41.711535",
+          "approach": "Implemented: Add Permissions-Policy to restrict browser features like camera, microphone, geolocation that the ap",
+          "success": true,
+          "error": null
+        }
+      ],
+      "status": "completed"
     }
   },
   "stuck_subtasks": [],
   "metadata": {
     "created_at": "2026-01-07T17:35:59.829426",
-    "last_updated": "2026-01-07T17:42:36.116387"
+    "last_updated": "2026-01-07T17:44:41.711538"
   }
 }
