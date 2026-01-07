@@ -92,4 +92,6 @@ export const HELP_TEXTS = {
     'Ranking calculado com base na media de pontuacao de todos os deputados ativos eleitos por cada circulo eleitoral.',
   fullRanking:
     'Lista completa de todos os deputados ordenados por pontuação de atividade parlamentar. Podes filtrar por partido, distrito ou nota.',
+  tiebreaker:
+    'Em caso de empate na pontuação, os deputados são ordenados por: 1) Presença em plenário, 2) Número de intervenções, 3) Ordem alfabética.',
 };

@@ -6,7 +6,12 @@ async function fetchBottomWorkers(limit = 3): Promise<DeputyDetail[]> {
     .from('deputy_details')
     .select('*')
     .eq('is_active', true)
+    // Primary sort: work_score (ascending for bottom workers)
+    // Tiebreakers: attendance_rate (asc), intervention_count (asc), short_name (asc)
     .order('work_score', { ascending: true })
+    .order('attendance_rate', { ascending: true, nullsFirst: true })
+    .order('intervention_count', { ascending: true })
+    .order('short_name', { ascending: true })
     .limit(limit);
 
   if (error) {
