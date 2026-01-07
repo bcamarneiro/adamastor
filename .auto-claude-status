@@ -3,13 +3,13 @@
   "spec": "020-add-lazy-loading-to-deputy-images-for-faster-initi",
   "state": "building",
   "subtasks": {
-    "completed": 5,
+    "completed": 7,
     "total": 9,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Add lazy loading to detail/result components",
+    "current": "Update tests and verify",
     "id": null,
     "total": 2
   },
@@ -18,8 +18,8 @@
     "max": 1
   },
   "session": {
-    "number": 7,
+    "number": 9,
     "started_at": "2026-01-07T17:30:31.348262"
   },
-  "last_update": "2026-01-07T17:41:44.635197"
+  "last_update": "2026-01-07T17:44:44.360152"
 }

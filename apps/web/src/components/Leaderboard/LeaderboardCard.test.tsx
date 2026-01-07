@@ -86,6 +86,12 @@ describe('LeaderboardCard', () => {
     expect(img.getAttribute('alt')).toBe('João Silva');
   });
 
+  it('should have lazy loading on deputy photo', () => {
+    render(<LeaderboardCard deputy={mockDeputy} position={1} />);
+    const img = screen.getByRole('img');
+    expect(img.getAttribute('loading')).toBe('lazy');
+  });
+
   it('should render placeholder when no photo', () => {
     const deputyNoPhoto = { ...mockDeputy, photo_url: null };
     render(<LeaderboardCard deputy={deputyNoPhoto} position={1} />);
