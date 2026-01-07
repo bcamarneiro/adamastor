@@ -94,6 +94,7 @@ export function FullRankings({ partyId, districtId, grade }: FullRankingsProps) 
                       <img
                         src={deputy.photo_url}
                         alt={deputy.short_name}
+                        loading="lazy"
                         className="w-10 h-10 rounded-full object-cover bg-neutral-4"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
