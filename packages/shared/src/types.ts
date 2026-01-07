@@ -13,7 +13,7 @@ export const CURRENT_LEGISLATURE = 17;
 export const CURRENT_LEGISLATURE_ROMAN = 'XVII';
 
 /** Legislature display label */
-export const CURRENT_LEGISLATURE_LABEL = `${CURRENT_LEGISLATURE_ROMAN}ª Legislatura`;
+export const CURRENT_LEGISLATURE_LABEL = `${CURRENT_LEGISLATURE_ROMAN} Legislatura`;
 
 /**
  * Convert legislature number to Roman numeral
