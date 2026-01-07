@@ -1,13 +1,17 @@
 import { Spinner } from '@/components/Spinner';
 import { useInitiatives } from '@/services/initiatives/useInitiatives';
 import * as Accordion from '@radix-ui/react-accordion';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { debounce } from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import InitiativeRow, { type InitiativeData, type RelatedInitiativeData } from './InitiativeRow';
 
 // Grid column classes for consistent layout (matching InitiativeRow)
 const gridColsClass = 'grid grid-cols-[48px_auto_auto_1fr_96px] items-center';
+
+// Estimated row heights for virtualization
+const COLLAPSED_ROW_HEIGHT = 48;
 
 const InitiativeList = () => {
   const { initiatives, metadata, isLoading, isError, error } = useInitiatives();
@@ -15,6 +19,9 @@ const InitiativeList = () => {
   const [selectedPhase, setSelectedPhase] = useState<string>('');
   const [debouncedFilterText, setDebouncedFilterText] = useState('');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
+  // Ref for the scroll container used by the virtualizer
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Debounce filter text updates
   const debouncedSetFilter = useMemo(
@@ -85,6 +92,14 @@ const InitiativeList = () => {
     },
     [initiatives]
   );
+
+  // Set up the virtualizer for efficient rendering of large lists
+  const virtualizer = useVirtualizer({
+    count: filteredInitiatives.length,
+    getScrollElement: () => scrollContainerRef.current,
+    estimateSize: () => COLLAPSED_ROW_HEIGHT,
+    overscan: 5, // Render 5 extra rows above/below viewport for smooth scrolling
+  });
 
   if (isError) {
     return (
@@ -160,17 +175,17 @@ const InitiativeList = () => {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-auto">
+      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg shadow overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <Spinner size="lg" />
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden" role="table" aria-label="Initiatives list">
+          <div role="table" aria-label="Initiatives list" className="flex flex-col min-h-0 h-full">
             {/* Sticky Header */}
             <div
               role="rowgroup"
-              className="sticky top-0 z-10 bg-neutral-2 border-b border-neutral-3"
+              className="flex-none bg-neutral-2 border-b border-neutral-3"
             >
               <div role="row" className={gridColsClass}>
                 <div role="columnheader" className="p-3" aria-label="Expand/collapse">
@@ -191,8 +206,12 @@ const InitiativeList = () => {
               </div>
             </div>
 
-            {/* Table Body */}
-            <div role="rowgroup">
+            {/* Virtualized Table Body */}
+            <div
+              ref={scrollContainerRef}
+              role="rowgroup"
+              className="flex-1 overflow-auto"
+            >
               {filteredInitiatives.length === 0 ? (
                 <div role="row" className="text-center py-8 text-neutral-11">
                   <div role="cell" className="flex flex-col items-center gap-2">
@@ -205,15 +224,36 @@ const InitiativeList = () => {
                   </div>
                 </div>
               ) : (
-                filteredInitiatives.map((initiative) => (
-                  <InitiativeRow
-                    key={initiative.IniId}
-                    initiative={initiative as InitiativeData}
-                    isExpanded={expandedRows.has(initiative.IniId)}
-                    onToggle={toggleRow}
-                    relatedInitiatives={getRelatedInitiatives(initiative as InitiativeData)}
-                  />
-                ))
+                <div
+                  style={{
+                    height: `${virtualizer.getTotalSize()}px`,
+                    width: '100%',
+                    position: 'relative',
+                  }}
+                >
+                  {virtualizer.getVirtualItems().map((virtualRow) => {
+                    const initiative = filteredInitiatives[virtualRow.index];
+                    return (
+                      <div
+                        key={virtualRow.key}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          transform: `translateY(${virtualRow.start}px)`,
+                        }}
+                      >
+                        <InitiativeRow
+                          initiative={initiative as InitiativeData}
+                          isExpanded={expandedRows.has(initiative.IniId)}
+                          onToggle={toggleRow}
+                          relatedInitiatives={getRelatedInitiatives(initiative as InitiativeData)}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               )}
             </div>
           </div>
