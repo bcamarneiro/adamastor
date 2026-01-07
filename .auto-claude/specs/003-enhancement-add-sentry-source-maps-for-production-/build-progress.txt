@@ -80,3 +80,87 @@ Expected Outcome:
 - Sentry plugin logs source map upload (when auth token is set)
 
 === END SESSION 2 ===
+
+=== SESSION 3: Deployment Verification (Manual) ===
+Started: 2026-01-07
+
+Subtask 5-2: Verify Vercel deployment with source map upload
+Status: READY FOR MANUAL VERIFICATION
+
+All implementation is complete. This step requires manual user verification.
+
+## Pre-Deployment Checklist ✅
+
+All code changes have been completed:
+✅ @sentry/vite-plugin installed (^3.2.4) - apps/web/package.json:59
+✅ sentryVitePlugin imported - apps/web/vite.config.ts:2
+✅ Plugin conditionally enabled for production - vite.config.ts:45-50
+✅ sourcemap: true enabled - vite.config.ts:18
+✅ .env.example documents all Sentry variables
+✅ docs/GITHUB-SECRETS.md updated with configuration steps
+
+## Required Vercel Environment Variables
+
+Before deploying, configure these in Vercel Dashboard > Settings > Environment Variables:
+
+| Variable | Description | Sensitive |
+|----------|-------------|-----------|
+| `VITE_SENTRY_DSN` | Sentry DSN for runtime error reporting | No |
+| `SENTRY_AUTH_TOKEN` | Auth token for source map uploads | **Yes** |
+| `SENTRY_ORG` | Sentry organization slug | No |
+| `SENTRY_PROJECT` | Sentry project slug | No |
+
+## Manual Verification Steps
+
+After configuring environment variables in Vercel:
+
+### Step 1: Deploy to Production
+1. Push changes to main/production branch
+2. Trigger a production deployment on Vercel
+
+### Step 2: Check Build Logs
+1. Open Vercel Dashboard > Deployments
+2. Click on the deployment to view build logs
+3. Look for: "Uploading source maps to Sentry" or similar success message
+4. ⚠️ If you see auth errors, verify SENTRY_AUTH_TOKEN has correct scopes (project:releases, org:read)
+
+### Step 3: Verify in Sentry Dashboard
+1. Navigate to Sentry > Releases
+2. Find the latest release matching your deployment
+3. Verify source map artifacts are present (look for .js.map files)
+4. ⚠️ If no release appears, check SENTRY_ORG and SENTRY_PROJECT values
+
+### Step 4: Test Error Stack Traces
+1. Open your production app
+2. Trigger a test error (e.g., intentionally throw an error in a component)
+3. Wait ~30 seconds for Sentry to process
+4. Check Sentry > Issues for the new error
+5. Open the error and verify:
+   - Stack trace shows original TypeScript file paths (e.g., `src/App.tsx:42`)
+   - NOT minified code (e.g., `assets/index-abc123.js:1:1234`)
+   - Source code snippet is visible in Sentry UI
+
+## Troubleshooting
+
+### Source maps not uploading
+- Verify SENTRY_AUTH_TOKEN is set and marked as Sensitive
+- Check token has scopes: `project:releases`, `org:read`
+- Confirm SENTRY_ORG and SENTRY_PROJECT match your Sentry dashboard URL
+
+### Stack traces still minified
+- Wait a few minutes for Sentry to process the release
+- Verify release version matches (check Git commit SHA in Sentry)
+- Ensure you're looking at errors that occurred AFTER the deployment
+
+### Build failures
+- Plugin only runs when NODE_ENV=production
+- If auth token is missing, plugin will warn but not fail the build
+
+## Verification Results
+
+[ ] Build logs show source map upload success
+[ ] Sentry dashboard displays uploaded artifacts
+[ ] Production errors show original TypeScript file paths
+[ ] Existing Sentry features (ErrorBoundary, Session Replay) still work
+
+=== END SESSION 3 ===
