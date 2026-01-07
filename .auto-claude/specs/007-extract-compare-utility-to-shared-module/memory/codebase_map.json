@@ -6,15 +6,20 @@
       "discovered_at": "2026-01-07T17:38:25.741666+00:00"
     },
     "apps/web/src/services/districts/useCompareDistricts.ts": {
-      "description": "Duplicate compare() function at lines 24-42 also exists in useCompareParties.ts. Both handle nullable values, equality checks, and higher/lower-is-better logic identically.",
-      "category": "duplication",
-      "discovered_at": "2026-01-07T17:38:25.767135+00:00"
+      "description": "Updated to import compare function from shared package instead of having local implementation",
+      "category": "refactoring",
+      "discovered_at": "2026-01-07T17:49:18.224235+00:00"
     },
     "packages/shared/src/compare.ts": {
       "description": "New compare utility module with CompareResult type and compare() function for determining winners between two values. Handles nullable values (treats null as 0), equality checks, and higher/lower-is-better logic.",
       "category": "utility",
       "discovered_at": "2026-01-07T17:40:23.326288+00:00"
+    },
+    "apps/web/src/services/parties/useCompareParties.ts": {
+      "description": "Updated to import compare function from shared package instead of having local implementation",
+      "category": "refactor",
+      "discovered_at": "2026-01-07T17:51:06.189793+00:00"
     }
   },
-  "last_updated": "2026-01-07T17:40:23.326296+00:00"
+  "last_updated": "2026-01-07T17:51:06.189802+00:00"
 }
