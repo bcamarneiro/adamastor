@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "012-standardize-focus-ring-colors-across-all-form-inpu",
+  "state": "building",
+  "subtasks": {
+    "completed": 0,
+    "total": 0,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Replace blue-500 with accent-9",
+    "id": null,
+    "total": 2
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 2,
+    "started_at": "2026-01-07T17:35:59.119168"
+  },
+  "last_update": "2026-01-07T17:41:58.189931"
+}
