@@ -351,10 +351,21 @@
       ]
     }
   },
-  "qa_signoff": null,
-  "last_updated": "2026-01-07T16:31:31.893745+00:00",
-  "status": "in_progress",
+  "qa_signoff": {
+    "status": "fixes_applied",
+    "timestamp": "2026-01-07T19:29:10+00:00",
+    "fix_session": 0,
+    "issues_fixed": [
+      {
+        "title": "Rebase branch with staging",
+        "description": "Branch was rebased onto origin/staging as requested by QA reviewer"
+      }
+    ],
+    "ready_for_qa_revalidation": true
+  },
+  "last_updated": "2026-01-07T19:29:10+00:00",
+  "status": "qa_fixes_applied",
   "planStatus": "in_progress",
-  "updated_at": "2026-01-07T16:23:13.787Z",
+  "updated_at": "2026-01-07T19:29:10+00:00",
   "recoveryNote": "Task recovered from stuck state at 2026-01-07T16:23:13.787Z"
 }
