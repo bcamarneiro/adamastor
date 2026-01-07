@@ -3,8 +3,8 @@
   "description": "The project has both 'reactflow' (v11.11.4) and '@xyflow/react' (v12.4.4) installed as dependencies. These are essentially the same library - reactflow was rebranded to @xyflow/react. Only @xyflow/react types are actually imported (in src/utils/flowLayout.ts). The reactflow package is completely unused but adds ~250KB to the bundle.",
   "created_at": "2026-01-07T17:29:00.346Z",
   "updated_at": "2026-01-07T00:00:00.000Z",
-  "status": "in_progress",
-  "planStatus": "approved",
+  "status": "human_review",
+  "planStatus": "review",
   "workflow_type": "development",
   "services_involved": [
     "apps/web"
@@ -107,19 +107,31 @@
     "This is a zero-code-change optimization that will reduce bundle size by ~250KB"
   ],
   "qa_signoff": {
-    "status": "fixes_applied",
-    "timestamp": "2026-01-07T20:20:00.000Z",
-    "fix_session": 1,
-    "issues_fixed": [
+    "status": "approved",
+    "qa_session": 0,
+    "issues_found": [
       {
-        "title": "Rebase branch onto staging",
-        "description": "Branch rebased onto latest origin/staging (ca4c89c). All 6 commits cleanly applied on top.",
-        "fix_commit": "60a8e64"
+        "description": "Minor: Stale package-lock.json files still contain reactflow references (no impact - project uses bun)"
       }
     ],
-    "tests_passed": "N/A - rebasing only, no code changes",
-    "issues": "",
-    "ready_for_qa_revalidation": true
+    "tests_passed": {},
+    "timestamp": "2026-01-07T20:20:34.095868+00:00",
+    "ready_for_qa_revalidation": false
   },
-  "last_updated": "2026-01-07T20:20:00.000Z"
+  "last_updated": "2026-01-07T20:20:34.095878+00:00",
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-01-07T20:21:08.362796+00:00",
+      "issues": [],
+      "duration_seconds": 203.04
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  }
 }
