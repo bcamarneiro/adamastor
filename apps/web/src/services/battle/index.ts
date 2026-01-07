@@ -1,2 +1,5 @@
 export { useDeputySearch } from './useDeputySearch';
-export { useCompareDeputies } from './useCompareDeputies';
+export {
+  useCompareDeputies,
+  type DeputyComparisonResult,
+} from './useCompareDeputies';
