@@ -1,0 +1,135 @@
+{
+  "feature": "Extract compare() utility to shared module",
+  "description": "The compare() function that determines winners between two values is duplicated verbatim in useCompareDistricts.ts and useCompareParties.ts. Extract this to a shared utility.",
+  "created_at": "2026-01-07T17:27:22.889Z",
+  "updated_at": "2026-01-07T17:27:22.889Z",
+  "status": "in_progress",
+  "planStatus": "complete",
+  "workflow_type": "development",
+  "services_involved": ["packages/shared", "apps/web"],
+  "spec_file": "spec.md",
+  "total_phases": 3,
+  "phases": [
+    {
+      "phase_id": "phase-1",
+      "title": "Create shared utility",
+      "description": "Create the compare utility and its types in the shared package",
+      "order": 1,
+      "subtasks": [
+        {
+          "subtask_id": "1.1",
+          "title": "Create compare utility file",
+          "description": "Create packages/shared/src/compare.ts with the compare function and CompareResult type exported. The function takes two nullable numbers and a higherIsBetter flag, returns {winnerA, winnerB, tie}.",
+          "status": "completed",
+          "file_path": "packages/shared/src/compare.ts",
+          "estimated_loc": 25
+        },
+        {
+          "subtask_id": "1.2",
+          "title": "Export from shared index",
+          "description": "Update packages/shared/src/index.ts to export the compare function and CompareResult type from the new compare module.",
+          "status": "completed",
+          "file_path": "packages/shared/src/index.ts",
+          "estimated_loc": 2
+        },
+        {
+          "subtask_id": "1.3",
+          "title": "Add unit tests for compare utility",
+          "description": "Create packages/shared/src/compare.test.ts with comprehensive tests covering: both null values, one null value, equal values, A wins (higher is better), B wins (higher is better), A wins (lower is better), B wins (lower is better).",
+          "status": "completed",
+          "file_path": "packages/shared/src/compare.test.ts",
+          "estimated_loc": 60
+        }
+      ]
+    },
+    {
+      "phase_id": "phase-2",
+      "title": "Update consumers",
+      "description": "Update the hook files to use the shared compare utility instead of their local implementations",
+      "order": 2,
+      "subtasks": [
+        {
+          "subtask_id": "2.1",
+          "title": "Update useCompareDistricts.ts",
+          "description": "Import compare from 'shared' package and remove the local compare function definition (lines 24-42). Update the import statement at the top of the file.",
+          "status": "pending",
+          "file_path": "apps/web/src/services/districts/useCompareDistricts.ts",
+          "estimated_loc": -18
+        },
+        {
+          "subtask_id": "2.2",
+          "title": "Update useCompareParties.ts",
+          "description": "Import compare from 'shared' package and remove the local compare function definition (lines 24-42). Update the import statement at the top of the file.",
+          "status": "pending",
+          "file_path": "apps/web/src/services/parties/useCompareParties.ts",
+          "estimated_loc": -18
+        }
+      ]
+    },
+    {
+      "phase_id": "phase-3",
+      "title": "Verification",
+      "description": "Run tests and verify the application builds correctly",
+      "order": 3,
+      "subtasks": [
+        {
+          "subtask_id": "3.1",
+          "title": "Run shared package tests",
+          "description": "Run bun test in packages/shared to verify the new compare utility tests pass.",
+          "status": "pending",
+          "file_path": null,
+          "estimated_loc": 0
+        },
+        {
+          "subtask_id": "3.2",
+          "title": "Run web app type check",
+          "description": "Run tsc --noEmit in apps/web to verify TypeScript compilation passes with the new imports.",
+          "status": "pending",
+          "file_path": null,
+          "estimated_loc": 0
+        },
+        {
+          "subtask_id": "3.3",
+          "title": "Run web app build",
+          "description": "Run the build command to ensure the application builds correctly with the refactored code.",
+          "status": "pending",
+          "file_path": null,
+          "estimated_loc": 0
+        }
+      ]
+    }
+  ],
+  "files_to_create": [
+    "packages/shared/src/compare.ts",
+    "packages/shared/src/compare.test.ts"
+  ],
+  "files_to_modify": [
+    "packages/shared/src/index.ts",
+    "apps/web/src/services/districts/useCompareDistricts.ts",
+    "apps/web/src/services/parties/useCompareParties.ts"
+  ],
+  "dependencies": [],
+  "risks": [
+    {
+      "risk": "Import path differences",
+      "mitigation": "The web app already imports from 'shared' for types, so the import path should work consistently"
+    }
+  ],
+  "qa_checklist": [
+    "compare utility tests pass",
+    "TypeScript compilation succeeds",
+    "Web app builds without errors",
+    "No duplicate compare() function remains in useCompareDistricts.ts",
+    "No duplicate compare() function remains in useCompareParties.ts"
+  ],
+  "final_acceptance": [
+    "All tests pass",
+    "Build succeeds",
+    "Code duplication eliminated"
+  ],
+  "qa_sign_off": {
+    "status": "pending",
+    "issues": "",
+    "tests_passed": ""
+  }
+}

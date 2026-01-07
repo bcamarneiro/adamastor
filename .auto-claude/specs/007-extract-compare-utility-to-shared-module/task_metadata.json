@@ -1,0 +1,14 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "ci-001",
+  "rationale": "The identical compare() function exists in two files (lines 24-42 in useCompareDistricts.ts and useCompareParties.ts). Both handle nullable values, equality checks, and higher/lower-is-better logic identically. This is a direct extraction opportunity.",
+  "category": "feature",
+  "estimatedEffort": "trivial",
+  "complexity": "trivial",
+  "affectedFiles": [
+    "apps/web/src/services/districts/useCompareDistricts.ts",
+    "apps/web/src/services/parties/useCompareParties.ts",
+    "apps/web/src/utils/compare.ts"
+  ]
+}

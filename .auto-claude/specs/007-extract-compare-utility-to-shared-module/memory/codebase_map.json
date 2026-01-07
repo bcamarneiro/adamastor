@@ -1,0 +1,20 @@
+{
+  "discovered_files": {
+    "packages/shared/src/types.ts": {
+      "description": "Shared package exists at packages/shared with types.ts containing core entity types, constants (CURRENT_LEGISLATURE, WORK_SCORE_WEIGHTS, GRADE_THRESHOLDS), and utility functions (legislatureToRoman, scoreToGrade). Exports via index.ts.",
+      "category": "architecture",
+      "discovered_at": "2026-01-07T17:38:25.741666+00:00"
+    },
+    "apps/web/src/services/districts/useCompareDistricts.ts": {
+      "description": "Duplicate compare() function at lines 24-42 also exists in useCompareParties.ts. Both handle nullable values, equality checks, and higher/lower-is-better logic identically.",
+      "category": "duplication",
+      "discovered_at": "2026-01-07T17:38:25.767135+00:00"
+    },
+    "packages/shared/src/compare.ts": {
+      "description": "New compare utility module with CompareResult type and compare() function for determining winners between two values. Handles nullable values (treats null as 0), equality checks, and higher/lower-is-better logic.",
+      "category": "utility",
+      "discovered_at": "2026-01-07T17:40:23.326288+00:00"
+    }
+  },
+  "last_updated": "2026-01-07T17:40:23.326296+00:00"
+}
