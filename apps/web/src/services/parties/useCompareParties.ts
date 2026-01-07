@@ -1,110 +1,97 @@
-import { useMemo } from 'react';
-import { compare } from 'shared';
 import type { PartyStats } from '../../lib/supabase';
+import {
+  createCompareHook,
+  type ComparisonMetric,
+  type ComparisonResult,
+  type MetricConfig,
+} from '../compare';
 
-export interface PartyComparisonMetric {
-  label: string;
-  valueA: number;
-  valueB: number;
-  winnerA: boolean;
-  winnerB: boolean;
-  tie: boolean;
-  higherIsBetter: boolean;
-}
+/**
+ * Type alias for backward compatibility.
+ * PartyComparisonMetric is identical to the shared ComparisonMetric type.
+ */
+export type PartyComparisonMetric = ComparisonMetric;
 
-export interface PartyComparisonResult {
+/**
+ * Party-specific comparison result with legacy property names.
+ * Extends ComparisonResult<PartyStats> and adds partyA/partyB aliases.
+ */
+export interface PartyComparisonResult extends ComparisonResult<PartyStats> {
+  /** Alias for entityA - maintains backward compatibility */
   partyA: PartyStats;
+  /** Alias for entityB - maintains backward compatibility */
   partyB: PartyStats;
-  metrics: PartyComparisonMetric[];
-  winsA: number;
-  winsB: number;
-  ties: number;
-  winner: 'A' | 'B' | 'tie';
 }
 
+/**
+ * Metrics configuration for party comparison.
+ * Defines the 5 metrics used to compare parties, including the derived
+ * "Propostas por Deputado" metric.
+ */
+const partyMetricsConfig: MetricConfig<PartyStats>[] = [
+  {
+    label: 'Pontuacao Media',
+    getValue: (p) => p.avg_work_score,
+    higherIsBetter: true,
+  },
+  {
+    label: 'Total de Propostas',
+    getValue: (p) => p.total_proposals,
+    higherIsBetter: true,
+  },
+  {
+    label: 'Total de Intervencoes',
+    getValue: (p) => p.total_interventions,
+    higherIsBetter: true,
+  },
+  {
+    label: 'Total de Perguntas',
+    getValue: (p) => p.total_questions,
+    higherIsBetter: true,
+  },
+  {
+    label: 'Propostas por Deputado',
+    getValue: (p) => (p.deputy_count > 0 ? (p.total_proposals ?? 0) / p.deputy_count : 0),
+    higherIsBetter: true,
+  },
+];
+
+/**
+ * Internal hook created by the factory.
+ * Returns the generic ComparisonResult<PartyStats>.
+ */
+const useComparePartiesBase = createCompareHook<PartyStats>(partyMetricsConfig);
+
+/**
+ * Compare two parties and determine which performs better.
+ *
+ * This hook uses the createCompareHook factory internally while maintaining
+ * backward compatibility with the original API that uses partyA/partyB
+ * property names.
+ *
+ * @param partyA - First party to compare (or null)
+ * @param partyB - Second party to compare (or null)
+ * @returns Comparison result with metrics and winner, or null if either party is null
+ *
+ * @example
+ * const comparison = useCompareParties(partyA, partyB);
+ * if (comparison) {
+ *   console.log(comparison.partyA.name, 'vs', comparison.partyB.name);
+ *   console.log('Winner:', comparison.winner);
+ * }
+ */
 export function useCompareParties(
   partyA: PartyStats | null,
   partyB: PartyStats | null
 ): PartyComparisonResult | null {
-  return useMemo(() => {
-    if (!partyA || !partyB) return null;
+  const baseResult = useComparePartiesBase(partyA, partyB);
 
-    const metricsConfig: {
-      label: string;
-      getA: () => number | null;
-      getB: () => number | null;
-      higherIsBetter: boolean;
-    }[] = [
-      {
-        label: 'Pontuacao Media',
-        getA: () => partyA.avg_work_score,
-        getB: () => partyB.avg_work_score,
-        higherIsBetter: true,
-      },
-      {
-        label: 'Total de Propostas',
-        getA: () => partyA.total_proposals,
-        getB: () => partyB.total_proposals,
-        higherIsBetter: true,
-      },
-      {
-        label: 'Total de Intervencoes',
-        getA: () => partyA.total_interventions,
-        getB: () => partyB.total_interventions,
-        higherIsBetter: true,
-      },
-      {
-        label: 'Total de Perguntas',
-        getA: () => partyA.total_questions,
-        getB: () => partyB.total_questions,
-        higherIsBetter: true,
-      },
-      {
-        label: 'Propostas por Deputado',
-        getA: () =>
-          partyA.deputy_count > 0 ? (partyA.total_proposals ?? 0) / partyA.deputy_count : 0,
-        getB: () =>
-          partyB.deputy_count > 0 ? (partyB.total_proposals ?? 0) / partyB.deputy_count : 0,
-        higherIsBetter: true,
-      },
-    ];
+  if (!baseResult) return null;
 
-    const metrics: PartyComparisonMetric[] = metricsConfig.map((m) => {
-      const valueA = m.getA() ?? 0;
-      const valueB = m.getB() ?? 0;
-      const { winnerA, winnerB, tie } = compare(valueA, valueB, m.higherIsBetter);
-      return {
-        label: m.label,
-        valueA,
-        valueB,
-        winnerA,
-        winnerB,
-        tie,
-        higherIsBetter: m.higherIsBetter,
-      };
-    });
-
-    const winsA = metrics.filter((m) => m.winnerA).length;
-    const winsB = metrics.filter((m) => m.winnerB).length;
-    const ties = metrics.filter((m) => m.tie).length;
-
-    let winner: 'A' | 'B' | 'tie';
-    if (winsA > winsB) {
-      winner = 'A';
-    } else if (winsB > winsA) {
-      winner = 'B';
-    } else {
-      winner = 'tie';
-    }
-
-    return {
-      partyA,
-      partyB,
-      metrics,
-      winsA,
-      winsB,
-      ties,
-      winner,
-    };
-  }, [partyA, partyB]);
+  // Add legacy property names for backward compatibility
+  return {
+    ...baseResult,
+    partyA: baseResult.entityA,
+    partyB: baseResult.entityB,
+  };
 }
