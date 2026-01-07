@@ -172,24 +172,31 @@
   "spec_file": "spec.md",
   "qa_signoff": {
     "status": "fixes_applied",
-    "timestamp": "2026-01-07T20:20:00.000Z",
-    "fix_session": 0,
+    "timestamp": "2026-01-07T21:40:00.000Z",
+    "fix_session": 1,
     "issues_fixed": [
       {
-        "title": "Needs rebase - branch rebased onto origin/main",
-        "fix_description": "Cherry-picked 9 feature commits onto current origin/main (d012917)"
+        "title": "Rebase onto origin/staging",
+        "fix_description": "Rebased branch onto origin/staging (68f3fd9) as requested by QA"
       }
     ],
     "ready_for_qa_revalidation": true
   },
-  "last_updated": "2026-01-07T20:20:00.000Z",
+  "last_updated": "2026-01-07T21:40:00.000Z",
   "qa_iteration_history": [
     {
       "iteration": 0,
       "status": "fixes_applied",
       "timestamp": "2026-01-07T20:20:00.000Z",
-      "issues": ["needs rebase"],
+      "issues": ["needs rebase onto main"],
       "fix_applied": "rebased branch onto origin/main"
+    },
+    {
+      "iteration": 1,
+      "status": "fixes_applied",
+      "timestamp": "2026-01-07T21:40:00.000Z",
+      "issues": ["needs rebase onto staging"],
+      "fix_applied": "rebased branch onto origin/staging (68f3fd9)"
     }
   ]
 }
