@@ -3,7 +3,7 @@ import { useInitiatives } from '@/services/initiatives/useInitiatives';
 import { formatDate } from '@/utils/dateUtils';
 import * as Accordion from '@radix-ui/react-accordion';
 import { Table } from '@radix-ui/themes';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { useEffect, useMemo, useState } from 'react';
 import { FaChevronDown, FaChevronRight, FaClock, FaSearch, FaVoteYea } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
