@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { compare } from 'shared';
 import type { PartyStats } from '../../lib/supabase';
 
 export interface PartyComparisonMetric {
@@ -19,26 +20,6 @@ export interface PartyComparisonResult {
   winsB: number;
   ties: number;
   winner: 'A' | 'B' | 'tie';
-}
-
-function compare(
-  a: number | null,
-  b: number | null,
-  higherIsBetter = true
-): { winnerA: boolean; winnerB: boolean; tie: boolean } {
-  const valA = a ?? 0;
-  const valB = b ?? 0;
-
-  if (valA === valB) {
-    return { winnerA: false, winnerB: false, tie: true };
-  }
-
-  const aWins = higherIsBetter ? valA > valB : valA < valB;
-  return {
-    winnerA: aWins,
-    winnerB: !aWins,
-    tie: false,
-  };
 }
 
 export function useCompareParties(
