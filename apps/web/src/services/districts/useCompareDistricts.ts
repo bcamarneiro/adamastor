@@ -1,10 +1,10 @@
+import { useMemo } from 'react';
 import type { DistrictStats } from '../../lib/supabase';
 import {
-  createCompareHook,
-  type ComparisonMetric,
-  type ComparisonResult,
+  useComparison,
   type MetricConfig,
-} from '../compare';
+  type ComparisonMetric,
+} from '../../hooks/useComparison';
 
 /**
  * Type alias for backward compatibility.
@@ -14,18 +14,22 @@ export type DistrictComparisonMetric = ComparisonMetric;
 
 /**
  * District-specific comparison result with legacy property names.
- * Extends ComparisonResult<DistrictStats> and adds districtA/districtB aliases.
+ * Preserves backwards compatibility with districtA/districtB naming.
  */
-export interface DistrictComparisonResult extends ComparisonResult<DistrictStats> {
-  /** Alias for entityA - maintains backward compatibility */
+export interface DistrictComparisonResult {
   districtA: DistrictStats;
-  /** Alias for entityB - maintains backward compatibility */
   districtB: DistrictStats;
+  metrics: DistrictComparisonMetric[];
+  winsA: number;
+  winsB: number;
+  ties: number;
+  winner: 'A' | 'B' | 'tie';
 }
 
 /**
  * Metrics configuration for district comparison.
  * Defines the 3 metrics used to compare districts.
+ * Defined outside hook to maintain stable references.
  */
 const districtMetricsConfig: MetricConfig<DistrictStats>[] = [
   {
@@ -46,17 +50,13 @@ const districtMetricsConfig: MetricConfig<DistrictStats>[] = [
 ];
 
 /**
- * Internal hook created by the factory.
- * Returns the generic ComparisonResult<DistrictStats>.
- */
-const useCompareDistrictsBase = createCompareHook<DistrictStats>(districtMetricsConfig);
-
-/**
  * Compare two districts and determine which performs better.
  *
- * This hook uses the createCompareHook factory internally while maintaining
+ * This hook uses the generic useComparison hook internally while maintaining
  * backward compatibility with the original API that uses districtA/districtB
  * property names.
+ *
+ * Compares districts on: avg_work_score, avg_attendance_rate, and active_deputies.
  *
  * @param districtA - First district to compare (or null)
  * @param districtB - Second district to compare (or null)
@@ -73,14 +73,22 @@ export function useCompareDistricts(
   districtA: DistrictStats | null,
   districtB: DistrictStats | null
 ): DistrictComparisonResult | null {
-  const baseResult = useCompareDistrictsBase(districtA, districtB);
+  const genericResult = useComparison(districtA, districtB, {
+    metrics: districtMetricsConfig,
+  });
 
-  if (!baseResult) return null;
+  // Transform generic result to district-specific format for backward compatibility
+  return useMemo(() => {
+    if (!genericResult) return null;
 
-  // Add legacy property names for backward compatibility
-  return {
-    ...baseResult,
-    districtA: baseResult.entityA,
-    districtB: baseResult.entityB,
-  };
+    return {
+      districtA: genericResult.entityA,
+      districtB: genericResult.entityB,
+      metrics: genericResult.metrics,
+      winsA: genericResult.winsA,
+      winsB: genericResult.winsB,
+      ties: genericResult.ties,
+      winner: genericResult.winner,
+    };
+  }, [genericResult]);
 }

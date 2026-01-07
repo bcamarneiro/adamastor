@@ -1,11 +1,10 @@
+import { useMemo } from 'react';
 import type { DeputyDetail } from '../../lib/supabase';
 import {
-  createCompareHook,
-  type ComparisonMetric,
-  type ComparisonResult,
+  useComparison,
   type MetricConfig,
-  type CompareOptions,
-} from '../compare';
+  type ComparisonMetric,
+} from '../../hooks/useComparison';
 
 /**
  * Type alias for backward compatibility.
@@ -14,21 +13,28 @@ import {
 export type DeputyComparisonMetric = ComparisonMetric;
 
 /**
- * Deputy-specific comparison result with legacy property names.
- * Extends ComparisonResult<DeputyDetail> and adds deputyA/deputyB aliases.
- * Includes scoreDifference which is always calculated for deputy comparisons.
+ * Result of comparing two deputies across multiple metrics.
+ * Preserves backwards compatibility with deputyA/deputyB naming.
+ * Includes:
+ * - deputyA/deputyB: The two deputies being compared
+ * - metrics: Array of comparison metrics with winners determined
+ * - winsA/winsB/ties: Count of metrics won by each deputy or tied
+ * - winner: Overall winner ('A', 'B', or 'tie')
+ * - scoreDifference: Absolute difference in work_score
  */
-export interface DeputyComparisonResult extends ComparisonResult<DeputyDetail> {
-  /** Alias for entityA - maintains backward compatibility */
+export interface DeputyComparisonResult {
   deputyA: DeputyDetail;
-  /** Alias for entityB - maintains backward compatibility */
   deputyB: DeputyDetail;
-  /** Score difference based on work_score (always present for deputies) */
+  metrics: ComparisonMetric[];
+  winsA: number;
+  winsB: number;
+  ties: number;
+  winner: 'A' | 'B' | 'tie';
   scoreDifference: number;
 }
 
 /**
- * Metrics configuration for deputy comparison.
+ * Metric configurations for deputy comparison.
  * Defines the 5 metrics used to compare deputies.
  * Note: national_rank uses higherIsBetter: false since lower rank is better.
  */
@@ -61,32 +67,29 @@ const deputyMetricsConfig: MetricConfig<DeputyDetail>[] = [
 ];
 
 /**
- * Options for deputy comparison.
- * Uses work_score as tiebreaker when metric wins are equal.
- * Calculates score difference based on work_score.
+ * Tiebreaker function using work_score.
+ * Returns 'A' if deputyA has higher work_score, 'B' if deputyB does, 'tie' if equal.
  */
-const deputyCompareOptions: CompareOptions<DeputyDetail> = {
-  tiebreaker: (a, b) => {
-    if (a.work_score > b.work_score) return 'A';
-    if (b.work_score > a.work_score) return 'B';
-    return 'tie';
-  },
-  scoreDifference: (a, b) => Math.abs(a.work_score - b.work_score),
-};
+function workScoreTiebreaker(
+  deputyA: DeputyDetail,
+  deputyB: DeputyDetail
+): 'A' | 'B' | 'tie' {
+  if (deputyA.work_score > deputyB.work_score) return 'A';
+  if (deputyB.work_score > deputyA.work_score) return 'B';
+  return 'tie';
+}
 
 /**
- * Internal hook created by the factory.
- * Returns the generic ComparisonResult<DeputyDetail>.
+ * Extract work_score for scoreDifference calculation.
  */
-const useCompareDeputiesBase = createCompareHook<DeputyDetail>(
-  deputyMetricsConfig,
-  deputyCompareOptions
-);
+function getWorkScore(deputy: DeputyDetail): number {
+  return deputy.work_score;
+}
 
 /**
  * Compare two deputies and determine which performs better.
  *
- * This hook uses the createCompareHook factory internally while maintaining
+ * This hook uses the useComparison hook internally while maintaining
  * backward compatibility with the original API that uses deputyA/deputyB
  * property names.
  *
@@ -111,16 +114,26 @@ export function useCompareDeputies(
   deputyA: DeputyDetail | null,
   deputyB: DeputyDetail | null
 ): DeputyComparisonResult | null {
-  const baseResult = useCompareDeputiesBase(deputyA, deputyB);
+  const genericResult = useComparison(deputyA, deputyB, {
+    metrics: deputyMetricsConfig,
+    tiebreaker: workScoreTiebreaker,
+    getScore: getWorkScore,
+  });
 
-  if (!baseResult) return null;
+  // Transform generic result to deputy-specific format for backwards compatibility
+  return useMemo(() => {
+    if (!genericResult) return null;
 
-  // Add legacy property names for backward compatibility
-  // scoreDifference is guaranteed to exist due to deputyCompareOptions
-  return {
-    ...baseResult,
-    deputyA: baseResult.entityA,
-    deputyB: baseResult.entityB,
-    scoreDifference: baseResult.scoreDifference as number,
-  };
+    return {
+      deputyA: genericResult.entityA,
+      deputyB: genericResult.entityB,
+      metrics: genericResult.metrics,
+      winsA: genericResult.winsA,
+      winsB: genericResult.winsB,
+      ties: genericResult.ties,
+      winner: genericResult.winner,
+      // scoreDifference is always defined here because we provide getScore
+      scoreDifference: genericResult.scoreDifference!,
+    };
+  }, [genericResult]);
 }
