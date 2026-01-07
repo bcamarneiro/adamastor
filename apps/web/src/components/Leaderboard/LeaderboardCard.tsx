@@ -38,6 +38,7 @@ export function LeaderboardCard({ deputy, position, isTop = true }: LeaderboardC
           <img
             src={deputy.photo_url}
             alt={deputy.short_name}
+            loading="lazy"
             className="w-14 h-14 rounded-full object-cover bg-neutral-4 border-2 border-neutral-5"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/placeholder-avatar.svg';
