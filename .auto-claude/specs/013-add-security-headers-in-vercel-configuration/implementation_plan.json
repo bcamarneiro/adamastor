@@ -187,15 +187,15 @@
       "data_urls": "Used for inline images and icons"
     }
   },
-  "last_updated": "2026-01-07T20:18:00.000000+00:00",
+  "last_updated": "2026-01-07T21:40:00.000000+00:00",
   "qa_signoff": {
     "status": "fixes_applied",
-    "timestamp": "2026-01-07T20:18:00.000Z",
-    "fix_session": 0,
+    "timestamp": "2026-01-07T21:40:00.000Z",
+    "fix_session": 1,
     "issues_fixed": [
       {
-        "title": "needs rebase",
-        "fix_commit": "0f78776"
+        "title": "rebase with origin/staging",
+        "fix_commit": "340bba9"
       }
     ],
     "ready_for_qa_revalidation": true
