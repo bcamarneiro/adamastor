@@ -16,25 +16,27 @@
           "title": "Update InitiativeList.tsx focus ring colors",
           "description": "Replace focus:ring-blue-500 with focus:ring-accent-9 on lines 122 and 133 (search input and filter select)",
           "file": "apps/web/src/pages/InitiativesPage/InitiativeList/InitiativeList.tsx",
-          "status": "in_progress",
+          "status": "completed",
           "changes": [
             "Line 122: Change focus:ring-blue-500 to focus:ring-accent-9",
             "Line 133: Change focus:ring-blue-500 to focus:ring-accent-9"
           ],
-          "notes": "Starting to replace focus:ring-blue-500 with focus:ring-accent-9 on lines 122 and 133",
-          "updated_at": "2026-01-07T17:42:46.635625+00:00"
+          "notes": "Successfully replaced focus:ring-blue-500 with focus:ring-accent-9 on lines 122 (search input) and 133 (filter select) in InitiativeList.tsx. Commit: 3f0485f",
+          "updated_at": "2026-01-07T17:43:26.739110+00:00"
         },
         {
           "id": "1.2",
           "title": "Update ParliamentList.tsx focus ring colors",
           "description": "Replace focus:ring-blue-500 with focus:ring-accent-9 on lines 138, 149, and 162 (search input and filter selects)",
           "file": "apps/web/src/pages/ParliamentPage/ParliamentList/ParliamentList.tsx",
-          "status": "pending",
+          "status": "completed",
           "changes": [
             "Line 138: Change focus:ring-blue-500 to focus:ring-accent-9",
             "Line 149: Change focus:ring-blue-500 to focus:ring-accent-9",
             "Line 162: Change focus:ring-blue-500 to focus:ring-accent-9"
-          ]
+          ],
+          "notes": "Successfully replaced focus:ring-blue-500 with focus:ring-accent-9 on lines 138 (search input), 149 (district filter select), and 162 (party filter select) in ParliamentList.tsx. Commit: 6c0661a",
+          "updated_at": "2026-01-07T17:44:44.964175+00:00"
         }
       ]
     },
@@ -159,5 +161,5 @@
     "tests_passed": "",
     "issues": ""
   },
-  "last_updated": "2026-01-07T17:42:46.635635+00:00"
+  "last_updated": "2026-01-07T17:44:44.964183+00:00"
 }
