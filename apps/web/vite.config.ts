@@ -38,5 +38,12 @@ export default defineConfig({
         }
       },
     },
-  ],
+    // Sentry source map uploads - only in production builds
+    process.env.NODE_ENV === 'production' &&
+      sentryVitePlugin({
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      }),
+  ].filter(Boolean),
 });
