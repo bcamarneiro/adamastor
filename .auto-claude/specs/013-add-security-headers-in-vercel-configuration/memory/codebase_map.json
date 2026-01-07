@@ -1,0 +1,10 @@
+{
+  "discovered_files": {
+    "apps/web/vercel.json": {
+      "description": "Vercel configuration file at apps/web/vercel.json. Currently only has cache headers for /assets/* path. Application uses external resources: Google Fonts (fonts.googleapis.com, fonts.gstatic.com), Vercel Analytics (*.vercel-scripts.com, *.vercel-insights.com), Sentry (*.sentry.io), Supabase (*.supabase.co). Also uses blob: URLs for html-to-image generation feature.",
+      "category": "configuration",
+      "discovered_at": "2026-01-07T17:38:10.349888+00:00"
+    }
+  },
+  "last_updated": "2026-01-07T17:38:10.349900+00:00"
+}

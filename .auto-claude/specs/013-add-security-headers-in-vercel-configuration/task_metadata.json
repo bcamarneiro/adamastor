@@ -1,0 +1,10 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "security_hardening",
+  "ideaId": "sec-001",
+  "rationale": "Security headers are a defense-in-depth measure that protect users even if other security controls fail. Missing headers expose users to clickjacking attacks (X-Frame-Options), MIME type confusion attacks (X-Content-Type-Options), and weaken CSP protections. These are easy wins with significant security benefits.",
+  "category": "security",
+  "securitySeverity": "high",
+  "impact": "high",
+  "priority": "high"
+}
