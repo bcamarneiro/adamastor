@@ -1,0 +1,30 @@
+{
+  "discovered_files": {
+    ".claude/CLAUDE.md": {
+      "description": "Contains GitHub issue workflow: branch naming (<type>/issue-<n>-<desc>), commit format, validation criteria requirements. Also has SuperDesign UI guidelines.",
+      "category": "workflow",
+      "discovered_at": "2026-01-07T15:13:50.710055+00:00"
+    },
+    "docs/AI_AGENTS.md": {
+      "description": "Comprehensive AI agent collaboration guidelines: PR review response patterns, E2E regression test requirements, critical paths to avoid (transform pipeline, work score, DB migrations), testing patterns.",
+      "category": "workflow",
+      "discovered_at": "2026-01-07T15:13:50.726411+00:00"
+    },
+    "/opt/homebrew/bin/gh": {
+      "description": "GitHub CLI is installed at /opt/homebrew/bin/gh and authenticated with bcamarneiro account. Token has repo, workflow, gist, and read:org scopes. Use full path when running in sandboxed environments.",
+      "category": "infrastructure",
+      "discovered_at": "2026-01-07T15:22:08.592034+00:00"
+    },
+    "GitHub PRs": {
+      "description": "7 open PRs exist: Issues #71, #75, #73, #36, #98, #109 already have PRs open. PR #123 has 17 unaddressed Copilot review comments about postal code duplications that need attention. For pilot issues, select #97 or #96 instead since they don't have existing PRs.",
+      "category": "workflow",
+      "discovered_at": "2026-01-07T15:27:51.026857+00:00"
+    },
+    "issue_selection.md": {
+      "description": "Selected 3 pilot issues for workflow validation: #97 (legislature format bug - apps/web/src/components/LegislatureBadge.tsx), #96 (missing emoji bug - apps/web/src/pages/PartiesPage/PartiesPage.tsx), #76 (tiebreaker explanation enhancement - apps/web/src/pages/RankingPage/). Implementation order: #97 \u2192 #96 \u2192 #76(optional).",
+      "category": "workflow",
+      "discovered_at": "2026-01-07T15:31:14.335591+00:00"
+    }
+  },
+  "last_updated": "2026-01-07T15:31:14.335598+00:00"
+}
