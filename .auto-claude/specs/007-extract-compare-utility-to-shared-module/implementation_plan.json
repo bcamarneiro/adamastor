@@ -137,12 +137,12 @@
   },
   "qa_signoff": {
     "status": "fixes_applied",
-    "timestamp": "2026-01-07T20:20:00.000Z",
-    "fix_session": 0,
+    "timestamp": "2026-01-07T21:35:00.000Z",
+    "fix_session": 1,
     "issues_fixed": [
       {
-        "title": "Branch needed rebase onto origin/main",
-        "fix_commit": "rebase completed"
+        "title": "Branch rebased onto origin/staging",
+        "fix_commit": "4330e91 (rebased on 68f3fd9)"
       }
     ],
     "ready_for_qa_revalidation": true
