@@ -4,12 +4,12 @@ import {
   useComparison,
   type MetricConfig,
   type ComparisonMetric,
-} from '../../hooks/useComparison';
+} from '@/hooks/useComparison';
 
-/**
- * Type alias for backwards compatibility.
- * PartyComparisonMetric is now the same as the generic ComparisonMetric.
- */
+// Re-export for backward compatibility
+export type { ComparisonMetric };
+
+/** @deprecated Use ComparisonMetric from @/hooks/useComparison instead */
 export type PartyComparisonMetric = ComparisonMetric;
 
 /**
@@ -19,7 +19,7 @@ export type PartyComparisonMetric = ComparisonMetric;
 export interface PartyComparisonResult {
   partyA: PartyStats;
   partyB: PartyStats;
-  metrics: PartyComparisonMetric[];
+  metrics: ComparisonMetric[];
   winsA: number;
   winsB: number;
   ties: number;
