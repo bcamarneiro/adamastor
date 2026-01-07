@@ -1,0 +1,84 @@
+# Build Progress: Extract Generic Comparison Hook
+
+## Session: 2026-01-07 17:34
+
+### Phase 1: Planning Complete
+
+**Analysis Summary:**
+- Identified 3 comparison hooks with duplicated logic:
+  - useCompareDeputies.ts (105 lines)
+  - useCompareParties.ts (129 lines)  
+  - useCompareDistricts.ts (115 lines)
+
+**Duplication Patterns Found:**
+1. compare() function - duplicated verbatim in useCompareParties.ts and useCompareDistricts.ts (lines 24-42)
+2. ComparisonMetric interface - 3 variants with same structure
+3. Winner calculation logic - repeated in all 3 hooks
+
+**Implementation Plan Created:**
+- Phase 1: Create generic useComparison hook in apps/web/src/hooks/useComparison/
+- Phase 2: Add comprehensive unit tests
+- Phase 3: Refactor existing hooks to use generic implementation  
+- Phase 4: Verify tests pass and measure code reduction
+
+**Estimated Impact:**
+- Lines before: ~245 lines total
+- Lines after: ~150 lines total
+- Code reduction: ~39%
+
+**Status:** Ready to begin implementation
+
+---
+
+## Session: 2026-01-07 (Implementation Complete)
+
+### Phases 1-3: Implementation Complete
+
+All implementation subtasks (1.1-3.3) have been completed:
+
+**Phase 1: Create Generic Comparison Utilities**
+- ✅ 1.1: Created types.ts with ComparisonMetric, MetricConfig<T>, ComparisonResult<T>
+- ✅ 1.2: Created compare.ts utility function
+- ✅ 1.3: Created useComparison.ts generic hook
+- ✅ 1.4: Created index.ts barrel export
+
+**Phase 2: Write Tests for Generic Utilities**
+- ✅ 2.1: Created compare.test.ts with comprehensive test coverage
+- ✅ 2.2: Created useComparison.test.ts with hook tests
+
+**Phase 3: Refactor Existing Hooks**
+- ✅ 3.1: Refactored useCompareDeputies.ts to use generic hook
+- ✅ 3.2: Refactored useCompareParties.ts to use generic hook
+- ✅ 3.3: Refactored useCompareDistricts.ts to use generic hook
+
+### Phase 4: Verify and Finalize
+
+**4.1: Run test suite and TypeScript compiler**
+
+**Environment Restriction Note:**
+The execution environment restricts running `npm`, `bun`, `npx`, and `tsc` commands.
+Static code verification was performed instead:
+
+**Static Code Verification:**
+- ✅ All TypeScript imports are correctly typed
+- ✅ Generic types properly propagate through the codebase
+- ✅ No syntax errors detected in any files
+- ✅ All exports/imports align correctly between modules
+- ✅ Test files have proper Vitest imports and test structure
+- ✅ Backwards compatibility maintained with domain-specific interfaces
+
+**Files Verified:**
+- apps/web/src/hooks/useComparison/index.ts
+- apps/web/src/hooks/useComparison/types.ts
+- apps/web/src/hooks/useComparison/compare.ts
+- apps/web/src/hooks/useComparison/useComparison.ts
+- apps/web/src/hooks/useComparison/compare.test.ts
+- apps/web/src/hooks/useComparison/useComparison.test.ts
+- apps/web/src/services/battle/useCompareDeputies.ts
+- apps/web/src/services/districts/useCompareDistricts.ts
+- apps/web/src/services/parties/useCompareParties.ts
+
+**Recommendation:** Run `bun run typecheck && bun test` manually to confirm verification
+
+**Status:** Awaiting manual test/typecheck verification before final sign-off
+
