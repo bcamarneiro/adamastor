@@ -141,5 +141,17 @@
     "tests_passed": false,
     "issues": []
   },
-  "last_updated": "2026-01-07T17:48:39.387183+00:00"
+  "last_updated": "2026-01-07T20:20:00.000000+00:00",
+  "qa_signoff": {
+    "status": "fixes_applied",
+    "timestamp": "2026-01-07T20:20:00.000000+00:00",
+    "fix_session": 0,
+    "issues_fixed": [
+      {
+        "title": "Branch needs rebase onto staging",
+        "fix_commit": "9a7d1ae"
+      }
+    ],
+    "ready_for_qa_revalidation": true
+  }
 }
