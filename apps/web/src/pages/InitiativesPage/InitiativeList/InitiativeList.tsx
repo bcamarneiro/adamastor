@@ -48,7 +48,8 @@ const InitiativeList = () => {
     });
   }, [initiatives, debouncedFilterText, selectedPhase]);
 
-  const toggleRow = (initiativeId: string) => {
+  // Memoize toggle callback to prevent unnecessary re-renders in virtualized rows
+  const toggleRow = useCallback((initiativeId: string) => {
     setExpandedRows((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(initiativeId)) {
@@ -58,7 +59,7 @@ const InitiativeList = () => {
       }
       return newSet;
     });
-  };
+  }, []);
 
   // Get unique phases for filter
   const phases = useMemo(() => {
@@ -71,10 +72,13 @@ const InitiativeList = () => {
     return Array.from(phaseSet);
   }, [initiatives]);
 
-  // Get related initiatives for a given initiative (memoized lookup)
-  const getRelatedInitiatives = useCallback(
-    (initiative: InitiativeData): RelatedInitiativeData[] => {
-      return initiatives
+  // Pre-compute related initiatives map for O(1) lookup during render
+  // This avoids expensive filtering during scroll when virtualizer re-renders visible items
+  const relatedInitiativesMap = useMemo(() => {
+    const map = new Map<string, RelatedInitiativeData[]>();
+
+    for (const initiative of initiatives) {
+      const related = initiatives
         .filter(
           (ini) =>
             ini.IniId !== initiative.IniId &&
@@ -90,9 +94,11 @@ const InitiativeList = () => {
           IniTitulo: ini.IniTitulo,
           IniTipo: ini.IniTipo,
         }));
-    },
-    [initiatives]
-  );
+      map.set(initiative.IniId, related);
+    }
+
+    return map;
+  }, [initiatives]);
 
   // Set up the virtualizer for efficient rendering of large lists
   const virtualizer = useVirtualizer({
@@ -263,7 +269,7 @@ const InitiativeList = () => {
                           initiative={initiative as InitiativeData}
                           isExpanded={isExpanded}
                           onToggle={toggleRow}
-                          relatedInitiatives={getRelatedInitiatives(initiative as InitiativeData)}
+                          relatedInitiatives={relatedInitiativesMap.get(initiative.IniId) ?? []}
                         />
                       </div>
                     );
