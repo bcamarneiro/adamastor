@@ -58,7 +58,25 @@ The codebase has inconsistent focus ring colors across form inputs:
   - Package manager commands (bun, npm) are restricted in this environment
   - Dependencies not installed (node_modules missing)
   - User should run: `bun install && bun run build && bun run typecheck`
-- 4.2: Visual testing - Pending
+- 4.2: Run tests - **Requires Manual Verification**
+  - Package manager commands (bun) are restricted in this environment
+  - Analysis of existing tests shows no tests check for focus ring classes
+  - Tests verify: component behavior, bg-colors, border-colors, layout classes
+  - Changes to focus:ring-* classes should NOT affect any existing tests
+  - User should run: `bun run test`
 
 ## Next Steps
-- User should manually run build and typecheck commands to verify no errors
+- User should manually run: `bun install && bun run build && bun run typecheck && bun run test`
+
+## Test Analysis Summary (2026-01-07)
+The following test files were reviewed for potential impact:
+- Button.test.tsx - Tests variant styles (bg-*), layout classes - NO focus ring tests
+- PostalCodeInput.test.tsx - Tests input behavior, error styles - NO focus ring tests
+- Other tests in apps/web/src/ and apps/watcher/src/ - Logic/behavior tests
+
+**Conclusion:** All focus ring changes are CSS-only styling changes that do not affect:
+- Component functionality being tested
+- Any class names that tests explicitly check for
+- Component behavior or DOM structure
+
+The tests should pass once run manually.
