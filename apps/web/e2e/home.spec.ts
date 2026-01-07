@@ -66,13 +66,17 @@ test.describe('Home Page', () => {
     const heroSection = page.locator('section, [class*="hero"]').first();
     await expect(heroSection).toBeVisible();
 
-    const emptyFeatureSection = page
+    // Check that sections with feature-related content actually have content
+    const featureSection = page
       .locator('section')
       .filter({ hasText: /funcionalidades/i })
-      .filter({ hasText: '' });
+      .first();
 
-    const emptyCount = await emptyFeatureSection.count();
-    expect(emptyCount).toBe(0);
+    if ((await featureSection.count()) > 0) {
+      const sectionText = await featureSection.textContent();
+      // Section should have more than just the heading text
+      expect(sectionText?.trim().length).toBeGreaterThan(20);
+    }
   });
 
   // Issue #92: Homepage tabs broken
