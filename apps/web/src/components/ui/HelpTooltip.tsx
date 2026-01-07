@@ -30,7 +30,7 @@ export function HelpTooltip({
             <button
               type="button"
               className={cn(
-                'inline-flex items-center justify-center p-0.5 rounded-full text-neutral-9 hover:text-neutral-11 hover:bg-neutral-3 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-7',
+                'inline-flex items-center justify-center p-0.5 rounded-full text-neutral-9 hover:text-neutral-11 hover:bg-neutral-3 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-9',
                 iconClassName
               )}
               aria-label="Ajuda"
