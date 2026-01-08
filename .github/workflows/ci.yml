@@ -80,7 +80,7 @@ jobs:
         working-directory: apps/web
 
       - name: Run web tests
-        run: bun test
+        run: bun run test
         working-directory: apps/web
 
   build:
