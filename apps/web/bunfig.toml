@@ -4,8 +4,7 @@ preload = ["./src/test-setup.ts"]
 
 # Exclude e2e tests (they run with Playwright, not Bun)
 ignore = [
-  "**/e2e/**",
-  "**/*.spec.ts"
+  "**/e2e/**"
 ]
 
 # Tell Bun which tsconfig to use for path resolution
