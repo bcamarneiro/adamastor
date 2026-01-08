@@ -167,7 +167,7 @@ describe('compare utility function', () => {
     });
 
     it('should detect tie with decimal equal values', () => {
-      const result = compare(3.14159, 3.14159);
+      const result = compare(Math.PI, Math.PI);
 
       expect(result.tie).toBe(true);
     });

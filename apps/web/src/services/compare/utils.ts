@@ -40,11 +40,7 @@ export interface CompareResult {
  * compare(null, 5)  // { winnerA: false, winnerB: true, tie: false }
  * compare(null, null) // { winnerA: false, winnerB: false, tie: true }
  */
-export function compare(
-  a: number | null,
-  b: number | null,
-  higherIsBetter = true
-): CompareResult {
+export function compare(a: number | null, b: number | null, higherIsBetter = true): CompareResult {
   const valA = a ?? 0;
   const valB = b ?? 0;
 

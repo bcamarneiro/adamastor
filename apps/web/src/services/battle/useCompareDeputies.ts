@@ -1,10 +1,6 @@
 import { useMemo } from 'react';
+import { type ComparisonMetric, type MetricConfig, useComparison } from '../../hooks/useComparison';
 import type { DeputyDetail } from '../../lib/supabase';
-import {
-  useComparison,
-  type MetricConfig,
-  type ComparisonMetric,
-} from '../../hooks/useComparison';
 
 /**
  * Type alias for backward compatibility.
@@ -70,10 +66,7 @@ const deputyMetricsConfig: MetricConfig<DeputyDetail>[] = [
  * Tiebreaker function using work_score.
  * Returns 'A' if deputyA has higher work_score, 'B' if deputyB does, 'tie' if equal.
  */
-function workScoreTiebreaker(
-  deputyA: DeputyDetail,
-  deputyB: DeputyDetail
-): 'A' | 'B' | 'tie' {
+function workScoreTiebreaker(deputyA: DeputyDetail, deputyB: DeputyDetail): 'A' | 'B' | 'tie' {
   if (deputyA.work_score > deputyB.work_score) return 'A';
   if (deputyB.work_score > deputyA.work_score) return 'B';
   return 'tie';

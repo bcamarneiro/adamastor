@@ -1,7 +1,7 @@
-import { formatDate } from '@/utils/dateUtils';
 import { memo } from 'react';
 import { FaChevronDown, FaChevronRight, FaClock, FaVoteYea } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { formatDate } from '../../../utils/dateUtils';
 
 // Event type matching the structure from useInitiatives
 type Event = {
@@ -109,9 +109,7 @@ const InitiativeRow = memo(function InitiativeRow({
             <span className="inline-flex px-2 py-1 rounded-full text-sm bg-neutral-2">
               {initiative.latestEvent.Fase?.trim()}
             </span>
-            {hasVotingPhases && (
-              <FaVoteYea className="text-neutral-11" title="Has voting phases" />
-            )}
+            {hasVotingPhases && <FaVoteYea className="text-neutral-11" title="Has voting phases" />}
             {duration > 180 && (
               <FaClock className="text-neutral-11" title="Long running initiative" />
             )}
@@ -185,7 +183,9 @@ const InitiativeRow = memo(function InitiativeRow({
                             )}
                           </p>
                           {event.Observacoes && (
-                            <p className="text-sm text-neutral-11 mt-1 italic">{event.Observacoes}</p>
+                            <p className="text-sm text-neutral-11 mt-1 italic">
+                              {event.Observacoes}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -217,7 +217,9 @@ const InitiativeRow = memo(function InitiativeRow({
                             )}
                           </p>
                           {event.Observacoes && (
-                            <p className="text-sm text-neutral-11 mt-1 italic">{event.Observacoes}</p>
+                            <p className="text-sm text-neutral-11 mt-1 italic">
+                              {event.Observacoes}
+                            </p>
                           )}
                         </div>
                       ))}
@@ -246,7 +248,9 @@ const InitiativeRow = memo(function InitiativeRow({
                 </div>
                 {initiative.latestEvent.Responsavel && (
                   <div>
-                    <h4 className="font-medium text-sm text-neutral-11 mb-1">Current Responsible</h4>
+                    <h4 className="font-medium text-sm text-neutral-11 mb-1">
+                      Current Responsible
+                    </h4>
                     <p className="text-neutral-12">{initiative.latestEvent.Responsavel}</p>
                   </div>
                 )}

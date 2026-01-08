@@ -22,10 +22,7 @@ function hasSharedTitleWords(initiative1: Initiative, initiative2: Initiative): 
  * - They have the same type (IniTipo), OR
  * - They share at least one significant word in their titles
  */
-export function areInitiativesRelated(
-  initiative1: Initiative,
-  initiative2: Initiative
-): boolean {
+export function areInitiativesRelated(initiative1: Initiative, initiative2: Initiative): boolean {
   // Same type means related
   if (initiative1.IniTipo === initiative2.IniTipo) {
     return true;
@@ -61,10 +58,7 @@ export function getRelatedInitiatives(
   limit: number = DEFAULT_RELATED_INITIATIVES_LIMIT
 ): Initiative[] {
   return allInitiatives
-    .filter(
-      (ini) =>
-        ini.IniId !== initiative.IniId && areInitiativesRelated(initiative, ini)
-    )
+    .filter((ini) => ini.IniId !== initiative.IniId && areInitiativesRelated(initiative, ini))
     .slice(0, limit);
 }
 
@@ -109,11 +103,7 @@ export function buildRelatedInitiativesMap(
   const map: RelatedInitiativesMap = new Map();
 
   for (const initiative of initiatives) {
-    const relatedInitiatives = getRelatedInitiatives(
-      initiative,
-      initiatives,
-      limit
-    );
+    const relatedInitiatives = getRelatedInitiatives(initiative, initiatives, limit);
     map.set(initiative.IniId, relatedInitiatives);
   }
 

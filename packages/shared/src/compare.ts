@@ -17,11 +17,7 @@ export interface CompareResult {
  * @param higherIsBetter - If true, higher value wins; if false, lower value wins
  * @returns CompareResult indicating which value won or if it's a tie
  */
-export function compare(
-  a: number | null,
-  b: number | null,
-  higherIsBetter = true
-): CompareResult {
+export function compare(a: number | null, b: number | null, higherIsBetter = true): CompareResult {
   const valA = a ?? 0;
   const valB = b ?? 0;
 

@@ -40,7 +40,7 @@ const LoadingScreen = () => {
               }}
               transition={{
                 duration: 1.5,
-                repeat: Infinity,
+                repeat: Number.POSITIVE_INFINITY,
                 ease: 'easeInOut',
               }}
             >
@@ -55,7 +55,7 @@ const LoadingScreen = () => {
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{
                 duration: 1.5,
-                repeat: Infinity,
+                repeat: Number.POSITIVE_INFINITY,
                 ease: 'easeInOut',
               }}
               className="text-sm text-neutral-500 dark:text-neutral-400"

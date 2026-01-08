@@ -97,7 +97,7 @@ describe('compare utility', () => {
     });
 
     it('should handle decimal ties', () => {
-      const result = compare(3.14159, 3.14159);
+      const result = compare(Math.PI, Math.PI);
       expect(result).toEqual({ winnerA: false, winnerB: false, tie: true });
     });
 

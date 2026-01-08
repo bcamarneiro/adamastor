@@ -1,5 +1,5 @@
-import { describe, expect, it, mock } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import Button from './Button';
 
 describe('Button', () => {
@@ -10,7 +10,7 @@ describe('Button', () => {
   });
 
   it('should call onClick handler when clicked', () => {
-    const handleClick = mock(() => {});
+    const handleClick = vi.fn(() => {});
 
     render(<Button onClick={handleClick}>Click me</Button>);
 
@@ -168,7 +168,7 @@ describe('Button', () => {
     });
 
     it('should not call onClick handler when disabled and clicked', () => {
-      const handleClick = mock(() => {});
+      const handleClick = vi.fn(() => {});
 
       render(
         <Button onClick={handleClick} disabled>

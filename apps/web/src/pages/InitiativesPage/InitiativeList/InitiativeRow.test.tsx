@@ -1,5 +1,5 @@
-import { describe, expect, it, mock } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import InitiativeRow, {
   calcularDuracao,
   type InitiativeData,
@@ -7,7 +7,7 @@ import InitiativeRow, {
 } from './InitiativeRow';
 
 // Mock react-router-dom Link
-mock.module('react-router-dom', () => ({
+vi.mock('react-router-dom', () => ({
   Link: ({
     to,
     children,
@@ -236,8 +236,9 @@ describe('InitiativeRow', () => {
       );
 
       expect(screen.getByText('Timeline Progress')).toBeTruthy();
-      expect(screen.getByText('Entrada')).toBeTruthy();
-      expect(screen.getByText('Discussão')).toBeTruthy();
+      // "Entrada" and "Discussão" appear multiple times (in badge and in timeline), so use getAllByText
+      expect(screen.getAllByText('Entrada').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('Discussão').length).toBeGreaterThan(0);
     });
 
     it('should show duration in days', () => {
@@ -356,7 +357,7 @@ describe('InitiativeRow', () => {
         ],
       });
 
-      const { container } = render(
+      render(
         <InitiativeRow
           initiative={initiativeWithVoting}
           isExpanded={false}
@@ -365,8 +366,8 @@ describe('InitiativeRow', () => {
         />
       );
 
-      // FaVoteYea icon should have title "Has voting phases"
-      const votingIcon = container.querySelector('[title="Has voting phases"]');
+      // FaVoteYea icon should have title "Has voting phases" - rendered as SVG title element
+      const votingIcon = screen.queryByTitle('Has voting phases');
       expect(votingIcon).toBeTruthy();
     });
 
@@ -439,7 +440,7 @@ describe('InitiativeRow', () => {
         },
       });
 
-      const { container } = render(
+      render(
         <InitiativeRow
           initiative={longRunningInitiative}
           isExpanded={false}
@@ -448,8 +449,8 @@ describe('InitiativeRow', () => {
         />
       );
 
-      // FaClock icon should have title "Long running initiative"
-      const clockIcon = container.querySelector('[title="Long running initiative"]');
+      // FaClock icon should have title "Long running initiative" - rendered as SVG title element
+      const clockIcon = screen.queryByTitle('Long running initiative');
       expect(clockIcon).toBeTruthy();
     });
 
@@ -594,7 +595,7 @@ describe('InitiativeRow', () => {
 
   describe('user interactions', () => {
     it('should call onToggle when row is clicked', () => {
-      const handleToggle = mock(() => {});
+      const handleToggle = vi.fn(() => {});
 
       const { container } = render(
         <InitiativeRow
@@ -615,7 +616,7 @@ describe('InitiativeRow', () => {
     });
 
     it('should call onToggle when Enter key is pressed on row', () => {
-      const handleToggle = mock(() => {});
+      const handleToggle = vi.fn(() => {});
 
       const { container } = render(
         <InitiativeRow
@@ -636,7 +637,7 @@ describe('InitiativeRow', () => {
     });
 
     it('should call onToggle when Space key is pressed on row', () => {
-      const handleToggle = mock(() => {});
+      const handleToggle = vi.fn(() => {});
 
       const { container } = render(
         <InitiativeRow
@@ -656,7 +657,7 @@ describe('InitiativeRow', () => {
     });
 
     it('should not call onToggle for other keys', () => {
-      const handleToggle = mock(() => {});
+      const handleToggle = vi.fn(() => {});
 
       const { container } = render(
         <InitiativeRow
@@ -676,7 +677,7 @@ describe('InitiativeRow', () => {
     });
 
     it('should not propagate click from Details link to row', () => {
-      const handleToggle = mock(() => {});
+      const handleToggle = vi.fn(() => {});
 
       render(
         <InitiativeRow
@@ -695,7 +696,7 @@ describe('InitiativeRow', () => {
     });
 
     it('should not propagate click from related initiative links', () => {
-      const handleToggle = mock(() => {});
+      const handleToggle = vi.fn(() => {});
       const relatedInitiatives = createMockRelatedInitiatives(1);
 
       render(
@@ -794,7 +795,8 @@ describe('InitiativeRow', () => {
         />
       );
 
-      expect(screen.getByText('Entrada')).toBeTruthy();
+      // "Entrada" appears multiple times, so use getAllByText
+      expect(screen.getAllByText('Entrada').length).toBeGreaterThan(0);
     });
 
     it('should handle initiative type that is not P', () => {

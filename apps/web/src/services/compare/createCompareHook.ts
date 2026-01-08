@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { ComparisonMetric, ComparisonResult, MetricConfig, CompareOptions } from './types';
+import type { CompareOptions, ComparisonMetric, ComparisonResult, MetricConfig } from './types';
 import { compare } from './utils';
 
 /**
@@ -33,10 +33,7 @@ export function createCompareHook<T>(
   metricsConfig: MetricConfig<T>[],
   options?: CompareOptions<T>
 ): (entityA: T | null, entityB: T | null) => ComparisonResult<T> | null {
-  return function useCompare(
-    entityA: T | null,
-    entityB: T | null
-  ): ComparisonResult<T> | null {
+  return function useCompare(entityA: T | null, entityB: T | null): ComparisonResult<T> | null {
     return useMemo(() => {
       if (!entityA || !entityB) return null;
 

@@ -1,18 +1,14 @@
-import { describe, expect, it } from 'vitest';
 import type { Initiative } from '@/services/initiatives/useInitiatives';
+import { describe, expect, it } from 'vitest';
 import {
+  DEFAULT_RELATED_INITIATIVES_LIMIT,
   areInitiativesRelated,
   buildRelatedInitiativesMap,
-  DEFAULT_RELATED_INITIATIVES_LIMIT,
   getRelatedInitiatives,
 } from './relatedInitiatives';
 
 // Helper to create mock initiatives with minimal required fields
-const createMockInitiative = (
-  id: string,
-  title: string,
-  type: string
-): Initiative => ({
+const createMockInitiative = (id: string, title: string, type: string): Initiative => ({
   IniId: id,
   IniNr: `NR-${id}`,
   IniTitulo: title,
@@ -38,33 +34,21 @@ describe('areInitiativesRelated', () => {
 
   it('should return true when initiatives share a title word (case insensitive)', () => {
     const initiative1 = createMockInitiative('1', 'Climate Change Act', 'Lei');
-    const initiative2 = createMockInitiative(
-      '2',
-      'Environmental climate policy',
-      'Decreto'
-    );
+    const initiative2 = createMockInitiative('2', 'Environmental climate policy', 'Decreto');
 
     expect(areInitiativesRelated(initiative1, initiative2)).toBe(true);
   });
 
   it('should match title words case-insensitively', () => {
     const initiative1 = createMockInitiative('1', 'EDUCATION Reform', 'Lei');
-    const initiative2 = createMockInitiative(
-      '2',
-      'Primary education funding',
-      'Decreto'
-    );
+    const initiative2 = createMockInitiative('2', 'Primary education funding', 'Decreto');
 
     expect(areInitiativesRelated(initiative1, initiative2)).toBe(true);
   });
 
   it('should match partial word substrings in titles', () => {
     const initiative1 = createMockInitiative('1', 'Tax Policy', 'Lei');
-    const initiative2 = createMockInitiative(
-      '2',
-      'Taxation and Revenue',
-      'Decreto'
-    );
+    const initiative2 = createMockInitiative('2', 'Taxation and Revenue', 'Decreto');
 
     // "Tax" should match as a substring of "Taxation"
     expect(areInitiativesRelated(initiative1, initiative2)).toBe(true);
@@ -110,9 +94,7 @@ describe('getRelatedInitiatives', () => {
 
     // Should find "Tax Credit Initiative" (shares "Tax")
     // Should find "Environmental Reform Act" (shares "Reform")
-    const taxRelated = related.some((ini) =>
-      ini.IniTitulo.toLowerCase().includes('tax')
-    );
+    const taxRelated = related.some((ini) => ini.IniTitulo.toLowerCase().includes('tax'));
     expect(taxRelated).toBe(true);
   });
 
@@ -131,11 +113,7 @@ describe('getRelatedInitiatives', () => {
   });
 
   it('should return empty array when no related initiatives exist', () => {
-    const standalone = createMockInitiative(
-      '99',
-      'Unique Standalone Item',
-      'UniqueType'
-    );
+    const standalone = createMockInitiative('99', 'Unique Standalone Item', 'UniqueType');
     const related = getRelatedInitiatives(standalone, initiatives);
 
     expect(related).toEqual([]);
@@ -180,9 +158,9 @@ describe('buildRelatedInitiativesMap', () => {
     const map = buildRelatedInitiativesMap(initiatives);
 
     expect(map.size).toBe(initiatives.length);
-    initiatives.forEach((ini) => {
+    for (const ini of initiatives) {
       expect(map.has(ini.IniId)).toBe(true);
-    });
+    }
   });
 
   it('should map each initiative to its related initiatives array', () => {
@@ -191,16 +169,16 @@ describe('buildRelatedInitiativesMap', () => {
     // Initiative 1 (Lei) should be related to Initiative 2 (Lei)
     const related1 = map.get('1');
     expect(related1).toBeDefined();
-    expect(related1!.some((ini) => ini.IniId === '2')).toBe(true);
+    expect(related1?.some((ini) => ini.IniId === '2')).toBe(true);
   });
 
   it('should exclude self from related initiatives in the map', () => {
     const map = buildRelatedInitiativesMap(initiatives);
 
-    initiatives.forEach((ini) => {
+    for (const ini of initiatives) {
       const related = map.get(ini.IniId);
-      expect(related!.every((r) => r.IniId !== ini.IniId)).toBe(true);
-    });
+      expect(related?.every((r) => r.IniId !== ini.IniId)).toBe(true);
+    }
   });
 
   it('should respect the default limit', () => {
@@ -214,7 +192,7 @@ describe('buildRelatedInitiativesMap', () => {
     const map = buildRelatedInitiativesMap(manyInitiatives);
 
     const related = map.get('1');
-    expect(related!.length).toBeLessThanOrEqual(DEFAULT_RELATED_INITIATIVES_LIMIT);
+    expect(related?.length).toBeLessThanOrEqual(DEFAULT_RELATED_INITIATIVES_LIMIT);
   });
 
   it('should respect a custom limit', () => {
@@ -228,7 +206,7 @@ describe('buildRelatedInitiativesMap', () => {
     const map = buildRelatedInitiativesMap(manyInitiatives, 2);
 
     const related = map.get('1');
-    expect(related!.length).toBeLessThanOrEqual(2);
+    expect(related?.length).toBeLessThanOrEqual(2);
   });
 
   it('should return empty map for empty initiatives list', () => {
@@ -238,9 +216,7 @@ describe('buildRelatedInitiativesMap', () => {
   });
 
   it('should handle single initiative (no relations possible)', () => {
-    const singleInitiative: Initiative[] = [
-      createMockInitiative('1', 'Lonely Initiative', 'Type'),
-    ];
+    const singleInitiative: Initiative[] = [createMockInitiative('1', 'Lonely Initiative', 'Type')];
     const map = buildRelatedInitiativesMap(singleInitiative);
 
     expect(map.size).toBe(1);
@@ -250,11 +226,11 @@ describe('buildRelatedInitiativesMap', () => {
   it('should compute consistent results (map values match getRelatedInitiatives)', () => {
     const map = buildRelatedInitiativesMap(initiatives);
 
-    initiatives.forEach((ini) => {
+    for (const ini of initiatives) {
       const fromMap = map.get(ini.IniId);
       const fromFunction = getRelatedInitiatives(ini, initiatives);
       expect(fromMap).toEqual(fromFunction);
-    });
+    }
   });
 });
 
