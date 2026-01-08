@@ -1,12 +1,12 @@
-import { Spinner } from '@/components/Spinner';
-import { useInitiatives } from '@/services/initiatives/useInitiatives';
-import { buildRelatedInitiativesMap } from '@/utils/relatedInitiatives';
 import * as Accordion from '@radix-ui/react-accordion';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
-import InitiativeRow, { type InitiativeData, type RelatedInitiativeData } from './InitiativeRow';
+import { Spinner } from '../../../components/Spinner';
+import { useInitiatives } from '../../../services/initiatives/useInitiatives';
+import { buildRelatedInitiativesMap } from '../../../utils/relatedInitiatives';
+import InitiativeRow, { type InitiativeData } from './InitiativeRow';
 
 // Grid column classes for consistent layout (matching InitiativeRow)
 const gridColsClass = 'grid grid-cols-[48px_auto_auto_1fr_96px] items-center';
@@ -83,23 +83,25 @@ const InitiativeList = () => {
   // Clear expanded rows that are no longer in filtered results
   // This prevents stale expanded state for filtered-out items
   useEffect(() => {
-    if (expandedRows.size === 0) return;
+    setExpandedRows((prev) => {
+      if (prev.size === 0) return prev;
 
-    const filteredIds = new Set(filteredInitiatives.map((i) => i.IniId));
-    const hasStaleExpanded = Array.from(expandedRows).some((id) => !filteredIds.has(id));
+      const filteredIds = new Set(filteredInitiatives.map((i) => i.IniId));
+      const hasStaleExpanded = Array.from(prev).some((id) => !filteredIds.has(id));
 
-    if (hasStaleExpanded) {
-      setExpandedRows((prev) => {
-        const newSet = new Set<string>();
-        for (const id of prev) {
-          if (filteredIds.has(id)) {
-            newSet.add(id);
-          }
+      if (!hasStaleExpanded) return prev;
+
+      const newSet = new Set<string>();
+      for (const id of prev) {
+        if (filteredIds.has(id)) {
+          newSet.add(id);
         }
-        return newSet;
-      });
-    }
-  }, [filteredInitiatives, expandedRows]);
+      }
+      return newSet;
+    });
+    // Only depend on filteredInitiatives, not expandedRows (would cause infinite loop)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredInitiatives]);
 
   // Track previous filter values to detect meaningful changes
   const prevFilterRef = useRef({ filterText: debouncedFilterText, phase: selectedPhase });
@@ -123,30 +125,39 @@ const InitiativeList = () => {
     prevFilterRef.current = { filterText: debouncedFilterText, phase: selectedPhase };
   }, [debouncedFilterText, selectedPhase]);
 
-  // Set up the virtualizer for efficient rendering of large lists
-  // Only enable when we have data to virtualize
-  const virtualizer = useVirtualizer({
-    count: filteredInitiatives.length,
-    getScrollElement: () => scrollContainerRef.current,
-    // Estimate size based on whether the row is expanded
-    // Defensive check for index bounds to handle race conditions during filter changes
-    estimateSize: (index) => {
+  // Memoize virtualizer configuration functions to prevent unnecessary recreations
+  const getScrollElement = useCallback(() => scrollContainerRef.current, []);
+
+  const estimateSize = useCallback(
+    (index: number) => {
       const initiative = filteredInitiatives[index];
       if (!initiative) return COLLAPSED_ROW_HEIGHT;
       return expandedRows.has(initiative.IniId) ? EXPANDED_ROW_HEIGHT : COLLAPSED_ROW_HEIGHT;
     },
-    // Use initiative ID as stable key for better virtualization
-    // Fallback to index if initiative is undefined (edge case during rapid filter changes)
-    getItemKey: (index) => filteredInitiatives[index]?.IniId ?? `fallback-${index}`,
+    [filteredInitiatives, expandedRows]
+  );
+
+  const getItemKey = useCallback(
+    (index: number) => filteredInitiatives[index]?.IniId ?? `fallback-${index}`,
+    [filteredInitiatives]
+  );
+
+  // Set up the virtualizer for efficient rendering of large lists
+  // Only enable when we have data to virtualize
+  const virtualizer = useVirtualizer({
+    count: filteredInitiatives.length,
+    getScrollElement,
+    estimateSize,
+    getItemKey,
     overscan: 5, // Render 5 extra rows above/below viewport for smooth scrolling
-    // Enable smooth scrolling behavior
     enabled: !isLoading && filteredInitiatives.length > 0,
   });
 
   // Force remeasurement when expanded rows change
   useLayoutEffect(() => {
     virtualizer.measure();
-  }, [expandedRows, virtualizer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandedRows]);
 
   if (isError) {
     return (
@@ -198,6 +209,11 @@ const InitiativeList = () => {
               placeholder="Search initiatives..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setFilterText('');
+                }
+              }}
               className="w-full px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-accent-9 focus:border-transparent transition-all"
               aria-label="Search initiatives"
             />
@@ -234,10 +250,7 @@ const InitiativeList = () => {
         ) : (
           <div role="table" aria-label="Initiatives list" className="flex flex-col min-h-0 h-full">
             {/* Sticky Header */}
-            <div
-              role="rowgroup"
-              className="flex-none bg-neutral-2 border-b border-neutral-3"
-            >
+            <div role="rowgroup" className="flex-none bg-neutral-2 border-b border-neutral-3">
               <div role="row" className={gridColsClass}>
                 <div role="columnheader" className="p-3" aria-label="Expand/collapse">
                   <span className="sr-only">Expand</span>
@@ -258,11 +271,7 @@ const InitiativeList = () => {
             </div>
 
             {/* Virtualized Table Body */}
-            <div
-              ref={scrollContainerRef}
-              role="rowgroup"
-              className="flex-1 overflow-auto"
-            >
+            <div ref={scrollContainerRef} role="rowgroup" className="flex-1 overflow-auto">
               {filteredInitiatives.length === 0 ? (
                 <div
                   role="row"

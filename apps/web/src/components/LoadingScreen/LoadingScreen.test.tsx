@@ -1,15 +1,15 @@
-import { describe, expect, it, mock, beforeEach } from 'bun:test';
 import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import LoadingScreen from './LoadingScreen';
 
 // Mock the useGlobalLoading hook
 let mockIsLoading = true;
-mock.module('../../hooks/useGlobalLoading', () => ({
+vi.mock('../../hooks/useGlobalLoading', () => ({
   useGlobalLoading: () => ({ isLoading: mockIsLoading }),
 }));
 
 // Mock framer-motion to avoid animation issues in tests
-mock.module('framer-motion', () => ({
+vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   motion: {
     div: ({
@@ -22,15 +22,10 @@ mock.module('framer-motion', () => ({
       children: React.ReactNode;
       className?: string;
       role?: string;
-      'aria-live'?: string;
+      'aria-live'?: 'polite' | 'off' | 'assertive';
       'aria-label'?: string;
     }) => (
-      <div
-        className={className}
-        role={role}
-        aria-live={ariaLive}
-        aria-label={ariaLabel}
-      >
+      <div className={className} role={role} aria-live={ariaLive} aria-label={ariaLabel}>
         {children}
       </div>
     ),

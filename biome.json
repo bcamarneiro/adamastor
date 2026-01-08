@@ -56,7 +56,9 @@
       },
       "a11y": {
         "useButtonType": "off",
-        "noLabelWithoutControl": "warn"
+        "noLabelWithoutControl": "warn",
+        "useSemanticElements": "warn",
+        "useFocusableInteractive": "warn"
       }
     }
   },

@@ -79,7 +79,9 @@ export function createMockDeputyDetail(overrides: Partial<DeputyDetail> = {}): D
  * Factory function to create mock NationalAverages objects.
  * Used for comparison metrics in the ReportCardDetail component.
  */
-export function createMockNationalAverages(overrides: Partial<NationalAverages> = {}): NationalAverages {
+export function createMockNationalAverages(
+  overrides: Partial<NationalAverages> = {}
+): NationalAverages {
   return {
     avg_proposals: 12.5,
     avg_interventions: 35.2,
@@ -146,11 +148,13 @@ export function createMockDeputyStatusHistory(
  * Factory function to create mock extended info object.
  * Contains roles, party history, and status history arrays.
  */
-export function createMockExtendedInfo(options: {
-  roles?: DeputyRole[];
-  partyHistory?: DeputyPartyHistory[];
-  statusHistory?: DeputyStatusHistory[];
-} = {}): {
+export function createMockExtendedInfo(
+  options: {
+    roles?: DeputyRole[];
+    partyHistory?: DeputyPartyHistory[];
+    statusHistory?: DeputyStatusHistory[];
+  } = {}
+): {
   roles: DeputyRole[];
   partyHistory: DeputyPartyHistory[];
   statusHistory: DeputyStatusHistory[];

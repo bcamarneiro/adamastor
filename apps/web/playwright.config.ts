@@ -23,13 +23,12 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    // In CI, serve the pre-built static files with SPA fallback; locally, use dev server
-    command: process.env.CI ? 'npx serve@latest dist -l 3000 --single' : 'bun run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: process.env.CI ? 60000 : 180000, // 1 minute in CI, 3 minutes locally for slower dev server startups
-    stdout: 'pipe',
-    stderr: 'pipe',
-  },
+  webServer: process.env.CI
+    ? {
+        command: 'npx serve@latest dist -l 3000 --single',
+        url: 'http://localhost:3000',
+        reuseExistingServer: false,
+        timeout: 60000,
+      }
+    : undefined,
 });

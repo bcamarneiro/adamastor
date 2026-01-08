@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { useComparison, type UseComparisonOptions } from './useComparison';
 import type { MetricConfig } from './types';
+import { type UseComparisonOptions, useComparison } from './useComparison';
 
 // Test entity type
 interface TestEntity {
@@ -12,12 +12,7 @@ interface TestEntity {
 }
 
 // Helper to create test entities
-const createEntity = (
-  id: string,
-  score: number,
-  rank: number,
-  count: number
-): TestEntity => ({
+const createEntity = (id: string, score: number, rank: number, count: number): TestEntity => ({
   id,
   score,
   rank,
@@ -39,9 +34,7 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(null, entityB, options)
-      );
+      const { result } = renderHook(() => useComparison(null, entityB, options));
 
       expect(result.current).toBeNull();
     });
@@ -52,9 +45,7 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, null, options)
-      );
+      const { result } = renderHook(() => useComparison(entityA, null, options));
 
       expect(result.current).toBeNull();
     });
@@ -78,15 +69,13 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, options)
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, options));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.metrics).toHaveLength(3);
+      expect(result.current?.metrics).toHaveLength(3);
 
       // Score: A=90 > B=80, higherIsBetter=true -> A wins
-      expect(result.current!.metrics[0]).toEqual({
+      expect(result.current?.metrics[0]).toEqual({
         label: 'Score',
         valueA: 90,
         valueB: 80,
@@ -97,7 +86,7 @@ describe('useComparison hook', () => {
       });
 
       // Rank: A=1 < B=5, higherIsBetter=false -> A wins (lower is better)
-      expect(result.current!.metrics[1]).toEqual({
+      expect(result.current?.metrics[1]).toEqual({
         label: 'Rank',
         valueA: 1,
         valueB: 5,
@@ -108,7 +97,7 @@ describe('useComparison hook', () => {
       });
 
       // Count: A=15 > B=10, higherIsBetter=true -> A wins
-      expect(result.current!.metrics[2]).toEqual({
+      expect(result.current?.metrics[2]).toEqual({
         label: 'Count',
         valueA: 15,
         valueB: 10,
@@ -131,14 +120,12 @@ describe('useComparison hook', () => {
         { label: 'Value', getValue: (e) => e.value, higherIsBetter: true },
       ];
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, { metrics })
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, { metrics }));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.metrics[0].valueA).toBe(0);
-      expect(result.current!.metrics[0].valueB).toBe(10);
-      expect(result.current!.metrics[0].winnerB).toBe(true);
+      expect(result.current?.metrics[0].valueA).toBe(0);
+      expect(result.current?.metrics[0].valueB).toBe(10);
+      expect(result.current?.metrics[0].winnerB).toBe(true);
     });
 
     it('should default higherIsBetter to true when not specified', () => {
@@ -149,13 +136,11 @@ describe('useComparison hook', () => {
         { label: 'Score', getValue: (e) => e.score }, // higherIsBetter not specified
       ];
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, { metrics })
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, { metrics }));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.metrics[0].winnerA).toBe(true);
-      expect(result.current!.metrics[0].higherIsBetter).toBe(true);
+      expect(result.current?.metrics[0].winnerA).toBe(true);
+      expect(result.current?.metrics[0].higherIsBetter).toBe(true);
     });
   });
 
@@ -167,14 +152,12 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, options)
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, options));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('A');
-      expect(result.current!.winsA).toBe(3);
-      expect(result.current!.winsB).toBe(0);
+      expect(result.current?.winner).toBe('A');
+      expect(result.current?.winsA).toBe(3);
+      expect(result.current?.winsB).toBe(0);
     });
 
     it('should determine B as winner when B wins more metrics', () => {
@@ -184,14 +167,12 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, options)
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, options));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('B');
-      expect(result.current!.winsA).toBe(0);
-      expect(result.current!.winsB).toBe(3);
+      expect(result.current?.winner).toBe('B');
+      expect(result.current?.winsA).toBe(0);
+      expect(result.current?.winsB).toBe(3);
     });
 
     it('should determine A as winner when A wins 2 and B wins 1', () => {
@@ -201,14 +182,12 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, options)
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, options));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('A');
-      expect(result.current!.winsA).toBe(2);
-      expect(result.current!.winsB).toBe(1);
+      expect(result.current?.winner).toBe('A');
+      expect(result.current?.winsA).toBe(2);
+      expect(result.current?.winsB).toBe(1);
     });
   });
 
@@ -223,14 +202,12 @@ describe('useComparison hook', () => {
         { label: 'Rank', getValue: (e) => e.rank, higherIsBetter: false },
       ];
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, { metrics })
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, { metrics }));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('tie');
-      expect(result.current!.winsA).toBe(1);
-      expect(result.current!.winsB).toBe(1);
+      expect(result.current?.winner).toBe('tie');
+      expect(result.current?.winsA).toBe(1);
+      expect(result.current?.winsB).toBe(1);
     });
 
     it('should use tiebreaker function when wins are equal', () => {
@@ -249,12 +226,10 @@ describe('useComparison hook', () => {
         return 'tie';
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, { metrics, tiebreaker })
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, { metrics, tiebreaker }));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('A'); // A has higher score
+      expect(result.current?.winner).toBe('A'); // A has higher score
     });
 
     it('should use tiebreaker to determine B as winner', () => {
@@ -273,17 +248,15 @@ describe('useComparison hook', () => {
         return 'tie';
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, { metrics, tiebreaker })
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, { metrics, tiebreaker }));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('B'); // B has higher score
+      expect(result.current?.winner).toBe('B'); // B has higher score
     });
 
     it('should return tie when tiebreaker also results in tie', () => {
       const entityA = createEntity('A', 80, 5, 10);
-      const entityB = createEntity('B', 80, 1, 10);
+      const entityB = createEntity('B', 80, 5, 10); // Same rank as A so metrics tie
 
       const metrics: MetricConfig<TestEntity>[] = [
         { label: 'Score', getValue: (e) => e.score, higherIsBetter: true },
@@ -297,12 +270,10 @@ describe('useComparison hook', () => {
         return 'tie';
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, { metrics, tiebreaker })
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, { metrics, tiebreaker }));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('tie');
+      expect(result.current?.winner).toBe('tie');
     });
 
     it('should not call tiebreaker when wins are not equal', () => {
@@ -324,7 +295,7 @@ describe('useComparison hook', () => {
       );
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winner).toBe('A');
+      expect(result.current?.winner).toBe('A');
       expect(tiebreakerCalled).toBe(false);
     });
   });
@@ -337,14 +308,12 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, options)
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, options));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winsA).toBe(1); // Score
-      expect(result.current!.winsB).toBe(1); // Rank
-      expect(result.current!.ties).toBe(1); // Count
+      expect(result.current?.winsA).toBe(1); // Score
+      expect(result.current?.winsB).toBe(1); // Rank
+      expect(result.current?.ties).toBe(1); // Count
     });
 
     it('should count all ties when values are equal', () => {
@@ -354,31 +323,27 @@ describe('useComparison hook', () => {
         metrics: standardMetrics,
       };
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, options)
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, options));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winsA).toBe(0);
-      expect(result.current!.winsB).toBe(0);
-      expect(result.current!.ties).toBe(3);
-      expect(result.current!.winner).toBe('tie');
+      expect(result.current?.winsA).toBe(0);
+      expect(result.current?.winsB).toBe(0);
+      expect(result.current?.ties).toBe(3);
+      expect(result.current?.winner).toBe('tie');
     });
 
     it('should handle empty metrics array', () => {
       const entityA = createEntity('A', 90, 1, 15);
       const entityB = createEntity('B', 80, 5, 10);
 
-      const { result } = renderHook(() =>
-        useComparison(entityA, entityB, { metrics: [] })
-      );
+      const { result } = renderHook(() => useComparison(entityA, entityB, { metrics: [] }));
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.winsA).toBe(0);
-      expect(result.current!.winsB).toBe(0);
-      expect(result.current!.ties).toBe(0);
-      expect(result.current!.winner).toBe('tie');
-      expect(result.current!.metrics).toHaveLength(0);
+      expect(result.current?.winsA).toBe(0);
+      expect(result.current?.winsB).toBe(0);
+      expect(result.current?.ties).toBe(0);
+      expect(result.current?.winner).toBe('tie');
+      expect(result.current?.metrics).toHaveLength(0);
     });
   });
 
@@ -395,7 +360,7 @@ describe('useComparison hook', () => {
       );
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.scoreDifference).toBe(10); // |90 - 80|
+      expect(result.current?.scoreDifference).toBe(10); // |90 - 80|
     });
 
     it('should return absolute value for scoreDifference', () => {
@@ -410,7 +375,7 @@ describe('useComparison hook', () => {
       );
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.scoreDifference).toBe(10); // |80 - 90| = 10
+      expect(result.current?.scoreDifference).toBe(10); // |80 - 90| = 10
     });
 
     it('should return undefined for scoreDifference when getScore is not provided', () => {
@@ -422,7 +387,7 @@ describe('useComparison hook', () => {
       );
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.scoreDifference).toBeUndefined();
+      expect(result.current?.scoreDifference).toBeUndefined();
     });
 
     it('should calculate scoreDifference as 0 when scores are equal', () => {
@@ -437,7 +402,7 @@ describe('useComparison hook', () => {
       );
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.scoreDifference).toBe(0);
+      expect(result.current?.scoreDifference).toBe(0);
     });
   });
 
@@ -451,8 +416,8 @@ describe('useComparison hook', () => {
       );
 
       expect(result.current).not.toBeNull();
-      expect(result.current!.entityA).toBe(entityA);
-      expect(result.current!.entityB).toBe(entityB);
+      expect(result.current?.entityA).toBe(entityA);
+      expect(result.current?.entityB).toBe(entityB);
     });
 
     it('should have correct structure for ComparisonResult', () => {

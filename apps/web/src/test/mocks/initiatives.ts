@@ -35,7 +35,9 @@ type InitiativesListMetadata = {
  * Factory function to create mock InitiativeEvent objects.
  * Provides sensible defaults while allowing partial overrides.
  */
-export function createMockInitiativeEvent(overrides: Partial<InitiativeEvent> = {}): InitiativeEvent {
+export function createMockInitiativeEvent(
+  overrides: Partial<InitiativeEvent> = {}
+): InitiativeEvent {
   return {
     EvtId: 'event-1',
     DataFase: '2024-03-15',
@@ -177,7 +179,7 @@ export function createInitiativeWithVoting(): ParsedInitiative {
     IniNr: '456/XVI/1',
     IniTitulo: 'Lei sobre proteção de dados pessoais',
     description: 'Proposta para reforçar a proteção de dados pessoais.',
-    IniEventos: events,
+    IniEventos: events.map((e) => ({ ...e, DataFase: new Date(e.DataFase as string) })),
   });
 }
 
@@ -212,7 +214,7 @@ export function createLongRunningInitiative(): ParsedInitiative {
     IniNr: '789/XVI/1',
     IniTitulo: 'Reforma do sistema de saúde',
     description: 'Proposta abrangente para reforma do sistema nacional de saúde.',
-    IniEventos: events,
+    IniEventos: events.map((e) => ({ ...e, DataFase: new Date(e.DataFase as string) })),
   });
 }
 
@@ -246,7 +248,7 @@ export function createQuickInitiative(): ParsedInitiative {
     IniNr: '101/XVI/1',
     IniTitulo: 'Medida de emergência COVID',
     description: 'Medida urgente para resposta à pandemia.',
-    IniEventos: events,
+    IniEventos: events.map((e) => ({ ...e, DataFase: new Date(e.DataFase as string) })),
   });
 }
 
@@ -268,7 +270,7 @@ export function createMinimalInitiative(): ParsedInitiative {
     IniNr: '999/XVI/1',
     IniTitulo: 'Iniciativa sem detalhes',
     description: '',
-    IniEventos: events,
+    IniEventos: events.map((e) => ({ ...e, DataFase: new Date(e.DataFase as string) })),
   });
 }
 
@@ -309,14 +311,14 @@ export function createInitiativeWithDetails(): ParsedInitiative {
     IniTitulo: 'Alteração ao regime de propinas no ensino superior',
     description:
       'Esta proposta visa reduzir as propinas no ensino superior público, estabelecendo um novo modelo de financiamento.',
-    IniEventos: events,
+    IniEventos: events.map((e) => ({ ...e, DataFase: new Date(e.DataFase as string) })),
   });
 }
 
 /**
  * Creates a set of diverse initiatives for testing list display
  */
-export function createInitiativesList(count: number = 5): ParsedInitiative[] {
+export function createInitiativesList(count = 5): ParsedInitiative[] {
   const initiativeTypes = ['P', 'PL', 'PJL', 'PAR', 'PJR'];
   const phases = ['Entrada', 'Distribuição', 'Em Análise', 'Votação na Generalidade', 'Concluído'];
   const phaseCodes = ['INI', 'DIS', 'FAC', 'VG1', 'FIN'];
@@ -338,7 +340,7 @@ export function createInitiativesList(count: number = 5): ParsedInitiative[] {
       IniTitulo: `Proposta de lei número ${index + 1}`,
       description: `Descrição da proposta número ${index + 1}.`,
       IniTipo: initiativeTypes[index % initiativeTypes.length],
-      IniEventos: events,
+      IniEventos: events.map((e) => ({ ...e, DataFase: new Date(e.DataFase as string) })),
     });
   });
 }
@@ -379,12 +381,15 @@ export function createPhaseFilterTestInitiatives(): ParsedInitiative[] {
       IniNr: '010/XVI/1',
       IniTitulo: 'Iniciativa em entrada',
       IniEventos: [
-        createMockInitiativeEvent({
-          EvtId: 'pe-1',
-          DataFase: '2024-03-01',
-          CodigoFase: 'INI',
-          Fase: 'Entrada',
-        }),
+        {
+          ...createMockInitiativeEvent({
+            EvtId: 'pe-1',
+            DataFase: '2024-03-01',
+            CodigoFase: 'INI',
+            Fase: 'Entrada',
+          }),
+          DataFase: new Date('2024-03-01'),
+        },
       ],
     }),
     createMockParsedInitiative({
@@ -392,18 +397,24 @@ export function createPhaseFilterTestInitiatives(): ParsedInitiative[] {
       IniNr: '011/XVI/1',
       IniTitulo: 'Iniciativa em análise',
       IniEventos: [
-        createMockInitiativeEvent({
-          EvtId: 'pe-2',
-          DataFase: '2024-03-01',
-          CodigoFase: 'INI',
-          Fase: 'Entrada',
-        }),
-        createMockInitiativeEvent({
-          EvtId: 'pe-3',
-          DataFase: '2024-04-01',
-          CodigoFase: 'FAC',
-          Fase: 'Em Análise',
-        }),
+        {
+          ...createMockInitiativeEvent({
+            EvtId: 'pe-2',
+            DataFase: '2024-03-01',
+            CodigoFase: 'INI',
+            Fase: 'Entrada',
+          }),
+          DataFase: new Date('2024-03-01'),
+        },
+        {
+          ...createMockInitiativeEvent({
+            EvtId: 'pe-3',
+            DataFase: '2024-04-01',
+            CodigoFase: 'FAC',
+            Fase: 'Em Análise',
+          }),
+          DataFase: new Date('2024-04-01'),
+        },
       ],
     }),
     createMockParsedInitiative({
@@ -411,18 +422,24 @@ export function createPhaseFilterTestInitiatives(): ParsedInitiative[] {
       IniNr: '012/XVI/1',
       IniTitulo: 'Iniciativa em votação',
       IniEventos: [
-        createMockInitiativeEvent({
-          EvtId: 'pe-4',
-          DataFase: '2024-03-01',
-          CodigoFase: 'INI',
-          Fase: 'Entrada',
-        }),
-        createMockInitiativeEvent({
-          EvtId: 'pe-5',
-          DataFase: '2024-05-01',
-          CodigoFase: 'VG1',
-          Fase: 'Votação na Generalidade',
-        }),
+        {
+          ...createMockInitiativeEvent({
+            EvtId: 'pe-4',
+            DataFase: '2024-03-01',
+            CodigoFase: 'INI',
+            Fase: 'Entrada',
+          }),
+          DataFase: new Date('2024-03-01'),
+        },
+        {
+          ...createMockInitiativeEvent({
+            EvtId: 'pe-5',
+            DataFase: '2024-05-01',
+            CodigoFase: 'VG1',
+            Fase: 'Votação na Generalidade',
+          }),
+          DataFase: new Date('2024-05-01'),
+        },
       ],
     }),
   ];

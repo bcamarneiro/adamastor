@@ -1,10 +1,6 @@
+import { type ComparisonMetric, type MetricConfig, useComparison } from '@/hooks/useComparison';
 import { useMemo } from 'react';
 import type { PartyStats } from '../../lib/supabase';
-import {
-  useComparison,
-  type MetricConfig,
-  type ComparisonMetric,
-} from '@/hooks/useComparison';
 
 // Re-export for backward compatibility
 export type { ComparisonMetric };
@@ -53,8 +49,7 @@ const partyMetricsConfig: MetricConfig<PartyStats>[] = [
   },
   {
     label: 'Propostas por Deputado',
-    getValue: (p) =>
-      p.deputy_count > 0 ? (p.total_proposals ?? 0) / p.deputy_count : 0,
+    getValue: (p) => (p.deputy_count > 0 ? (p.total_proposals ?? 0) / p.deputy_count : 0),
     higherIsBetter: true,
   },
 ];

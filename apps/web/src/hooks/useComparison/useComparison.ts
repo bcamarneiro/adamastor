@@ -99,9 +99,7 @@ export function useComparison<T>(
     }
 
     // Calculate score difference if score extractor is provided
-    const scoreDifference = getScore
-      ? Math.abs(getScore(entityA) - getScore(entityB))
-      : undefined;
+    const scoreDifference = getScore ? Math.abs(getScore(entityA) - getScore(entityB)) : undefined;
 
     return {
       entityA,

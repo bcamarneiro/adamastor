@@ -1,10 +1,7 @@
-import { useMemo } from 'react';
-import type { DistrictStats } from '../../lib/supabase';
 import type { ComparisonMetric } from '@/types/comparison';
-import {
-  useComparison,
-  type MetricConfig,
-} from '../../hooks/useComparison';
+import { useMemo } from 'react';
+import { type MetricConfig, useComparison } from '../../hooks/useComparison';
+import type { DistrictStats } from '../../lib/supabase';
 
 // Re-export for backward compatibility
 export type { ComparisonMetric };

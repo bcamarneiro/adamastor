@@ -1,9 +1,9 @@
-import { Spinner } from '@/components/Spinner';
-import { useParliament } from '@/services/parliament/useParliament';
 import { Table } from '@radix-ui/themes';
 import { useMemo, useState } from 'react';
 import { FaSearch, FaUserTie } from 'react-icons/fa';
 import { PieChart } from 'react-minimal-pie-chart';
+import { Spinner } from '../../../components/Spinner';
+import { useParliament } from '../../../services/parliament/useParliament';
 
 const ParliamentList = () => {
   const { parliament, metadata, isLoading, isError, error } = useParliament();

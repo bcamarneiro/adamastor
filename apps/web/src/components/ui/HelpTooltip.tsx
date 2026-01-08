@@ -1,7 +1,7 @@
-import { cn } from '@/utils/cn';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { HelpCircle } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { cn } from '../../utils/cn';
 
 interface HelpTooltipProps {
   content: ReactNode;

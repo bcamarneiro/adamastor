@@ -53,8 +53,8 @@ export function ComparisonBars({
   const colorBIsCss = colorB && isCssColor(colorB);
 
   // Default Tailwind classes when no color is provided
-  const colorAClass = colorAIsCss ? '' : (colorA || 'bg-accent-9');
-  const colorBClass = colorBIsCss ? '' : (colorB || 'bg-success-9');
+  const colorAClass = colorAIsCss ? '' : colorA || 'bg-accent-9';
+  const colorBClass = colorBIsCss ? '' : colorB || 'bg-success-9';
 
   return (
     <div className="space-y-4">

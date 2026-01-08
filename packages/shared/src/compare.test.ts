@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { compare, CompareResult } from './compare';
+import { type CompareResult, compare } from './compare';
 
 describe('compare', () => {
   describe('both null values', () => {

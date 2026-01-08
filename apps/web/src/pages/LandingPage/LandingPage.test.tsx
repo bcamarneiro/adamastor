@@ -1,10 +1,10 @@
-import { describe, expect, it, mock, beforeEach } from 'bun:test';
-import { render, screen, fireEvent } from '@testing-library/react';
-import React, { useState } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import LandingPage from './LandingPage';
 
 // Mock react-router-dom Link component
-mock.module('react-router-dom', () => ({
+vi.mock('react-router-dom', () => ({
   Link: ({ children, to, ...props }: { children: React.ReactNode; to: string }) => (
     <a href={to} {...props}>
       {children}
@@ -13,41 +13,49 @@ mock.module('react-router-dom', () => ({
 }));
 
 // Mock framer-motion to simplify testing
-mock.module('framer-motion', () => ({
+vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode }) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: { children?: React.ReactNode }) => <section {...props}>{children}</section>,
-    span: ({ children, ...props }: { children?: React.ReactNode }) => <span {...props}>{children}</span>,
+    div: ({ children, ...props }: { children?: React.ReactNode }) => (
+      <div {...props}>{children}</div>
+    ),
+    section: ({ children, ...props }: { children?: React.ReactNode }) => (
+      <section {...props}>{children}</section>
+    ),
+    span: ({ children, ...props }: { children?: React.ReactNode }) => (
+      <span {...props}>{children}</span>
+    ),
     h2: ({ children, ...props }: { children?: React.ReactNode }) => <h2 {...props}>{children}</h2>,
     p: ({ children, ...props }: { children?: React.ReactNode }) => <p {...props}>{children}</p>,
   },
 }));
 
 // Mock child components that may have complex dependencies
-mock.module('@/components/Hero', () => ({
+vi.mock('@/components/Hero', () => ({
   default: () => <div data-testid="hero-component">Hero</div>,
 }));
 
-mock.module('@/components/KeyMetrics', () => ({
+vi.mock('@/components/KeyMetrics', () => ({
   default: () => <div data-testid="key-metrics-component">KeyMetrics</div>,
 }));
 
-mock.module('@/components/MainNav', () => ({
-  default: ({ scrollY }: { scrollY: number }) => <nav data-testid="main-nav-component">MainNav (scrollY: {scrollY})</nav>,
+vi.mock('@/components/MainNav', () => ({
+  default: ({ scrollY }: { scrollY: number }) => (
+    <nav data-testid="main-nav-component">MainNav (scrollY: {scrollY})</nav>
+  ),
 }));
 
-mock.module('@/components/Footer', () => ({
+vi.mock('@/components/Footer', () => ({
   default: () => <footer data-testid="footer-component">Footer</footer>,
 }));
 
-mock.module('@/components/SEO', () => ({
+vi.mock('@/components/SEO', () => ({
   SEO: () => null,
   SEO_CONFIGS: { landing: {} },
   getOrganizationSchema: () => ({}),
 }));
 
 // Mock Radix UI Button
-mock.module('@radix-ui/themes', () => ({
+vi.mock('@radix-ui/themes', () => ({
   Button: ({ children, ...props }: { children?: React.ReactNode }) => (
     <button {...props}>{children}</button>
   ),
@@ -63,7 +71,7 @@ const createTabsContextValue = () => {
     getActiveTab: () => activeTab,
     setActiveTab: (tab: string) => {
       activeTab = tab;
-      listeners.forEach(l => l(tab));
+      listeners.forEach((l) => l(tab));
     },
     subscribe: (listener: (tab: string) => void) => {
       listeners.push(listener);
@@ -83,101 +91,90 @@ beforeEach(() => {
 });
 
 // Mock UI components - Tabs with functional state management
-mock.module('@/components/ui/tabs', () => ({
-  Tabs: ({ children, defaultValue, ...props }: { children?: React.ReactNode; defaultValue?: string }) => {
-    const [activeTab, setActiveTab] = React.useState(defaultValue || 'sectors');
+vi.mock('@/components/ui/tabs', () => {
+  // Create context for tabs state
+  const TabsContext = React.createContext<{
+    activeTab: string;
+    setActiveTab: (value: string) => void;
+  } | null>(null);
 
-    // Store in context for TabsContent/TabsTrigger to access
-    React.useEffect(() => {
-      tabsContext.setActiveTab(activeTab);
-    }, [activeTab]);
+  return {
+    Tabs: ({
+      children,
+      defaultValue,
+      ...props
+    }: { children?: React.ReactNode; defaultValue?: string }) => {
+      const [activeTab, setActiveTab] = React.useState(defaultValue || 'sectors');
 
-    return (
-      <div
-        data-testid="tabs"
-        data-active-tab={activeTab}
-        {...props}
-      >
-        {React.Children.map(children, child => {
-          if (React.isValidElement(child)) {
-            return React.cloneElement(child as React.ReactElement<any>, {
-              activeTab,
-              setActiveTab
-            });
-          }
-          return child;
-        })}
+      // Store in context for TabsContent/TabsTrigger to access
+      React.useEffect(() => {
+        tabsContext.setActiveTab(activeTab);
+      }, [activeTab]);
+
+      return (
+        <TabsContext.Provider value={{ activeTab, setActiveTab }}>
+          <div data-testid="tabs" data-active-tab={activeTab} {...props}>
+            {children}
+          </div>
+        </TabsContext.Provider>
+      );
+    },
+    TabsContent: ({
+      children,
+      value,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      value: string;
+    }) => {
+      const context = React.useContext(TabsContext);
+      const isActive = context?.activeTab === value;
+      return (
+        <div
+          data-testid={`tabs-content-${value}`}
+          data-state={isActive ? 'active' : 'inactive'}
+          hidden={!isActive}
+          {...props}
+        >
+          {isActive ? children : null}
+        </div>
+      );
+    },
+    TabsList: ({
+      children,
+      ...props
+    }: {
+      children?: React.ReactNode;
+    }) => (
+      <div data-testid="tabs-list" role="tablist" {...props}>
+        {children}
       </div>
-    );
-  },
-  TabsContent: ({
-    children,
-    value,
-    activeTab,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    value: string;
-    activeTab?: string;
-  }) => {
-    const isActive = activeTab === value;
-    return (
-      <div
-        data-testid={`tabs-content-${value}`}
-        data-state={isActive ? 'active' : 'inactive'}
-        hidden={!isActive}
-        {...props}
-      >
-        {isActive ? children : null}
-      </div>
-    );
-  },
-  TabsList: ({
-    children,
-    activeTab,
-    setActiveTab,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    activeTab?: string;
-    setActiveTab?: (tab: string) => void;
-  }) => (
-    <div data-testid="tabs-list" role="tablist" {...props}>
-      {React.Children.map(children, child => {
-        if (React.isValidElement(child)) {
-          return React.cloneElement(child as React.ReactElement<any>, {
-            activeTab,
-            setActiveTab
-          });
-        }
-        return child;
-      })}
-    </div>
-  ),
-  TabsTrigger: ({
-    children,
-    value,
-    activeTab,
-    setActiveTab,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    value: string;
-    activeTab?: string;
-    setActiveTab?: (tab: string) => void;
-  }) => (
-    <button
-      data-testid={`tabs-trigger-${value}`}
-      role="tab"
-      aria-selected={activeTab === value}
-      data-state={activeTab === value ? 'active' : 'inactive'}
-      onClick={() => setActiveTab?.(value)}
-      {...props}
-    >
-      {children}
-    </button>
-  ),
-}));
+    ),
+    TabsTrigger: ({
+      children,
+      value,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      value: string;
+    }) => {
+      const context = React.useContext(TabsContext);
+      const isActive = context?.activeTab === value;
+      return (
+        <button
+          data-testid={`tabs-trigger-${value}`}
+          role="tab"
+          aria-selected={isActive}
+          data-state={isActive ? 'active' : 'inactive'}
+          onClick={() => context?.setActiveTab(value)}
+          {...props}
+        >
+          {children}
+        </button>
+      );
+    },
+  };
+});
 
 describe('LandingPage', () => {
   describe('Feature Cards Rendering', () => {
@@ -191,7 +188,9 @@ describe('LandingPage', () => {
       it('should render Report Card description', () => {
         render(<LandingPage />);
 
-        expect(screen.getByText('Descobre a nota do teu deputado com base na sua atividade parlamentar.')).toBeTruthy();
+        expect(
+          screen.getByText('Descobre a nota do teu deputado com base na sua atividade parlamentar.')
+        ).toBeTruthy();
       });
 
       it('should link Report Card to /report-card', () => {
@@ -203,7 +202,7 @@ describe('LandingPage', () => {
       });
 
       it('should render Report Card with BarChart3 icon', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         // Find the Report Card link and check for svg icon inside
         const reportCardLink = screen.getByText('Report Card').closest('a');
@@ -224,7 +223,9 @@ describe('LandingPage', () => {
       it('should render Ranking description', () => {
         render(<LandingPage />);
 
-        expect(screen.getByText('Compara a atividade parlamentar de todos os deputados.')).toBeTruthy();
+        expect(
+          screen.getByText('Compara a atividade parlamentar de todos os deputados.')
+        ).toBeTruthy();
       });
 
       it('should link Ranking to /ranking', () => {
@@ -236,7 +237,7 @@ describe('LandingPage', () => {
       });
 
       it('should render Ranking with Trophy icon', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         // Find the Ranking link and check for svg icon inside
         const rankingLink = screen.getByText('Ranking').closest('a');
@@ -257,7 +258,11 @@ describe('LandingPage', () => {
       it('should render Calculadora description', () => {
         render(<LandingPage />);
 
-        expect(screen.getByText('Calcula quanto do teu IRS vai para deputados com baixa atividade registada.')).toBeTruthy();
+        expect(
+          screen.getByText(
+            'Calcula quanto do teu IRS vai para deputados com baixa atividade registada.'
+          )
+        ).toBeTruthy();
       });
 
       it('should link Calculadora to /desperdicio', () => {
@@ -269,7 +274,7 @@ describe('LandingPage', () => {
       });
 
       it('should render Calculadora with Calculator icon', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         // Find the Calculadora link and check for svg icon inside
         const calculatorLink = screen.getByText('Calculadora').closest('a');
@@ -302,7 +307,7 @@ describe('LandingPage', () => {
       });
 
       it('should render Battle Royale with Swords icon', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         // Find the Battle Royale link and check for svg icon inside
         const battleLink = screen.getByText('Battle Royale').closest('a');
@@ -334,9 +339,17 @@ describe('LandingPage', () => {
       it('should render all feature card descriptions', () => {
         render(<LandingPage />);
 
-        expect(screen.getByText('Descobre a nota do teu deputado com base na sua atividade parlamentar.')).toBeTruthy();
-        expect(screen.getByText('Compara a atividade parlamentar de todos os deputados.')).toBeTruthy();
-        expect(screen.getByText('Calcula quanto do teu IRS vai para deputados com baixa atividade registada.')).toBeTruthy();
+        expect(
+          screen.getByText('Descobre a nota do teu deputado com base na sua atividade parlamentar.')
+        ).toBeTruthy();
+        expect(
+          screen.getByText('Compara a atividade parlamentar de todos os deputados.')
+        ).toBeTruthy();
+        expect(
+          screen.getByText(
+            'Calcula quanto do teu IRS vai para deputados com baixa atividade registada.'
+          )
+        ).toBeTruthy();
         expect(screen.getByText('Compara dois deputados lado a lado.')).toBeTruthy();
       });
 
@@ -411,7 +424,11 @@ describe('LandingPage', () => {
       it('should render section description', () => {
         render(<LandingPage />);
 
-        expect(screen.getByText('Descobre como os teus deputados trabalham com dados reais do Parlamento.')).toBeTruthy();
+        expect(
+          screen.getByText(
+            'Descobre como os teus deputados trabalham com dados reais do Parlamento.'
+          )
+        ).toBeTruthy();
       });
 
       it('should render section badge with accent styling', () => {
@@ -482,7 +499,7 @@ describe('LandingPage', () => {
 
     describe('Feature Card Color Themes', () => {
       it('should render Report Card with accent color theme', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         const reportCardLink = screen.getByText('Report Card').closest('a');
         const iconContainer = reportCardLink?.querySelector('.rounded-xl');
@@ -491,7 +508,7 @@ describe('LandingPage', () => {
       });
 
       it('should render Ranking with success color theme', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         const rankingLink = screen.getByText('Ranking').closest('a');
         const iconContainer = rankingLink?.querySelector('.rounded-xl');
@@ -500,7 +517,7 @@ describe('LandingPage', () => {
       });
 
       it('should render Calculadora with warning color theme', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         const calculatorLink = screen.getByText('Calculadora').closest('a');
         const iconContainer = calculatorLink?.querySelector('.rounded-xl');
@@ -509,7 +526,7 @@ describe('LandingPage', () => {
       });
 
       it('should render Battle Royale with danger color theme', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         const battleLink = screen.getByText('Battle Royale').closest('a');
         const iconContainer = battleLink?.querySelector('.rounded-xl');
@@ -699,7 +716,9 @@ describe('LandingPage', () => {
         const cronologiaTab = screen.getByTestId('tabs-trigger-timeline');
         fireEvent.click(cronologiaTab);
 
-        expect(screen.getByText(/Acompanha o progresso das iniciativas parlamentares/)).toBeTruthy();
+        expect(
+          screen.getByText(/Acompanha o progresso das iniciativas parlamentares/)
+        ).toBeTruthy();
         expect(screen.getByText(/visualiza a cronologia legislativa completa/)).toBeTruthy();
       });
 
@@ -731,7 +750,9 @@ describe('LandingPage', () => {
         fireEvent.click(cronologiaTab);
 
         const timelineContent = container.querySelector('[data-testid="tabs-content-timeline"]');
-        const iconContainer = timelineContent?.querySelector('.w-20.h-20.rounded-full.bg-neutral-3');
+        const iconContainer = timelineContent?.querySelector(
+          '.w-20.h-20.rounded-full.bg-neutral-3'
+        );
         expect(iconContainer).toBeTruthy();
 
         const svg = iconContainer?.querySelector('svg');
@@ -765,7 +786,9 @@ describe('LandingPage', () => {
         const iniciativasTab = screen.getByTestId('tabs-trigger-promises');
         fireEvent.click(iniciativasTab);
 
-        expect(screen.getByText(/Pesquisa, filtra e acompanha iniciativas parlamentares/)).toBeTruthy();
+        expect(
+          screen.getByText(/Pesquisa, filtra e acompanha iniciativas parlamentares/)
+        ).toBeTruthy();
         expect(screen.getByText(/registos de votação, transcrições de debates/)).toBeTruthy();
       });
 
@@ -797,7 +820,9 @@ describe('LandingPage', () => {
         fireEvent.click(iniciativasTab);
 
         const promisesContent = container.querySelector('[data-testid="tabs-content-promises"]');
-        const iconContainer = promisesContent?.querySelector('.w-20.h-20.rounded-full.bg-neutral-3');
+        const iconContainer = promisesContent?.querySelector(
+          '.w-20.h-20.rounded-full.bg-neutral-3'
+        );
         expect(iconContainer).toBeTruthy();
 
         const svg = iconContainer?.querySelector('svg');
@@ -985,7 +1010,7 @@ describe('LandingPage', () => {
 
         expect(screen.getByText(/progresso das iniciativas parlamentares/i)).toBeTruthy();
         expect(screen.getByText(/diferentes fases/i)).toBeTruthy();
-        expect(screen.getByText(/cronologia legislativa/i)).toBeTruthy();
+        expect(screen.getAllByText(/cronologia legislativa/i).length).toBeGreaterThan(0);
       });
 
       it('should describe search and filter features in Iniciativas', () => {
@@ -1066,7 +1091,7 @@ describe('LandingPage', () => {
       });
 
       it('should render KeyMetrics within the feature cards section', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
         const keyMetrics = screen.getByTestId('key-metrics-component');
         // KeyMetrics should be a sibling of the feature cards grid
@@ -1074,7 +1099,9 @@ describe('LandingPage', () => {
         expect(section).toBeTruthy();
 
         // The section should contain the feature cards grid
-        const featureCardsGrid = section?.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+        const featureCardsGrid = section?.querySelector(
+          '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4'
+        );
         expect(featureCardsGrid).toBeTruthy();
       });
     });
@@ -1158,11 +1185,13 @@ describe('LandingPage', () => {
       });
 
       it('should render CTA section heading with correct styling', () => {
-        const { container } = render(<LandingPage />);
+        render(<LandingPage />);
 
-        const heading = container.querySelector('h2.text-3xl.md\\:text-4xl.font-light');
+        const heading = screen.getByText('Aumentar a Participação Civica');
         expect(heading).toBeTruthy();
-        expect(heading?.textContent).toBe('Aumentar a Participação Civica');
+        expect(heading.tagName).toBe('H2');
+        expect(heading.className).toContain('text-3xl');
+        expect(heading.className).toContain('font-light');
       });
 
       it('should render CTA section description about democratizing data', () => {
@@ -1344,14 +1373,13 @@ describe('LandingPage', () => {
         const { container } = render(<LandingPage />);
 
         const hero = screen.getByTestId('hero-component');
-        const featureCardsSection = container.querySelector('.max-w-\\[1280px\\]');
 
         const motionContainer = container.querySelector('.flex.flex-col.overflow-x-hidden');
         const children = Array.from(motionContainer?.children || []);
 
         // Find section containing feature cards
-        const featureSection = Array.from(container.querySelectorAll('section')).find(
-          (section) => section.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4')
+        const featureSection = Array.from(container.querySelectorAll('section')).find((section) =>
+          section.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4')
         );
 
         expect(featureSection).toBeTruthy();

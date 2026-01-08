@@ -2,8 +2,8 @@ import type {
   ElectoralDistrict,
   MP,
   MPSituation,
-  ParliamentaryGroup,
   ParliamentData,
+  ParliamentaryGroup,
 } from '../../types/parliament';
 
 /**
@@ -256,7 +256,7 @@ export function createMPWithRole(): MP {
 /**
  * Creates a diverse set of MPs for list testing
  */
-export function createMPsList(count: number = 10): MP[] {
+export function createMPsList(count = 10): MP[] {
   const parties = ['PS', 'PSD', 'IL', 'CH', 'BE', 'PCP', 'L', 'PAN', 'CDS-PP'];
   const districts = ['Lisboa', 'Porto', 'Braga', 'Setúbal', 'Aveiro', 'Faro'];
   const firstNames = [
@@ -404,7 +404,7 @@ export function createFilterTestParliament(): ParliamentData {
     // PS Lisboa
     createMockMP({
       DepId: 1,
-      DepNomeParlamentar: 'Deputado PS Lisboa',
+      DepNomeParlamentar: 'António Silva (PS Lisboa)',
       DepCPId: 1,
       DepCPDes: 'Lisboa',
       DepGP: [createMockParliamentaryGroup({ gpSigla: 'PS' })],
@@ -412,7 +412,7 @@ export function createFilterTestParliament(): ParliamentData {
     // PS Porto
     createMockMP({
       DepId: 2,
-      DepNomeParlamentar: 'Deputado PS Porto',
+      DepNomeParlamentar: 'Maria Santos (PS Porto)',
       DepCPId: 2,
       DepCPDes: 'Porto',
       DepGP: [createMockParliamentaryGroup({ gpSigla: 'PS' })],
@@ -420,7 +420,7 @@ export function createFilterTestParliament(): ParliamentData {
     // PSD Lisboa
     createMockMP({
       DepId: 3,
-      DepNomeParlamentar: 'Deputado PSD Lisboa',
+      DepNomeParlamentar: 'João Ferreira (PSD Lisboa)',
       DepCPId: 1,
       DepCPDes: 'Lisboa',
       DepGP: [createMockParliamentaryGroup({ gpSigla: 'PSD' })],
@@ -428,7 +428,7 @@ export function createFilterTestParliament(): ParliamentData {
     // PSD Porto
     createMockMP({
       DepId: 4,
-      DepNomeParlamentar: 'Deputado PSD Porto',
+      DepNomeParlamentar: 'Ana Costa (PSD Porto)',
       DepCPId: 2,
       DepCPDes: 'Porto',
       DepGP: [createMockParliamentaryGroup({ gpSigla: 'PSD' })],
@@ -436,7 +436,7 @@ export function createFilterTestParliament(): ParliamentData {
     // IL Lisboa
     createMockMP({
       DepId: 5,
-      DepNomeParlamentar: 'Deputado IL Lisboa',
+      DepNomeParlamentar: 'Pedro Oliveira (IL Lisboa)',
       DepCPId: 1,
       DepCPDes: 'Lisboa',
       DepGP: [createMockParliamentaryGroup({ gpSigla: 'IL' })],

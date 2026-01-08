@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { createCompareHook } from './createCompareHook';
-import type { MetricConfig, CompareOptions } from './types';
+import type { CompareOptions, MetricConfig } from './types';
 
 /**
  * Test entity type for comparison tests
@@ -403,7 +403,7 @@ describe('createCompareHook', () => {
         scoreDifference: (a, b) => {
           const max = Math.max(a.score, b.score);
           if (max === 0) return 0;
-          return ((Math.abs(a.score - b.score) / max) * 100);
+          return (Math.abs(a.score - b.score) / max) * 100;
         },
       };
 
