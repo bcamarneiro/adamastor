@@ -717,65 +717,85 @@ Status: COMPLETED
 Changes Made:
 
 1. Created test file: /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/test_pr_creation.py
-   - 25 unit tests for PR creation functionality
-   - Follows existing test patterns (test_enhanced_pr_review.py, test_gh_client.py)
+   - 38 pytest unit tests for PR creation functionality
+   - Follows existing patterns (test_gh_client.py, test_enhanced_pr_review.py)
+   - Uses pytest fixtures and mocking for subprocess calls
 
-Test Categories:
+Test Categories (38 tests total):
 
-a. PR Title Generation (4 tests):
-   - test_generate_pr_title_with_feature: Title from plan["feature"]
-   - test_generate_pr_title_without_feature: Fallback to spec name
-   - test_generate_pr_title_with_numeric_prefix: Removes "022-" prefix
-   - test_generate_pr_title_fallback: Default message when all else fails
+a. TestPRTitleGeneration (4 tests):
+   - test_pr_title_uses_feature_name: Title from plan["feature"]
+   - test_pr_title_fallback_to_spec_name: Fallback to spec name
+   - test_pr_title_handles_numeric_prefix: Removes "007-" prefix
+   - test_pr_title_default_when_no_info: Default for unnamed specs
 
-b. PR Body Generation (8 tests):
-   - test_generate_pr_body_with_issue_number: "Closes #22" from spec name
-   - test_generate_pr_body_without_issue_number: No "Closes #" when no number
-   - test_generate_pr_body_what_section: Feature and description content
-   - test_generate_pr_body_why_section_with_rationale: Uses workflow_rationale
-   - test_generate_pr_body_why_section_workflow_types: bugfix/refactor/feature messages
-   - test_generate_pr_body_how_section_with_phases: Phase summaries with completion counts
-   - test_generate_pr_body_services_involved: Lists services
-   - test_generate_pr_body_testing_section: Generates checklist from qa_acceptance
+b. TestPRBodyGeneration (6 tests):
+   - test_pr_body_includes_closes_issue: "Closes #42" from spec name
+   - test_pr_body_what_section_with_feature: Feature and description
+   - test_pr_body_why_section_with_rationale: Uses workflow_rationale
+   - test_pr_body_why_section_default_for_bugfix: Type-specific messages
+   - test_pr_body_how_section_with_phases: Phase summaries with completion
+   - test_pr_body_testing_section: Checklist from qa_acceptance
 
-c. Error Categorization (7 tests):
-   - test_categorize_pr_error_auth: "not logged in" → auth, not retryable
-   - test_categorize_pr_error_network: "could not resolve" → network, retryable
-   - test_categorize_pr_error_exists: "already exists" → exists, not retryable
-   - test_categorize_pr_error_base_branch: "base branch not found" → base_branch, not retryable
-   - test_categorize_pr_error_rate_limit: "rate limit" → rate_limit, retryable
-   - test_categorize_pr_error_server: "500/502/503" → server_error, retryable
-   - test_categorize_pr_error_unknown: Unknown → unknown, retryable (default)
+c. TestExistingPRCheck (5 tests):
+   - test_check_existing_pr_found: Detects existing PR
+   - test_check_existing_pr_not_found: Returns False when none
+   - test_check_existing_pr_auth_error: Handles auth errors
+   - test_check_existing_pr_timeout: Handles timeout
+   - test_check_existing_pr_gh_not_found: Handles missing gh CLI
 
-d. Human Review Guard (5 tests):
-   - test_guard_human_review_transition_no_pr_created: Blocks without pr_created
-   - test_guard_human_review_transition_invalid_pr_created: Blocks invalid type
-   - test_guard_human_review_transition_no_url: Blocks without pr_created.url
-   - test_guard_human_review_transition_empty_url: Blocks empty URL
-   - test_guard_human_review_transition_success: Allows with valid URL, sets status
+d. TestPRCreation (6 tests):
+   - test_create_pr_success: Creates PR, returns URL
+   - test_create_pr_targets_staging: CRITICAL: Always uses --base staging
+   - test_create_pr_auth_failure: Handles auth errors
+   - test_create_pr_already_exists: Handles existing PR
+   - test_create_pr_network_error: Network errors are retryable
+   - test_create_pr_timeout: Timeout is retryable
 
-e. Command Structure (2 tests):
-   - test_pr_command_args_base_staging: Verifies "--base", "staging" in source
-   - test_pr_command_args_structure: Verifies gh pr create command structure
+e. TestPRErrorCategorization (5 tests):
+   - test_auth_error_not_retryable: auth → not retryable
+   - test_network_error_retryable: network → retryable
+   - test_pr_exists_not_retryable: exists → not retryable
+   - test_rate_limit_retryable: rate_limit → retryable
+   - test_server_error_retryable: server_error → retryable
 
-Test File Structure:
-- Standard test pattern with run_all_tests() function
-- Each test prints status and uses assert statements
-- Exit code 0 on success, 1 on failure
+f. TestBranchPush (5 tests):
+   - test_push_branch_success: Normal push succeeds
+   - test_push_branch_force_with_lease: Retries on rejection
+   - test_push_branch_auth_failure: Handles auth errors
+   - test_push_branch_network_failure: Handles network errors
+   - test_push_branch_timeout: Handles timeout
 
-Verification Notes:
-- Tests require Python 3.12 (bundled with Auto-Claude.app) due to type hint syntax
-- System Python 3.9 cannot import qa.py due to str | None syntax
-- Test file syntax validated successfully
-- Run with: /Applications/Auto-Claude.app/Contents/Resources/python/bin/python3.12 test_pr_creation.py
+g. TestHumanReviewGuard (5 tests):
+   - test_guard_allows_transition_with_pr_url: Allows with valid URL
+   - test_guard_blocks_without_pr_created: Blocks without pr_created
+   - test_guard_blocks_without_pr_url: Blocks without URL
+   - test_guard_blocks_with_empty_pr_url: Blocks empty URL
+   - test_guard_blocks_with_invalid_pr_created_type: Blocks invalid type
 
-Key Assertions:
+h. TestPRCreationIntegration (2 tests):
+   - test_full_pr_workflow_new_pr: Complete workflow test
+   - test_workflow_uses_existing_pr: Links to existing PR
+
+Test Execution:
+```
+cd /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools
+/Applications/Auto-Claude.app/Contents/Resources/python/bin/python3 -m pytest test_pr_creation.py -v
+```
+
+Results:
+- 38 passed in 0.06s
+- All assertions verified successfully
+
+Key Validations:
 1. PR title uses feature name when available
 2. PR body follows AUTO_CLAUDE.md format with all sections
 3. Issue number extracted from spec directory name (e.g., "022-..." → #22)
 4. Error types correctly mapped to retryability
 5. Human review ONLY allowed with valid pr_created.url
 6. Commands always use --base staging, never main
+7. Branch push retries with --force-with-lease on rejection
+8. All error handling paths tested
 
 Note: Tests added to external Auto-Claude MCP server application at:
 /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/test_pr_creation.py
