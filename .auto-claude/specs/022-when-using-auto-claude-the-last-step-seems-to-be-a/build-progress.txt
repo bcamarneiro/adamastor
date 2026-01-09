@@ -628,3 +628,82 @@ Note: Changes made to external Auto-Claude MCP server application at:
 /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
 
 === END SUBTASK 4-1 ===
+
+=== SUBTASK 4-2 (2026-01-09) ===
+
+Subtask 4-2: Update .auto-claude-status with PR URL
+--------------------------------------------------
+Status: COMPLETED
+
+Changes Made:
+
+1. Updated /Applications/Auto-Claude.app/Contents/Resources/backend/ui/status.py:
+   - Added pr_url field to BuildStatus dataclass (line 53):
+     pr_url: str = ""  # GitHub PR URL when PR is created
+   - Updated to_dict() to include pr_url (only when set):
+     if self.pr_url:
+         result["pr_url"] = self.pr_url
+   - Updated from_dict() to parse pr_url:
+     pr_url=data.get("pr_url", "")
+   - Added set_pr_url method to StatusManager (line 206-209):
+     def set_pr_url(self, pr_url: str) -> None:
+         self._status.pr_url = pr_url
+         self.write()
+
+2. Added _update_status_file_pr_url helper function in qa.py (lines 190-239):
+   - Finds main project root (handles both main project and worktree paths)
+   - Reads existing .auto-claude-status JSON file
+   - Updates pr_url field with the GitHub PR URL
+   - Updates last_update timestamp
+   - Writes file back
+   - Returns True on success, False on error (graceful degradation)
+
+3. Added status file updates after successful PR creation in qa.py:
+   All successful guard_ok paths now call _update_status_file_pr_url():
+
+   update_qa_status function:
+   - Line 989-990: Existing PR found
+   - Line 1022-1023: PR created after failed PR check
+   - Line 1067-1068: New PR created
+
+   retry_branch_push function:
+   - Line 1311-1312: Existing PR found
+   - Line 1344-1345: PR created after failed PR check
+   - Line 1389-1390: New PR created
+
+   retry_pr_creation function:
+   - Line 1631-1632: PR retry succeeded
+
+Status File Structure (after PR creation):
+```json
+{
+  "active": true,
+  "spec": "022-when-using-auto-claude...",
+  "state": "building",
+  "subtasks": { ... },
+  "phase": { ... },
+  "workers": { ... },
+  "session": { ... },
+  "last_update": "2026-01-09T12:30:00.000000",
+  "pr_url": "https://github.com/bcamarneiro/adamastor/pull/123"
+}
+```
+
+Verification:
+- Python syntax check status.py: PASSED
+- Python syntax check qa.py: PASSED
+- Command: cat .auto-claude-status | jq '.pr_url'
+- Result: null (expected - no PR created yet for this spec)
+- Expected after PR creation: GitHub PR URL string
+
+Implementation Notes:
+- pr_url field only appears in JSON when set (non-empty)
+- Status file update is best-effort (errors are silently ignored)
+- Works correctly for both main project and worktree contexts
+- StatusManager.set_pr_url() available for other code paths if needed
+
+Note: Changes made to external Auto-Claude MCP server application at:
+- /Applications/Auto-Claude.app/Contents/Resources/backend/ui/status.py
+- /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
+
+=== END SUBTASK 4-2 ===
