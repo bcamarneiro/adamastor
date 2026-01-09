@@ -227,3 +227,61 @@ Verification:
 - All error types properly categorized with retry hints
 
 === END SUBTASK 2-2 ===
+
+=== SUBTASK 3-1 (2026-01-09) ===
+
+Subtask 3-1: Check for existing PR on branch before creating new one
+-------------------------------------------------------------------
+Status: COMPLETED
+
+Changes Made to /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py:
+
+1. Added _check_existing_pr function (lines 187-259):
+   - Executes: gh pr list --head <branch> --json url,number,title
+   - Returns tuple: (found: bool, pr_info: dict | None, error_message: str)
+   - Timeout handling: PR_CHECK_TIMEOUT_SECONDS = 30
+   - Error handling for:
+     - GitHub CLI not authenticated
+     - GitHub CLI not installed (FileNotFoundError)
+     - Network timeouts
+     - JSON parsing errors
+
+2. Added PR_CHECK_TIMEOUT_SECONDS constant (line 25):
+   - 30 seconds timeout for PR list check
+   - Prevents hanging on network issues
+
+3. Integrated _check_existing_pr into update_qa_status workflow (lines 424-451):
+   - After successful branch push, checks for existing PR
+   - If existing PR found:
+     - Stores PR details in pr_created object with existing=True flag
+     - pr_created: { url, number, title, branch, created_at, existing: True }
+     - Transitions directly to human_review
+     - Message: "Existing PR found: #<number> - <url>"
+   - If PR check error:
+     - Logs warning but continues to human_review
+     - Message: "Warning: Could not check for existing PR: <error>"
+   - If no existing PR:
+     - Proceeds to human_review (PR creation will be handled by subtask-3-3)
+     - Message: "No existing PR found for this branch."
+
+4. State transitions after successful push:
+   - Initially sets status to "creating_pr" while checking
+   - If existing PR found: status → "human_review"
+   - If no existing PR: status → "human_review" (ready for PR creation)
+   - If error checking: status → "human_review" (graceful degradation)
+
+Verification:
+- Python syntax check: PASSED (python3 -m py_compile qa.py)
+- gh pr list command format verified correct
+- Expected output: Empty array [] or existing PR details [{"url": "...", "number": ..., "title": "..."}]
+
+Implementation Notes:
+- Follows the pattern: gh pr list --head <branch> --json url,number,title
+- Links to existing PR instead of creating duplicates
+- Graceful degradation: proceeds even if PR check fails
+- existing=True flag distinguishes linked PRs from newly created ones
+
+Note: Changes made to external Auto-Claude MCP server application at:
+/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
+
+=== END SUBTASK 3-1 ===
