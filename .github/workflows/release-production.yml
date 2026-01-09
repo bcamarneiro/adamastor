@@ -55,8 +55,8 @@ jobs:
           bunx playwright install-deps chromium
           bunx playwright install chromium
 
-      - name: Run E2E tests against staging
-        run: bun run e2e
+      - name: Run smoke tests against staging
+        run: bun run e2e:smoke
         working-directory: apps/web
         env:
           PLAYWRIGHT_BASE_URL: https://adamastor-staging.vercel.app

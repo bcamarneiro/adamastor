@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "test:ci": "vitest run",
     "e2e": "playwright test",
+    "e2e:smoke": "playwright test e2e/smoke",
     "e2e:ui": "playwright test --ui",
     "e2e:headed": "playwright test --headed",
     "e2e:debug": "DEBUG=pw:webserver,pw:browser* playwright test --headed --timeout=0",
