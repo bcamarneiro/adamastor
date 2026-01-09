@@ -139,3 +139,91 @@ Verification commands passed:
 - grep 'push_failed|pr_creation_failed': 6 matches
 
 Subtask 1-1 Status: VERIFIED COMPLETE
+
+=== SUBTASK 2-2 (2026-01-09) ===
+
+Subtask 2-2: Add error handling for push failures
+------------------------------------------------
+Status: COMPLETED
+
+Changes Made to /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py:
+
+1. Fixed error_type capture:
+   - Changed: push_success, push_msg = _push_branch_to_remote(...)
+   - To:      push_success, push_msg, error_type = _push_branch_to_remote(...)
+
+2. Enhanced branch_pushed schema in implementation_plan.json:
+   - Added error_type: "network" | "timeout" | "auth" | "rejected" | "config" | "unknown" | None
+   - Added can_retry: bool - True for retryable errors (network, timeout)
+   - Added retry_count: int - Number of retry attempts made
+
+3. Added retry mechanism via new MCP tool:
+   - Tool: retry_branch_push
+   - Description: Retry a failed branch push operation
+   - Only works when status is "push_failed" and can_retry is True
+   - Updates retry_count on each attempt
+   - Provides clear guidance for non-retryable errors
+
+4. Improved error handling for edge cases:
+   - No branch name found: status = "push_failed", error_type = "config", can_retry = False
+   - No worktree found: status = "push_failed", error_type = "config", can_retry = False
+   - Network/timeout errors: can_retry = True (user can retry with retry_branch_push)
+   - Auth/rejected errors: can_retry = False (requires manual intervention)
+
+5. Error type classification:
+   - "network": Connection/DNS issues → retryable
+   - "timeout": Push timed out (>120s) → retryable
+   - "auth": Authentication/permission denied → not retryable (run gh auth login)
+   - "rejected": Remote has conflicting changes → not retryable (resolve conflicts)
+   - "config": Missing worktree/branch → not retryable (check configuration)
+   - "unknown": Unclassified errors → not retryable (manual investigation)
+
+Verification:
+- Python syntax check: PASSED (python3 -m py_compile qa.py)
+- Manual verification: Test with network disconnected - verify graceful failure and status update
+
+Implementation Notes:
+- Retryable errors (network, timeout) can be resolved by fixing connectivity and calling retry_branch_push
+- Non-retryable errors provide clear guidance messages for manual resolution
+- Status never proceeds to PR creation (or human_review) when push fails
+- retry_count tracks cumulative attempts for monitoring
+
+=== SUBTASK 2-2 ENHANCEMENTS (Session 4) ===
+
+Additional improvements made to error handling:
+
+1. Added timeout constant:
+   - PUSH_TIMEOUT_SECONDS = 120 (2 minutes)
+   - Prevents hanging on network issues
+   - Returns error_type="timeout" on timeout
+
+2. Enhanced _push_branch_to_remote function:
+   - Now returns 3-tuple: (success, message, error_type)
+   - Added try/except for subprocess.TimeoutExpired
+   - More comprehensive network error detection patterns
+
+3. Added error history tracking:
+   - branch_pushed.error_history: List of previous errors (max 5)
+   - Each entry has: timestamp, error_type, message
+   - Preserved across retries for debugging
+
+4. Added retry hints in error messages:
+   - Network/timeout: "Use retry_branch_push tool or call update_qa_status..."
+   - Auth: "Run 'gh auth login' or configure git credentials..."
+   - Rejected: "Resolve remote conflicts manually..."
+   - Other: "Manual intervention required..."
+
+5. Improved retry detection:
+   - is_retry = plan.get("status") == "push_failed"
+   - Increment retry_count only on actual retry attempts
+   - Display attempt number in failure messages
+
+6. Added error history to retry_branch_push tool:
+   - Preserves previous errors before each retry
+   - Same 5-error limit as update_qa_status
+
+Verification:
+- Python syntax check: PASSED
+- All error types properly categorized with retry hints
+
+=== END SUBTASK 2-2 ===
