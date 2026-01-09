@@ -6,7 +6,7 @@ on:
       staging_url:
         description: 'Staging URL to test against'
         required: false
-        default: 'https://staging.adamastor.pt'
+        default: 'https://adamastor-staging.vercel.app'
 
 jobs:
   e2e-staging:
