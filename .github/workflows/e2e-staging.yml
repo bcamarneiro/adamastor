@@ -40,13 +40,11 @@ jobs:
           bunx playwright install-deps chromium
           bunx playwright install chromium
 
-      - name: Run E2E tests against staging
-        run: bun run e2e
+      - name: Run smoke tests against staging
+        run: bun run e2e:smoke
         working-directory: apps/web
         env:
           PLAYWRIGHT_BASE_URL: ${{ inputs.staging_url }}
-          # Skip tests that require controlled test data
-          PLAYWRIGHT_SKIP_FIXTURE_TESTS: 'true'
 
       - uses: actions/upload-artifact@v4
         if: failure()
