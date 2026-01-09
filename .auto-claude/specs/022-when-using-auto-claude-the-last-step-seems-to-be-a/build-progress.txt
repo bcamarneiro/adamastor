@@ -414,3 +414,112 @@ Implementation Notes:
 - All required fields (url, number, branch, created_at) are populated
 
 === END SUBTASK 3-4 ===
+
+=== SUBTASK 3-5 (2026-01-09) ===
+
+Subtask 3-5: Add error handling for PR creation failures
+-------------------------------------------------------
+Status: COMPLETED
+
+Changes Made to /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py:
+
+1. Added time import (line 10):
+   - Required for exponential backoff retry implementation
+
+2. Added PR creation constants (lines 457-459):
+   - PR_CREATE_TIMEOUT_SECONDS = 60
+   - PR_MAX_RETRY_ATTEMPTS = 3
+   - PR_INITIAL_BACKOFF_SECONDS = 2
+
+3. Added _categorize_pr_error function (lines 462-505):
+   - Categorizes PR creation errors and determines retryability
+   - Returns tuple: (error_type: str, is_retryable: bool)
+   - Error types:
+     * "auth" (not retryable): GitHub CLI not authenticated
+     * "network" (retryable): Network/connection issues
+     * "exists" (not retryable): PR already exists
+     * "base_branch" (not retryable): Staging branch not found
+     * "not_found" (not retryable): Repository not found
+     * "rate_limit" (retryable): GitHub API rate limit
+     * "server_error" (retryable): GitHub 5xx errors
+     * "timeout" (retryable): Command timed out
+     * "gh_not_found" (not retryable): gh CLI not installed
+     * "unknown" (retryable): Unclassified errors
+
+4. Updated _create_pr function return signature (lines 508-529):
+   - Changed from: (success, pr_info, error_message)
+   - To:           (success, pr_info, error_message, error_type, is_retryable)
+   - All return statements updated with error categorization
+
+5. Updated pr_error object schema in implementation_plan.json:
+   ```python
+   {
+       "message": str,           # Error message
+       "error_type": str,        # Categorized error type
+       "can_retry": bool,        # True if retryable
+       "retry_count": int,       # Number of retry attempts (0 initially)
+       "timestamp": str,         # ISO timestamp
+       "branch": str,            # Branch name
+       "title": str,             # PR title (for retry)
+       "error_history": list,    # List of previous errors (max 5)
+   }
+   ```
+
+6. Updated all _create_pr call sites to handle new return signature:
+   - In update_qa_status (2 locations): lines 801-871
+   - In retry_branch_push (2 locations): lines 1100-1170
+   - Each failure now stores complete error info with retry hints
+
+7. Added retry_pr_creation MCP tool (lines 1223-1435):
+   - Tool: retry_pr_creation
+   - Description: "Retry a failed PR creation operation..."
+   - Parameters: None (uses spec_dir from closure)
+   - Features:
+     * Validates status is "pr_creation_failed"
+     * Checks can_retry and retry_count before retrying
+     * Max 3 retry attempts (PR_MAX_RETRY_ATTEMPTS)
+     * Exponential backoff: 2s, 4s, 8s (PR_INITIAL_BACKOFF_SECONDS * 2^retry_count)
+     * Preserves error history for debugging
+     * Clears pr_error on success
+     * Provides retry hints in failure messages
+
+8. Error clearing on success:
+   - When PR creation succeeds, any previous pr_error is deleted
+   - Code: `if "pr_error" in plan: del plan["pr_error"]`
+
+Implementation Details:
+
+Exponential Backoff Formula:
+  backoff_seconds = PR_INITIAL_BACKOFF_SECONDS * (2 ** retry_count)
+  - Attempt 1: 2 seconds wait (after retry_count=0)
+  - Attempt 2: 4 seconds wait (after retry_count=1)
+  - Attempt 3: 8 seconds wait (after retry_count=2)
+
+Retry Flow:
+1. Check status is "pr_creation_failed"
+2. Check can_retry is True
+3. Check retry_count < PR_MAX_RETRY_ATTEMPTS
+4. Update status to "creating_pr"
+5. Apply backoff delay
+6. Attempt PR creation
+7. On success: Set status to "human_review", clear pr_error
+8. On failure: Update pr_error with new error info, increment retry_count
+
+Error Type Classification:
+- Retryable: network, timeout, rate_limit, server_error, unknown
+- Not retryable: auth, exists, base_branch, not_found, gh_not_found
+
+Verification:
+- Python syntax check: PASSED (python3 -m py_compile qa.py)
+- Manual verification: Test with gh CLI not authenticated - verify graceful failure
+
+Test Scenarios:
+1. Network error: Status = "pr_creation_failed", can_retry = True
+2. Auth error: Status = "pr_creation_failed", can_retry = False
+3. Max retries: After 3 attempts, can_retry = False, message shows "Maximum retries exceeded"
+4. Success after retry: pr_error deleted, status = "human_review"
+
+Note: Changes made to external Auto-Claude MCP server application at:
+/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
+
+=== END SUBTASK 3-5 ===

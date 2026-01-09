@@ -31,9 +31,9 @@
       "discovered_at": "2026-01-09T11:45:43.936774+00:00"
     },
     "/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py": {
-      "description": "Enhanced push error handling with: (1) Timeout constant PUSH_TIMEOUT_SECONDS=120, (2) Error type categorization (network, auth, timeout, rejected, config, unknown), (3) can_retry flag for retryable errors, (4) retry_count tracking, (5) error_history list (max 5), (6) New retry_branch_push MCP tool for explicit retries, (7) Helpful retry hints in error messages",
-      "category": "error_handling",
-      "discovered_at": "2026-01-09T11:51:06.000374+00:00"
+      "description": "retry_pr_creation MCP tool (lines 1223-1435) implements PR creation error handling with: 1) max 3 retries with exponential backoff (2s, 4s, 8s), 2) error categorization via _categorize_pr_error(), 3) detailed pr_error object tracking (message, error_type, can_retry, retry_count, error_history), 4) automatic error clearing on success. Error types: auth, network, timeout, rate_limit, server_error, exists, base_branch, not_found, gh_not_found, unknown.",
+      "category": "error-handling",
+      "discovered_at": "2026-01-09T12:06:08.376720+00:00"
     },
     "/Applications/Auto-Claude.app/Contents/Resources/backend/core/workspace/git_utils.py": {
       "description": "Added push_branch_to_remote() and get_remote_branch_exists() functions for git push operations. push_branch_to_remote handles first-time push with -u flag and existing remote branches with --force-with-lease for safety.",
@@ -41,5 +41,5 @@
       "discovered_at": "2026-01-09T11:45:59.286552+00:00"
     }
   },
-  "last_updated": "2026-01-09T11:51:06.000384+00:00"
+  "last_updated": "2026-01-09T12:06:08.376725+00:00"
 }
