@@ -540,12 +540,16 @@
   },
   "qa_signoff": {
     "status": "fixes_applied",
-    "timestamp": "2026-01-09T13:56:00.000Z",
+    "timestamp": "2026-01-09T14:32:00.000Z",
     "fix_session": 0,
     "issues_fixed": [
       {
         "title": "Auto-claude spec files not tracked in git",
         "fix_commit": "e459289"
+      },
+      {
+        "title": "Rebase with latest staging",
+        "fix_commit": "5140829"
       }
     ],
     "ready_for_qa_revalidation": true
