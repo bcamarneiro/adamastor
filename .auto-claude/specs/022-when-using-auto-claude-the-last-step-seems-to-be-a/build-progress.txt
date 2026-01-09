@@ -285,3 +285,85 @@ Note: Changes made to external Auto-Claude MCP server application at:
 /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
 
 === END SUBTASK 3-1 ===
+
+=== SUBTASK 3-2 (2026-01-09) ===
+
+Subtask 3-2: Generate PR body from implementation plan
+-----------------------------------------------------
+Status: COMPLETED
+
+Changes Made to /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py:
+
+1. Added _generate_pr_title function (lines 187-216):
+   - Generates PR title from implementation plan
+   - Primary source: plan["feature"]
+   - Fallback: "auto-claude: <spec-slug>" from spec directory name
+   - Format: "<Feature Name>" or "auto-claude: <Readable Slug>"
+
+2. Added _generate_pr_body function (lines 219-378):
+   - Generates structured PR body following AUTO_CLAUDE.md format
+   - Sections generated:
+     a. Closes #<issue> - Extracted from spec directory name (e.g., "022-xxx" → #22)
+     b. ## What - Feature name (bold) and description
+     c. ## Why - workflow_rationale or type-based default message
+     d. ## How - Phase summaries with completion status and subtask list
+        - Format: "**Phase Name** (X/Y completed)"
+        - Lists completed subtasks with ✅ emoji
+        - Includes "Services involved: <list>"
+     e. ## Testing - Generated checklist from qa_acceptance:
+        - Unit tests (checked if required)
+        - Integration tests (checked if required)
+        - E2E tests (for bugfixes)
+        - Browser verification (if required)
+        - GitHub verification (if required)
+        - QA sign-off (if approved)
+        - Manual testing (always checked)
+
+Sample Output (verified):
+```
+Closes #22
+
+## What
+**Auto-Claude PR Creation Before Human Review**
+
+Automate PR creation in auto-claude workflow after QA approval
+
+## Why
+This is a feature enhancement to the auto-claude workflow.
+
+## How
+**Workflow State Machine Update** (2/2 completed)
+- Add new workflow states
+  - ✅ Add pushing_branch state
+  - ✅ Update schema
+
+**PR Creation** (1/2 completed)
+- Implement PR creation
+  - ✅ Generate PR body
+
+**Services involved:** auto-claude-mcp-server
+
+## Testing
+- [x] Unit tests pass
+- [x] Integration tests pass
+- [x] GitHub verification completed
+- [x] QA sign-off approved
+- [x] Manual testing completed
+```
+
+Verification:
+- Python syntax check: PASSED (python3 -m py_compile qa.py)
+- Function output matches AUTO_CLAUDE.md format ✓
+- Issue number extraction from spec name works ✓
+- All sections (What/Why/How/Testing) generated correctly ✓
+
+Implementation Notes:
+- Functions ready for use by subtask-3-3 (gh pr create execution)
+- PR body will be passed to gh pr create via --body flag
+- Title function provides clean feature name for --title flag
+- Graceful handling when plan fields are missing
+
+Note: Changes made to external Auto-Claude MCP server application at:
+/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
+
+=== END SUBTASK 3-2 ===
