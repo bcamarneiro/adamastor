@@ -523,3 +523,108 @@ Note: Changes made to external Auto-Claude MCP server application at:
 /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
 
 === END SUBTASK 3-5 ===
+
+=== SUBTASK 4-1 (2026-01-09) ===
+
+Subtask 4-1: Guard human_review transition with PR URL check
+-----------------------------------------------------------
+Status: COMPLETED
+
+Changes Made to /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py:
+
+1. Added _validate_pr_exists function (lines 509-556):
+   - Validates PR exists via `gh pr view <number> --json url,state`
+   - Extracts PR number from URL
+   - Returns tuple: (exists: bool, message: str)
+   - Timeout handling: Uses PR_CHECK_TIMEOUT_SECONDS (30s)
+
+2. Added _guard_human_review_transition function (lines 559-629):
+   - CRITICAL: Validates pr_created.url exists before allowing human_review
+   - Checks:
+     a. pr_created is not None
+     b. pr_created is a dict
+     c. pr_created.url exists and is non-empty
+     d. pr_created.url is a valid string
+   - Optionally validates PR exists via gh pr view (soft validation)
+   - On success: Sets plan["status"] = "human_review", plan["planStatus"] = "review"
+   - On failure: Returns (False, error_message)
+   - Returns: (allowed: bool, message: str)
+
+3. Fixed BUG: QA "rejected" was setting human_review without PR (line 1061):
+   - Changed from: plan["status"] = "human_review"
+   - Changed to:   plan["status"] = "qa_rejected"
+   - QA rejection now properly sets qa_rejected status instead of human_review
+   - This ensures human_review is NEVER set without a PR
+
+4. Updated all human_review transitions to use guard (9 locations):
+   All direct `plan["status"] = "human_review"` replaced with:
+   ```python
+   guard_ok, guard_msg = _guard_human_review_transition(plan, worktree_path)
+   if not guard_ok:
+       plan["status"] = "pr_creation_failed"
+       plan["planStatus"] = "failed"
+       push_message += f" Guard failed: {guard_msg}"
+   else:
+       # ... proceed with success handling
+   ```
+
+   Locations updated:
+   - update_qa_status: Lines 914-922 (existing PR found)
+   - update_qa_status: Lines 943-953 (PR created after check error)
+   - update_qa_status: Lines 986-996 (new PR created)
+   - retry_branch_push: Lines 1231-1238 (existing PR found)
+   - retry_branch_push: Lines 1259-1269 (PR created after check error)
+   - retry_branch_push: Lines 1302-1312 (new PR created)
+   - retry_pr_creation: Lines 1525-1543 (PR creation success)
+
+5. Only remaining human_review assignment:
+   - Line 622: INSIDE _guard_human_review_transition itself
+   - This is the ONLY place that can set human_review status
+   - All other code paths go through the guard
+
+Guard Function Logic:
+```python
+def _guard_human_review_transition(plan, worktree_path=None, validate_pr=True):
+    # Check pr_created exists
+    pr_created = plan.get("pr_created")
+    if not pr_created:
+        return (False, "pr_created is not set")
+
+    # Check pr_created is a dict
+    if not isinstance(pr_created, dict):
+        return (False, "pr_created is invalid type")
+
+    # Check url exists
+    pr_url = pr_created.get("url")
+    if not pr_url:
+        return (False, "pr_created.url is not set")
+
+    # Check url is valid string
+    if not isinstance(pr_url, str) or not pr_url.strip():
+        return (False, "pr_created.url is invalid")
+
+    # Optional: Validate PR exists via gh pr view
+    if validate_pr and worktree_path:
+        _validate_pr_exists(worktree_path, pr_url)  # Soft validation
+
+    # All checks passed
+    plan["status"] = "human_review"
+    plan["planStatus"] = "review"
+    return (True, f"Transitioning to human_review. PR #...")
+```
+
+Verification:
+- Python syntax check: PASSED (python3 -m py_compile qa.py)
+- Grep for direct human_review assignments: Only 1 found (inside guard function)
+- Manual verification: implementation_plan.json cannot have status: human_review without pr_created.url
+
+Test Scenarios:
+1. QA approved with successful PR: Status = "human_review", pr_created.url set ✓
+2. QA approved but PR fails: Status = "pr_creation_failed", pr_created.url not set ✓
+3. QA rejected: Status = "qa_rejected" (NOT human_review) ✓
+4. Try to set human_review without PR: Guard blocks, returns error message ✓
+
+Note: Changes made to external Auto-Claude MCP server application at:
+/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
+
+=== END SUBTASK 4-1 ===

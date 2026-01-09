@@ -300,7 +300,9 @@
             "type": "manual",
             "instructions": "Verify implementation_plan.json cannot have status: human_review without pr_created.url"
           },
-          "status": "pending"
+          "status": "completed",
+          "notes": "Implemented comprehensive guard for human_review transition:\n\n1. Added _guard_human_review_transition() function that validates pr_created.url exists before allowing transition to human_review status\n2. Added _validate_pr_exists() function for optional PR validation via gh pr view\n3. Fixed BUG: QA \"rejected\" was incorrectly setting human_review - now correctly sets qa_rejected\n4. Updated ALL human_review transitions (7 locations) to use the guard function\n5. Only remaining direct assignment is INSIDE the guard function itself (line 622)\n\nGuard function checks:\n- pr_created is not None\n- pr_created is a dict\n- pr_created.url exists and is non-empty\n- pr_created.url is a valid string\n\nPython syntax verified. All direct assignments to human_review now go through the guard function.",
+          "updated_at": "2026-01-09T12:10:47.926947+00:00"
         },
         {
           "id": "subtask-4-2",
@@ -527,5 +529,5 @@
     "Use gh CLI for all GitHub operations (already authenticated)"
   ],
   "spec_file": "spec.md",
-  "last_updated": "2026-01-09T12:06:08.403330+00:00"
+  "last_updated": "2026-01-09T12:10:47.926960+00:00"
 }
