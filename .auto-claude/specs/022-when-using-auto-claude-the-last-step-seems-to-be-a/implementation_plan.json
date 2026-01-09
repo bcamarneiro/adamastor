@@ -539,12 +539,16 @@
     }
   },
   "qa_signoff": {
-    "status": "approved",
-    "qa_session": 3,
-    "issues_found": [],
-    "tests_passed": {},
-    "timestamp": "2026-01-09T12:39:18.067284+00:00",
-    "ready_for_qa_revalidation": false
+    "status": "fixes_applied",
+    "timestamp": "2026-01-09T13:56:00.000Z",
+    "fix_session": 0,
+    "issues_fixed": [
+      {
+        "title": "Auto-claude spec files not tracked in git",
+        "fix_commit": "e459289"
+      }
+    ],
+    "ready_for_qa_revalidation": true
   },
   "technical_notes": [
     "The auto-claude MCP server is EXTERNAL to this repository",
