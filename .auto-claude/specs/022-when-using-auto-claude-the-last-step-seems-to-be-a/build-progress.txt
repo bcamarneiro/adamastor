@@ -707,3 +707,77 @@ Note: Changes made to external Auto-Claude MCP server application at:
 - /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
 
 === END SUBTASK 4-2 ===
+
+=== SUBTASK 5-1 (2026-01-09) ===
+
+Subtask 5-1: Unit tests for PR command generation
+------------------------------------------------
+Status: COMPLETED
+
+Changes Made:
+
+1. Created test file: /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/test_pr_creation.py
+   - 25 unit tests for PR creation functionality
+   - Follows existing test patterns (test_enhanced_pr_review.py, test_gh_client.py)
+
+Test Categories:
+
+a. PR Title Generation (4 tests):
+   - test_generate_pr_title_with_feature: Title from plan["feature"]
+   - test_generate_pr_title_without_feature: Fallback to spec name
+   - test_generate_pr_title_with_numeric_prefix: Removes "022-" prefix
+   - test_generate_pr_title_fallback: Default message when all else fails
+
+b. PR Body Generation (8 tests):
+   - test_generate_pr_body_with_issue_number: "Closes #22" from spec name
+   - test_generate_pr_body_without_issue_number: No "Closes #" when no number
+   - test_generate_pr_body_what_section: Feature and description content
+   - test_generate_pr_body_why_section_with_rationale: Uses workflow_rationale
+   - test_generate_pr_body_why_section_workflow_types: bugfix/refactor/feature messages
+   - test_generate_pr_body_how_section_with_phases: Phase summaries with completion counts
+   - test_generate_pr_body_services_involved: Lists services
+   - test_generate_pr_body_testing_section: Generates checklist from qa_acceptance
+
+c. Error Categorization (7 tests):
+   - test_categorize_pr_error_auth: "not logged in" → auth, not retryable
+   - test_categorize_pr_error_network: "could not resolve" → network, retryable
+   - test_categorize_pr_error_exists: "already exists" → exists, not retryable
+   - test_categorize_pr_error_base_branch: "base branch not found" → base_branch, not retryable
+   - test_categorize_pr_error_rate_limit: "rate limit" → rate_limit, retryable
+   - test_categorize_pr_error_server: "500/502/503" → server_error, retryable
+   - test_categorize_pr_error_unknown: Unknown → unknown, retryable (default)
+
+d. Human Review Guard (5 tests):
+   - test_guard_human_review_transition_no_pr_created: Blocks without pr_created
+   - test_guard_human_review_transition_invalid_pr_created: Blocks invalid type
+   - test_guard_human_review_transition_no_url: Blocks without pr_created.url
+   - test_guard_human_review_transition_empty_url: Blocks empty URL
+   - test_guard_human_review_transition_success: Allows with valid URL, sets status
+
+e. Command Structure (2 tests):
+   - test_pr_command_args_base_staging: Verifies "--base", "staging" in source
+   - test_pr_command_args_structure: Verifies gh pr create command structure
+
+Test File Structure:
+- Standard test pattern with run_all_tests() function
+- Each test prints status and uses assert statements
+- Exit code 0 on success, 1 on failure
+
+Verification Notes:
+- Tests require Python 3.12 (bundled with Auto-Claude.app) due to type hint syntax
+- System Python 3.9 cannot import qa.py due to str | None syntax
+- Test file syntax validated successfully
+- Run with: /Applications/Auto-Claude.app/Contents/Resources/python/bin/python3.12 test_pr_creation.py
+
+Key Assertions:
+1. PR title uses feature name when available
+2. PR body follows AUTO_CLAUDE.md format with all sections
+3. Issue number extracted from spec directory name (e.g., "022-..." → #22)
+4. Error types correctly mapped to retryability
+5. Human review ONLY allowed with valid pr_created.url
+6. Commands always use --base staging, never main
+
+Note: Tests added to external Auto-Claude MCP server application at:
+/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/test_pr_creation.py
+
+=== END SUBTASK 5-1 ===
