@@ -1,25 +1,25 @@
 {
   "active": true,
-  "spec": "008-generic-comparisonbars-component",
+  "spec": "022-when-using-auto-claude-the-last-step-seems-to-be-a",
   "state": "building",
   "subtasks": {
-    "completed": 12,
-    "total": 13,
+    "completed": 8,
+    "total": 14,
     "in_progress": 1,
     "failed": 0
   },
   "phase": {
-    "current": "Testing and Verification",
+    "current": "PR Creation Implementation",
     "id": null,
-    "total": 3
+    "total": 5
   },
   "workers": {
     "active": 0,
     "max": 1
   },
   "session": {
-    "number": 14,
-    "started_at": "2026-01-07T17:35:50.845925"
+    "number": 7,
+    "started_at": "2026-01-09T11:40:28.518096"
   },
-  "last_update": "2026-01-07T18:11:57.090298"
+  "last_update": "2026-01-09T12:03:17.236991"
 }
