@@ -6,9 +6,9 @@
       "discovered_at": "2026-01-09T11:41:38.056808+00:00"
     },
     "/Applications/Auto-Claude.app/Contents/Resources/backend/ui/status.py": {
-      "description": "BuildState enum defines UI status states (IDLE, PLANNING, BUILDING, etc.) - added new states: PUSHING_BRANCH, CREATING_PR, PUSH_FAILED, PR_CREATION_FAILED, HUMAN_REVIEW",
-      "category": "workflow",
-      "discovered_at": "2026-01-09T11:41:38.080049+00:00"
+      "description": "StatusManager provides set_pr_url() method for setting GitHub PR URL in .auto-claude-status file. PR URL appears only when set (non-empty). Status file is located in project root.",
+      "category": "implementation",
+      "discovered_at": "2026-01-09T12:17:49.534455+00:00"
     },
     "/Applications/Auto-Claude.app/Contents/Resources/backend/implementation_plan/plan.py": {
       "description": "ImplementationPlan dataclass now includes pr_created and branch_pushed fields for PR tracking. pr_created: { url: str, number: int, branch: str, created_at: str }, branch_pushed: { success: bool, timestamp: str }",
@@ -31,15 +31,25 @@
       "discovered_at": "2026-01-09T11:45:43.936774+00:00"
     },
     "/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py": {
-      "description": "_guard_human_review_transition() function (lines 559-629) is the ONLY place that can set status to \"human_review\". All other code paths must call this guard function. Guard validates: pr_created exists, is a dict, has url field, url is non-empty string. Also _validate_pr_exists() (lines 509-556) can validate PR via gh pr view. QA rejected now sets status=\"qa_rejected\" instead of \"human_review\".",
-      "category": "workflow_guard",
-      "discovered_at": "2026-01-09T12:10:47.953403+00:00"
+      "description": "_update_status_file_pr_url() function (lines 190-239) updates .auto-claude-status with PR URL. Called from 7 locations after successful PR creation/linking. Handles both main project and worktree contexts.",
+      "category": "workflow",
+      "discovered_at": "2026-01-09T12:17:50.257267+00:00"
     },
     "/Applications/Auto-Claude.app/Contents/Resources/backend/core/workspace/git_utils.py": {
       "description": "Added push_branch_to_remote() and get_remote_branch_exists() functions for git push operations. push_branch_to_remote handles first-time push with -u flag and existing remote branches with --force-with-lease for safety.",
       "category": "git",
       "discovered_at": "2026-01-09T11:45:59.286552+00:00"
+    },
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/test_pr_creation.py": {
+      "description": "Unit tests for PR creation workflow - 25 tests covering title/body generation, error categorization, human review guard, and command structure. Uses pytest with mocked subprocess calls. Tests require Python 3.12 (bundled at /Applications/Auto-Claude.app/Contents/Resources/python/bin/python3.12).",
+      "category": "testing",
+      "discovered_at": "2026-01-09T12:22:05.311187+00:00"
+    },
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/test_qa_pr_integration.py": {
+      "description": "Integration tests for QA to PR flow - 31 tests covering complete workflow from QA approval through branch push, PR creation, to human_review status. Tests use pytest fixtures and mock subprocess calls for GitHub CLI operations. All test classes prefixed with 'QA to PR flow' in docstrings for grep filtering.",
+      "category": "testing",
+      "discovered_at": "2026-01-09T12:27:07.726382+00:00"
     }
   },
-  "last_updated": "2026-01-09T12:10:47.953411+00:00"
+  "last_updated": "2026-01-09T12:27:07.726389+00:00"
 }

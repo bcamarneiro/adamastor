@@ -149,11 +149,68 @@
         }
       ],
       "status": "completed"
+    },
+    "subtask-4-1": {
+      "attempts": [
+        {
+          "session": 10,
+          "timestamp": "2026-01-09T12:11:15.186541",
+          "approach": "Implemented: Guard human_review transition with PR URL check",
+          "success": true,
+          "error": null
+        },
+        {
+          "session": 8,
+          "timestamp": "2026-01-09T12:11:23.022481",
+          "approach": "Implemented: Guard human_review transition with PR URL check",
+          "success": true,
+          "error": null
+        }
+      ],
+      "status": "completed"
+    },
+    "subtask-4-2": {
+      "attempts": [
+        {
+          "session": 11,
+          "timestamp": "2026-01-09T12:18:00.717059",
+          "approach": "Implemented: Update .auto-claude-status with PR URL",
+          "success": true,
+          "error": null
+        },
+        {
+          "session": 9,
+          "timestamp": "2026-01-09T12:18:04.321696",
+          "approach": "Implemented: Update .auto-claude-status with PR URL",
+          "success": true,
+          "error": null
+        }
+      ],
+      "status": "completed"
+    },
+    "subtask-5-1": {
+      "attempts": [
+        {
+          "session": 12,
+          "timestamp": "2026-01-09T12:22:22.967062",
+          "approach": "Implemented: Unit tests for PR command generation",
+          "success": true,
+          "error": null
+        },
+        {
+          "session": 10,
+          "timestamp": "2026-01-09T12:24:13.142838",
+          "approach": "Implemented: Unit tests for PR command generation",
+          "success": true,
+          "error": null
+        }
+      ],
+      "status": "completed"
     }
   },
   "stuck_subtasks": [],
   "metadata": {
     "created_at": "2026-01-09T11:40:28.517817",
-    "last_updated": "2026-01-09T12:06:34.392705"
+    "last_updated": "2026-01-09T12:24:13.142841"
   }
 }
