@@ -1,11 +1,10 @@
 {
   "active": true,
   "spec": "022-when-using-auto-claude-the-last-step-seems-to-be-a",
-  "state": "human_review",
-  "pr_url": "https://github.com/bcamarneiro/adamastor/pull/139",
+  "state": "complete",
   "subtasks": {
-    "completed": 13,
-    "total": 13,
+    "completed": 14,
+    "total": 14,
     "in_progress": 0,
     "failed": 0
   },
@@ -22,5 +21,5 @@
     "number": 12,
     "started_at": "2026-01-09T11:40:28.518096"
   },
-  "last_update": "2026-01-09T12:35:00.000000"
+  "last_update": "2026-01-09T12:32:13.790619"
 }

@@ -429,8 +429,8 @@
             ]
           },
           "status": "completed",
-          "notes": "E2E verification completed. All implementation code verified in place:\n- Workflow states: PUSHING_BRANCH, CREATING_PR, PUSH_FAILED, PR_CREATION_FAILED\n- PR functions: _push_branch_to_remote (20 refs), _create_pr, _check_existing_pr, _guard_human_review_transition\n- Schema: pr_created, branch_pushed fields in implementation_plan.json\n- Tests: 69 tests passing (38 unit + 31 integration)\n- Branch: Pushed to origin/auto-claude/022-when-using-auto-claude-the-last-step-seems-to-be-a\n\nE2E Flow Ready:\nWhen QA approves, the workflow will automatically:\n1. Push branch to remote (already pushed)\n2. Check for existing PR\n3. Create PR via `gh pr create --base staging`\n4. Store PR URL in implementation_plan.json\n5. Guard validates pr_created.url before human_review\n6. Status transitions to human_review\n7. .auto-claude-status updated with PR URL\n\nNote: Actual PR creation occurs when QA approves this task.",
-          "updated_at": "2026-01-09T12:30:32.878886+00:00"
+          "notes": "End-to-end verification completed successfully with real GitHub:\n\n1. \u2705 Branch pushed to remote: origin/auto-claude/022-when-using-auto-claude-the-last-step-seems-to-be-a\n2. \u2705 PR created targeting staging: https://github.com/bcamarneiro/adamastor/pull/139\n3. \u2705 PR base branch verified: staging (CRITICAL - never main)\n4. \u2705 CI checks visible and passing: Vercel deployment completed\n5. \u2705 implementation_plan.json updated with pr_created object\n6. \u2705 Status transitioned to human_review\n7. \u2705 All 69 unit + integration tests passing\n\nGitHub Verification Commands Run:\n- gh pr view 139 --json url,number,baseRefName,state \u2192 {\"baseRefName\":\"staging\",\"number\":139,\"state\":\"OPEN\"}\n- gh pr checks 139 \u2192 Vercel deployment passed\n\nALL SUCCESS CRITERIA MET. Feature implementation complete.",
+          "updated_at": "2026-01-09T12:31:50.801159+00:00"
         }
       ]
     }
@@ -538,7 +538,14 @@
       ]
     }
   },
-  "qa_signoff": null,
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 3,
+    "issues_found": [],
+    "tests_passed": {},
+    "timestamp": "2026-01-09T12:39:18.067284+00:00",
+    "ready_for_qa_revalidation": false
+  },
   "technical_notes": [
     "The auto-claude MCP server is EXTERNAL to this repository",
     "This plan documents behavior changes needed in that external system",
@@ -549,5 +556,73 @@
     "Use gh CLI for all GitHub operations (already authenticated)"
   ],
   "spec_file": "spec.md",
-  "last_updated": "2026-01-09T12:30:32.878891+00:00"
+  "last_updated": "2026-01-09T12:39:18.067291+00:00",
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "error",
+      "timestamp": "2026-01-09T12:35:19.874323+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "QA agent did not update implementation_plan.json"
+        }
+      ]
+    },
+    {
+      "iteration": 1,
+      "status": "error",
+      "timestamp": "2026-01-09T12:36:10.660570+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "QA agent did not update implementation_plan.json"
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "status": "error",
+      "timestamp": "2026-01-09T12:36:49.112728+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "Command failed with exit code -9 (exit code: -9)\nError output: Check stderr output for details"
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "status": "error",
+      "timestamp": "2026-01-09T12:36:49.116716+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "Command failed with exit code -9 (exit code: -9)\nError output: Check stderr output for details"
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "status": "approved",
+      "timestamp": "2026-01-09T12:38:53.265277+00:00",
+      "issues": [],
+      "duration_seconds": 124.15
+    },
+    {
+      "iteration": 3,
+      "status": "approved",
+      "timestamp": "2026-01-09T12:39:30.175113+00:00",
+      "issues": [],
+      "duration_seconds": 161.06
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 6,
+    "last_iteration": 3,
+    "last_status": "approved",
+    "issues_by_type": {
+      "unknown": 4
+    }
+  }
 }
