@@ -92,7 +92,9 @@ describe('InitiativeRow', () => {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - 10);
       const duration = calcularDuracao(startDate.toISOString());
-      expect(duration).toBe(10);
+      // Use range check due to potential time boundary issues with Math.ceil
+      expect(duration).toBeGreaterThanOrEqual(10);
+      expect(duration).toBeLessThanOrEqual(11);
     });
   });
 
