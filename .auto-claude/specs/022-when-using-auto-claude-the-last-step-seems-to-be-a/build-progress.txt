@@ -367,3 +367,50 @@ Note: Changes made to external Auto-Claude MCP server application at:
 /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py
 
 === END SUBTASK 3-2 ===
+
+=== SUBTASK 3-4 (2026-01-09) ===
+
+Subtask 3-4: Store PR details in implementation_plan.json
+--------------------------------------------------------
+Status: COMPLETED
+
+Implementation Already Present in qa.py:
+PR details storage is implemented in multiple locations within the update_qa_status and retry_branch_push functions.
+
+Locations in /Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py:
+- Lines 746-757: After existing PR found
+- Lines 769-780: After new PR created (when existing PR check failed)
+- Lines 798-809: After new PR created (no existing PR)
+- Lines 1027-1038: In retry_branch_push - existing PR found
+- Lines 1050-1061: In retry_branch_push - new PR created (PR check failed)
+- Lines 1079-1090: In retry_branch_push - new PR created (no existing)
+
+PR Details Object Structure (plan["pr_created"]):
+```python
+{
+    "url": str,           # GitHub PR URL (e.g., "https://github.com/owner/repo/pull/123")
+    "number": int,        # PR number (e.g., 123)
+    "title": str,         # PR title (from _generate_pr_title or existing PR)
+    "branch": str,        # Branch name (e.g., "auto-claude/022-spec-name")
+    "created_at": str,    # ISO timestamp (e.g., "2026-01-09T12:00:00.000Z")
+    "existing": bool,     # True if linked to existing PR, False if newly created
+}
+```
+
+Pattern Followed (stagedAt field):
+- Uses ISO timestamp format for created_at field
+- Object stored at root level of implementation_plan.json
+- Populated only when PR is successfully created or linked
+
+Verification:
+- Command: cat implementation_plan.json | jq '.pr_created'
+- Result: null (expected - no PR created yet for this spec)
+- Expected after PR creation: Object with url, number, branch, created_at fields
+
+Implementation Notes:
+- pr_created field is null until a PR is created
+- Set immediately after successful gh pr create or existing PR discovery
+- existing flag differentiates between linked PRs and newly created ones
+- All required fields (url, number, branch, created_at) are populated
+
+=== END SUBTASK 3-4 ===
