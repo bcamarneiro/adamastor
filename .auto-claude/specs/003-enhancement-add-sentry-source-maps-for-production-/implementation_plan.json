@@ -332,23 +332,23 @@
     }
   },
   "qa_signoff": {
-    "status": "fixes_applied",
-    "qa_session": 2,
-    "fix_session": 0,
-    "issues_found": [
-      {
-        "description": "None - All implementation requirements verified through static code analysis"
-      }
-    ],
-    "issues_fixed": [
-      {
-        "title": "Rebase branch onto origin/main",
-        "fix_commit": "185f4e7"
-      }
-    ],
-    "tests_passed": {},
-    "timestamp": "2026-01-07T20:15:00.000000+00:00",
-    "ready_for_qa_revalidation": true
+    "status": "pr_ready",
+    "qa_session": 3,
+    "issues_found": [],
+    "tests_passed": {
+      "subtasks": "8/8",
+      "security_scan": "PASS",
+      "pattern_compliance": "PASS",
+      "regression_check": "PASS"
+    },
+    "timestamp": "2026-01-09T14:50:00.000000+00:00",
+    "ready_for_qa_revalidation": false,
+    "pr_info": {
+      "branch": "auto-claude/003-enhancement-add-sentry-source-maps-for-production-",
+      "base": "staging",
+      "url": "https://github.com/bcamarneiro/adamastor/compare/staging...auto-claude/003-enhancement-add-sentry-source-maps-for-production-?expand=1",
+      "pushed_at": "2026-01-09T14:50:00.000000+00:00"
+    }
   },
   "summary": {
     "total_phases": 5,
@@ -370,7 +370,7 @@
       "Verify existing Sentry features (ErrorBoundary, Session Replay) still work after changes"
     ]
   },
-  "last_updated": "2026-01-07T20:15:00.000000+00:00",
+  "last_updated": "2026-01-07T20:19:57.985920+00:00",
   "qa_iteration_history": [
     {
       "iteration": 1,
@@ -408,17 +408,23 @@
         }
       ],
       "fix_session": 0
+    },
+    {
+      "iteration": 3,
+      "status": "approved",
+      "timestamp": "2026-01-07T20:20:11.140831+00:00",
+      "issues": [],
+      "duration_seconds": 239.35
     }
   ],
   "qa_stats": {
-    "total_iterations": 4,
-    "last_iteration": 4,
-    "last_status": "fixes_applied",
+    "total_iterations": 5,
+    "last_iteration": 3,
+    "last_status": "approved",
     "issues_by_type": {
-      "unknown": 1,
-      "rebase": 1
+      "unknown": 2
     }
   },
-  "status": "human_review",
-  "planStatus": "review"
+  "status": "pr_ready",
+  "planStatus": "pr_ready"
 }
