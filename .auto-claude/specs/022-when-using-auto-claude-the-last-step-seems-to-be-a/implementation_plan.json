@@ -1,0 +1,519 @@
+{
+  "feature": "Auto-Claude PR Creation Before Human Review",
+  "description": "Automate PR creation in auto-claude workflow after QA approval, eliminating manual terminal operations and enabling GitHub-based human review with visible CI status",
+  "created_at": "2026-01-09T11:27:23.530Z",
+  "updated_at": "2026-01-09T12:15:00.000Z",
+  "status": "planning",
+  "planStatus": "pending_approval",
+  "workflow_type": "feature",
+  "workflow_rationale": "This is a feature enhancement to the auto-claude workflow. It adds a new step (PR creation) between QA approval and human review. The core workflow exists; this extends it for better developer experience by integrating with GitHub's PR interface.",
+  "services_involved": [
+    "auto-claude-mcp-server"
+  ],
+  "external_dependency_note": "CRITICAL: The auto-claude MCP server is EXTERNAL to this repository. Implementation requires access to that server's source code. This plan documents the behavior changes needed.",
+  "phases": [
+    {
+      "id": "phase-1-workflow-state",
+      "name": "Workflow State Machine Update",
+      "type": "implementation",
+      "description": "Modify the auto-claude MCP server workflow state machine to include PR creation states between qa_approved and human_review",
+      "depends_on": [],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Add new workflow states for branch pushing and PR creation",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "workflow state machine module"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "Existing state transitions (building \u2192 qa_review \u2192 qa_approved \u2192 human_review)"
+          ],
+          "implementation_notes": [
+            "Add 'pushing_branch' state after 'qa_approved'",
+            "Add 'creating_pr' state after 'pushing_branch'",
+            "Add error states: 'push_failed', 'pr_creation_failed'",
+            "Only transition to 'human_review' after successful PR creation"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "grep -r 'pushing_branch\\|creating_pr' <mcp-server-src>",
+            "expected": "New states defined in workflow"
+          },
+          "status": "completed",
+          "notes": "Verified: All workflow states for branch pushing and PR creation are implemented in the Auto-Claude MCP server app bundle. States added: PUSHING_BRANCH, CREATING_PR, PUSH_FAILED, PR_CREATION_FAILED in both ExecutionPhase (phase_event.py) and BuildState (status.py). QA tool (qa.py) implements branch pushing workflow with proper state transitions.",
+          "updated_at": "2026-01-09T11:46:42.367986+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Update implementation_plan.json schema to include pr_created object",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "implementation plan schema/types"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "Existing qa_signoff object structure"
+          ],
+          "implementation_notes": [
+            "Add pr_created: { url: string, number: number, branch: string, created_at: string }",
+            "Add branch_pushed: { success: boolean, timestamp: string }",
+            "Ensure status cannot be 'human_review' without pr_created.url"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify schema includes pr_created and branch_pushed fields with correct types"
+          },
+          "status": "completed",
+          "notes": "Updated implementation_plan.json schema in auto-claude MCP server:\n\n1. Added `pr_created` field to ImplementationPlan dataclass (dict | None) with structure: { url: str, number: int, branch: str, created_at: str }\n2. Added `branch_pushed` field to ImplementationPlan dataclass (dict | None) with structure: { success: bool, timestamp: str }\n3. Updated to_dict() method to serialize new fields when present\n4. Updated from_dict() classmethod to deserialize new fields from JSON\n5. Added 'branch_pushed' and 'pr_created' to IMPLEMENTATION_PLAN_SCHEMA optional_fields for validation\n\nFiles modified:\n- /Applications/Auto-Claude.app/Contents/Resources/backend/implementation_plan/plan.py\n- /Applications/Auto-Claude.app/Contents/Resources/backend/spec/validate_pkg/schemas.py",
+          "updated_at": "2026-01-09T11:43:38.651213+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-push-logic",
+      "name": "Branch Push Implementation",
+      "type": "implementation",
+      "description": "Implement logic to push the worktree branch to remote before PR creation",
+      "depends_on": [
+        "phase-1-workflow-state"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Implement git push to remote from worktree",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "post-QA transition logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "implementation_notes": [
+            "Execute: git push -u origin <branch-name>",
+            "Handle existing remote branch with --force-with-lease",
+            "Capture success/failure and error messages",
+            "Update implementation_plan.json with branch_pushed status"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "git branch -r | grep <branch-name>",
+            "expected": "Branch appears in remote branches"
+          },
+          "status": "completed",
+          "notes": "Implemented git push to remote from worktree:\n\n1. Added _push_branch_to_remote() function to qa.py with:\n   - First-time push with -u flag to set upstream\n   - Retry with --force-with-lease for rejected pushes\n   - Error handling for authentication and network issues\n\n2. Added _get_worktree_branch() and _get_worktree_path_from_spec() helpers\n\n3. Modified update_qa_status() to:\n   - Push branch when QA status is 'approved'\n   - Update implementation_plan.json with branch_pushed status\n   - Set status to 'push_failed' if push fails\n\n4. Also added push_branch_to_remote() to git_utils.py for reuse\n\nVerification: Branch 'auto-claude/022-when-using-auto-claude-the-last-step-seems-to-be-a' successfully pushed and visible in remote branches.",
+          "updated_at": "2026-01-09T11:46:53.306438+00:00"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Add error handling for push failures",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "post-QA transition logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "implementation_notes": [
+            "Set status to 'push_failed' on failure",
+            "Store error message in implementation_plan.json",
+            "Allow retry mechanism",
+            "Do NOT proceed to PR creation if push fails"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "Test with network disconnected - verify graceful failure and status update"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-pr-creation",
+      "name": "PR Creation Implementation",
+      "type": "implementation",
+      "description": "Implement automatic PR creation using GitHub CLI after successful branch push",
+      "depends_on": [
+        "phase-2-push-logic"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Check for existing PR on branch before creating new one",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "PR creation logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "gh pr list --head <branch> --json url"
+          ],
+          "implementation_notes": [
+            "Execute: gh pr list --head <branch> --json url,number",
+            "If PR exists, link to it instead of creating new",
+            "Store existing PR details in pr_created object"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "gh pr list --head <branch-name> --json url",
+            "expected": "Empty array [] or existing PR details"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Generate PR body from implementation plan",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "PR creation logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "AUTO_CLAUDE.md PR body format"
+          ],
+          "implementation_notes": [
+            "Extract feature name for title",
+            "Generate structured body with What/Why/How/Testing sections",
+            "Include 'Closes #<issue>' if issue linked",
+            "Follow exact format from AUTO_CLAUDE.md"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify PR body matches AUTO_CLAUDE.md format with all sections"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-3-3",
+          "description": "Execute gh pr create command",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "PR creation logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "gh pr create --base staging --title '...' --body '...'"
+          ],
+          "implementation_notes": [
+            "CRITICAL: Always use --base staging, never main",
+            "Capture PR URL and number from output",
+            "Use HEREDOC for body to preserve formatting",
+            "Handle authentication errors (gh auth login needed)"
+          ],
+          "verification": {
+            "type": "api",
+            "method": "GET",
+            "url": "gh pr view <number> --json url,baseRefName",
+            "expected_status": 200,
+            "expected_values": {
+              "baseRefName": "staging"
+            }
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-3-4",
+          "description": "Store PR details in implementation_plan.json",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "PR creation logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "Existing stagedAt field pattern"
+          ],
+          "implementation_notes": [
+            "Set pr_created.url = PR URL",
+            "Set pr_created.number = PR number",
+            "Set pr_created.branch = branch name",
+            "Set pr_created.created_at = ISO timestamp"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cat implementation_plan.json | jq '.pr_created'",
+            "expected": "Object with url, number, branch, created_at fields"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-3-5",
+          "description": "Add error handling for PR creation failures",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "PR creation logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "implementation_notes": [
+            "Set status to 'pr_creation_failed' on failure",
+            "Store error message for debugging",
+            "Implement exponential backoff retry (3 attempts)",
+            "Clear error message on successful retry"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "Test with gh CLI not authenticated - verify graceful failure"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-status-transition",
+      "name": "Status Transition to Human Review",
+      "type": "implementation",
+      "description": "Only transition to human_review status after successful PR creation",
+      "depends_on": [
+        "phase-3-pr-creation"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Guard human_review transition with PR URL check",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            "workflow state machine"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "implementation_notes": [
+            "NEVER set status to 'human_review' without pr_created.url",
+            "Validate PR exists via gh pr view before transitioning",
+            "Log clear message when transitioning to human_review with PR URL"
+          ],
+          "verification": {
+            "type": "manual",
+            "instructions": "Verify implementation_plan.json cannot have status: human_review without pr_created.url"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Update .auto-claude-status with PR URL",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [
+            ".auto-claude-status update logic"
+          ],
+          "files_to_create": [],
+          "patterns_from": [
+            "Existing .auto-claude-status structure"
+          ],
+          "implementation_notes": [
+            "Add pr_url field to .auto-claude-status",
+            "Include in status output for visibility",
+            "Update when PR is created"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "cat .auto-claude-status | jq '.pr_url'",
+            "expected": "GitHub PR URL string"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-5-testing",
+      "name": "Testing and Verification",
+      "type": "integration",
+      "description": "Verify the complete workflow from QA approval to PR creation",
+      "depends_on": [
+        "phase-4-status-transition"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Unit tests for PR command generation",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [],
+          "files_to_create": [
+            "PR creation unit tests"
+          ],
+          "patterns_from": [
+            "Existing MCP server test patterns"
+          ],
+          "implementation_notes": [
+            "Test gh pr create command args generation",
+            "Test PR body format generation",
+            "Test branch name extraction",
+            "Test error handling paths"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "npm test -- --grep 'PR creation'",
+            "expected": "All PR creation tests pass"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-5-2",
+          "description": "Integration test for full QA\u2192PR flow",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [],
+          "files_to_create": [
+            "Integration test for workflow"
+          ],
+          "patterns_from": [],
+          "implementation_notes": [
+            "Mock GitHub CLI for testing",
+            "Test: QA approval \u2192 push \u2192 PR create \u2192 human_review",
+            "Verify implementation_plan.json state at each step",
+            "Test error scenarios (push fail, PR fail)"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "npm test -- --grep 'QA to PR flow'",
+            "expected": "Integration tests pass"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-5-3",
+          "description": "End-to-end verification with real GitHub",
+          "service": "auto-claude-mcp-server",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "implementation_notes": [
+            "Run full workflow on test spec",
+            "Verify PR created in GitHub",
+            "Verify PR targets staging branch",
+            "Verify CI checks appear on PR"
+          ],
+          "verification": {
+            "type": "e2e",
+            "steps": [
+              "Complete implementation on test spec",
+              "QA approves the task",
+              "Verify branch pushed to remote",
+              "Verify PR created targeting staging",
+              "Verify implementation_plan.json has pr_created.url",
+              "Verify status is human_review",
+              "Open PR URL in browser - verify CI checks visible"
+            ]
+          },
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 5,
+    "total_subtasks": 13,
+    "services_involved": [
+      "auto-claude-mcp-server"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential only - phases have strict dependencies"
+    },
+    "estimated_effort": "Medium - workflow state machine changes with error handling",
+    "startup_command": "Access to auto-claude MCP server source code required"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "unit",
+      "integration"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "PR auto-created after QA approval targeting staging branch",
+      "pr_created.url populated in implementation_plan.json",
+      "Status = human_review ONLY after PR success",
+      "CI checks visible on PR page",
+      "Zero manual terminal commands between QA and human review",
+      "Existing workflow still functions for edge cases"
+    ],
+    "verification_steps": [
+      {
+        "name": "Unit Tests",
+        "command": "npm test",
+        "expected_outcome": "All unit tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Integration Tests",
+        "command": "npm test -- --integration",
+        "expected_outcome": "Integration tests pass",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "PR Verification",
+        "command": "gh pr view <number> --json baseRefName,state",
+        "expected_outcome": "baseRefName: staging, state: OPEN",
+        "type": "manual",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "Medium risk workflow change requires unit tests for PR creation logic and integration tests for full QA\u2192PR flow. No security concerns."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": true,
+      "commands": [
+        "npm test"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": true,
+      "commands": [
+        "npm test -- --integration"
+      ],
+      "services_to_test": [
+        "auto-claude-mcp-server"
+      ]
+    },
+    "e2e_tests": {
+      "required": true,
+      "commands": [],
+      "flows": [
+        "qa-approval-to-pr-creation"
+      ]
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    },
+    "github_verification": {
+      "required": true,
+      "checks": [
+        "PR exists for completed task",
+        "PR base branch is staging",
+        "CI checks visible on PR",
+        "PR URL stored in implementation_plan.json"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "technical_notes": [
+    "The auto-claude MCP server is EXTERNAL to this repository",
+    "This plan documents behavior changes needed in that external system",
+    "Implementation requires access to MCP server source code",
+    "Current workflow: qa_approved \u2192 (staging) \u2192 human_review",
+    "New workflow: qa_approved \u2192 pushing_branch \u2192 creating_pr \u2192 human_review",
+    "PR must ALWAYS target staging branch, never main",
+    "Use gh CLI for all GitHub operations (already authenticated)"
+  ],
+  "spec_file": "spec.md",
+  "last_updated": "2026-01-09T11:46:53.306445+00:00"
+}

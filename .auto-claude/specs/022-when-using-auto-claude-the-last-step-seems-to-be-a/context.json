@@ -1,0 +1,53 @@
+{
+  "task_description": "Automate PR creation in auto-claude workflow after QA approval, eliminating manual terminal operations and enabling GitHub-based human review with visible CI status",
+  "scoped_services": ["auto-claude-mcp-server"],
+  "files_to_modify": {
+    "auto-claude-mcp-server": [
+      "workflow state machine (where human_review status transitions occur)",
+      "post-QA transition logic",
+      "implementation_plan.json schema (add pr_created object)",
+      ".auto-claude-status update logic (add pr_url field)"
+    ]
+  },
+  "files_to_reference": [
+    ".auto-claude/specs/006-implement-loading-screen-component/implementation_plan.json",
+    ".auto-claude/specs/019-memoize-o-n-related-initiatives-computation-in-ini/implementation_plan.json",
+    "AUTO_CLAUDE.md",
+    ".claude/CLAUDE.md"
+  ],
+  "patterns": {
+    "pr_creation_pattern": "git push -u origin <branch> && gh pr create --base staging --title '...' --body '...'",
+    "implementation_plan_status_fields": "status, qa_signoff, stagedAt, stagedInMainProject",
+    "pr_body_format": "Closes #<issue>\\n\\n## What\\n[desc]\\n\\n## Why\\n[why]\\n\\n## How\\n[how]\\n\\n## Testing\\n- [ ] checklist",
+    "workflow_states": "building → qa_review → qa_approved → human_review",
+    "proposed_workflow_states": "qa_approved → pushing_branch → creating_pr → human_review"
+  },
+  "existing_implementations": {
+    "description": "Current workflow sets status to human_review after QA approval and staging. PR creation is a manual terminal operation by the user.",
+    "relevant_files": [
+      ".auto-claude-status",
+      ".auto-claude/specs/*/implementation_plan.json"
+    ]
+  },
+  "external_dependencies": {
+    "note": "The auto-claude MCP server is EXTERNAL to this repository. Implementation requires access to that server's source code.",
+    "mcp_tools_available": [
+      "mcp__auto-claude__update_subtask_status",
+      "mcp__auto-claude__get_build_progress",
+      "mcp__auto-claude__record_discovery",
+      "mcp__auto-claude__record_gotcha",
+      "mcp__auto-claude__get_session_context",
+      "mcp__auto-claude__update_qa_status"
+    ]
+  },
+  "planning_completed": {
+    "implementation_plan_created": true,
+    "init_sh_created": true,
+    "build_progress_created": true,
+    "total_phases": 5,
+    "total_subtasks": 13,
+    "recommended_workers": 1
+  },
+  "created_at": "2026-01-09T11:29:32.532840",
+  "updated_at": "2026-01-09T11:39:00.000000"
+}

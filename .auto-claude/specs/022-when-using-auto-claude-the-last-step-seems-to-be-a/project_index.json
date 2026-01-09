@@ -1,0 +1,248 @@
+{
+  "project_root": "/Users/brunocamarneiro/Projects/bcamarneiro/adamastor",
+  "project_type": "monorepo",
+  "services": {
+    "shared": {
+      "name": "shared",
+      "path": "/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/packages/shared",
+      "language": "JavaScript",
+      "framework": null,
+      "type": "library",
+      "package_manager": "npm",
+      "key_directories": {
+        "src": {
+          "path": "src",
+          "purpose": "Source code"
+        }
+      },
+      "entry_point": "src/index.ts",
+      "dependencies": [],
+      "dev_dependencies": [
+        "@types/bun"
+      ]
+    },
+    "watcher": {
+      "name": "watcher",
+      "path": "/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/apps/watcher",
+      "language": "JavaScript",
+      "framework": null,
+      "type": "unknown",
+      "package_manager": "npm",
+      "dev_command": "npm run start",
+      "key_directories": {
+        "src": {
+          "path": "src",
+          "purpose": "Source code"
+        },
+        "schemas": {
+          "path": "schemas",
+          "purpose": "Schemas/DTOs"
+        }
+      },
+      "entry_point": "index.ts",
+      "dependencies": [
+        "shared",
+        "@bokuweb/zstd-wasm",
+        "@sentry/node",
+        "@supabase/supabase-js",
+        "@types/backblaze-b2",
+        "@types/deep-diff",
+        "@vercel/blob",
+        "ajv",
+        "backblaze-b2",
+        "date-fns",
+        "deep-diff",
+        "generate-schema",
+        "minimist",
+        "sharp",
+        "zstd-codec"
+      ],
+      "dev_dependencies": [
+        "@types/bun",
+        "@types/minimist",
+        "@types/sharp"
+      ],
+      "environment": {
+        "variables": {
+          "SUPABASE_URL": {
+            "value": "http://127.0.0.1:54321",
+            "source": ".env",
+            "type": "url",
+            "sensitive": false,
+            "required": false
+          },
+          "SUPABASE_SERVICE_ROLE_KEY": {
+            "value": "<REDACTED>",
+            "source": ".env",
+            "type": "string",
+            "sensitive": true,
+            "required": false
+          }
+        },
+        "required_count": 0,
+        "optional_count": 0,
+        "detected_count": 2
+      },
+      "services": {
+        "monitoring": [
+          {
+            "type": "sentry",
+            "client": "@sentry/node"
+          }
+        ]
+      },
+      "monitoring": {
+        "apm_tools": [
+          "sentry"
+        ]
+      },
+      "consumes": [
+        "shared"
+      ]
+    },
+    "web": {
+      "name": "web",
+      "path": "/Users/brunocamarneiro/Projects/bcamarneiro/adamastor/apps/web",
+      "language": "TypeScript",
+      "framework": "React",
+      "type": "frontend",
+      "package_manager": "npm",
+      "default_port": 3000,
+      "build_tool": "Vite",
+      "styling": "Tailwind CSS",
+      "state_management": "Zustand",
+      "dev_command": "npm run dev",
+      "key_directories": {
+        "src": {
+          "path": "src",
+          "purpose": "Source code"
+        }
+      },
+      "entry_point": "src/App.tsx",
+      "dependencies": [
+        "shared",
+        "@headlessui/react",
+        "@radix-ui/react-tabs",
+        "@radix-ui/themes",
+        "@sentry/react",
+        "@supabase/supabase-js",
+        "@tailwindcss/vite",
+        "@tanstack/react-query",
+        "@tanstack/react-virtual",
+        "@types/lodash",
+        "@vercel/analytics",
+        "@vercel/blob",
+        "@vercel/speed-insights",
+        "@xyflow/react",
+        "clsx",
+        "cmdk",
+        "framer-motion",
+        "html-to-image",
+        "lodash",
+        "lucide-react"
+      ],
+      "dev_dependencies": [
+        "@happy-dom/global-registrator",
+        "@playwright/test",
+        "@sentry/vite-plugin",
+        "@testing-library/jest-dom",
+        "@testing-library/react",
+        "@testing-library/user-event",
+        "@types/node",
+        "@types/react",
+        "@types/react-dom",
+        "@vitejs/plugin-react"
+      ],
+      "testing": "Vitest",
+      "e2e_testing": "Playwright",
+      "environment": {
+        "variables": {
+          "VITE_INITIATIVES_URL": {
+            "value": "https://ydfwrfxg9t0mujvy.public.blob.vercel-storage.com/latest/iniciativas.json",
+            "source": ".env",
+            "type": "url",
+            "sensitive": false,
+            "required": false
+          },
+          "VITE_BASE_INFO_URL": {
+            "value": "https://ydfwrfxg9t0mujvy.public.blob.vercel-storage.com/latest/informacao_base.json",
+            "source": ".env",
+            "type": "url",
+            "sensitive": false,
+            "required": false
+          },
+          "VITE_SUPABASE_URL": {
+            "value": "http://127.0.0.1:54321",
+            "source": ".env.local",
+            "type": "url",
+            "sensitive": false,
+            "required": true
+          },
+          "VITE_SUPABASE_ANON_KEY": {
+            "value": "<REDACTED>",
+            "source": ".env.local",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "VITE_SENTRY_DSN": {
+            "value": null,
+            "source": ".env.example",
+            "type": "string",
+            "sensitive": false,
+            "required": true
+          },
+          "VITE_ENVIRONMENT": {
+            "value": null,
+            "source": ".env.example",
+            "type": "string",
+            "sensitive": false,
+            "required": true
+          },
+          "SENTRY_AUTH_TOKEN": {
+            "value": null,
+            "source": ".env.example",
+            "type": "string",
+            "sensitive": true,
+            "required": true
+          },
+          "SENTRY_ORG": {
+            "value": null,
+            "source": ".env.example",
+            "type": "string",
+            "sensitive": false,
+            "required": true
+          },
+          "SENTRY_PROJECT": {
+            "value": null,
+            "source": ".env.example",
+            "type": "string",
+            "sensitive": false,
+            "required": true
+          }
+        },
+        "required_count": 7,
+        "optional_count": 0,
+        "detected_count": 9
+      },
+      "consumes": [
+        "shared"
+      ]
+    }
+  },
+  "infrastructure": {
+    "ci": "GitHub Actions",
+    "ci_workflows": [
+      "e2e-staging.yml",
+      "release-production.yml",
+      "sync-photos.yml",
+      "sync-data.yml",
+      "deploy-staging.yml",
+      "ci.yml"
+    ]
+  },
+  "conventions": {
+    "typescript": true,
+    "git_hooks": "Husky"
+  }
+}

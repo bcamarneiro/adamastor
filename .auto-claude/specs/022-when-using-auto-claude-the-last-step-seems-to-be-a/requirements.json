@@ -1,0 +1,4 @@
+{
+  "task_description": "when using auto-claude. the last step seems to be a direct commit done manually by me to the target branch. I would prefer that tasks are only moved to human review when a PR is opened so I dont have to make manual validation in the ide/terminal. I want to be able to validate in github because there I can also see if the CI passes",
+  "workflow_type": "feature"
+}

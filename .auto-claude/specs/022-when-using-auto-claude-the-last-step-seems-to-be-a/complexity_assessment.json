@@ -1,0 +1,93 @@
+{
+  "complexity": "standard",
+  "workflow_type": "feature",
+  "confidence": 0.85,
+  "reasoning": "This is a workflow enhancement that changes how auto-claude transitions to human review. The scope is contained to the auto-claude system, using existing GitHub CLI patterns already present in the codebase. No new external dependencies or infrastructure changes required - just modifying workflow state machine and adding PR creation step before human review.",
+
+  "analysis": {
+    "scope": {
+      "estimated_files": 6,
+      "estimated_services": 1,
+      "is_cross_cutting": false,
+      "notes": "Changes are localized to auto-claude workflow logic. Need to modify: workflow state transitions, add PR creation step, update human review trigger conditions, and potentially add PR URL tracking to implementation_plan.json."
+    },
+    "integrations": {
+      "external_services": ["GitHub (via gh CLI)"],
+      "new_dependencies": [],
+      "research_needed": false,
+      "notes": "GitHub CLI (gh) is already extensively used in the codebase for PR operations. Existing patterns for 'gh pr create', 'gh pr checks', 'gh pr view' are documented in specs and implementation plans (e.g., .auto-claude/specs/001-you/spec.md, implementation_plan.json)."
+    },
+    "infrastructure": {
+      "docker_changes": false,
+      "database_changes": false,
+      "config_changes": false,
+      "notes": "No infrastructure changes required. GitHub authentication is already configured for existing gh CLI usage throughout the auto-claude system."
+    },
+    "knowledge": {
+      "patterns_exist": true,
+      "research_required": false,
+      "unfamiliar_tech": [],
+      "notes": "Existing patterns for workflow state management (human_review status in implementation_plan.json), gh CLI operations (gh pr create --base staging), and branch naming conventions (auto-claude/XXX-task-slug) are well-established in the codebase."
+    },
+    "risk": {
+      "level": "medium",
+      "concerns": [
+        "PR creation failures need graceful handling",
+        "Need to preserve existing workflow for non-PR cases or edge cases",
+        "Branch naming must be consistent with PR creation requirements",
+        "Must handle cases where branch not pushed to remote"
+      ],
+      "notes": "Main risk is breaking the workflow for edge cases. Need comprehensive testing of happy path (PR created successfully) and error scenarios (remote not available, branch conflicts)."
+    }
+  },
+
+  "recommended_phases": [
+    "discovery",
+    "requirements",
+    "context",
+    "spec_writing",
+    "planning",
+    "validation"
+  ],
+
+  "flags": {
+    "needs_research": false,
+    "needs_self_critique": false,
+    "needs_infrastructure_setup": false
+  },
+
+  "validation_recommendations": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "minimal_mode": false,
+    "test_types_required": ["unit", "integration"],
+    "security_scan_required": false,
+    "staging_deployment_required": false,
+    "reasoning": "Workflow state machine changes require unit tests for PR creation logic and integration tests to verify the full sequence (commit -> push -> PR -> human review). No security concerns since this doesn't modify authentication or sensitive data handling."
+  },
+
+  "implementation_hints": {
+    "key_areas_to_modify": [
+      "Workflow state machine (where human_review status is set in implementation_plan.json)",
+      "Post-coding/validation phase completion logic",
+      "Add PR creation step using gh CLI (gh pr create --base staging)",
+      "Store PR URL in implementation_plan.json for human review reference"
+    ],
+    "existing_patterns_to_follow": [
+      "gh pr create --base staging (from .auto-claude/specs/001-you/spec.md)",
+      "implementation_plan.json status field: 'human_review'",
+      "Branch naming: auto-claude/{task-id}-{task-slug}",
+      "gh pr view --json state,title,baseRefName for verification"
+    ],
+    "acceptance_criteria": [
+      "PRs are automatically created after validation phase completes",
+      "Human review status only set AFTER successful PR creation",
+      "PR URL is captured and stored in task metadata for human review",
+      "CI status visible in GitHub PR before human approval",
+      "Graceful error handling if PR creation fails (task stays in previous state)",
+      "User can review changes and CI status in GitHub UI"
+    ]
+  },
+
+  "created_at": "2026-01-09T11:45:00.000Z"
+}

@@ -1,0 +1,45 @@
+{
+  "discovered_files": {
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/core/phase_event.py": {
+      "description": "ExecutionPhase enum defines workflow phases (PLANNING, CODING, QA_REVIEW, etc.) - added new phases: PUSHING_BRANCH, CREATING_PR, PUSH_FAILED, PR_CREATION_FAILED",
+      "category": "workflow",
+      "discovered_at": "2026-01-09T11:41:38.056808+00:00"
+    },
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/ui/status.py": {
+      "description": "BuildState enum defines UI status states (IDLE, PLANNING, BUILDING, etc.) - added new states: PUSHING_BRANCH, CREATING_PR, PUSH_FAILED, PR_CREATION_FAILED, HUMAN_REVIEW",
+      "category": "workflow",
+      "discovered_at": "2026-01-09T11:41:38.080049+00:00"
+    },
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/implementation_plan/plan.py": {
+      "description": "ImplementationPlan dataclass now includes pr_created and branch_pushed fields for PR tracking. pr_created: { url: str, number: int, branch: str, created_at: str }, branch_pushed: { success: bool, timestamp: str }",
+      "category": "schema",
+      "discovered_at": "2026-01-09T11:43:23.373829+00:00"
+    },
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/spec/validate_pkg/schemas.py": {
+      "description": "IMPLEMENTATION_PLAN_SCHEMA optional_fields now includes 'branch_pushed' and 'pr_created' for validation",
+      "category": "schema",
+      "discovered_at": "2026-01-09T11:43:23.401517+00:00"
+    },
+    "~/Library/Application Support/auto-claude-ui/backend-source/agents/tools_pkg/tools/qa.py": {
+      "description": "Auto-claude MCP server QA tool location - this is where workflow state transitions happen. When QA status is \"approved\", it sets plan[\"status\"] = \"human_review\". This is where new states (pushing_branch, creating_pr) need to be added.",
+      "category": "external-dependency",
+      "discovered_at": "2026-01-09T11:45:43.910977+00:00"
+    },
+    "~/Library/Application Support/auto-claude-ui/backend-source/agents/tools_pkg/models.py": {
+      "description": "MCP tool models and constants - defines all auto-claude MCP tools including TOOL_UPDATE_QA_STATUS. Contains agent configurations and MCP server mappings.",
+      "category": "external-dependency",
+      "discovered_at": "2026-01-09T11:45:43.936774+00:00"
+    },
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/agents/tools_pkg/tools/qa.py": {
+      "description": "update_qa_status tool now automatically pushes branch to remote when QA status is 'approved'. Uses _push_branch_to_remote helper with retry logic (--force-with-lease). Updates implementation_plan.json with branch_pushed status including success, timestamp, branch name, and message.",
+      "category": "workflow",
+      "discovered_at": "2026-01-09T11:45:59.262371+00:00"
+    },
+    "/Applications/Auto-Claude.app/Contents/Resources/backend/core/workspace/git_utils.py": {
+      "description": "Added push_branch_to_remote() and get_remote_branch_exists() functions for git push operations. push_branch_to_remote handles first-time push with -u flag and existing remote branches with --force-with-lease for safety.",
+      "category": "git",
+      "discovered_at": "2026-01-09T11:45:59.286552+00:00"
+    }
+  },
+  "last_updated": "2026-01-09T11:45:59.286556+00:00"
+}
