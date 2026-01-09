@@ -1,7 +1,7 @@
 {
   "spec_id": "003-enhancement-add-sentry-source-maps-for-production-",
   "created_at": "2026-01-07T15:50:44.967664+00:00",
-  "updated_at": "2026-01-09T14:49:35.019935+00:00",
+  "updated_at": "2026-01-09T14:50:04.145524+00:00",
   "phases": {
     "planning": {
       "phase": "planning",
@@ -8865,6 +8865,63 @@
         },
         {
           "timestamp": "2026-01-09T14:49:35.019811+00:00",
+          "type": "tool_start",
+          "content": "[Bash] git add -A && git commit -m \"$(cat <<'EOF'\nchor...",
+          "phase": "validation",
+          "tool_name": "Bash",
+          "tool_input": "git add -A && git commit -m \"$(cat <<'EOF'\nchor..."
+        },
+        {
+          "timestamp": "2026-01-09T14:49:37.429926+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "validation",
+          "tool_name": "Bash",
+          "detail": "[auto-claude/003-enhancement-add-sentry-source-maps-for-production- 5fb7db3] chore: Prepare PR to staging branch\n 2 files changed, 949 insertions(+), 28 deletions(-)",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-09T14:49:42.079727+00:00",
+          "type": "tool_start",
+          "content": "[Bash] git push origin auto-claude/003-enhancement-add...",
+          "phase": "validation",
+          "tool_name": "Bash",
+          "tool_input": "git push origin auto-claude/003-enhancement-add..."
+        },
+        {
+          "timestamp": "2026-01-09T14:49:45.305731+00:00",
+          "type": "tool_end",
+          "content": "[Bash] Done",
+          "phase": "validation",
+          "tool_name": "Bash",
+          "detail": "To https://github.com/bcamarneiro/adamastor.git\n   9a1527e..5fb7db3  auto-claude/003-enhancement-add-sentry-source-maps-for-production- -> auto-claude/003-enhancement-add-sentry-source-maps-for-production-",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-09T14:49:49.858777+00:00",
+          "type": "text",
+          "content": "Now let me update the QA fix request to signal completion and provide the PR URL:",
+          "phase": "validation"
+        },
+        {
+          "timestamp": "2026-01-09T14:49:59.768864+00:00",
+          "type": "tool_start",
+          "content": "[Write] ...y-source-maps-for-production-/QA_FIX_REQUEST.md",
+          "phase": "validation",
+          "tool_name": "Write",
+          "tool_input": "...y-source-maps-for-production-/QA_FIX_REQUEST.md"
+        },
+        {
+          "timestamp": "2026-01-09T14:49:59.813170+00:00",
+          "type": "tool_end",
+          "content": "[Write] Done",
+          "phase": "validation",
+          "tool_name": "Write",
+          "detail": "The file /Users/brunocamarneiro/Projects/bcamarneiro/adamastor/.worktrees/003-enhancement-add-sentry-source-maps-for-production-/.auto-claude/specs/003-enhancement-add-sentry-source-maps-for-production-/QA_FIX_REQUEST.md has been updated. Here's the result of running `cat -n` on a snippet of the edited file:\n     1→# QA Fix Request\n     2→\n     3→Status: FIXED\n     4→\n     5→## Original Request\n     6→\n     7→> lets create a github PR to staging\n     8→\n     9→## Resolution\n    10→\n    11→Branch has been pushed and is ready for PR creation.\n    12→\n    13→**Note:** The `gh` CLI is not available in this environment. Please use the link below to create the PR manually.\n    14→\n    15→## PR Creation Link\n    16→\n    17→**[Click here to create the PR to staging](https://github.com/bcamarneiro/adamastor/compare/staging...auto-claude/003-enhancement-add-sentry-source-maps-for-production-?expand=1)**\n    18→\n    19→## PR Details\n    20→\n    21→**Title:** feat: Add Sentry Source Maps for Production Debugging\n    22→\n    23→**Base branch:** `staging`\n    24→\n    25→**Head branch:** `auto-claude/003-enhancement-add-sentry-source-maps-for-production-`\n    26→\n    27→**PR Body:**\n    28→\n    29→```markdown\n    30→## Summary\n    31→- Add `@sentry/vite-plugin` for source map uploads during production builds\n    32→- Configure Vite to generate source maps and upload to Sentry\n    33→- Document required environment variables in `.env.example` and `GITHUB-SECRETS.md`\n    34→\n    35→## Changes\n    36→- `apps/web/package.json` - Added `@sentry/vite-plugin` to devDependencies\n    37→- `apps/web/vite.config.ts` - Configured Sentry plugin with production conditional\n    38→- `apps/web/.env.example` - Documented all Sentry environment variables\n    39→- `docs/GITHUB-SECRETS.md` - Added Vercel environment setup instructions\n    40→\n    41→## Test plan\n    42→- [ ] Deploy to staging environment\n    43→- [ ] Verify build logs show \"Uploading source maps to Sentry\"\n    44→- [ ] Check Sentry dashboard for uploaded source maps\n    45→- [ ] Trigger test error and verify stack traces show original TypeScript paths\n    46→\n    47→## Environment Variables Required\n    48→Before deploying, add these to Vercel:\n    49→- `SENTRY_AUTH_TOKEN` (sensitive)\n    50→- `SENTRY_ORG`\n    51→- `SENTRY_PROJECT`\n    52→\n    53→🤖 Generated with [Claude Code](https://claude.com/claude-code)\n    54→```\n    55→\n    56→---\n    57→\n    58→Created at: 2026-01-09T14:50:00.000Z\n    59→Fix session: 0\n    60→",
+          "collapsed": true
+        },
+        {
+          "timestamp": "2026-01-09T14:50:04.145417+00:00",
           "type": "tool_start",
           "content": "[Bash] git add -A && git commit -m \"$(cat <<'EOF'\nchor...",
           "phase": "validation",
