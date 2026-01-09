@@ -1,0 +1,56 @@
+name: E2E Tests - Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      staging_url:
+        description: 'Staging URL to test against'
+        required: false
+        default: 'https://staging.adamastor.pt'
+
+jobs:
+  e2e-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install Playwright browsers
+        run: |
+          bunx playwright install-deps chromium
+          bunx playwright install chromium
+
+      - name: Run E2E tests against staging
+        run: bun run e2e
+        working-directory: apps/web
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.staging_url }}
+          # Skip tests that require controlled test data
+          PLAYWRIGHT_SKIP_FIXTURE_TESTS: 'true'
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-staging
+          path: apps/web/playwright-report/
+          retention-days: 7

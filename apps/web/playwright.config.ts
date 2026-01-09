@@ -1,5 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Use environment variable for base URL, fallback to localhost
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
+const isLiveEnvironment = baseURL.includes('https://');
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -11,7 +15,7 @@ export default defineConfig({
   timeout: 30000,
 
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -23,12 +27,14 @@ export default defineConfig({
     },
   ],
 
-  webServer: process.env.CI
-    ? {
-        command: 'npx serve@latest dist -l 3000 --single',
-        url: 'http://localhost:3000',
-        reuseExistingServer: false,
-        timeout: 60000,
-      }
-    : undefined,
+  // Only start local web server when not testing against live environment
+  webServer:
+    process.env.CI && !isLiveEnvironment
+      ? {
+          command: 'npx serve@latest dist -l 3000 --single',
+          url: 'http://localhost:3000',
+          reuseExistingServer: false,
+          timeout: 60000,
+        }
+      : undefined,
 });
