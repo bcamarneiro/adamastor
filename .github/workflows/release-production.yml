@@ -59,7 +59,7 @@ jobs:
         run: bun run e2e
         working-directory: apps/web
         env:
-          PLAYWRIGHT_BASE_URL: https://staging.adamastor.pt
+          PLAYWRIGHT_BASE_URL: https://adamastor-staging.vercel.app
 
       - uses: actions/upload-artifact@v4
         if: failure()
