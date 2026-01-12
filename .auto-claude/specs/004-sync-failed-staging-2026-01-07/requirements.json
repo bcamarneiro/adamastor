@@ -1,4 +1,0 @@
-{
-  "task_description": "Investigate GitHub Issue #128: Sync failed (staging) - 2026-01-07\n\n\n# GitHub Issue #128: Sync failed (staging) - 2026-01-07\n\nThe staging sync workflow failed.\n\nRun: https://github.com/bcamarneiro/adamastor/actions/runs/20772339098\n\n\n\n**Labels:** bug, sync\n**URL:** https://github.com/bcamarneiro/adamastor/issues/128\n\n\nPlease analyze this issue and provide:\n1. A brief summary of what the issue is about\n2. A proposed solution approach\n3. The files that would likely need to be modified\n4. Estimated complexity (simple/standard/complex)\n5. Acceptance criteria for resolving this issue",
-  "workflow_type": "feature"
-}
