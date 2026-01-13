@@ -21,9 +21,57 @@ permissions:
   contents: write
 
 jobs:
+  # Mandatory E2E tests against staging before production release
+  e2e-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: staging
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install Playwright browsers
+        run: |
+          bunx playwright install-deps chromium
+          bunx playwright install chromium
+
+      - name: Run smoke tests against staging
+        run: bun run e2e:smoke
+        working-directory: apps/web
+        env:
+          PLAYWRIGHT_BASE_URL: https://adamastor-staging.vercel.app
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-staging
+          path: apps/web/playwright-report/
+          retention-days: 7
+
   release:
     runs-on: ubuntu-latest
     environment: production
+    needs: e2e-staging
     steps:
       - name: Checkout staging
         uses: actions/checkout@v4

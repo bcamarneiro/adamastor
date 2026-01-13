@@ -26,6 +26,6 @@ export function useTopWorkers(limit = 3) {
   return useQuery({
     queryKey: ['leaderboard', 'top', limit],
     queryFn: () => fetchTopWorkers(limit),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
