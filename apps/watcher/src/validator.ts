@@ -4,7 +4,7 @@ import type { JSONSchemaType } from 'ajv';
 import generateSchema from 'generate-schema';
 
 export interface ValidateOptions {
-  /** If false, log validation errors as warnings instead of throwing (default: false) */
+  /** If true, throw errors on validation failure; if false, log warnings and continue (default: false) */
   strict?: boolean;
 }
 
