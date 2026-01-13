@@ -3,8 +3,19 @@ import Ajv from 'ajv';
 import type { JSONSchemaType } from 'ajv';
 import generateSchema from 'generate-schema';
 
-// biome-ignore lint/suspicious/noExplicitAny: Ajv JSONSchemaType requires generic, unknown not compatible
-export async function validate(path: string, schema: JSONSchemaType<any>) {
+export interface ValidateOptions {
+  /** If false, log validation errors as warnings instead of throwing (default: false) */
+  strict?: boolean;
+}
+
+export async function validate(
+  path: string,
+  // biome-ignore lint/suspicious/noExplicitAny: Ajv JSONSchemaType requires generic, unknown not compatible
+  schema: JSONSchemaType<any>,
+  options: ValidateOptions = {}
+) {
+  const { strict = false } = options;
+
   try {
     console.log(`[DEBUG] Validating file: ${path}`);
     // Configure Ajv to not validate schema against meta-schema
@@ -17,13 +28,28 @@ export async function validate(path: string, schema: JSONSchemaType<any>) {
     const raw = JSON.parse(await readFile(path, 'utf8'));
 
     if (!validate(raw)) {
-      console.error(`[ERROR] Validation failed for ${path}:`, validate.errors);
-      throw new Error(JSON.stringify(validate.errors, null, 2));
+      const errorCount = validate.errors?.length || 0;
+      const errorMsg = `${errorCount} validation error(s) in ${path}`;
+
+      if (strict) {
+        console.error(`[ERROR] ${errorMsg}:`, validate.errors);
+        throw new Error(JSON.stringify(validate.errors, null, 2));
+      }
+
+      // Non-strict mode: log as warning and continue
+      console.warn(`[WARN] ${errorMsg}:`);
+      console.warn(JSON.stringify(validate.errors, null, 2));
+      console.warn('[WARN] Continuing despite validation errors (strict=false)');
+      return;
     }
+
     console.log(`[DEBUG] Validation passed for ${path}`);
   } catch (err) {
     console.error(`[ERROR] validate failed for ${path}:`, err);
-    throw err;
+    if (strict) {
+      throw err;
+    }
+    console.warn('[WARN] Continuing despite error (strict=false)');
   }
 }
 
