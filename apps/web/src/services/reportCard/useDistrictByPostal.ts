@@ -48,6 +48,6 @@ export function useDistrictByPostal(postalCode: string | null) {
     queryKey: ['district', postalCode],
     queryFn: () => findDistrictByPostal(postalCode as string),
     enabled: !!postalCode && postalCode.length >= 4,
-    staleTime: 1000 * 60 * 60, // 1 hour - districts don't change
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours - districts don't change
   });
 }

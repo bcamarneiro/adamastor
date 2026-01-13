@@ -1,5 +1,5 @@
-import { describe, expect, it, mock } from 'bun:test';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { PostalCodeInput } from './PostalCodeInput';
 
 describe('PostalCodeInput', () => {
@@ -74,7 +74,7 @@ describe('PostalCodeInput', () => {
 
   describe('form submission', () => {
     it('should call onSubmit with first 4 digits when form is submitted', () => {
-      const handleSubmit = mock(() => {});
+      const handleSubmit = vi.fn(() => {});
       render(<PostalCodeInput onSubmit={handleSubmit} />);
 
       const input = screen.getByLabelText('O teu codigo postal') as HTMLInputElement;
@@ -88,7 +88,7 @@ describe('PostalCodeInput', () => {
     });
 
     it('should not call onSubmit when input has less than 4 digits', () => {
-      const handleSubmit = mock(() => {});
+      const handleSubmit = vi.fn(() => {});
       render(<PostalCodeInput onSubmit={handleSubmit} />);
 
       const input = screen.getByLabelText('O teu codigo postal') as HTMLInputElement;
