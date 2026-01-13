@@ -1,5 +1,3 @@
-import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
-import { useFeatureFlags } from '@/store/useFeatureFlags';
 import {
   ArrowLeftRight,
   Award,
@@ -20,6 +18,8 @@ import type {
   DeputyStatusHistory,
   NationalAverages,
 } from '../../lib/supabase';
+import { useFeatureFlags } from '../../store/useFeatureFlags';
+import { HELP_TEXTS, HelpTooltip } from '../ui/HelpTooltip';
 import { GradeCircle } from './GradeCircle';
 import { MetricBar } from './MetricBar';
 
