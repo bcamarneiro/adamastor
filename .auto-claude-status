@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "001-you",
+  "state": "building",
+  "subtasks": {
+    "completed": 6,
+    "total": 22,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Fix Issue #1",
+    "id": null,
+    "total": 5
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 7,
+    "started_at": "2026-01-07T15:18:51.597031"
+  },
+  "last_update": "2026-01-07T15:31:35.556826"
+}
