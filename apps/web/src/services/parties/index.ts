@@ -3,4 +3,5 @@ export {
   useCompareParties,
   type PartyComparisonResult,
   type PartyComparisonMetric,
+  type ComparisonMetric,
 } from './useCompareParties';

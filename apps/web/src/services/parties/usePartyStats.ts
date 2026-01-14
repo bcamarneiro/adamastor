@@ -19,7 +19,7 @@ export function usePartyStats() {
   return useQuery({
     queryKey: ['parties', 'stats'],
     queryFn: fetchPartyStats,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
 
@@ -39,6 +39,6 @@ export function usePartyById(partyId: string | null) {
     queryKey: ['parties', 'detail', partyId],
     queryFn: () => fetchPartyById(partyId as string),
     enabled: !!partyId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }

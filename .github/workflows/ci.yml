@@ -80,7 +80,7 @@ jobs:
         working-directory: apps/web
 
       - name: Run web tests
-        run: bun test
+        run: bun run test
         working-directory: apps/web
 
   build:
@@ -119,11 +119,11 @@ jobs:
           path: apps/web/dist
           retention-days: 1
 
-  # E2E tests run on PRs and main
+  # E2E tests run on PRs and direct pushes to staging
   e2e:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/staging')
     steps:
       - uses: actions/checkout@v4
 

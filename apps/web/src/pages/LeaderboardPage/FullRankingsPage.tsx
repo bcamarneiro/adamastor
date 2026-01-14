@@ -48,13 +48,13 @@ export function FullRankingsPage() {
   const { data: parties = [] } = useQuery({
     queryKey: ['parties'],
     queryFn: fetchParties,
-    staleTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours - static reference data
   });
 
   const { data: districts = [] } = useQuery({
     queryKey: ['districts'],
     queryFn: fetchDistricts,
-    staleTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours - static reference data
   });
 
   const clearFilters = () => {

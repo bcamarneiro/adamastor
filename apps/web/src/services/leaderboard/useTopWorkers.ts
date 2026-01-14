@@ -6,7 +6,12 @@ async function fetchTopWorkers(limit = 3): Promise<DeputyDetail[]> {
     .from('deputy_details')
     .select('*')
     .eq('is_active', true)
+    // Primary sort: work_score (descending)
+    // Tiebreakers: attendance_rate (desc), intervention_count (desc), short_name (asc)
     .order('work_score', { ascending: false })
+    .order('attendance_rate', { ascending: false, nullsFirst: false })
+    .order('intervention_count', { ascending: false })
+    .order('short_name', { ascending: true })
     .limit(limit);
 
   if (error) {
@@ -21,6 +26,6 @@ export function useTopWorkers(limit = 3) {
   return useQuery({
     queryKey: ['leaderboard', 'top', limit],
     queryFn: () => fetchTopWorkers(limit),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
