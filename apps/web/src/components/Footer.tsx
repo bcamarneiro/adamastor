@@ -1,5 +1,5 @@
-import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
 import { Link } from 'react-router-dom';
+import DebaixoDolhoLogo from './ui/Icons/DebaixoDolhoLogo';
 
 const Footer = () => {
   return (
@@ -57,6 +57,22 @@ const Footer = () => {
                   className="text-sm text-neutral-400 hover:text-white transition-colors"
                 >
                   Ranking
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/parliament"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Parlamento
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/initiatives"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Iniciativas
                 </Link>
               </li>
               <li>

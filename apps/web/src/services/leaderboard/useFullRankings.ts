@@ -26,7 +26,12 @@ async function fetchFullRankings(
     .from('deputy_details')
     .select('*', { count: 'exact' })
     .eq('is_active', true)
-    .order('work_score', { ascending: false });
+    // Primary sort: work_score (descending)
+    // Tiebreakers: attendance_rate (desc), intervention_count (desc), short_name (asc)
+    .order('work_score', { ascending: false })
+    .order('attendance_rate', { ascending: false, nullsFirst: false })
+    .order('intervention_count', { ascending: false })
+    .order('short_name', { ascending: true });
 
   if (filters.partyId) {
     query = query.eq('party_id', filters.partyId);
@@ -62,7 +67,7 @@ export function useFullRankings(page = 1, pageSize = 20, filters: RankingsFilter
   return useQuery({
     queryKey: ['leaderboard', 'full', page, pageSize, filters],
     queryFn: () => fetchFullRankings(page, pageSize, filters),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
     placeholderData: (previousData) => previousData,
   });
 }

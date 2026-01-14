@@ -21,6 +21,6 @@ export function useDeputyDetail(deputyId: string | null) {
     queryKey: ['deputy', deputyId],
     queryFn: () => fetchDeputyById(deputyId as string),
     enabled: !!deputyId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }

@@ -41,7 +41,7 @@ export function useDeputySearch() {
     queryKey: ['deputy-search', debouncedTerm],
     queryFn: () => searchDeputies(debouncedTerm),
     enabled: debouncedTerm.length >= MIN_SEARCH_LENGTH,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 
   return {

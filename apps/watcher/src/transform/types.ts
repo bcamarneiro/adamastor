@@ -39,10 +39,11 @@ export interface ParliamentInformacaoBase {
   GruposParlamentares: ParliamentGrupoParlamentar[];
   CirculosEleitorais: ParliamentCirculoEleitoral[];
   DetalheLegislatura: {
-    LegId: number;
-    LegDes: string;
-    LegDataInicio: string;
-    LegDataFim: string | null;
+    id: string;
+    sigla: string;
+    siglaAntiga: string;
+    dtini: string;
+    dtfim: string | null;
   };
 }
 

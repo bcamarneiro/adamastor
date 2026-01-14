@@ -22,6 +22,6 @@ export function useDeputiesByDistrict(districtId: string | null) {
     queryKey: ['deputies', 'district', districtId],
     queryFn: () => fetchDeputiesByDistrict(districtId as string),
     enabled: !!districtId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
