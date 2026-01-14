@@ -19,7 +19,7 @@ export function useDistrictStats() {
   return useQuery({
     queryKey: ['districts', 'stats'],
     queryFn: fetchDistrictStats,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
 

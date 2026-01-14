@@ -16,6 +16,6 @@ export function useNationalAverages() {
   return useQuery({
     queryKey: ['nationalAverages'],
     queryFn: fetchNationalAverages,
-    staleTime: 1000 * 60 * 30, // 30 minutes - averages don't change often
+    staleTime: 1000 * 60 * 60 * 2, // 2 hours - data syncs daily
   });
 }

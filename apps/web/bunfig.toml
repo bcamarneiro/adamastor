@@ -1,5 +1,12 @@
 [test]
-# Exclude e2e tests from bun test (use playwright for those)
-root = "./src"
 # Enable DOM environment for React component tests
 preload = ["./src/test-setup.ts"]
+
+# Exclude e2e tests (they run with Playwright, not Bun)
+ignore = [
+  "**/e2e/**"
+]
+
+# Tell Bun which tsconfig to use for path resolution
+[test.compilerOptions]
+tsconfig = "./tsconfig.app.json"

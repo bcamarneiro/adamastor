@@ -56,6 +56,6 @@ export function useWasteStats() {
   return useQuery({
     queryKey: ['waste', 'stats'],
     queryFn: fetchWasteStats,
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
