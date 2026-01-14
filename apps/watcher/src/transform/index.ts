@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
-import { SNAPSHOT_PATH } from '../config.js';
+import { FEATURES, SNAPSHOT_PATH } from '../config.js';
 import { fetchAllAttendance } from '../scrapers/attendance.js';
+import { updateLegislatureFromDetection, validateLegislature } from '../services/legislature.js';
 import { pipelineResult, runStep } from '../utils/pipeline-result.js';
 import { countInterventions, distributeInterventionsToDeputies } from './activities.js';
 import { transformAttendance } from './attendance.js';
@@ -8,6 +9,7 @@ import { transformBiographies } from './biography.js';
 import { ensureDeputyStats, syncDeputyExtendedInfo, transformDeputies } from './deputies/index.js';
 import { transformDistricts } from './districts.js';
 import { transformInitiatives, upsertPartyVotes } from './initiatives.js';
+import { detectLegislatureFromData } from './legislature-detection.js';
 import { transformParties } from './parties.js';
 import {
   recalculateAllStats,
@@ -41,6 +43,45 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
   console.log(`  iniciativas: ${iniciativas.length} initiatives`);
   console.log(`  atividades: ${atividades.Debates?.length || 0} debates`);
   console.log(`  ⏱️  Files loaded in ${((Date.now() - loadStart) / 1000).toFixed(1)}s\n`);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LEGISLATURE AUTO-DETECTION (if feature flag enabled)
+  // ═══════════════════════════════════════════════════════════════════════════
+  if (FEATURES.legislatureAutoDetect) {
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('LEGISLATURE AUTO-DETECTION');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    try {
+      const detected = detectLegislatureFromData(infoBase);
+      const validation = validateLegislature(detected);
+
+      console.log(`  📊 Detected legislature: ${detected.number} (${detected.roman})`);
+      console.log(`  📍 Source: ${detected.source}`);
+      console.log(`  ✅ Matches constant: ${detected.matchesConstant ? 'Yes' : 'No'}`);
+
+      if (validation.warnings.length > 0) {
+        console.log('  ⚠️  Warnings:');
+        for (const warning of validation.warnings) {
+          console.log(`     - ${warning}`);
+        }
+      }
+
+      // Store in database
+      const updateResult = await updateLegislatureFromDetection(detected);
+      if (updateResult.success) {
+        console.log('  💾 Stored in database config table\n');
+      } else {
+        console.log(`  ⚠️  Failed to store in database: ${updateResult.error}\n`);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.log(`  ⚠️  Legislature detection failed: ${errorMessage}`);
+      console.log('  🔄 Falling back to constant value\n');
+    }
+  } else {
+    console.log('  ⊘ Legislature auto-detection disabled (LEGISLATURE_AUTO_DETECT=false)\n');
+  }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // PHASE 1: Foundation data (parties + districts run in parallel)
