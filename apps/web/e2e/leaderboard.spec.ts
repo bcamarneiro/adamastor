@@ -42,4 +42,58 @@ test.describe('Leaderboard Page', () => {
       }
     }
   });
+
+  // Issue #67: Ranking numbers exceed deputy count
+  // @see https://github.com/bcamarneiro/adamastor/issues/67
+  test('no ranking position should exceed 230', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const rankElements = page.locator('text=/#\\d+/');
+    const ranks = await rankElements.allTextContents();
+
+    for (const rankText of ranks) {
+      const match = rankText.match(/#(\d+)/);
+      if (match) {
+        const rank = Number.parseInt(match[1], 10);
+        expect(rank).toBeLessThanOrEqual(230);
+      }
+    }
+  });
+
+  // Issue #68: Suspended deputies in ranking
+  // @see https://github.com/bcamarneiro/adamastor/issues/68
+  test('should not show suspended deputies in low activity section', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const lowActivitySection = page.locator('section, div').filter({
+      hasText: /menor atividade|ranking de preguiça/i,
+    });
+
+    if ((await lowActivitySection.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    const suspendedBadges = lowActivitySection.getByText(/suspenso|suspens/i);
+    const suspendedCount = await suspendedBadges.count();
+
+    expect(suspendedCount).toBe(0);
+  });
+
+  // Issue #76: Explain tiebreaker criteria in rankings
+  // @see https://github.com/bcamarneiro/adamastor/issues/76
+  test('full rankings should display tiebreaker help', async ({ page }) => {
+    await page.goto('/ranking/completo');
+    await page.waitForLoadState('networkidle');
+
+    // Check that the tiebreaker help button is visible
+    const tiebreakerButton = page.getByRole('button', { name: /critério de desempate/i });
+    await expect(tiebreakerButton).toBeVisible();
+
+    // Verify the Info icon is present (SVG inside the button)
+    const infoIcon = tiebreakerButton.locator('svg');
+    await expect(infoIcon).toBeVisible();
+  });
 });

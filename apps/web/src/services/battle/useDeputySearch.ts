@@ -25,6 +25,6 @@ export function useDeputySearch(query: string) {
     queryKey: ['deputies', 'search', query],
     queryFn: () => searchDeputies(query),
     enabled: query.length >= 2,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }
