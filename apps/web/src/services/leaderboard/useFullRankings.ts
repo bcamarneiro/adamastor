@@ -26,7 +26,12 @@ async function fetchFullRankings(
     .from('deputy_details')
     .select('*', { count: 'exact' })
     .eq('is_active', true)
-    .order('work_score', { ascending: false });
+    // Primary sort: work_score (descending)
+    // Tiebreakers: attendance_rate (desc), intervention_count (desc), short_name (asc)
+    .order('work_score', { ascending: false })
+    .order('attendance_rate', { ascending: false, nullsFirst: false })
+    .order('intervention_count', { ascending: false })
+    .order('short_name', { ascending: true });
 
   if (filters.partyId) {
     query = query.eq('party_id', filters.partyId);
