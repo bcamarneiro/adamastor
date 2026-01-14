@@ -8,6 +8,34 @@ export interface ValidateOptions {
   strict?: boolean;
 }
 
+/**
+ * Sanitize data to fix known Parliament API inconsistencies.
+ * This handles cases where the API returns unexpected types for certain fields.
+ */
+// biome-ignore lint/suspicious/noExplicitAny: Need to handle arbitrary JSON structures
+function sanitizeData(data: any): any {
+  if (!data || typeof data !== 'object') return data;
+
+  // Fix Audicoes.Assunto: API sometimes returns non-string/non-null values
+  if (data.Audicoes && Array.isArray(data.Audicoes)) {
+    // biome-ignore lint/suspicious/noExplicitAny: Need to handle arbitrary API response structures
+    data.Audicoes = data.Audicoes.map((item: any) => {
+      if (item && typeof item === 'object' && 'Assunto' in item) {
+        // Coerce invalid Assunto values to null
+        if (typeof item.Assunto !== 'string' && item.Assunto !== null) {
+          console.warn(
+            `[WARN] Coercing invalid Assunto value to null: ${JSON.stringify(item.Assunto)}`
+          );
+          item.Assunto = null;
+        }
+      }
+      return item;
+    });
+  }
+
+  return data;
+}
+
 export async function validate(
   path: string,
   // biome-ignore lint/suspicious/noExplicitAny: Ajv JSONSchemaType requires generic, unknown not compatible
@@ -25,7 +53,13 @@ export async function validate(
       validateSchema: false, // Skip validating schema against meta-schema
     });
     const validate = ajv.compile(schema);
-    const raw = JSON.parse(await readFile(path, 'utf8'));
+    let raw = JSON.parse(await readFile(path, 'utf8'));
+
+    // Sanitize data to handle API inconsistencies
+    raw = sanitizeData(raw);
+
+    // Write sanitized data back to file
+    await writeFile(path, JSON.stringify(raw, null, 2));
 
     if (!validate(raw)) {
       const errorCount = validate.errors?.length || 0;
