@@ -43,6 +43,6 @@ export function useDeputyExtendedInfo(deputyId: string | null) {
     queryKey: ['deputy', 'extended', deputyId],
     queryFn: () => fetchDeputyExtendedInfo(deputyId as string),
     enabled: !!deputyId,
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 60, // 1 hour - data syncs daily
   });
 }

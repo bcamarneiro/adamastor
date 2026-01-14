@@ -47,6 +47,7 @@ To populate with data, see [CONTRIBUTING.md](CONTRIBUTING.md#running-the-full-pi
 |----------|----------------|
 | **[ARCHITECTURE.md](ARCHITECTURE.md)** | How the system works - data flow, transforms, database |
 | **[CONTRIBUTING.md](CONTRIBUTING.md)** | Setup guide, development workflow, how to contribute |
+| **[docs/AI_AGENTS.md](docs/AI_AGENTS.md)** | Guidelines for AI agents and AI-assisted development |
 
 ---
 
@@ -130,6 +131,14 @@ This project is **non-partisan**. We measure activity metrics only:
 4. Submit PR to `staging`
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed setup.
+
+### Working with AI Agents
+
+This repository is optimized for AI collaboration (Cursor, GitHub Copilot, Claude Code). See [docs/AI_AGENTS.md](docs/AI_AGENTS.md) for:
+- Guidelines for AI-assisted development
+- Best practices for writing prompts
+- Monorepo-specific patterns
+- Testing and code quality standards
 
 ---
 

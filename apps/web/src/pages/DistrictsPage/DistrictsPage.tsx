@@ -6,9 +6,10 @@ import { SEO } from '@/components/SEO';
 import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { useDistrictStats } from '@/services/districts';
 import { ArrowLeft, MapPin, Scale, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function DistrictsPage() {
+  const navigate = useNavigate();
   const { data: districts, isLoading, error } = useDistrictStats();
 
   const totalDeputies = districts?.reduce((sum, d) => sum + d.active_deputies, 0) ?? 0;
@@ -27,13 +28,13 @@ export function DistrictsPage() {
       <MainNav scrollY={0} />
 
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-8">
-        <Link
-          to="/"
+        <button
+          onClick={() => navigate(-1)}
           className="inline-flex items-center gap-2 text-neutral-11 hover:text-neutral-12 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar</span>
-        </Link>
+        </button>
 
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
