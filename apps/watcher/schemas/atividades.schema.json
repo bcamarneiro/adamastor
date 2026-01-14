@@ -425,7 +425,7 @@
             "type": "object",
             "properties": {
               "Assunto": {
-                "type": "string"
+                "type": ["string", "null"]
               },
               "Audicoes": {
                 "type": ["array", "null"],
@@ -866,7 +866,7 @@
         "type": "object",
         "properties": {
           "Assunto": {
-            "type": "string"
+            "type": ["string", "null"]
           },
           "Data": {
             "type": "string"
@@ -912,7 +912,7 @@
         "type": "object",
         "properties": {
           "Assunto": {
-            "type": "string"
+            "type": ["string", "null"]
           },
           "Concedida": {
             "type": "string"
@@ -965,7 +965,7 @@
             "type": ["null", "string"]
           },
           "Assunto": {
-            "type": "string"
+            "type": ["string", "null"]
           },
           "AutoresDeputados": {
             "type": ["string", "null"]

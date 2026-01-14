@@ -108,6 +108,10 @@ export const FEATURES = {
   archiveToB2: Boolean(process.env.B2_KEY_ID && process.env.B2_APP_KEY && process.env.B2_BUCKET),
   /** Enable verbose logging */
   verboseLogging: process.env.VERBOSE === 'true',
+  /** Enable legislature auto-detection from API data (default: enabled) */
+  legislatureAutoDetect: process.env.LEGISLATURE_AUTO_DETECT !== 'false',
+  /** Only warn on legislature validation mismatch, don't fail (default: warn only) */
+  legislatureValidationWarnOnly: process.env.LEGISLATURE_VALIDATION_WARN_ONLY !== 'false',
 } as const;
 
 // =============================================================================

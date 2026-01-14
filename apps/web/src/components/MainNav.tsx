@@ -1,9 +1,9 @@
-import { GlobalSearch } from '@/components/Search';
-import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
-import { type FeatureFlags, useFeatureFlags } from '@/store/useFeatureFlags';
 import { Menu, Search, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { type FeatureFlags, useFeatureFlags } from '../store/useFeatureFlags';
+import { GlobalSearch } from './Search';
+import DebaixoDolhoLogo from './ui/Icons/DebaixoDolhoLogo';
 
 interface MainNavProps {
   scrollY: number;
@@ -17,8 +17,10 @@ interface NavItem {
 
 const allNavItems: NavItem[] = [
   { path: '/report-card', label: 'Deputados' },
+  { path: '/parliament', label: 'Parlamento' },
   { path: '/partidos', label: 'Partidos' },
   { path: '/ranking', label: 'Ranking' },
+  { path: '/initiatives', label: 'Iniciativas' },
   { path: '/desperdicio', label: 'Calculadora', featureFlag: 'wasteCalculator' },
   { path: '/batalha', label: 'Battle Royale' },
   { path: '/about', label: 'Sobre' },

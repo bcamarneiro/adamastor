@@ -1,14 +1,14 @@
-import Footer from '@/components/Footer';
-import Hero from '@/components/Hero';
-import KeyMetrics from '@/components/KeyMetrics';
-import MainNav from '@/components/MainNav';
-import { SEO, SEO_CONFIGS, getOrganizationSchema } from '@/components/SEO';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@radix-ui/themes';
 import { motion } from 'framer-motion';
 import { BarChart3, Calculator, Flag, Swords, Trophy } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Footer from '../../components/Footer';
+import Hero from '../../components/Hero';
+import KeyMetrics from '../../components/KeyMetrics';
+import MainNav from '../../components/MainNav';
+import { SEO, SEO_CONFIGS, getOrganizationSchema } from '../../components/SEO';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 
 const featureCards = [
   {

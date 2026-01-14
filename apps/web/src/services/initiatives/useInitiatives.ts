@@ -49,7 +49,7 @@ export const useInitiatives = () => {
   const { isError, isFetching, isSuccess, data, error } = useQuery({
     queryKey: ['initiatives'],
     queryFn: fetchInitiatives,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 60 * 60 * 1000, // 1 hour - data syncs daily
     retry: 2,
   });
 
