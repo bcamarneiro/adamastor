@@ -1,2 +1,6 @@
 export { useDistrictStats, useDistrictById } from './useDistrictStats';
-export { useCompareDistricts } from './useCompareDistricts';
+export {
+  useCompareDistricts,
+  type DistrictComparisonMetric,
+  type DistrictComparisonResult,
+} from './useCompareDistricts';

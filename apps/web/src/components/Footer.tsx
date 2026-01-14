@@ -1,5 +1,5 @@
-import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
 import { Link } from 'react-router-dom';
+import DebaixoDolhoLogo from './ui/Icons/DebaixoDolhoLogo';
 
 const Footer = () => {
   return (

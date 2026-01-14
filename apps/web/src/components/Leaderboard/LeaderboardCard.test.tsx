@@ -1,10 +1,10 @@
-import { describe, expect, it, mock } from 'bun:test';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import type { DeputyDetail } from '../../lib/supabase';
 import { LeaderboardCard } from './LeaderboardCard';
 
 // Mock react-router-dom Link
-mock.module('react-router-dom', () => ({
+vi.mock('react-router-dom', () => ({
   Link: ({
     to,
     children,
