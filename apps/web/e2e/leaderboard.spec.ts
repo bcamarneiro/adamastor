@@ -81,4 +81,19 @@ test.describe('Leaderboard Page', () => {
 
     expect(suspendedCount).toBe(0);
   });
+
+  // Issue #76: Explain tiebreaker criteria in rankings
+  // @see https://github.com/bcamarneiro/adamastor/issues/76
+  test('full rankings should display tiebreaker help', async ({ page }) => {
+    await page.goto('/ranking/completo');
+    await page.waitForLoadState('networkidle');
+
+    // Check that the tiebreaker help button is visible
+    const tiebreakerButton = page.getByRole('button', { name: /critério de desempate/i });
+    await expect(tiebreakerButton).toBeVisible();
+
+    // Verify the Info icon is present (SVG inside the button)
+    const infoIcon = tiebreakerButton.locator('svg');
+    await expect(infoIcon).toBeVisible();
+  });
 });

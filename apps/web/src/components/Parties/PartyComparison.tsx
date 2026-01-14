@@ -1,8 +1,8 @@
+import { ComparisonBars } from '@/components/ui/ComparisonBars';
 import type { PartyStats } from '@/lib/supabase';
 import { useCompareParties } from '@/services/parties';
 import { RotateCcw, Scale, Trophy } from 'lucide-react';
 import { useState } from 'react';
-import { PartyComparisonBars } from './PartyComparisonBars';
 import { PartySelector } from './PartySelector';
 
 export function PartyComparison() {
@@ -103,12 +103,13 @@ export function PartyComparison() {
           {/* Comparison Bars */}
           <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5">
             <h3 className="font-semibold text-neutral-12 mb-4 text-center">Comparacao Detalhada</h3>
-            <PartyComparisonBars
+            <ComparisonBars
               metrics={comparison.metrics}
               nameA={comparison.partyA.acronym}
               nameB={comparison.partyB.acronym}
               colorA={comparison.partyA.color}
               colorB={comparison.partyB.color}
+              nameColumnWidth="w-16"
             />
           </div>
 
