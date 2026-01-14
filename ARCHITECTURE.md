@@ -274,3 +274,186 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and guidelines.
+
+---
+
+## Navigating the Codebase (for AI Agents)
+
+This section helps AI agents understand how to find and modify code effectively.
+
+### Entry Points
+
+**Data Pipeline:**
+- Main entry: `apps/watcher/index.ts` → `src/commands/sync.ts`
+- Transform pipeline: `apps/watcher/src/transform/index.ts` (8-step sequence)
+- Individual transforms: `apps/watcher/src/transform/*.ts` (one file per step)
+
+**Web Application:**
+- Main entry: `apps/web/src/main.tsx` → `App.tsx`
+- Pages: `apps/web/src/pages/` (one folder per page)
+- Components: `apps/web/src/components/` (reusable UI)
+- Data hooks: `apps/web/src/services/` (React Query hooks)
+
+**Shared Types:**
+- Location: `packages/shared/src/types.ts`
+- Used by: Both `watcher` and `web` apps
+- Changes here affect both apps - test thoroughly
+
+### Finding Related Code
+
+**When modifying a transform step:**
+1. Check `apps/watcher/src/transform/index.ts` for pipeline order
+2. Understand dependencies (e.g., `transformDeputies` needs `partyMap` and `districtMap`)
+3. Check for tests: `apps/watcher/src/transform/your-step.test.ts`
+4. Check database schema: `supabase/migrations/` (look for related tables)
+
+**When modifying a React component:**
+1. Find the component: `apps/web/src/components/YourComponent/`
+2. Find where it's used: `grep -r "YourComponent" apps/web/src/`
+3. Check for data hooks: `apps/web/src/services/yourFeature/`
+4. Check for tests: `apps/web/src/components/YourComponent/YourComponent.test.tsx`
+
+**When modifying work score calculation:**
+1. Database function: `supabase/migrations/*_functions.sql` → `calculate_work_score()`
+2. TypeScript helper: `apps/watcher/src/data-consistency/helpers.ts` → `calculateWorkScore()`
+3. Shared types: `packages/shared/src/types.ts` (for UI display)
+4. **Keep all three in sync!**
+
+### Common Patterns
+
+**Transform Pipeline Pattern:**
+```typescript
+// apps/watcher/src/transform/your-step.ts
+export async function transformYourData(
+  input: YourInput[],
+  dependencies: DependencyMap
+): Promise<ResultMap> {
+  const result = new Map();
+  // Transform logic
+  return result;
+}
+```
+
+**React Query Hook Pattern:**
+```typescript
+// apps/web/src/services/yourFeature/useYourData.ts
+export function useYourData(id: string) {
+  return useQuery({
+    queryKey: ['yourData', id],
+    queryFn: () => supabase.from('your_table').select('*').eq('id', id).single()
+  });
+}
+```
+
+**Component Pattern:**
+```typescript
+// apps/web/src/components/YourComponent/YourComponent.tsx
+export function YourComponent({ prop }: Props) {
+  const { data, isLoading } = useYourData(prop.id);
+  // Render logic
+}
+```
+
+### ID Mapping Complexity
+
+Parliament uses different IDs for the same deputy:
+- `DepId` - Used in photos, external references
+- `DepCadId` (Cadastro ID) - Used in initiatives (author references)
+- `biography_id` (BID) - Used in attendance pages, biography pages
+
+**Where mappings are maintained:**
+- `apps/watcher/src/transform/deputies/index.ts` - Creates initial mappings
+- `apps/watcher/src/transform/deputies/helpers.ts` - Helper functions for ID lookups
+- Transform steps use these mappings to link data correctly
+
+**When modifying ID logic:**
+- Test with real data (some deputies may have missing IDs)
+- Check all transform steps that use ID mappings
+- Verify database foreign keys match ID types
+
+### Testing Locations
+
+**Watcher tests:**
+- Unit tests: `apps/watcher/src/**/*.test.ts`
+- Data consistency: `apps/watcher/src/data-consistency/*.test.ts`
+
+**Web tests:**
+- Unit tests: `apps/web/src/**/*.test.tsx` (Vitest + Testing Library)
+- E2E tests: `apps/web/e2e/*.spec.ts` (Playwright)
+
+**Running tests:**
+```bash
+# All tests
+bun test
+
+# Watcher only
+bun --filter watcher test
+
+# Web only
+bun --filter web test
+
+# E2E only
+bun --filter web e2e
+```
+
+### Database Schema
+
+**Migrations location:** `supabase/migrations/`
+- Naming: `YYYYMMDDHHMMSS_description.sql`
+- Never modify existing migrations (create new ones)
+- Test locally: `npx supabase db reset`
+
+**Key tables:**
+- `deputies` - Core deputy records
+- `deputy_stats` - Computed metrics (work score, grade, rankings)
+- `initiatives` - Bills and proposals
+- `plenary_attendance` - Meeting attendance records
+- `deputy_biographies` - Scraped biography data
+
+**Views (pre-joined for performance):**
+- `deputy_details` - Everything about a deputy in one query
+- `rankings` - Active deputies ordered by work score
+
+### Monorepo Commands
+
+**App-specific:**
+```bash
+bun --filter watcher <command>
+bun --filter web <command>
+```
+
+**Root-level (all apps):**
+```bash
+bun lint          # Lint all apps
+bun typecheck     # Type check all apps
+bun test          # Run all tests
+```
+
+**When changing shared code:**
+1. Make change in `packages/shared/`
+2. Test watcher: `bun --filter watcher test`
+3. Test web: `bun --filter web test`
+4. Build both: `bun --filter '*' build`
+
+### Common AI-Assisted Tasks
+
+**Adding a new transform step:**
+1. Create `apps/watcher/src/transform/your-step.ts`
+2. Add to pipeline in `apps/watcher/src/transform/index.ts`
+3. Add tests: `apps/watcher/src/transform/your-step.test.ts`
+4. Create migration if new tables needed
+
+**Adding a new web page:**
+1. Create `apps/web/src/pages/YourPage/YourPage.tsx`
+2. Add route in `apps/web/src/App.tsx`
+3. Create data hook in `apps/web/src/services/yourFeature/`
+4. Add navigation in `apps/web/src/components/MainNav.tsx`
+
+**Modifying work score formula:**
+1. Update `calculate_work_score()` in `supabase/migrations/*_functions.sql`
+2. Update `calculateWorkScore()` in `apps/watcher/src/data-consistency/helpers.ts`
+3. Update shared types if thresholds change: `packages/shared/src/types.ts`
+4. Add tests for edge cases
+5. Run migration: `npx supabase db reset`
+
+For more detailed guidance, see [docs/AI_AGENTS.md](docs/AI_AGENTS.md).

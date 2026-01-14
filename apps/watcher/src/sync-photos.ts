@@ -79,9 +79,17 @@ async function fetchDeputiesToSync(options: SyncOptions) {
     throw new Error(`Failed to fetch deputies: ${error.message}`);
   }
 
-  // Filter out deputies that already have photos (unless --force)
+  // Filter out deputies that already have Supabase Storage photos (unless --force)
+  // Note: We DO want to process deputies with parlamento.pt URLs since those need to be migrated
   if (!options.force) {
-    return (data || []).filter((d) => !d.photo_url);
+    return (data || []).filter((d) => {
+      // Skip deputies with Supabase Storage URLs (already synced)
+      if (d.photo_url?.includes('supabase')) {
+        return false;
+      }
+      // Include deputies with no photo or with parlamento.pt URLs (need migration)
+      return true;
+    });
   }
 
   return data || [];
