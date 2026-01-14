@@ -15,6 +15,9 @@ export const CURRENT_LEGISLATURE_ROMAN = 'XVII';
 /** Legislature display label */
 export const CURRENT_LEGISLATURE_LABEL = `${CURRENT_LEGISLATURE_ROMAN}ª Legislatura`;
 
+/** Constitutional number of deputies in Portuguese Parliament */
+export const TOTAL_DEPUTIES = 230;
+
 /**
  * Convert legislature number to Roman numeral
  */
