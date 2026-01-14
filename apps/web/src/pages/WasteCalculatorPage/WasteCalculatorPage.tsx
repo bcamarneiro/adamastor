@@ -2,7 +2,7 @@ import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { WasteCalculator } from '@/components/WasteCalculator';
-import { ArrowLeft } from 'lucide-react';
+import { AlertTriangle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function WasteCalculatorPage() {
@@ -24,6 +24,15 @@ export function WasteCalculatorPage() {
           <h1 className="text-3xl font-bold text-neutral-12 mb-2">Calculadora de Desperdício</h1>
           <p className="text-neutral-11">
             Calcula quanto do teu IRS vai para deputados com baixa assiduidade registada
+          </p>
+        </div>
+
+        {/* Disclaimer notice at top */}
+        <div className="flex items-start gap-3 p-4 bg-warning-3 border border-warning-6 rounded-xl mb-6">
+          <AlertTriangle className="w-5 h-5 text-warning-11 shrink-0 mt-0.5" />
+          <p className="text-sm text-warning-11">
+            <strong>Nota:</strong> Esta é uma estimativa simplificada para fins ilustrativos. O
+            orçamento parlamentar e a distribuição real são mais complexos.
           </p>
         </div>
 
