@@ -1,9 +1,19 @@
+import { ComparisonBars } from '@/components/ui/ComparisonBars';
 import type { DistrictStats } from '@/lib/supabase';
 import { useCompareDistricts } from '@/services/districts/useCompareDistricts';
 import { MapPin, RotateCcw, Scale, Trophy } from 'lucide-react';
 import { useState } from 'react';
-import { DistrictComparisonBars } from './DistrictComparisonBars';
 import { DistrictSelector } from './DistrictSelector';
+
+/**
+ * Custom value formatter for district comparison.
+ * Formats 'Media' values with 1 decimal place and adds '%' suffix for 'Assiduidade'.
+ */
+function formatDistrictValue(value: number, label: string): string {
+  const decimals = label.includes('Media') ? 1 : 0;
+  const suffix = label.includes('Assiduidade') ? '%' : '';
+  return `${value.toFixed(decimals)}${suffix}`;
+}
 
 export function DistrictComparison() {
   const [districtA, setDistrictA] = useState<DistrictStats | null>(null);
@@ -103,10 +113,11 @@ export function DistrictComparison() {
           {/* Comparison Bars */}
           <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5">
             <h3 className="font-semibold text-neutral-12 mb-4 text-center">Comparacao Detalhada</h3>
-            <DistrictComparisonBars
+            <ComparisonBars
               metrics={comparison.metrics}
               nameA={comparison.districtA.name}
               nameB={comparison.districtB.name}
+              formatValue={formatDistrictValue}
             />
           </div>
 

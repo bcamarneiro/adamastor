@@ -1,7 +1,7 @@
-import { cn } from '@/utils/cn';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { HelpCircle } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { cn } from '../../utils/cn';
 
 interface HelpTooltipProps {
   content: ReactNode;
@@ -30,7 +30,7 @@ export function HelpTooltip({
             <button
               type="button"
               className={cn(
-                'inline-flex items-center justify-center p-0.5 rounded-full text-neutral-9 hover:text-neutral-11 hover:bg-neutral-3 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-7',
+                'inline-flex items-center justify-center p-0.5 rounded-full text-neutral-9 hover:text-neutral-11 hover:bg-neutral-3 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-9',
                 iconClassName
               )}
               aria-label="Ajuda"
@@ -92,4 +92,6 @@ export const HELP_TEXTS = {
     'Ranking calculado com base na media de pontuacao de todos os deputados ativos eleitos por cada circulo eleitoral.',
   fullRanking:
     'Lista completa de todos os deputados ordenados por pontuação de atividade parlamentar. Podes filtrar por partido, distrito ou nota.',
+  tiebreaker:
+    'Em caso de empate na pontuação, os deputados são ordenados por: 1) Presença em plenário, 2) Número de intervenções, 3) Ordem alfabética.',
 };
