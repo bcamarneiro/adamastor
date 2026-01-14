@@ -5,7 +5,7 @@ import { PartyCard } from '@/components/Parties';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { usePartyStats } from '@/services/parties';
-import { ArrowLeft, Scale, Trophy, Users } from 'lucide-react';
+import { ArrowLeft, Flag, Scale, Trophy, Users } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export function PartiesPage() {
@@ -54,6 +54,7 @@ export function PartiesPage() {
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-neutral-1 rounded-xl p-4 border border-neutral-5 text-center">
+            <Flag className="w-5 h-5 mx-auto mb-1 text-accent-9" />
             <div className="text-2xl font-bold text-neutral-12">{parties?.length ?? 0}</div>
             <div className="text-sm text-neutral-11">Partidos</div>
           </div>

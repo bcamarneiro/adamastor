@@ -26,7 +26,7 @@ const ContributePage: React.FC = () => {
           <span>Voltar</span>
         </Link>
 
-        <article className="prose prose-neutral dark:prose-invert max-w-none">
+        <article className="prose max-w-none">
           <Markdown remarkPlugins={[remarkGfm]}>{contributePtMd}</Markdown>
         </article>
       </main>
