@@ -66,15 +66,15 @@ test.describe('Home Page', () => {
     const heroSection = page.locator('section, [class*="hero"]').first();
     await expect(heroSection).toBeVisible();
 
-    // Check that sections with feature-related content actually have content
-    const featureSection = page
+    // Find the features section and verify it has content
+    const featuresSection = page
       .locator('section')
       .filter({ hasText: /funcionalidades/i })
       .first();
 
-    if ((await featureSection.count()) > 0) {
-      const sectionText = await featureSection.textContent();
-      // Section should have more than just the heading text
+    if ((await featuresSection.count()) > 0) {
+      const sectionText = await featuresSection.textContent();
+      // Verify the section has more than just the title "funcionalidades"
       expect(sectionText?.trim().length).toBeGreaterThan(20);
     }
   });

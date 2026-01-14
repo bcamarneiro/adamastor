@@ -1,19 +1,19 @@
-import { Spinner } from '@/components/Spinner';
-import { useInitiatives } from '@/services/initiatives/useInitiatives';
-import { formatDate } from '@/utils/dateUtils';
 import * as Accordion from '@radix-ui/react-accordion';
-import { Table } from '@radix-ui/themes';
-import { debounce } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
-import { FaChevronDown, FaChevronRight, FaClock, FaSearch, FaVoteYea } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import debounce from 'lodash/debounce';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { FaChevronDown, FaSearch } from 'react-icons/fa';
+import { Spinner } from '../../../components/Spinner';
+import { useInitiatives } from '../../../services/initiatives/useInitiatives';
+import { buildRelatedInitiativesMap } from '../../../utils/relatedInitiatives';
+import InitiativeRow, { type InitiativeData } from './InitiativeRow';
 
-const calcularDuracao = (inicio: string, fim?: string): number => {
-  const startDate = new Date(inicio);
-  const endDate = fim ? new Date(fim) : new Date();
-  const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
+// Grid column classes for consistent layout (matching InitiativeRow)
+const gridColsClass = 'grid grid-cols-[48px_auto_auto_1fr_96px] items-center';
+
+// Estimated row heights for virtualization
+const COLLAPSED_ROW_HEIGHT = 48;
+const EXPANDED_ROW_HEIGHT = 400; // Estimated height for expanded rows
 
 const InitiativeList = () => {
   const { initiatives, metadata, isLoading, isError, error } = useInitiatives();
@@ -21,6 +21,9 @@ const InitiativeList = () => {
   const [selectedPhase, setSelectedPhase] = useState<string>('');
   const [debouncedFilterText, setDebouncedFilterText] = useState('');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
+  // Ref for the scroll container used by the virtualizer
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Debounce filter text updates
   const debouncedSetFilter = useMemo(
@@ -46,7 +49,8 @@ const InitiativeList = () => {
     });
   }, [initiatives, debouncedFilterText, selectedPhase]);
 
-  const toggleRow = (initiativeId: string) => {
+  // Memoize toggle callback to prevent unnecessary re-renders in virtualized rows
+  const toggleRow = useCallback((initiativeId: string) => {
     setExpandedRows((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(initiativeId)) {
@@ -56,7 +60,7 @@ const InitiativeList = () => {
       }
       return newSet;
     });
-  };
+  }, []);
 
   // Get unique phases for filter
   const phases = useMemo(() => {
@@ -68,6 +72,92 @@ const InitiativeList = () => {
     }
     return Array.from(phaseSet);
   }, [initiatives]);
+
+  // Precompute related initiatives map once when initiatives change
+  // This avoids O(n²) computation on every render
+  const relatedInitiativesMap = useMemo(
+    () => buildRelatedInitiativesMap(initiatives),
+    [initiatives]
+  );
+
+  // Clear expanded rows that are no longer in filtered results
+  // This prevents stale expanded state for filtered-out items
+  useEffect(() => {
+    setExpandedRows((prev) => {
+      if (prev.size === 0) return prev;
+
+      const filteredIds = new Set(filteredInitiatives.map((i) => i.IniId));
+      const hasStaleExpanded = Array.from(prev).some((id) => !filteredIds.has(id));
+
+      if (!hasStaleExpanded) return prev;
+
+      const newSet = new Set<string>();
+      for (const id of prev) {
+        if (filteredIds.has(id)) {
+          newSet.add(id);
+        }
+      }
+      return newSet;
+    });
+    // Only depend on filteredInitiatives, not expandedRows (would cause infinite loop)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredInitiatives]);
+
+  // Track previous filter values to detect meaningful changes
+  const prevFilterRef = useRef({ filterText: debouncedFilterText, phase: selectedPhase });
+
+  // Reset scroll position to top when filters change
+  // This provides a consistent UX when searching or filtering
+  useEffect(() => {
+    const prevFilter = prevFilterRef.current;
+    const filterChanged =
+      prevFilter.filterText !== debouncedFilterText || prevFilter.phase !== selectedPhase;
+
+    if (filterChanged && scrollContainerRef.current) {
+      // Use smooth scrolling for a polished feel
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+
+    // Update the ref for next comparison
+    prevFilterRef.current = { filterText: debouncedFilterText, phase: selectedPhase };
+  }, [debouncedFilterText, selectedPhase]);
+
+  // Memoize virtualizer configuration functions to prevent unnecessary recreations
+  const getScrollElement = useCallback(() => scrollContainerRef.current, []);
+
+  const estimateSize = useCallback(
+    (index: number) => {
+      const initiative = filteredInitiatives[index];
+      if (!initiative) return COLLAPSED_ROW_HEIGHT;
+      return expandedRows.has(initiative.IniId) ? EXPANDED_ROW_HEIGHT : COLLAPSED_ROW_HEIGHT;
+    },
+    [filteredInitiatives, expandedRows]
+  );
+
+  const getItemKey = useCallback(
+    (index: number) => filteredInitiatives[index]?.IniId ?? `fallback-${index}`,
+    [filteredInitiatives]
+  );
+
+  // Set up the virtualizer for efficient rendering of large lists
+  // Only enable when we have data to virtualize
+  const virtualizer = useVirtualizer({
+    count: filteredInitiatives.length,
+    getScrollElement,
+    estimateSize,
+    getItemKey,
+    overscan: 5, // Render 5 extra rows above/below viewport for smooth scrolling
+    enabled: !isLoading && filteredInitiatives.length > 0,
+  });
+
+  // Force remeasurement when expanded rows change
+  useLayoutEffect(() => {
+    virtualizer.measure();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandedRows]);
 
   if (isError) {
     return (
@@ -119,7 +209,12 @@ const InitiativeList = () => {
               placeholder="Search initiatives..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setFilterText('');
+                }
+              }}
+              className="w-full px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-accent-9 focus:border-transparent transition-all"
               aria-label="Search initiatives"
             />
             <FaSearch
@@ -130,7 +225,7 @@ const InitiativeList = () => {
           <select
             value={selectedPhase}
             onChange={(e) => setSelectedPhase(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="px-4 py-2 rounded-lg border border-neutral-6 bg-neutral-2 focus:ring-2 focus:ring-accent-9 focus:border-transparent transition-all"
             aria-label="Filter by phase"
           >
             <option value="">All Phases</option>
@@ -143,314 +238,99 @@ const InitiativeList = () => {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-auto">
+      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-lg shadow overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
+          <div
+            className="flex justify-center items-center h-full min-h-64 transition-opacity duration-200"
+            role="status"
+            aria-label="Loading initiatives"
+          >
             <Spinner size="lg" />
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <Table.Root>
-              <Table.Header>
-                <Table.Row className="bg-neutral-2">
-                  <Table.ColumnHeaderCell scope="col" className="w-12" />
-                  <Table.ColumnHeaderCell scope="col">#</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col">Phase</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col">Title</Table.ColumnHeaderCell>
-                  <Table.ColumnHeaderCell scope="col" className="w-24">
-                    Actions
-                  </Table.ColumnHeaderCell>
-                </Table.Row>
-              </Table.Header>
+          <div role="table" aria-label="Initiatives list" className="flex flex-col min-h-0 h-full">
+            {/* Sticky Header */}
+            <div role="rowgroup" className="flex-none bg-neutral-2 border-b border-neutral-3">
+              <div role="row" className={gridColsClass}>
+                <div role="columnheader" className="p-3" aria-label="Expand/collapse">
+                  <span className="sr-only">Expand</span>
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  #
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  Phase
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  Title
+                </div>
+                <div role="columnheader" className="p-3 font-semibold text-neutral-12">
+                  Actions
+                </div>
+              </div>
+            </div>
 
-              <Table.Body>
-                {filteredInitiatives.length === 0 ? (
-                  <Table.Row>
-                    <Table.Cell colSpan={5} className="text-center py-8 text-neutral-11">
-                      <div className="flex flex-col items-center gap-2">
-                        <FaSearch className="w-6 h-6" aria-hidden="true" />
-                        <p>
-                          {debouncedFilterText || selectedPhase
-                            ? 'No initiatives found matching your criteria.'
-                            : 'No initiatives available.'}
-                        </p>
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                ) : (
-                  filteredInitiatives.map((initiative) => {
+            {/* Virtualized Table Body */}
+            <div ref={scrollContainerRef} role="rowgroup" className="flex-1 overflow-auto">
+              {filteredInitiatives.length === 0 ? (
+                <div
+                  role="row"
+                  className="flex items-center justify-center h-full min-h-48 text-neutral-11 transition-opacity duration-200"
+                >
+                  <div role="cell" className="flex flex-col items-center gap-3 p-8">
+                    <FaSearch className="w-8 h-8 opacity-50" aria-hidden="true" />
+                    <p className="text-center">
+                      {debouncedFilterText || selectedPhase
+                        ? 'No initiatives found matching your criteria.'
+                        : 'No initiatives available.'}
+                    </p>
+                    {(debouncedFilterText || selectedPhase) && (
+                      <p className="text-sm text-neutral-9">
+                        Try adjusting your search or filter settings.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    height: `${virtualizer.getTotalSize()}px`,
+                    width: '100%',
+                    position: 'relative',
+                  }}
+                >
+                  {virtualizer.getVirtualItems().map((virtualRow) => {
+                    const initiative = filteredInitiatives[virtualRow.index];
+                    // Defensive check: skip rendering if initiative is undefined
+                    // This can happen briefly during rapid filter changes
+                    if (!initiative) return null;
+
                     const isExpanded = expandedRows.has(initiative.IniId);
-                    const duration = calcularDuracao(
-                      typeof initiative.IniEventos[0].DataFase === 'string'
-                        ? initiative.IniEventos[0].DataFase
-                        : initiative.IniEventos[0].DataFase.toISOString(),
-                      typeof initiative.latestEvent.DataFase === 'string'
-                        ? initiative.latestEvent.DataFase
-                        : initiative.latestEvent.DataFase.toISOString()
-                    );
-                    const hasVotingPhases = initiative.IniEventos.some((event) =>
-                      event.Fase.toLowerCase().includes('votação')
-                    );
-
                     return (
-                      <>
-                        <Table.Row
-                          key={initiative.IniId}
-                          className="hover:bg-neutral-1 transition-colors cursor-pointer"
-                          onClick={() => toggleRow(initiative.IniId)}
-                        >
-                          <Table.Cell className="w-12">
-                            {isExpanded ? (
-                              <FaChevronDown className="text-neutral-11" />
-                            ) : (
-                              <FaChevronRight className="text-neutral-11" />
-                            )}
-                          </Table.Cell>
-                          <Table.RowHeaderCell>{initiative.IniNr}</Table.RowHeaderCell>
-                          <Table.Cell>
-                            <div className="flex items-center gap-2">
-                              <span className="inline-flex px-2 py-1 rounded-full text-sm bg-neutral-2">
-                                {initiative.latestEvent.Fase?.trim()}
-                              </span>
-                              {hasVotingPhases && (
-                                <FaVoteYea className="text-neutral-11" title="Has voting phases" />
-                              )}
-                              {duration > 180 && (
-                                <FaClock
-                                  className="text-neutral-11"
-                                  title="Long running initiative"
-                                />
-                              )}
-                            </div>
-                          </Table.Cell>
-                          <Table.Cell>{initiative.IniTitulo}</Table.Cell>
-                          <Table.Cell>
-                            <Link
-                              to={`/initiatives/${initiative.IniId}/details`}
-                              className="inline-block px-3 py-1 text-sm text-blue-600 hover:text-blue-700 hover:underline rounded transition-colors"
-                              aria-label={`View details for initiative ${initiative.IniTitulo}`}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              Details
-                            </Link>
-                          </Table.Cell>
-                        </Table.Row>
-                        {isExpanded && (
-                          <Table.Row className="bg-neutral-1">
-                            <Table.Cell colSpan={5} className="p-4">
-                              <div className="space-y-6">
-                                {/* Description Section */}
-                                {initiative.description && (
-                                  <div>
-                                    <h4 className="font-medium text-sm text-neutral-11 mb-1">
-                                      Description
-                                    </h4>
-                                    <p className="text-neutral-12">{initiative.description}</p>
-                                  </div>
-                                )}
-
-                                {/* Timeline Progress */}
-                                <div>
-                                  <h4 className="font-medium text-sm text-neutral-11 mb-3">
-                                    Timeline Progress
-                                  </h4>
-                                  <div className="bg-neutral-2 p-4 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <FaClock className="text-neutral-11" />
-                                      <span className="text-sm">
-                                        {duration} days in process
-                                        {duration > 180
-                                          ? ' (longer than usual)'
-                                          : duration < 30
-                                            ? ' (relatively quick)'
-                                            : ''}
-                                      </span>
-                                    </div>
-                                    <div className="space-y-2">
-                                      {initiative.IniEventos.map((event, index) => (
-                                        <div key={event.EvtId} className="flex items-start gap-3">
-                                          <div className="flex flex-col items-center">
-                                            <div
-                                              className={`w-2 h-2 rounded-full ${
-                                                event.Fase.toLowerCase().includes('votação')
-                                                  ? 'bg-blue-500'
-                                                  : 'bg-neutral-6'
-                                              }`}
-                                            />
-                                            {index < initiative.IniEventos.length - 1 && (
-                                              <div className="w-0.5 h-full bg-neutral-6" />
-                                            )}
-                                          </div>
-                                          <div className="flex-1 pb-4">
-                                            <p className="text-sm font-medium text-neutral-12">
-                                              {event.Fase}
-                                            </p>
-                                            <p className="text-sm text-neutral-11">
-                                              {formatDate(
-                                                typeof event.DataFase === 'string'
-                                                  ? event.DataFase
-                                                  : event.DataFase.toISOString()
-                                              )}
-                                            </p>
-                                            {event.Observacoes && (
-                                              <p className="text-sm text-neutral-11 mt-1 italic">
-                                                {event.Observacoes}
-                                              </p>
-                                            )}
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Voting Information */}
-                                {hasVotingPhases && (
-                                  <div>
-                                    <h4 className="font-medium text-sm text-neutral-11 mb-3">
-                                      Voting Information
-                                    </h4>
-                                    <div className="bg-neutral-2 p-4 rounded-lg">
-                                      <div className="flex items-center gap-2 mb-3">
-                                        <FaVoteYea className="text-neutral-11" />
-                                        <span className="text-sm font-medium">Voting Phases</span>
-                                      </div>
-                                      <div className="space-y-3">
-                                        {initiative.IniEventos.filter((event) =>
-                                          event.Fase.toLowerCase().includes('votação')
-                                        ).map((event) => (
-                                          <div key={event.EvtId} className="flex flex-col gap-1">
-                                            <p className="text-sm text-neutral-12">{event.Fase}</p>
-                                            <p className="text-sm text-neutral-11">
-                                              {formatDate(
-                                                typeof event.DataFase === 'string'
-                                                  ? event.DataFase
-                                                  : event.DataFase.toISOString()
-                                              )}
-                                            </p>
-                                            {event.Observacoes && (
-                                              <p className="text-sm text-neutral-11 mt-1 italic">
-                                                {event.Observacoes}
-                                              </p>
-                                            )}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Basic Information Grid */}
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                  <div>
-                                    <h4 className="font-medium text-sm text-neutral-11 mb-1">
-                                      Type
-                                    </h4>
-                                    <p className="text-neutral-12">
-                                      {initiative.IniTipo === 'P'
-                                        ? 'Proposta de Lei'
-                                        : initiative.IniTipo}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <h4 className="font-medium text-sm text-neutral-11 mb-1">
-                                      Latest Update
-                                    </h4>
-                                    <p className="text-neutral-12">
-                                      {formatDate(
-                                        typeof initiative.latestEvent.DataFase === 'string'
-                                          ? initiative.latestEvent.DataFase
-                                          : initiative.latestEvent.DataFase.toISOString()
-                                      )}
-                                    </p>
-                                  </div>
-                                  {initiative.latestEvent.Responsavel && (
-                                    <div>
-                                      <h4 className="font-medium text-sm text-neutral-11 mb-1">
-                                        Current Responsible
-                                      </h4>
-                                      <p className="text-neutral-12">
-                                        {initiative.latestEvent.Responsavel}
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Related Initiatives */}
-                                {initiatives
-                                  .filter(
-                                    (ini) =>
-                                      ini.IniId !== initiative.IniId &&
-                                      (ini.IniTipo === initiative.IniTipo ||
-                                        initiative.IniTitulo.split(' ').some((word) =>
-                                          ini.IniTitulo.toLowerCase().includes(word.toLowerCase())
-                                        ))
-                                  )
-                                  .slice(0, 3).length > 0 && (
-                                  <div>
-                                    <h4 className="font-medium text-sm text-neutral-11 mb-3">
-                                      Related Initiatives
-                                    </h4>
-                                    <div className="grid gap-3">
-                                      {initiatives
-                                        .filter(
-                                          (ini) =>
-                                            ini.IniId !== initiative.IniId &&
-                                            (ini.IniTipo === initiative.IniTipo ||
-                                              initiative.IniTitulo.split(' ').some((word) =>
-                                                ini.IniTitulo.toLowerCase().includes(
-                                                  word.toLowerCase()
-                                                )
-                                              ))
-                                        )
-                                        .slice(0, 3)
-                                        .map((relatedInitiative) => (
-                                          <Link
-                                            key={relatedInitiative.IniId}
-                                            to={`/initiatives/${relatedInitiative.IniId}/details`}
-                                            className="block p-3 bg-white rounded-lg border border-neutral-3 hover:border-neutral-6 transition-colors"
-                                            onClick={(e) => e.stopPropagation()}
-                                          >
-                                            <div className="flex items-center gap-2 mb-1">
-                                              <span className="text-sm font-medium text-neutral-12">
-                                                #{relatedInitiative.IniNr}
-                                              </span>
-                                              <span className="text-sm text-neutral-11">
-                                                {relatedInitiative.IniTipo === 'P'
-                                                  ? 'Proposta de Lei'
-                                                  : relatedInitiative.IniTipo}
-                                              </span>
-                                            </div>
-                                            <p className="text-sm text-neutral-12">
-                                              {relatedInitiative.IniTitulo}
-                                            </p>
-                                          </Link>
-                                        ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Latest Observations */}
-                                {initiative.latestEvent.Observacoes && (
-                                  <div>
-                                    <h4 className="font-medium text-sm text-neutral-11 mb-1">
-                                      Latest Observations
-                                    </h4>
-                                    <p className="text-neutral-12">
-                                      {initiative.latestEvent.Observacoes}
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                            </Table.Cell>
-                          </Table.Row>
-                        )}
-                      </>
+                      <div
+                        key={virtualRow.key}
+                        data-index={virtualRow.index}
+                        ref={virtualizer.measureElement}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          transform: `translateY(${virtualRow.start}px)`,
+                        }}
+                      >
+                        <InitiativeRow
+                          initiative={initiative as InitiativeData}
+                          isExpanded={isExpanded}
+                          onToggle={toggleRow}
+                          relatedInitiatives={relatedInitiativesMap.get(initiative.IniId) ?? []}
+                        />
+                      </div>
                     );
-                  })
-                )}
-              </Table.Body>
-            </Table.Root>
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

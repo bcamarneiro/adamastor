@@ -1,10 +1,11 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPartyBadgeBackground } from '../../lib/colors';
 import type { DeputyDetail } from '../../lib/supabase';
 import { useFullRankings } from '../../services/leaderboard/useFullRankings';
 import { GradeCircle } from '../ReportCard/GradeCircle';
+import { HELP_TEXTS, HelpTooltip } from '../ui/HelpTooltip';
 
 interface FullRankingsProps {
   partyId?: string | null;
@@ -49,9 +50,21 @@ export function FullRankings({ partyId, districtId, grade }: FullRankingsProps) 
     <div className="space-y-4">
       {/* Results info */}
       <div className="flex items-center justify-between text-sm text-neutral-11">
-        <span>
-          {total} deputado{total !== 1 ? 's' : ''} encontrado{total !== 1 ? 's' : ''}
-        </span>
+        <div className="flex items-center gap-2">
+          <span>
+            {total} deputado{total !== 1 ? 's' : ''} encontrado{total !== 1 ? 's' : ''}
+          </span>
+          <HelpTooltip content={HELP_TEXTS.tiebreaker} side="right">
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 text-xs text-neutral-9 hover:text-neutral-11 transition-colors"
+              aria-label="Critério de desempate"
+            >
+              <Info className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Desempate</span>
+            </button>
+          </HelpTooltip>
+        </div>
         <span>
           Pagina {page} de {totalPages}
         </span>

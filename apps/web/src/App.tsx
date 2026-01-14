@@ -6,6 +6,7 @@ import { cn } from '@utils/cn';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import FourOFour from './components/FourOFour/FourOFour';
+import LoadingScreen from './components/LoadingScreen/LoadingScreen';
 import { OnboardingModal } from './components/Onboarding';
 
 // Core pages - loaded eagerly
@@ -77,6 +78,7 @@ const App = () => {
         )}
       >
         <OnboardingModal />
+        <LoadingScreen />
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
