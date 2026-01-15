@@ -51,10 +51,8 @@ test.describe('Deputy Photos', () => {
     // Parliament API: https://app.parlamento.pt/webutils/getimage.aspx?id={depId}&type=deputado
     // Next.js optimized: /_next/image?url=https%3A%2F%2Fapp.parlamento.pt%2Fwebutils%2Fgetimage.aspx...
     const isParliamentUrl =
-      src?.includes('app.parlamento.pt/webutils/getimage.aspx') &&
-      src?.includes('type=deputado');
-    const isNextImageUrl =
-      src?.includes('/_next/image') && src?.includes('app.parlamento.pt');
+      src?.includes('app.parlamento.pt/webutils/getimage.aspx') && src?.includes('type=deputado');
+    const isNextImageUrl = src?.includes('/_next/image') && src?.includes('app.parlamento.pt');
 
     expect(isParliamentUrl || isNextImageUrl).toBeTruthy();
   });
@@ -202,9 +200,7 @@ test.describe('Deputy Photos', () => {
     }
 
     // Find deputy images within this section
-    const sectionImages = highActivitySection.locator(
-      'img[alt*="Deputado"], img[alt*="Deputada"]'
-    );
+    const sectionImages = highActivitySection.locator('img[alt*="Deputado"], img[alt*="Deputada"]');
     const imageCount = await sectionImages.count();
 
     // Should have at least one deputy photo in high activity section
@@ -232,9 +228,7 @@ test.describe('Deputy Photos', () => {
     }
 
     // Find deputy images within this section
-    const sectionImages = lowActivitySection.locator(
-      'img[alt*="Deputado"], img[alt*="Deputada"]'
-    );
+    const sectionImages = lowActivitySection.locator('img[alt*="Deputado"], img[alt*="Deputada"]');
     const imageCount = await sectionImages.count();
 
     // Should have at least one deputy photo in low activity section
