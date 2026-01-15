@@ -112,7 +112,7 @@ async function validatePhotoUrl(url: string): Promise<{ valid: boolean; status?:
     }
 
     return { valid: response.status === 200, status: response.status };
-  } catch (error) {
+  } catch (_error) {
     return { valid: false };
   }
 }
@@ -234,7 +234,7 @@ async function fixDeputyPhoto(result: AuditResult): Promise<boolean> {
 }
 
 function printSummary(results: AuditResult[], summary: AuditSummary, options: AuditOptions) {
-  console.log('\n' + '='.repeat(80));
+  console.log(`\n${'='.repeat(80)}`);
   console.log('AUDIT SUMMARY');
   console.log('='.repeat(80));
   console.log(`Total deputies audited: ${summary.total}`);
@@ -251,7 +251,7 @@ function printSummary(results: AuditResult[], summary: AuditSummary, options: Au
   // Print list of deputies with missing URLs
   const missingDeputies = results.filter((r) => r.issue === 'missing');
   if (missingDeputies.length > 0) {
-    console.log('\n' + '-'.repeat(80));
+    console.log(`\n${'-'.repeat(80)}`);
     console.log(`MISSING PHOTO URLs (${missingDeputies.length})`);
     console.log('-'.repeat(80));
     for (const deputy of missingDeputies) {
@@ -262,7 +262,7 @@ function printSummary(results: AuditResult[], summary: AuditSummary, options: Au
   // Print list of deputies with incorrect URLs
   const incorrectDeputies = results.filter((r) => r.issue === 'incorrect');
   if (incorrectDeputies.length > 0) {
-    console.log('\n' + '-'.repeat(80));
+    console.log(`\n${'-'.repeat(80)}`);
     console.log(`INCORRECT PHOTO URLs (${incorrectDeputies.length})`);
     console.log('-'.repeat(80));
     for (const deputy of incorrectDeputies) {
@@ -275,7 +275,7 @@ function printSummary(results: AuditResult[], summary: AuditSummary, options: Au
   // Print list of deputies without available photos
   const unavailableDeputies = results.filter((r) => r.issue === 'unavailable');
   if (unavailableDeputies.length > 0) {
-    console.log('\n' + '-'.repeat(80));
+    console.log(`\n${'-'.repeat(80)}`);
     console.log(`UNAVAILABLE PHOTOS (${unavailableDeputies.length})`);
     console.log('-'.repeat(80));
     console.log('These deputies have correct URL format but photos are not available from Parliament API:');
@@ -284,7 +284,7 @@ function printSummary(results: AuditResult[], summary: AuditSummary, options: Au
     }
   }
 
-  console.log('\n' + '='.repeat(80));
+  console.log(`\n${'='.repeat(80)}`);
 }
 
 async function main() {
@@ -302,10 +302,22 @@ async function main() {
   // Step 2: Audit each deputy
   console.log(`🔍 Auditing ${deputies.length} deputies...\n`);
   const results: AuditResult[] = [];
+  const startTime = Date.now();
 
-  for (const deputy of deputies) {
+  for (let i = 0; i < deputies.length; i++) {
+    const deputy = deputies[i];
     const result = await auditDeputy(deputy, options);
     results.push(result);
+
+    // Show progress every 50 deputies
+    if ((i + 1) % 50 === 0 || i === deputies.length - 1) {
+      const elapsed = Math.round((Date.now() - startTime) / 1000);
+      const rate = (i + 1) / elapsed;
+      const remaining = Math.round((deputies.length - i - 1) / rate);
+      console.log(
+        `Progress: ${i + 1}/${deputies.length} (${Math.round(((i + 1) / deputies.length) * 100)}%) - ${elapsed}s elapsed, ~${remaining}s remaining`
+      );
+    }
 
     // Small delay to avoid rate limiting
     await new Promise((resolve) => setTimeout(resolve, 100));
