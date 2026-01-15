@@ -79,6 +79,14 @@
   --color-monochrome-white: #ffffff;
   --color-monochrome-black: #000000;
   --color-other-component-fill: var(--monochrome-white);
+
+  /* map score colors */
+  --map-score-null: #e5e5e5;
+  --map-score-a: #22c55e;
+  --map-score-b: #4ade80;
+  --map-score-c: #f59e0b;
+  --map-score-d: #fbbf24;
+  --map-score-f: #ef4444;
 }
 
 .dark {
@@ -160,6 +168,14 @@
   --color-monochrome-white: #ffffff;
   --color-monochrome-black: #000000;
   --color-other-component-fill: var(--neutral-2);
+
+  /* map score colors */
+  --map-score-null: #e5e5e5;
+  --map-score-a: #22c55e;
+  --map-score-b: #4ade80;
+  --map-score-c: #f59e0b;
+  --map-score-d: #fbbf24;
+  --map-score-f: #ef4444;
 }
 
 @font-face {

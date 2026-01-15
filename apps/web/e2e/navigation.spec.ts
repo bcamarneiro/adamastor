@@ -119,4 +119,21 @@ test.describe('Navigation', () => {
     const status = response?.status();
     expect(status === 404 || page.url() !== '/what-happened').toBeTruthy();
   });
+
+  // Issue #118: Correct GitHub repository link on About page
+  // @see https://github.com/bcamarneiro/adamastor/issues/118
+  test('/missao page should link to correct GitHub repository', async ({ page }) => {
+    await page.goto('/missao');
+    await page.waitForLoadState('networkidle');
+
+    // Check that the GitHub links point to the correct repository
+    const githubLinks = page.getByRole('link', { name: /github/i });
+    const linkCount = await githubLinks.count();
+
+    if (linkCount > 0) {
+      // Check the first GitHub link
+      const href = await githubLinks.first().getAttribute('href');
+      expect(href).toContain('github.com/bcamarneiro/adamastor');
+    }
+  });
 });

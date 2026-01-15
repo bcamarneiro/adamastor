@@ -35,12 +35,12 @@ const districtPaths: Record<string, string> = {
 };
 
 function getScoreColorHex(score: number | null): string {
-  if (score === null) return '#e5e5e5';
-  if (score >= 85) return '#22c55e';
-  if (score >= 70) return '#4ade80';
-  if (score >= 55) return '#f59e0b';
-  if (score >= 40) return '#fbbf24';
-  return '#ef4444';
+  if (score === null) return 'var(--map-score-null)';
+  if (score >= 85) return 'var(--map-score-a)';
+  if (score >= 70) return 'var(--map-score-b)';
+  if (score >= 55) return 'var(--map-score-c)';
+  if (score >= 40) return 'var(--map-score-d)';
+  return 'var(--map-score-f)';
 }
 
 export function PortugalMap({ districts, className }: PortugalMapProps) {
@@ -77,23 +77,23 @@ export function PortugalMap({ districts, className }: PortugalMapProps) {
           <text x="0" y="0" className="text-[8px] fill-neutral-11" fontWeight="600">
             Pontuacao
           </text>
-          <rect x="0" y="5" width="12" height="8" fill="#22c55e" rx="1" />
+          <rect x="0" y="5" width="12" height="8" fill="var(--map-score-a)" rx="1" />
           <text x="16" y="12" className="text-[6px] fill-neutral-10">
             A (85+)
           </text>
-          <rect x="0" y="16" width="12" height="8" fill="#4ade80" rx="1" />
+          <rect x="0" y="16" width="12" height="8" fill="var(--map-score-b)" rx="1" />
           <text x="16" y="23" className="text-[6px] fill-neutral-10">
             B (70+)
           </text>
-          <rect x="0" y="27" width="12" height="8" fill="#f59e0b" rx="1" />
+          <rect x="0" y="27" width="12" height="8" fill="var(--map-score-c)" rx="1" />
           <text x="16" y="34" className="text-[6px] fill-neutral-10">
             C (55+)
           </text>
-          <rect x="0" y="38" width="12" height="8" fill="#fbbf24" rx="1" />
+          <rect x="0" y="38" width="12" height="8" fill="var(--map-score-d)" rx="1" />
           <text x="16" y="45" className="text-[6px] fill-neutral-10">
             D (40+)
           </text>
-          <rect x="0" y="49" width="12" height="8" fill="#ef4444" rx="1" />
+          <rect x="0" y="49" width="12" height="8" fill="var(--map-score-f)" rx="1" />
           <text x="16" y="56" className="text-[6px] fill-neutral-10">
             F (&lt;40)
           </text>
