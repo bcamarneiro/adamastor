@@ -117,10 +117,7 @@ async function validatePhotoUrl(url: string): Promise<{ valid: boolean; status?:
   }
 }
 
-async function auditDeputy(
-  deputy: DeputyRecord,
-  options: AuditOptions
-): Promise<AuditResult> {
+async function auditDeputy(deputy: DeputyRecord, options: AuditOptions): Promise<AuditResult> {
   const expectedUrl = getPhotoUrl(deputy.external_id);
   const currentUrl = deputy.photo_url;
 
@@ -238,10 +235,18 @@ function printSummary(results: AuditResult[], summary: AuditSummary, options: Au
   console.log('AUDIT SUMMARY');
   console.log('='.repeat(80));
   console.log(`Total deputies audited: ${summary.total}`);
-  console.log(`✅ Valid URLs: ${summary.valid} (${((summary.valid / summary.total) * 100).toFixed(1)}%)`);
-  console.log(`❌ Missing URLs: ${summary.missing} (${((summary.missing / summary.total) * 100).toFixed(1)}%)`);
-  console.log(`⚠️  Incorrect URLs: ${summary.incorrect} (${((summary.incorrect / summary.total) * 100).toFixed(1)}%)`);
-  console.log(`🚫 Unavailable photos: ${summary.unavailable} (${((summary.unavailable / summary.total) * 100).toFixed(1)}%)`);
+  console.log(
+    `✅ Valid URLs: ${summary.valid} (${((summary.valid / summary.total) * 100).toFixed(1)}%)`
+  );
+  console.log(
+    `❌ Missing URLs: ${summary.missing} (${((summary.missing / summary.total) * 100).toFixed(1)}%)`
+  );
+  console.log(
+    `⚠️  Incorrect URLs: ${summary.incorrect} (${((summary.incorrect / summary.total) * 100).toFixed(1)}%)`
+  );
+  console.log(
+    `🚫 Unavailable photos: ${summary.unavailable} (${((summary.unavailable / summary.total) * 100).toFixed(1)}%)`
+  );
 
   if (options.fix) {
     console.log(`\n🔧 Fixed: ${summary.fixed} deputies`);
@@ -278,9 +283,13 @@ function printSummary(results: AuditResult[], summary: AuditSummary, options: Au
     console.log(`\n${'-'.repeat(80)}`);
     console.log(`UNAVAILABLE PHOTOS (${unavailableDeputies.length})`);
     console.log('-'.repeat(80));
-    console.log('These deputies have correct URL format but photos are not available from Parliament API:');
+    console.log(
+      'These deputies have correct URL format but photos are not available from Parliament API:'
+    );
     for (const deputy of unavailableDeputies) {
-      console.log(`- ${deputy.name} (ID: ${deputy.externalId}) - Status: ${deputy.httpStatus || 'error'}`);
+      console.log(
+        `- ${deputy.name} (ID: ${deputy.externalId}) - Status: ${deputy.httpStatus || 'error'}`
+      );
     }
   }
 
@@ -294,7 +303,7 @@ async function main() {
   console.log('='.repeat(80));
   console.log(`Mode: ${options.fix ? '🔧 FIX MODE' : '👁️  DRY-RUN MODE (no changes)'}`);
   console.log(`Verbose: ${options.verbose ? 'ON' : 'OFF'}`);
-  console.log('='.repeat(80) + '\n');
+  console.log(`${'='.repeat(80)}\n`);
 
   // Step 1: Fetch all deputies
   const deputies = await fetchAllDeputies();
