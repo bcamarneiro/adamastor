@@ -126,11 +126,13 @@ test.describe('Navigation', () => {
     await page.goto('/missao');
     await page.waitForLoadState('networkidle');
 
-    // Check that the GitHub link points to the correct repository
-    const githubLink = page.getByRole('link', { name: /github/i });
+    // Check that the GitHub links point to the correct repository
+    const githubLinks = page.getByRole('link', { name: /github/i });
+    const linkCount = await githubLinks.count();
 
-    if ((await githubLink.count()) > 0) {
-      const href = await githubLink.getAttribute('href');
+    if (linkCount > 0) {
+      // Check the first GitHub link
+      const href = await githubLinks.first().getAttribute('href');
       expect(href).toContain('github.com/bcamarneiro/adamastor');
     }
   });
