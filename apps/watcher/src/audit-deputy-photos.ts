@@ -315,6 +315,7 @@ async function main() {
 
   for (let i = 0; i < deputies.length; i++) {
     const deputy = deputies[i];
+    if (!deputy) continue;
     const result = await auditDeputy(deputy, options);
     results.push(result);
 
