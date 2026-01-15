@@ -33,6 +33,31 @@ This document provides guidelines for AI agents (Cursor, GitHub Copilot, Claude 
 
 ---
 
+## Architecture Decision Records (ADRs)
+
+Before making significant changes, **read the relevant ADRs** to understand existing architectural patterns and decisions:
+
+- **[ADR-001: Monorepo Structure](architecture/ADR-001-monorepo.md)** - Bun workspaces, workspace dependencies, project organization
+- **[ADR-002: React + Vite Architecture Patterns](architecture/ADR-002-nextjs-patterns.md)** - Routing (React Router v6), component structure, data fetching (React Query), service layer patterns
+- **[ADR-003: Supabase Integration Patterns](architecture/ADR-003-supabase.md)** - Database schema, client configuration, RLS policies, data sync patterns
+- **[ADR-004: Testing Strategy](architecture/ADR-004-testing.md)** - Testing pyramid, Vitest (unit), Playwright (E2E), CI integration
+
+**When to reference ADRs:**
+- Making changes to monorepo structure or workspace configuration → Read ADR-001
+- Adding new routes, pages, or data fetching logic → Read ADR-002
+- Modifying database queries or Supabase integration → Read ADR-003
+- Adding tests or changing test patterns → Read ADR-004
+
+**When to update ADRs:**
+- Making architectural decisions that affect future development
+- Changing core patterns (routing, data fetching, testing)
+- Introducing new technologies or frameworks
+- Deprecating or replacing existing patterns
+
+See [docs/architecture/README.md](architecture/README.md) for the complete ADR index and template.
+
+---
+
 ## Tool-Specific Guidance
 
 ### Inline Assistants (GitHub Copilot, Cursor Inline)
@@ -437,7 +462,8 @@ const apiKey = 'sk_live_abc123...';
 
 ## Getting Help
 
-- **Questions about architecture**: See [ARCHITECTURE.md](../ARCHITECTURE.md)
+- **Architectural patterns**: See [docs/architecture/](architecture/) (ADRs for monorepo, React patterns, Supabase, testing)
+- **Project structure and data flow**: See [ARCHITECTURE.md](../ARCHITECTURE.md)
 - **Setup issues**: See [CONTRIBUTING.md](../CONTRIBUTING.md)
 - **Testing guidance**: See [docs/TESTING.md](TESTING.md)
 - **GitHub Discussions**: For general questions
