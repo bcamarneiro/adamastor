@@ -1,5 +1,5 @@
 import { expect, test } from '../fixtures';
-import { DeputySchema } from '../helpers/schemas';
+import { DeputySchema } from '../helpers/schemas.ts';
 
 // Issue #172: Homepage Data Contract Test
 // @see https://github.com/bcamarneiro/adamastor/issues/172
