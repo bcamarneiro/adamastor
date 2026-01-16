@@ -57,14 +57,14 @@ export function ComparisonBars({
   const colorBClass = colorBIsCss ? '' : colorB || 'bg-success-9';
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="district-comparison-chart">
       {metrics.map((metric) => {
         const max = Math.max(metric.valueA, metric.valueB, 1);
         const widthA = (metric.valueA / max) * 100;
         const widthB = (metric.valueB / max) * 100;
 
         return (
-          <div key={metric.label} className="space-y-2">
+          <div key={metric.label} className="space-y-2" data-testid="chart-item">
             <div className="flex items-center justify-between text-sm">
               <span className="text-neutral-11">{metric.label}</span>
               {metric.tie && (
