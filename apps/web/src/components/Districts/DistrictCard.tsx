@@ -47,6 +47,7 @@ export function DistrictCard({ district, rank, onClick, isSelected }: DistrictCa
 
   return (
     <div
+      data-testid="district-card"
       onClick={onClick}
       onKeyDown={handleKeyDown}
       role={onClick ? 'button' : undefined}
@@ -81,7 +82,7 @@ export function DistrictCard({ district, rank, onClick, isSelected }: DistrictCa
 
           {/* Stats Row */}
           <div className="flex flex-wrap gap-3 text-xs text-neutral-10">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1" data-testid="deputy-count">
               <Users className="w-3 h-3" />
               {district.active_deputies} deputados ativos
             </span>
@@ -89,14 +90,14 @@ export function DistrictCard({ district, rank, onClick, isSelected }: DistrictCa
               <span className="text-neutral-9">({district.seat_count} lugares)</span>
             )}
             {district.avg_attendance_rate !== null && (
-              <span>Assiduidade: {district.avg_attendance_rate?.toFixed(0)}%</span>
+              <span data-testid="avg-attendance">Assiduidade: {district.avg_attendance_rate?.toFixed(0)}%</span>
             )}
           </div>
         </div>
 
         {/* Score */}
         <div className="text-right flex-shrink-0">
-          <div className="text-2xl font-bold text-neutral-12">
+          <div className="text-2xl font-bold text-neutral-12" data-testid="avg-grade">
             {district.avg_work_score?.toFixed(1) ?? 'N/A'}
           </div>
           <div className="text-xs text-neutral-10">pontos</div>
