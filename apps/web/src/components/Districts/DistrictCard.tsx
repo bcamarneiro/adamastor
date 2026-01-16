@@ -90,7 +90,9 @@ export function DistrictCard({ district, rank, onClick, isSelected }: DistrictCa
               <span className="text-neutral-9">({district.seat_count} lugares)</span>
             )}
             {district.avg_attendance_rate !== null && (
-              <span data-testid="avg-attendance">Assiduidade: {district.avg_attendance_rate?.toFixed(0)}%</span>
+              <span data-testid="avg-attendance">
+                Assiduidade: {district.avg_attendance_rate?.toFixed(0)}%
+              </span>
             )}
           </div>
         </div>
