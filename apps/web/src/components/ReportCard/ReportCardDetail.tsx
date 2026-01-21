@@ -91,6 +91,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
         <div className="flex items-center gap-6">
           {deputy.photo_url ? (
             <img
+              data-testid="deputy-photo"
               src={deputy.photo_url}
               alt={deputy.short_name}
               className="w-24 h-24 rounded-full object-cover border-4 border-monochrome-white shadow-lg bg-neutral-4"
@@ -108,7 +109,10 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <p className="text-accent-3">{deputy.name}</p>
             <div className="flex items-center gap-3 mt-2">
               {deputy.party_acronym && (
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-monochrome-white/20">
+                <span
+                  data-testid="party-badge"
+                  className="px-3 py-1 rounded-full text-sm font-medium bg-monochrome-white/20"
+                >
                   {deputy.party_acronym}
                 </span>
               )}
@@ -146,7 +150,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
               <HelpTooltip content={HELP_TEXTS.grade} />
             </h2>
             <div className="flex items-center gap-4 mt-2 text-sm text-neutral-11">
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1" data-testid="national-rank">
                 <span className="font-medium">#{deputy.national_rank}</span> nacional
                 <HelpTooltip content={HELP_TEXTS.nationalRank} />
               </span>
@@ -173,7 +177,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
           <SourceIndicator sourceType="api" />
         </h2>
 
-        <div>
+        <div data-testid="proposals-metric">
           <div className="flex items-center gap-1 mb-2">
             <span className="text-sm font-medium text-neutral-11">Propostas apresentadas</span>
             <HelpTooltip content={HELP_TEXTS.proposals} />
@@ -203,7 +207,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
         {deputy.attendance_rate !== null &&
           deputy.meetings_total !== null &&
           deputy.meetings_total > 0 && (
-            <div className="pt-4 border-t border-neutral-5">
+            <div className="pt-4 border-t border-neutral-5" data-testid="attendance-metric">
               <div className="flex items-center gap-2 mb-4">
                 <Users className="w-5 h-5 text-accent-9" />
                 <h3 className="text-base font-medium text-neutral-12 flex items-center gap-1">
