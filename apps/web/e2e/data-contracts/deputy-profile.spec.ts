@@ -26,6 +26,7 @@ test('deputy profile renders API data correctly', async ({ page }) => {
   }
 
   // Validate basic information
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
   const deputy = apiDeputy as any;
   await expect(page.locator('h1')).toContainText(deputy.name);
   await expect(page.locator('[data-testid="party-badge"]')).toContainText(deputy.party_acronym);
@@ -77,6 +78,7 @@ test('deputy profile voting history matches API', async ({ page }) => {
     return;
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
   const votingRecords = apiVotingHistory as any[];
 
   // Validate first 3 voting records
