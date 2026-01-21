@@ -6,8 +6,12 @@
  * receives correctly shaped data from the API/database.
  *
  * See apps/web/e2e/data-contracts/README.md for usage examples.
+ *
+ * Note: This file intentionally uses `as any` for runtime type validation
+ * of untyped API responses in E2E tests.
  */
 
+// biome-ignore lint/suspicious/noExplicitAny: This file validates unknown API responses at runtime
 import { expect } from '@playwright/test';
 
 /**

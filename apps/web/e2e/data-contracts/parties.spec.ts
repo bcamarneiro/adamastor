@@ -50,8 +50,8 @@ test('parties page renders API data correctly', async ({ page }) => {
     // Validate party color indicator if present
     if (party.color) {
       const colorIndicator = card.locator('.w-2.h-16.rounded-full');
-      const bgColor = await colorIndicator.evaluate((el) =>
-        window.getComputedStyle(el).backgroundColor
+      const bgColor = await colorIndicator.evaluate(
+        (el) => window.getComputedStyle(el).backgroundColor
       );
       // Just verify it has a background color set
       expect(bgColor).toBeTruthy();
@@ -86,26 +86,34 @@ test('parties page aggregated metrics match API', async ({ page }) => {
 
   // Validate work score if present (shown on the right side of the card)
   if (firstParty.avg_work_score !== undefined && firstParty.avg_work_score !== null) {
-    const scoreElement = firstCard.locator('.text-right').locator('.text-2xl.font-bold.text-neutral-12');
+    const scoreElement = firstCard
+      .locator('.text-right')
+      .locator('.text-2xl.font-bold.text-neutral-12');
     const scoreText = await scoreElement.textContent();
-    const scoreValue = parseFloat(scoreText || '0');
+    const scoreValue = Number.parseFloat(scoreText || '0');
     const expectedScore = Math.round(firstParty.avg_work_score * 10) / 10;
     expect(Math.abs(scoreValue - expectedScore)).toBeLessThan(0.2);
   }
 
   // Validate total proposals if present
   if (firstParty.total_proposals !== undefined && firstParty.total_proposals !== null) {
-    await expect(firstCard.getByText(/\d+ propostas/)).toContainText(String(firstParty.total_proposals));
+    await expect(firstCard.getByText(/\d+ propostas/)).toContainText(
+      String(firstParty.total_proposals)
+    );
   }
 
   // Validate total interventions if present
   if (firstParty.total_interventions !== undefined && firstParty.total_interventions !== null) {
-    await expect(firstCard.getByText(/\d+ intervencoes/)).toContainText(String(firstParty.total_interventions));
+    await expect(firstCard.getByText(/\d+ intervencoes/)).toContainText(
+      String(firstParty.total_interventions)
+    );
   }
 
   // Validate total questions if present
   if (firstParty.total_questions !== undefined && firstParty.total_questions !== null) {
-    await expect(firstCard.getByText(/\d+ perguntas/)).toContainText(String(firstParty.total_questions));
+    await expect(firstCard.getByText(/\d+ perguntas/)).toContainText(
+      String(firstParty.total_questions)
+    );
   }
 });
 
@@ -141,18 +149,22 @@ test('parties page summary stats match API', async ({ page }) => {
 
   // Validate party count
   const partyCountCard = summaryStats.locator('.bg-neutral-1.rounded-xl').nth(0);
-  await expect(partyCountCard.locator('.text-2xl.font-bold')).toContainText(String(expectedPartyCount));
+  await expect(partyCountCard.locator('.text-2xl.font-bold')).toContainText(
+    String(expectedPartyCount)
+  );
   await expect(partyCountCard.locator('.text-sm.text-neutral-11')).toContainText('Partidos');
 
   // Validate total deputies
   const deputiesCard = summaryStats.locator('.bg-neutral-1.rounded-xl').nth(1);
-  await expect(deputiesCard.locator('.text-2xl.font-bold')).toContainText(String(expectedTotalDeputies));
+  await expect(deputiesCard.locator('.text-2xl.font-bold')).toContainText(
+    String(expectedTotalDeputies)
+  );
   await expect(deputiesCard.locator('.text-sm.text-neutral-11')).toContainText('Deputados');
 
   // Validate average score
   const avgScoreCard = summaryStats.locator('.bg-neutral-1.rounded-xl').nth(2);
   const avgScoreText = await avgScoreCard.locator('.text-2xl.font-bold').textContent();
-  const avgScoreValue = parseFloat(avgScoreText || '0');
+  const avgScoreValue = Number.parseFloat(avgScoreText || '0');
   expect(Math.abs(avgScoreValue - expectedAvgScore)).toBeLessThan(0.2);
   await expect(avgScoreCard.locator('.text-sm.text-neutral-11')).toContainText('Media Global');
 });

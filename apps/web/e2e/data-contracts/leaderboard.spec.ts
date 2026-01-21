@@ -9,7 +9,7 @@ test('leaderboard renders deputies from API correctly', async ({ page }) => {
       try {
         const data = await response.json();
         apiResponses.push(...data);
-      } catch (e) {
+      } catch (_e) {
         // Ignore non-JSON responses
       }
     }
@@ -60,12 +60,12 @@ test('leaderboard renders deputies from API correctly', async ({ page }) => {
     expect(matchingDeputy).toBeDefined();
 
     // Validate national rank if present in both
-    if (matchingDeputy && matchingDeputy.national_rank) {
+    if (matchingDeputy?.national_rank) {
       await expect(card).toContainText(`#${matchingDeputy.national_rank}`);
     }
 
     // Validate party acronym if present
-    if (matchingDeputy && matchingDeputy.party_acronym) {
+    if (matchingDeputy?.party_acronym) {
       await expect(card).toContainText(matchingDeputy.party_acronym);
     }
   }
