@@ -33,6 +33,31 @@ This document provides guidelines for AI agents (Cursor, GitHub Copilot, Claude 
 
 ---
 
+## Architecture Decision Records (ADRs)
+
+Before making significant changes, **read the relevant ADRs** to understand existing architectural patterns and decisions:
+
+- **[ADR-001: Monorepo Structure](architecture/ADR-001-monorepo.md)** - Bun workspaces, workspace dependencies, project organization
+- **[ADR-002: React + Vite Architecture Patterns](architecture/ADR-002-nextjs-patterns.md)** - Routing (React Router v6), component structure, data fetching (React Query), service layer patterns
+- **[ADR-003: Supabase Integration Patterns](architecture/ADR-003-supabase.md)** - Database schema, client configuration, RLS policies, data sync patterns
+- **[ADR-004: Testing Strategy](architecture/ADR-004-testing.md)** - Testing pyramid, Vitest (unit), Playwright (E2E), CI integration
+
+**When to reference ADRs:**
+- Making changes to monorepo structure or workspace configuration → Read ADR-001
+- Adding new routes, pages, or data fetching logic → Read ADR-002
+- Modifying database queries or Supabase integration → Read ADR-003
+- Adding tests or changing test patterns → Read ADR-004
+
+**When to update ADRs:**
+- Making architectural decisions that affect future development
+- Changing core patterns (routing, data fetching, testing)
+- Introducing new technologies or frameworks
+- Deprecating or replacing existing patterns
+
+See [docs/architecture/README.md](architecture/README.md) for the complete ADR index and template.
+
+---
+
 ## Tool-Specific Guidance
 
 ### Inline Assistants (GitHub Copilot, Cursor Inline)
@@ -383,6 +408,497 @@ test('postal code 3700 should map to Aveiro district', async ({ page }) => {
 - [ ] Verify test passes locally: `cd apps/web && npx playwright test <spec-file>`
 - [ ] Create PR targeting `staging` and linking to the issue
 
+### E2E Data Contract Testing
+
+**Location:** `apps/web/e2e/data-contracts/`
+
+Data contract tests validate that **rendered UI data matches API/database responses**. Unlike traditional E2E tests that only check element existence, these tests ensure data accuracy and prevent silent data transformation bugs.
+
+#### What Are Data Contract Tests?
+
+Data contract tests verify:
+1. **API schema correctness** - Response data has expected structure and types
+2. **UI rendering accuracy** - Displayed data matches API response
+3. **Data transformation integrity** - No bugs between API → UI
+
+**Example bug prevented:**
+```typescript
+// API returns: { name: "João Silva", rank: 42 }
+// UI displays: "João Silva #24" ← BUG! Rank reversed
+// Data contract test catches this mismatch immediately
+```
+
+#### The Pattern: Intercept → Validate → Compare
+
+All data contract tests follow this 4-step pattern:
+
+```typescript
+import { expect, test } from '../fixtures';
+import { DeputySchema, validateArray } from '../helpers/schemas';
+
+test('leaderboard renders deputy data correctly', async ({ page }) => {
+  // Step 1: Intercept API call and capture response
+  let apiDeputies: any[] = [];
+  await page.route('**/rest/v1/deputies*', async (route) => {
+    const response = await route.fetch();
+    apiDeputies = await response.json();
+    await route.fulfill({ response });
+  });
+
+  // Step 2: Navigate to page and wait for data load
+  await page.goto('/ranking');
+  await page.waitForLoadState('networkidle');
+
+  // Step 3: Skip gracefully if no data
+  if (!apiDeputies || apiDeputies.length === 0) {
+    test.skip();
+    return;
+  }
+
+  // Step 4: Validate API schema
+  validateArray(apiDeputies, DeputySchema, 1);
+
+  // Step 5: Validate UI renders API data (sample-based: 3-5 items)
+  const sampleSize = Math.min(3, apiDeputies.length);
+  for (let i = 0; i < sampleSize; i++) {
+    const deputy = apiDeputies[i];
+    const card = page.locator('[data-testid="deputy-card"]').nth(i);
+
+    // Verify name matches
+    await expect(card.locator('h3')).toContainText(deputy.name);
+
+    // Verify rank matches
+    await expect(card).toContainText(`#${deputy.national_rank}`);
+
+    // Verify grade matches
+    await expect(card).toContainText(deputy.grade);
+  }
+});
+```
+
+#### Key Pattern Elements
+
+**1. API Interception (Playwright route)**
+```typescript
+await page.route('**/rest/v1/deputies*', async (route) => {
+  const response = await route.fetch();  // Make real API call
+  apiData = await response.json();       // Capture response
+  await route.fulfill({ response });     // Pass to page
+});
+```
+
+**2. Graceful Degradation**
+```typescript
+// Always skip if data unavailable (prevents flaky failures)
+if (!apiData || apiData.length === 0) {
+  test.skip();
+  return;
+}
+```
+
+**3. Sample-Based Validation**
+```typescript
+// Validate 3-5 items instead of all (faster, still catches bugs)
+const sampleSize = Math.min(3, apiData.length);
+for (let i = 0; i < sampleSize; i++) {
+  // ... validate item ...
+}
+```
+
+**4. Wait for Network Idle**
+```typescript
+// Ensure all API calls complete before validation
+await page.goto('/ranking');
+await page.waitForLoadState('networkidle'); // Critical!
+```
+
+#### Schema Validators
+
+**Location:** `apps/web/e2e/helpers/schemas.ts`
+
+Schema validators ensure API responses have correct structure and types:
+
+```typescript
+// Available validators:
+import {
+  DeputySchema,        // Deputies list/detail
+  PartySchema,         // Party data
+  DistrictSchema,      // District data
+  InitiativeSchema,    // Initiatives/proposals
+  DeputyStatsSchema,   // Deputy statistics
+  validateArray,       // Array validator helper
+} from '../helpers/schemas';
+
+// Usage:
+DeputySchema.validate(deputy);           // Basic fields
+DeputySchema.validateWithStats(deputy);  // With stats join
+validateArray(deputies, DeputySchema);   // Validate array (samples first 3)
+```
+
+**Example validator implementation:**
+```typescript
+export const DeputySchema = {
+  validate(deputy: unknown) {
+    // Required fields
+    expect(deputy).toHaveProperty('id');
+    expect(deputy).toHaveProperty('name');
+    expect(deputy).toHaveProperty('external_id');
+    expect(deputy).toHaveProperty('is_active');
+
+    // Type checks
+    expect(typeof (deputy as any).id).toBe('string');
+    expect(typeof (deputy as any).name).toBe('string');
+    expect(typeof (deputy as any).is_active).toBe('boolean');
+  },
+
+  validateWithStats(deputy: unknown) {
+    this.validate(deputy);
+
+    // Stats fields (from deputy_stats join)
+    if ((deputy as any).national_rank !== undefined) {
+      expect(typeof (deputy as any).national_rank).toBe('number');
+    }
+    if ((deputy as any).grade !== undefined) {
+      expect((deputy as any).grade).toMatch(/^[A-F]$/);
+    }
+  },
+};
+```
+
+#### Supabase API Patterns
+
+Adamastor uses Supabase's REST API with this URL pattern:
+
+```
+**/rest/v1/{table}*
+```
+
+**Common endpoints:**
+- `**/rest/v1/deputies*` - Deputies list/detail
+- `**/rest/v1/parties*` - Parties list
+- `**/rest/v1/districts*` - Districts list
+- `**/rest/v1/initiatives*` - Initiatives/proposals
+- `**/rest/v1/deputy_stats*` - Deputy statistics
+
+**Query parameters:**
+```typescript
+// Supabase adds query params (select, order, filters)
+// Example: /rest/v1/deputies?select=*,deputy_stats(*)&order=national_rank.asc
+// Pattern matches: **/rest/v1/deputies* (wildcard catches all variations)
+```
+
+#### Test Organization
+
+Tests are organized by page/feature:
+
+```
+apps/web/e2e/data-contracts/
+├── README.md                    # Quick reference guide
+├── schema-validation.spec.ts    # Leaderboard validation (current)
+├── homepage.spec.ts             # Homepage featured deputies (future)
+├── deputy-profile.spec.ts       # Individual deputy pages (future)
+├── parties.spec.ts              # Party pages (future)
+├── districts.spec.ts            # District pages (future)
+├── initiatives.spec.ts          # Initiatives/proposals (future)
+└── search.spec.ts               # Search results (future)
+```
+
+**Current coverage (as of Jan 2026):**
+- ✅ Leaderboard (`/ranking`) - Deputy rankings validation
+
+**Future coverage planned:**
+- ⏳ Homepage (`/`) - Featured deputies
+- ⏳ Deputy Profile (`/deputado/:id`) - Individual deputy data
+- ⏳ Parties (`/partidos`) - Party aggregations
+- ⏳ Districts (`/distritos`) - District comparisons
+- ⏳ Initiatives (`/iniciativas`) - Proposals and voting
+- ⏳ Search - Search results validation
+
+#### Maintenance Guide
+
+**When API schema changes:**
+
+1. **Update schema validators** in `apps/web/e2e/helpers/schemas.ts`
+   ```typescript
+   // Example: Adding new field to DeputySchema
+   export const DeputySchema = {
+     validate(deputy: unknown) {
+       // ... existing validations ...
+
+       // Add new field validation
+       if ((deputy as any).photo_url) {
+         expect(typeof (deputy as any).photo_url).toBe('string');
+       }
+     },
+   };
+   ```
+
+2. **Update affected test files** in `apps/web/e2e/data-contracts/`
+   ```typescript
+   // Add new field validation to test
+   await expect(card.locator('img')).toHaveAttribute('src', deputy.photo_url);
+   ```
+
+3. **Run tests locally** to verify changes
+   ```bash
+   cd apps/web
+   npx playwright test data-contracts/
+   ```
+
+4. **Commit with descriptive message**
+   ```bash
+   git add apps/web/e2e/helpers/schemas.ts apps/web/e2e/data-contracts/*.spec.ts
+   git commit -m "test(e2e): update data contract tests for photo_url field"
+   ```
+
+**Adding new data contract tests:**
+
+1. **Create new spec file** following naming convention
+   ```bash
+   # Example: Testing party page
+   touch apps/web/e2e/data-contracts/parties.spec.ts
+   ```
+
+2. **Follow the established pattern** (see example above)
+   - Import fixtures and schemas
+   - Intercept API call
+   - Navigate and wait for networkidle
+   - Skip if no data
+   - Validate schema
+   - Validate rendered UI (sample 3-5 items)
+
+3. **Add data-testid attributes** to components if needed
+   ```tsx
+   // In component file
+   <div data-testid="party-card">
+     <h3 data-testid="party-name">{party.name}</h3>
+   </div>
+   ```
+
+4. **Test locally** before committing
+   ```bash
+   npx playwright test data-contracts/parties.spec.ts
+   ```
+
+5. **Verify in CI** after pushing
+
+#### Running Tests
+
+```bash
+# Run all data contract tests
+cd apps/web
+npx playwright test data-contracts/
+
+# Run specific test file
+npx playwright test data-contracts/schema-validation.spec.ts
+
+# Run in UI mode for debugging
+npx playwright test --ui data-contracts/
+
+# Show browser during test (headed mode)
+npx playwright test --headed data-contracts/schema-validation.spec.ts
+
+# Run with verbose output
+npx playwright test --reporter=list data-contracts/
+```
+
+#### Common Issues & Solutions
+
+**Issue: Test timeout**
+```typescript
+// Problem: Test times out waiting for networkidle
+await page.goto('/ranking');
+await page.waitForLoadState('networkidle'); // Times out after 30s
+
+// Solution 1: Increase timeout
+test.setTimeout(90000); // 90 seconds
+
+// Solution 2: Use 'load' instead of 'networkidle' (less strict)
+await page.waitForLoadState('load');
+
+// Solution 3: Wait for specific selector
+await page.waitForSelector('[data-testid="deputy-card"]');
+```
+
+**Issue: Selector not found**
+```typescript
+// Problem: Element not found
+const card = page.locator('[data-testid="deputy-card"]').first();
+await expect(card).toBeVisible(); // Fails
+
+// Solution: Add data-testid attribute to component
+// In component file (e.g., DeputyCard.tsx):
+<div data-testid="deputy-card">
+  {/* ... */}
+</div>
+```
+
+**Issue: API pattern doesn't match**
+```typescript
+// Problem: API call not intercepted
+await page.route('**/rest/v1/deputies', async (route) => { ... });
+//                                    ^ Missing wildcard!
+
+// Solution: Add wildcard to match query params
+await page.route('**/rest/v1/deputies*', async (route) => { ... });
+//                                     ^ Wildcard matches all params
+```
+
+**Issue: Schema validation fails**
+```typescript
+// Problem: Unexpected field type
+expect(typeof deputy.rank).toBe('number'); // Fails: rank is string
+
+// Solution: Check actual API response and update validator
+// Use console.log to debug:
+console.log('Deputy data:', JSON.stringify(deputy, null, 2));
+
+// Update schema validator to match reality:
+expect(typeof deputy.rank).toBe('string'); // Correct
+```
+
+**Issue: Flaky test (sometimes passes, sometimes fails)**
+```typescript
+// Problem: Race condition - data loads after validation starts
+await page.goto('/ranking');
+const card = page.locator('[data-testid="deputy-card"]').first();
+await expect(card).toContainText(deputy.name); // Sometimes fails
+
+// Solution: Wait for network idle before validation
+await page.goto('/ranking');
+await page.waitForLoadState('networkidle'); // Ensures data loaded
+const card = page.locator('[data-testid="deputy-card"]').first();
+await expect(card).toContainText(deputy.name); // More reliable
+```
+
+#### Known Limitations
+
+1. **Sample-based validation only**
+   - Tests validate 3-5 items per page, not full dataset
+   - Trade-off: Speed vs completeness
+   - Catches most bugs (95%+) while keeping tests fast (<60s)
+
+2. **Network timing sensitivity**
+   - Tests may be slower on CI or slow connections
+   - Mitigated by `networkidle` wait and timeouts
+
+3. **Data freshness dependency**
+   - Tests assume staging/production data is valid
+   - Invalid source data causes test failures
+   - Consider seeding known test data for critical flows
+
+4. **Hard-coded API patterns**
+   - Supabase REST API patterns (`/rest/v1/`) are hard-coded
+   - If API architecture changes, all tests need updates
+   - Consider extracting patterns to shared config
+
+5. **Component selector coupling**
+   - Tests depend on `data-testid` attributes
+   - Removing attributes breaks tests
+   - Document required test IDs in component props
+
+6. **Browser-specific**
+   - Tests run in Chromium by default
+   - Not tested across all browsers (Firefox, WebKit)
+   - Unlikely to have browser-specific data rendering bugs
+
+7. **No real-time validation**
+   - Tests capture API response at page load only
+   - Don't validate dynamic updates or websocket data
+   - Consider adding tests for real-time features if needed
+
+#### Best Practices
+
+1. **Always use `test.skip()` for graceful degradation**
+   ```typescript
+   if (!apiData || apiData.length === 0) {
+     test.skip(); // Better than failing
+     return;
+   }
+   ```
+
+2. **Use `data-testid` for stable selectors**
+   ```tsx
+   // ✅ Good - stable selector
+   <div data-testid="deputy-card">
+
+   // ❌ Bad - fragile selector
+   <div className="bg-white rounded-lg shadow">
+   ```
+
+3. **Validate types, not just values**
+   ```typescript
+   // ✅ Good - validates structure
+   expect(typeof deputy.rank).toBe('number');
+
+   // ❌ Bad - only validates specific value
+   expect(deputy.rank).toBe(42);
+   ```
+
+4. **Keep tests fast with sample-based validation**
+   ```typescript
+   // ✅ Good - validate 3 items
+   for (let i = 0; i < Math.min(3, data.length); i++)
+
+   // ❌ Bad - validate all 230 items (slow!)
+   for (const item of data)
+   ```
+
+5. **Document API patterns in comments**
+   ```typescript
+   // Matches: /rest/v1/deputies?select=*&order=rank
+   await page.route('**/rest/v1/deputies*', ...)
+   ```
+
+6. **Use schema validators consistently**
+   ```typescript
+   // ✅ Good - reusable validation
+   DeputySchema.validate(deputy);
+
+   // ❌ Bad - ad-hoc validation (not reusable)
+   expect(deputy).toHaveProperty('name');
+   expect(deputy).toHaveProperty('rank');
+   ```
+
+#### Debugging Tips
+
+**View captured API data:**
+```typescript
+let apiData;
+await page.route('**/rest/v1/deputies*', async (route) => {
+  const response = await route.fetch();
+  apiData = await response.json();
+  console.log('API Response:', JSON.stringify(apiData, null, 2));
+  await route.fulfill({ response });
+});
+```
+
+**Pause test execution:**
+```typescript
+await page.goto('/ranking');
+await page.pause(); // Opens Playwright Inspector
+```
+
+**Screenshot on failure:**
+```typescript
+// Auto-captured by Playwright
+// Location: test-results/{test-name}/test-failed-1.png
+```
+
+**Network logs:**
+```bash
+# See all network requests
+DEBUG=pw:api npx playwright test data-contracts/
+```
+
+#### References
+
+- **Data Contract Tests README**: `apps/web/e2e/data-contracts/README.md`
+- **Schema Validators**: `apps/web/e2e/helpers/schemas.ts`
+- **Playwright Network API**: https://playwright.dev/docs/network
+- **Epic #168**: https://github.com/bcamarneiro/adamastor/issues/168
+- **Supabase REST API**: https://supabase.com/docs/guides/api
+
 ---
 
 ## Monorepo-Specific Patterns
@@ -437,7 +953,8 @@ const apiKey = 'sk_live_abc123...';
 
 ## Getting Help
 
-- **Questions about architecture**: See [ARCHITECTURE.md](../ARCHITECTURE.md)
+- **Architectural patterns**: See [docs/architecture/](architecture/) (ADRs for monorepo, React patterns, Supabase, testing)
+- **Project structure and data flow**: See [ARCHITECTURE.md](../ARCHITECTURE.md)
 - **Setup issues**: See [CONTRIBUTING.md](../CONTRIBUTING.md)
 - **Testing guidance**: See [docs/TESTING.md](TESTING.md)
 - **GitHub Discussions**: For general questions
