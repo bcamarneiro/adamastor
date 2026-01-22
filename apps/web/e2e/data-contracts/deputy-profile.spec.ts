@@ -39,15 +39,15 @@ test('deputy profile renders API data correctly', async ({ page }) => {
   }
 
   // Validate metrics (attendance, proposals, etc.)
-  if (deputy.attendance_percentage) {
+  if (deputy.attendance_rate) {
     await expect(page.locator('[data-testid="attendance-metric"]')).toContainText(
-      String(deputy.attendance_percentage)
+      String(deputy.attendance_rate)
     );
   }
 
-  if (deputy.proposals_count) {
+  if (deputy.proposal_count) {
     await expect(page.locator('[data-testid="proposals-metric"]')).toContainText(
-      String(deputy.proposals_count)
+      String(deputy.proposal_count)
     );
   }
 
