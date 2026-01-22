@@ -1,7 +1,8 @@
 import { expect, test } from '../fixtures';
 
 test('parties page renders API data correctly', async ({ page }) => {
-  let apiParties;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiParties: any[] = [];
 
   // Intercept Supabase REST API for parties
   await page.route('**/rest/v1/party_stats*', async (route) => {
@@ -61,7 +62,8 @@ test('parties page renders API data correctly', async ({ page }) => {
 });
 
 test('parties page aggregated metrics match API', async ({ page }) => {
-  let apiParties;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiParties: any[] = [];
 
   // Intercept parties API with aggregated metrics
   await page.route('**/rest/v1/party_stats*', async (route) => {
@@ -118,7 +120,8 @@ test('parties page aggregated metrics match API', async ({ page }) => {
 });
 
 test('parties page summary stats match API', async ({ page }) => {
-  let apiParties;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiParties: any[] = [];
 
   // Intercept parties API
   await page.route('**/rest/v1/party_stats*', async (route) => {
