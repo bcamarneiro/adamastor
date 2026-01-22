@@ -1,7 +1,8 @@
 import { expect, test } from '../fixtures';
 
 test('leaderboard renders deputies from API correctly', async ({ page }) => {
-  let apiDeputies: any;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiDeputies: any[] = [];
 
   // Intercept Supabase REST API
   await page.route('**/rest/v1/deputies*', async (route) => {
