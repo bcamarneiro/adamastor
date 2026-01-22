@@ -30,7 +30,9 @@ test('initiatives page renders API data correctly', async ({ page }) => {
   const initiatives = apiInitiatives as any[];
 
   // Wait for initiative rows to be rendered
-  const initiativeRows = page.locator('[role="row"]').filter({ has: page.locator('[role="rowheader"]') });
+  const initiativeRows = page
+    .locator('[role="row"]')
+    .filter({ has: page.locator('[role="rowheader"]') });
   const rowCount = await initiativeRows.count();
 
   // Skip if no rows rendered (feature not implemented yet)
@@ -90,10 +92,7 @@ test('initiatives page voting results match API', async ({ page }) => {
   // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
   const initiativeWithVotes = initiatives.find((i: any) => {
     if (!i.IniEventos || !Array.isArray(i.IniEventos)) return false;
-    // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
-    return i.IniEventos.some((event: any) =>
-      event.Fase && event.Fase.toLowerCase().includes('votação')
-    );
+    return i.IniEventos.some((event: any) => event.Fase?.toLowerCase().includes('votação'));
   });
 
   if (!initiativeWithVotes) {
@@ -104,7 +103,7 @@ test('initiatives page voting results match API', async ({ page }) => {
   // Find the initiative row by its number
   const initiativeNumber = initiativeWithVotes.IniNr;
   const initiativeRows = page.locator('[role="row"]').filter({
-    has: page.locator('[role="rowheader"]').filter({ hasText: initiativeNumber })
+    has: page.locator('[role="rowheader"]').filter({ hasText: initiativeNumber }),
   });
 
   const rowCount = await initiativeRows.count();

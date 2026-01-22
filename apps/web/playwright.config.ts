@@ -11,9 +11,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : undefined,
   // Use list reporter for real-time progress + github for annotations
-  reporter: process.env.CI
-    ? [['list', { printSteps: true }], ['github']]
-    : 'html',
+  reporter: process.env.CI ? [['list', { printSteps: true }], ['github']] : 'html',
   timeout: 30000,
   expect: {
     timeout: 5000, // 5 seconds per assertion
