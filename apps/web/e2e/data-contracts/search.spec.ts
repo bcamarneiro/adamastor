@@ -13,7 +13,7 @@ test('search results match API response', async ({ page }) => {
     if (url.includes('/rest/v1/deputy_details') && url.includes('or=')) {
       try {
         apiSearchResults = await response.json();
-      } catch (error) {
+      } catch (_error) {
         // Ignore parsing errors
       }
     }
