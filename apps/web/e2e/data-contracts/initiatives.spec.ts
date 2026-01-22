@@ -14,7 +14,7 @@ test('initiatives page renders API data correctly', async ({ page }) => {
     await route.fulfill({ response });
   });
 
-  await page.goto('/iniciativas');
+  await page.goto('/initiatives');
   await page.waitForLoadState('networkidle');
 
   // Skip if no data
@@ -74,7 +74,7 @@ test('initiatives page voting results match API', async ({ page }) => {
     await route.fulfill({ response });
   });
 
-  await page.goto('/iniciativas');
+  await page.goto('/initiatives');
   await page.waitForLoadState('networkidle');
 
   // Skip if no data
