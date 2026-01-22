@@ -12,6 +12,7 @@ export const DeputyCard = memo(function DeputyCard({ deputy }: DeputyCardProps) 
   return (
     <Link
       to={`/deputado/${deputy.id}`}
+      data-testid="deputy-card"
       className="flex items-center gap-4 p-4 bg-neutral-1 rounded-lg shadow-sm border border-neutral-5 hover:shadow-md hover:border-accent-7 transition-all"
     >
       {/* Photo */}
