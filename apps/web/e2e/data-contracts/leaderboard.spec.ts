@@ -1,6 +1,7 @@
 import { expect, test } from '../fixtures';
 
 test('leaderboard renders deputies from API correctly', async ({ page }) => {
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
   const apiResponses: any[] = [];
 
   // Collect all deputy_details API responses
