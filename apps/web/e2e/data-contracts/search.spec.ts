@@ -6,16 +6,16 @@ import { expect, test } from '../fixtures';
 test('search results match API response', async ({ page }) => {
   let apiSearchResults: unknown;
 
-  // Intercept Supabase REST API for deputy search
-  await page.route('**/rest/v1/deputy_details*', async (route) => {
-    const url = route.request().url();
+  // Listen for API responses (don't intercept)
+  page.on('response', async (response) => {
+    const url = response.url();
     // Check if it's a search query with 'or' parameter
-    if (url.includes('or=')) {
-      const response = await route.fetch();
-      apiSearchResults = await response.json();
-      await route.fulfill({ response });
-    } else {
-      await route.continue();
+    if (url.includes('/rest/v1/deputy_details') && url.includes('or=')) {
+      try {
+        apiSearchResults = await response.json();
+      } catch (error) {
+        // Ignore parsing errors
+      }
     }
   });
 
@@ -77,14 +77,13 @@ test('search results match API response', async ({ page }) => {
 test('search query parameters match API request', async ({ page }) => {
   let capturedUrl: string | undefined;
 
-  // Intercept and capture search URL
-  await page.route('**/rest/v1/deputy_details*', async (route) => {
-    const url = route.request().url();
+  // Listen for API requests
+  page.on('request', (request) => {
+    const url = request.url();
     // Capture URL if it's a search query with 'or' parameter
-    if (url.includes('or=')) {
+    if (url.includes('/rest/v1/deputy_details') && url.includes('or=')) {
       capturedUrl = url;
     }
-    await route.continue();
   });
 
   await page.goto('/');
