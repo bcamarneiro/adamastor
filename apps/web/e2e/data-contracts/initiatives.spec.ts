@@ -8,7 +8,7 @@ test('initiatives page renders API data correctly', async ({ page }) => {
   let apiInitiatives: unknown;
 
   // Intercept initiatives JSON file endpoint
-  await page.route('**/iniciativas.json', async (route) => {
+  await page.route('**/iniciativas.json*', async (route) => {
     const response = await route.fetch();
     apiInitiatives = await response.json();
     await route.fulfill({ response });
@@ -68,7 +68,7 @@ test('initiatives page renders API data correctly', async ({ page }) => {
 test('initiatives page voting results match API', async ({ page }) => {
   let apiInitiatives: unknown;
 
-  await page.route('**/iniciativas.json', async (route) => {
+  await page.route('**/iniciativas.json*', async (route) => {
     const response = await route.fetch();
     apiInitiatives = await response.json();
     await route.fulfill({ response });
