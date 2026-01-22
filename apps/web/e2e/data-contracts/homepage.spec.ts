@@ -4,7 +4,8 @@ import { DeputySchema } from '../helpers/schemas.ts';
 // Issue #172: Homepage Data Contract Test
 // @see https://github.com/bcamarneiro/adamastor/issues/172
 test('homepage renders featured deputies from API correctly', async ({ page }) => {
-  let apiDeputies;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiDeputies: any[] = [];
 
   // Intercept Supabase REST API
   await page.route('**/rest/v1/deputies*', async (route) => {

@@ -1,7 +1,8 @@
 import { expect, test } from '../fixtures';
 
 test('parties page renders API data correctly', async ({ page }) => {
-  let apiParties;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiParties: any[] = [];
 
   // Intercept Supabase REST API for parties
   await page.route('**/rest/v1/party_stats*', async (route) => {
@@ -61,7 +62,8 @@ test('parties page renders API data correctly', async ({ page }) => {
 });
 
 test('parties page aggregated metrics match API', async ({ page }) => {
-  let apiParties;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiParties: any[] = [];
 
   // Intercept parties API with aggregated metrics
   await page.route('**/rest/v1/party_stats*', async (route) => {
@@ -88,7 +90,7 @@ test('parties page aggregated metrics match API', async ({ page }) => {
   if (firstParty.avg_work_score !== undefined && firstParty.avg_work_score !== null) {
     const scoreElement = firstCard.locator('.text-right').locator('.text-2xl.font-bold.text-neutral-12');
     const scoreText = await scoreElement.textContent();
-    const scoreValue = parseFloat(scoreText || '0');
+    const scoreValue = Number.parseFloat(scoreText || '0');
     const expectedScore = Math.round(firstParty.avg_work_score * 10) / 10;
     expect(Math.abs(scoreValue - expectedScore)).toBeLessThan(0.2);
   }
@@ -110,7 +112,8 @@ test('parties page aggregated metrics match API', async ({ page }) => {
 });
 
 test('parties page summary stats match API', async ({ page }) => {
-  let apiParties;
+  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
+  let apiParties: any[] = [];
 
   // Intercept parties API
   await page.route('**/rest/v1/party_stats*', async (route) => {
@@ -152,7 +155,7 @@ test('parties page summary stats match API', async ({ page }) => {
   // Validate average score
   const avgScoreCard = summaryStats.locator('.bg-neutral-1.rounded-xl').nth(2);
   const avgScoreText = await avgScoreCard.locator('.text-2xl.font-bold').textContent();
-  const avgScoreValue = parseFloat(avgScoreText || '0');
+  const avgScoreValue = Number.parseFloat(avgScoreText || '0');
   expect(Math.abs(avgScoreValue - expectedAvgScore)).toBeLessThan(0.2);
   await expect(avgScoreCard.locator('.text-sm.text-neutral-11')).toContainText('Media Global');
 });
