@@ -6,6 +6,9 @@
   "types": "src/index.ts",
   "scripts": {
     "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
     "test": "bun test"
   },
   "devDependencies": {
