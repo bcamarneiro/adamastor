@@ -11,6 +11,13 @@
 import { expect } from '@playwright/test';
 
 /**
+ * Helper to safely access properties of unknown objects for type checking
+ */
+function getProp(obj: unknown, prop: string): unknown {
+  return (obj as Record<string, unknown>)[prop];
+}
+
+/**
  * Deputy Schema Validator
  *
  * Validates deputy data from Supabase deputies table.
@@ -29,20 +36,20 @@ export const DeputySchema = {
     expect(deputy).toHaveProperty('is_active');
 
     // Type checks
-    expect(typeof (deputy as any).id).toBe('string');
-    expect(typeof (deputy as any).name).toBe('string');
-    expect(typeof (deputy as any).external_id).toBe('string');
-    expect(typeof (deputy as any).is_active).toBe('boolean');
+    expect(typeof getProp(deputy, 'id')).toBe('string');
+    expect(typeof getProp(deputy, 'name')).toBe('string');
+    expect(typeof getProp(deputy, 'external_id')).toBe('string');
+    expect(typeof getProp(deputy, 'is_active')).toBe('boolean');
 
     // Optional fields that may be present
-    if ((deputy as any).party_id) {
-      expect(typeof (deputy as any).party_id).toBe('string');
+    if (getProp(deputy, 'party_id')) {
+      expect(typeof getProp(deputy, 'party_id')).toBe('string');
     }
-    if ((deputy as any).district_id) {
-      expect(typeof (deputy as any).district_id).toBe('string');
+    if (getProp(deputy, 'district_id')) {
+      expect(typeof getProp(deputy, 'district_id')).toBe('string');
     }
-    if ((deputy as any).short_name) {
-      expect(typeof (deputy as any).short_name).toBe('string');
+    if (getProp(deputy, 'short_name')) {
+      expect(typeof getProp(deputy, 'short_name')).toBe('string');
     }
   },
 
@@ -53,15 +60,15 @@ export const DeputySchema = {
     this.validate(deputy);
 
     // Stats fields (from deputy_stats table)
-    if ((deputy as any).national_rank !== undefined) {
-      expect(typeof (deputy as any).national_rank).toBe('number');
+    if (getProp(deputy, 'national_rank') !== undefined) {
+      expect(typeof getProp(deputy, 'national_rank')).toBe('number');
     }
-    if ((deputy as any).work_score !== undefined) {
-      expect(typeof (deputy as any).work_score).toBe('number');
+    if (getProp(deputy, 'work_score') !== undefined) {
+      expect(typeof getProp(deputy, 'work_score')).toBe('number');
     }
-    if ((deputy as any).grade !== undefined) {
-      expect(typeof (deputy as any).grade).toBe('string');
-      expect((deputy as any).grade).toMatch(/^[A-F]$/);
+    if (getProp(deputy, 'grade') !== undefined) {
+      expect(typeof getProp(deputy, 'grade')).toBe('string');
+      expect(getProp(deputy, 'grade')).toMatch(/^[A-F]$/);
     }
   },
 };
@@ -85,17 +92,18 @@ export const PartySchema = {
     expect(party).toHaveProperty('external_id');
 
     // Type checks
-    expect(typeof (party as any).id).toBe('string');
-    expect(typeof (party as any).acronym).toBe('string');
-    expect(typeof (party as any).name).toBe('string');
-    expect(typeof (party as any).external_id).toBe('string');
+    expect(typeof getProp(party, 'id')).toBe('string');
+    expect(typeof getProp(party, 'acronym')).toBe('string');
+    expect(typeof getProp(party, 'name')).toBe('string');
+    expect(typeof getProp(party, 'external_id')).toBe('string');
 
     // Optional fields
-    if ((party as any).color) {
-      expect(typeof (party as any).color).toBe('string');
+    const color = getProp(party, 'color');
+    if (color) {
+      expect(typeof color).toBe('string');
       // Optionally validate hex color format
-      if ((party as any).color.startsWith('#')) {
-        expect((party as any).color).toMatch(/^#[0-9A-Fa-f]{6}$/);
+      if (typeof color === 'string' && color.startsWith('#')) {
+        expect(color).toMatch(/^#[0-9A-Fa-f]{6}$/);
       }
     }
   },
@@ -119,13 +127,13 @@ export const DistrictSchema = {
     expect(district).toHaveProperty('postal_prefixes');
 
     // Type checks
-    expect(typeof (district as any).id).toBe('string');
-    expect(typeof (district as any).name).toBe('string');
-    expect(Array.isArray((district as any).postal_prefixes)).toBe(true);
+    expect(typeof getProp(district, 'id')).toBe('string');
+    expect(typeof getProp(district, 'name')).toBe('string');
+    expect(Array.isArray(getProp(district, 'postal_prefixes'))).toBe(true);
 
     // Optional fields
-    if ((district as any).deputy_count !== undefined) {
-      expect(typeof (district as any).deputy_count).toBe('number');
+    if (getProp(district, 'deputy_count') !== undefined) {
+      expect(typeof getProp(district, 'deputy_count')).toBe('number');
     }
   },
 };
@@ -148,19 +156,19 @@ export const InitiativeSchema = {
     expect(initiative).toHaveProperty('IniNr');
 
     // Type checks
-    expect(typeof (initiative as any).IniId).toBe('string');
-    expect(typeof (initiative as any).IniTitulo).toBe('string');
-    expect(typeof (initiative as any).IniNr).toBe('string');
+    expect(typeof getProp(initiative, 'IniId')).toBe('string');
+    expect(typeof getProp(initiative, 'IniTitulo')).toBe('string');
+    expect(typeof getProp(initiative, 'IniNr')).toBe('string');
 
     // Optional fields that may be present
-    if ((initiative as any).IniTipo) {
-      expect(typeof (initiative as any).IniTipo).toBe('string');
+    if (getProp(initiative, 'IniTipo')) {
+      expect(typeof getProp(initiative, 'IniTipo')).toBe('string');
     }
-    if ((initiative as any).IniEventos) {
-      expect(Array.isArray((initiative as any).IniEventos)).toBe(true);
+    if (getProp(initiative, 'IniEventos')) {
+      expect(Array.isArray(getProp(initiative, 'IniEventos'))).toBe(true);
     }
-    if ((initiative as any).IniDescTipo) {
-      expect(typeof (initiative as any).IniDescTipo).toBe('string');
+    if (getProp(initiative, 'IniDescTipo')) {
+      expect(typeof getProp(initiative, 'IniDescTipo')).toBe('string');
     }
   },
 };
@@ -182,8 +190,8 @@ export const DeputyStatsSchema = {
     expect(stats).toHaveProperty('deputy_id');
 
     // Type checks
-    expect(typeof (stats as any).id).toBe('string');
-    expect(typeof (stats as any).deputy_id).toBe('string');
+    expect(typeof getProp(stats, 'id')).toBe('string');
+    expect(typeof getProp(stats, 'deputy_id')).toBe('string');
 
     // Numeric fields
     const numericFields = [
@@ -197,31 +205,31 @@ export const DeputyStatsSchema = {
     ];
 
     for (const field of numericFields) {
-      if ((stats as any)[field] !== undefined) {
-        expect(typeof (stats as any)[field]).toBe('number');
+      if (getProp(stats, field) !== undefined) {
+        expect(typeof getProp(stats, field)).toBe('number');
       }
     }
 
     // Decimal fields
-    if ((stats as any).attendance_rate !== undefined) {
-      expect(typeof (stats as any).attendance_rate).toBe('number');
+    if (getProp(stats, 'attendance_rate') !== undefined) {
+      expect(typeof getProp(stats, 'attendance_rate')).toBe('number');
     }
-    if ((stats as any).work_score !== undefined) {
-      expect(typeof (stats as any).work_score).toBe('number');
+    if (getProp(stats, 'work_score') !== undefined) {
+      expect(typeof getProp(stats, 'work_score')).toBe('number');
     }
 
     // Grade field
-    if ((stats as any).grade) {
-      expect(typeof (stats as any).grade).toBe('string');
-      expect((stats as any).grade).toMatch(/^[A-F]$/);
+    if (getProp(stats, 'grade')) {
+      expect(typeof getProp(stats, 'grade')).toBe('string');
+      expect(getProp(stats, 'grade')).toMatch(/^[A-F]$/);
     }
 
     // Ranking fields
-    if ((stats as any).district_rank !== undefined) {
-      expect(typeof (stats as any).district_rank).toBe('number');
+    if (getProp(stats, 'district_rank') !== undefined) {
+      expect(typeof getProp(stats, 'district_rank')).toBe('number');
     }
-    if ((stats as any).national_rank !== undefined) {
-      expect(typeof (stats as any).national_rank).toBe('number');
+    if (getProp(stats, 'national_rank') !== undefined) {
+      expect(typeof getProp(stats, 'national_rank')).toBe('number');
     }
   },
 };
@@ -229,7 +237,7 @@ export const DeputyStatsSchema = {
 /**
  * Helper function to validate arrays of items
  */
-export function validateArray<T>(
+export function validateArray(
   items: unknown[],
   validator: { validate: (item: unknown) => void },
   minItems = 1
