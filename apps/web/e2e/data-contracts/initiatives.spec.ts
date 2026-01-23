@@ -86,14 +86,16 @@ test('initiatives page voting results match API', async ({ page }) => {
     return;
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
-  const initiatives = apiInitiatives as any[];
+  // Type definitions for unknown API response
+  type InitiativeEvent = { Fase?: string; [key: string]: unknown };
+  type Initiative = { IniEventos?: InitiativeEvent[]; IniNr?: string; [key: string]: unknown };
+
+  const initiatives = apiInitiatives as Initiative[];
 
   // Find first initiative with voting phases
-  // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
-  const initiativeWithVotes = initiatives.find((i: any) => {
+  const initiativeWithVotes = initiatives.find((i) => {
     if (!i.IniEventos || !Array.isArray(i.IniEventos)) return false;
-    return i.IniEventos.some((event: any) => event.Fase?.toLowerCase().includes('votação'));
+    return i.IniEventos.some((event) => event.Fase?.toLowerCase().includes('votação'));
   });
 
   if (!initiativeWithVotes) {

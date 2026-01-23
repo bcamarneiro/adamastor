@@ -1,0 +1,70 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env", ".env.local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": [
+        "VITE_*",
+        "NEXT_PUBLIC_*",
+        "NODE_ENV"
+      ]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "cache": false
+    },
+    "test:ci": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "lint:fix": {
+      "dependsOn": [],
+      "outputs": [],
+      "cache": false
+    },
+    "format": {
+      "dependsOn": [],
+      "outputs": [],
+      "cache": false
+    },
+    "e2e": {
+      "dependsOn": ["build"],
+      "outputs": ["playwright-report/**", "test-results/**"],
+      "cache": false,
+      "env": [
+        "PLAYWRIGHT_BASE_URL",
+        "CI"
+      ]
+    },
+    "e2e:smoke": {
+      "dependsOn": ["build"],
+      "outputs": ["playwright-report/**", "test-results/**"],
+      "cache": false
+    },
+    "e2e:data-contracts": {
+      "dependsOn": ["build"],
+      "outputs": ["playwright-report/**", "test-results/**"],
+      "cache": false
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "sync": {
+      "cache": false,
+      "persistent": false
+    }
+  }
+}
