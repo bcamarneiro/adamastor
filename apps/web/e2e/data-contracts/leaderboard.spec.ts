@@ -2,72 +2,49 @@ import { expect, test } from '../fixtures';
 
 test('leaderboard renders deputies from API correctly', async ({ page }) => {
   // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
-  const apiResponses: any[] = [];
+  let apiDeputies: any[] = [];
 
-  // Collect all deputy_details API responses
-  page.on('response', async (response) => {
-    if (response.url().includes('/rest/v1/deputy_details')) {
-      try {
-        const data = await response.json();
-        apiResponses.push(...data);
-      } catch (_e) {
-        // Ignore non-JSON responses
-      }
-    }
+  // Intercept Supabase REST API
+  await page.route('**/rest/v1/deputies*', async (route) => {
+    const response = await route.fetch();
+    apiDeputies = await response.json();
+    await route.fulfill({ response });
   });
 
-  // Navigate to leaderboard page
   await page.goto('/ranking');
-  await page.waitForLoadState('load');
+  await page.waitForLoadState('networkidle');
 
-  // Wait a bit for API calls to complete
-  await page.waitForTimeout(2000);
-
-  // Skip if no API data captured
-  if (apiResponses.length === 0) {
+  // Skip if no data
+  if (!apiDeputies || apiDeputies.length === 0) {
     test.skip();
     return;
   }
 
-  // Validate basic schema using first deputy from API
-  const firstDeputy = apiResponses[0];
-  expect(firstDeputy).toHaveProperty('short_name');
-  expect(typeof firstDeputy.short_name).toBe('string');
+  // Validate basic schema
+  const firstDeputy = apiDeputies[0];
+  expect(firstDeputy).toHaveProperty('name');
+  expect(typeof firstDeputy.name).toBe('string');
   expect(firstDeputy).toHaveProperty('national_rank');
   expect(typeof firstDeputy.national_rank).toBe('number');
   expect(firstDeputy).toHaveProperty('party_acronym');
+  expect(typeof firstDeputy.party_acronym).toBe('string');
 
-  // Get all rendered deputy cards
-  const cards = page.locator('[data-testid="deputy-card"]');
-  const cardCount = await cards.count();
+  // Validate rendered matches API (first 5 deputies)
+  for (let i = 0; i < Math.min(5, apiDeputies.length); i++) {
+    const deputy = apiDeputies[i];
+    const card = page.locator('[data-testid="deputy-card"]').nth(i);
 
-  // Skip if no cards rendered
-  if (cardCount === 0) {
-    test.skip();
-    return;
-  }
+    // Validate deputy name
+    await expect(card.locator('h3')).toContainText(deputy.name || deputy.short_name);
 
-  // Validate that rendered data comes from API (check first 5 cards)
-  for (let i = 0; i < Math.min(5, cardCount); i++) {
-    const card = cards.nth(i);
-
-    // Get the short_name from the card
-    const displayedName = await card.locator('h3').textContent();
-
-    // Find matching deputy in API responses
-    const matchingDeputy = apiResponses.find((d) => d.short_name === displayedName);
-
-    // Validate that this deputy exists in API
-    expect(matchingDeputy).toBeDefined();
-
-    // Validate national rank if present in both
-    if (matchingDeputy?.national_rank) {
-      await expect(card).toContainText(`#${matchingDeputy.national_rank}`);
+    // Validate national rank if present
+    if (deputy.national_rank !== undefined && deputy.national_rank !== null) {
+      await expect(card).toContainText(`#${deputy.national_rank}`);
     }
 
     // Validate party acronym if present
-    if (matchingDeputy?.party_acronym) {
-      await expect(card).toContainText(matchingDeputy.party_acronym);
+    if (deputy.party_acronym) {
+      await expect(card).toContainText(deputy.party_acronym);
     }
   }
 });
