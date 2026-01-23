@@ -11,6 +11,7 @@ import { DeputySchema, validateArray } from '../helpers/schemas';
 test.describe('Schema Validators', () => {
   test('should validate deputy data from leaderboard API', async ({ page }) => {
     // Intercept API call and capture response
+    // biome-ignore lint/suspicious/noExplicitAny: API response type is unknown in E2E tests
     let apiDeputies: any[] = [];
     await page.route('**/rest/v1/deputies*', async (route) => {
       const response = await route.fetch();
