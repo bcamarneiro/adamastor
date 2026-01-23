@@ -9,6 +9,9 @@
     "sync": "bun run src/commands/sync.ts",
     "build": "bun build src/commands/sync.ts --outdir dist --target bun",
     "test": "bun test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

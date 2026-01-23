@@ -16,8 +16,7 @@
       "supabase/.temp",
       "tsconfig*.json",
       "*.d.ts",
-      "apps/web/public/data",
-      ".auto-claude"
+      "**/public/data"
     ]
   },
   "organizeImports": {
