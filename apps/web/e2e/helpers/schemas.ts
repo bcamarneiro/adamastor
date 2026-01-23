@@ -133,8 +133,8 @@ export const DistrictSchema = {
 /**
  * Initiative Schema Validator
  *
- * Validates initiative data from Supabase initiatives table.
- * Fields based on: supabase/migrations/20241224000001_initial_schema.sql
+ * Validates initiative data from the initiatives JSON API (Vercel Blob Storage).
+ * Raw Portuguese field names from the parliamentary API.
  */
 export const InitiativeSchema = {
   /**
@@ -143,24 +143,24 @@ export const InitiativeSchema = {
   validate(initiative: unknown) {
     // Required fields
     expect(initiative, 'Initiative object should exist').toBeTruthy();
-    expect(initiative).toHaveProperty('id');
-    expect(initiative).toHaveProperty('title');
-    expect(initiative).toHaveProperty('external_id');
+    expect(initiative).toHaveProperty('IniId');
+    expect(initiative).toHaveProperty('IniTitulo');
+    expect(initiative).toHaveProperty('IniNr');
 
     // Type checks
-    expect(typeof (initiative as any).id).toBe('string');
-    expect(typeof (initiative as any).title).toBe('string');
-    expect(typeof (initiative as any).external_id).toBe('string');
+    expect(typeof (initiative as any).IniId).toBe('string');
+    expect(typeof (initiative as any).IniTitulo).toBe('string');
+    expect(typeof (initiative as any).IniNr).toBe('string');
 
-    // Optional fields
-    if ((initiative as any).number) {
-      expect(typeof (initiative as any).number).toBe('string');
+    // Optional fields that may be present
+    if ((initiative as any).IniTipo) {
+      expect(typeof (initiative as any).IniTipo).toBe('string');
     }
-    if ((initiative as any).type) {
-      expect(typeof (initiative as any).type).toBe('string');
+    if ((initiative as any).IniEventos) {
+      expect(Array.isArray((initiative as any).IniEventos)).toBe(true);
     }
-    if ((initiative as any).status) {
-      expect(typeof (initiative as any).status).toBe('string');
+    if ((initiative as any).IniDescTipo) {
+      expect(typeof (initiative as any).IniDescTipo).toBe('string');
     }
   },
 };
