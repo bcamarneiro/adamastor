@@ -68,14 +68,17 @@ test('districts page aggregated metrics match API', async ({ page }) => {
   const firstCard = page.locator('[data-testid="district-card"]').first();
 
   // Validate average attendance if present (API field: avg_attendance_rate)
-  if (firstDistrict.avg_attendance_rate !== undefined) {
+  if (
+    firstDistrict.avg_attendance_rate !== undefined &&
+    firstDistrict.avg_attendance_rate !== null
+  ) {
     await expect(firstCard.locator('[data-testid="avg-attendance"]')).toContainText(
       String(Math.round(firstDistrict.avg_attendance_rate))
     );
   }
 
   // Validate average grade/score if present (API field: avg_work_score)
-  if (firstDistrict.avg_work_score !== undefined) {
+  if (firstDistrict.avg_work_score !== undefined && firstDistrict.avg_work_score !== null) {
     const gradeText = await firstCard.locator('[data-testid="avg-grade"]').textContent();
     const gradeValue = Number.parseFloat(gradeText || '0');
     const expectedGrade = Math.round(firstDistrict.avg_work_score * 10) / 10;
