@@ -25,8 +25,5 @@
     "husky": "^9.1.7",
     "turbo": "^2.7.5",
     "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "@radix-ui/react-tooltip": "^1.2.8"
   }
 }
