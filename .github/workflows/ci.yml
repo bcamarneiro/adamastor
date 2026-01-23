@@ -179,6 +179,11 @@ jobs:
         working-directory: apps/web
         # Note: VITE_SUPABASE_* are baked into the build at compile time
 
+      - name: Run E2E Data Contract Tests
+        run: bun run e2e:data-contracts
+        working-directory: apps/web
+        timeout-minutes: 5
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
