@@ -7,15 +7,15 @@ import { InitiativeSchema } from '../helpers/schemas';
 test('initiatives page renders API data correctly', async ({ page }) => {
   let apiInitiatives: unknown;
 
-  // Intercept initiatives JSON file endpoint
-  await page.route('**/iniciativas.json*', async (route) => {
+  // Intercept initiatives JSON file endpoint (Vercel Blob Storage)
+  await page.route('**/latest/iniciativas.json', async (route) => {
     const response = await route.fetch();
     apiInitiatives = await response.json();
     await route.fulfill({ response });
   });
 
   await page.goto('/initiatives');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
 
   // Skip if no data
   if (!apiInitiatives || !Array.isArray(apiInitiatives) || apiInitiatives.length === 0) {
@@ -70,14 +70,15 @@ test('initiatives page renders API data correctly', async ({ page }) => {
 test('initiatives page voting results match API', async ({ page }) => {
   let apiInitiatives: unknown;
 
-  await page.route('**/iniciativas.json*', async (route) => {
+  // Intercept initiatives JSON file endpoint (Vercel Blob Storage)
+  await page.route('**/latest/iniciativas.json', async (route) => {
     const response = await route.fetch();
     apiInitiatives = await response.json();
     await route.fulfill({ response });
   });
 
   await page.goto('/initiatives');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('networkidle', { timeout: 10000 });
 
   // Skip if no data
   if (!apiInitiatives || !Array.isArray(apiInitiatives) || apiInitiatives.length === 0) {
