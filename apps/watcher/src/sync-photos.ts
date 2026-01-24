@@ -208,44 +208,37 @@ async function main() {
   let successCount = 0;
   let failCount = 0;
 
-  // Process in batches to avoid overwhelming the server
-  const batchSize = 5;
+  // Process sequentially to avoid Bun memory corruption with Sharp library
+  // See: https://github.com/bcamarneiro/adamastor/issues/192
+  let processed = 0;
+  for (const deputy of deputies) {
+    const result = await syncPhotoForDeputy(deputy, options.dryRun);
+    results.push(result);
 
-  for (let i = 0; i < deputies.length; i += batchSize) {
-    const batch = deputies.slice(i, i + batchSize);
-
-    const batchResults = await Promise.all(
-      batch.map((deputy) => syncPhotoForDeputy(deputy, options.dryRun))
-    );
-
-    for (const result of batchResults) {
-      results.push(result);
-
-      if (result.success) {
-        successCount++;
-        if (result.photoUrl) {
-          // Show the source of the photo (biography page or Parliament API)
-          console.log(`✅ ${result.name}: uploaded ${result.reason || ''}`);
-        } else {
-          console.log(`✅ ${result.name}: ${result.reason}`);
-        }
+    if (result.success) {
+      successCount++;
+      if (result.photoUrl) {
+        // Show the source of the photo (biography page or Parliament API)
+        console.log(`✅ ${result.name}: uploaded ${result.reason || ''}`);
       } else {
-        failCount++;
-        console.log(`❌ ${result.name}: ${result.reason}`);
+        console.log(`✅ ${result.name}: ${result.reason}`);
       }
+    } else {
+      failCount++;
+      console.log(`❌ ${result.name}: ${result.reason}`);
+    }
+
+    // Small delay between photos to reduce memory pressure
+    processed++;
+    if (processed < deputies.length) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
     }
 
     // Progress update every 25 deputies
-    const processed = Math.min(i + batchSize, deputies.length);
     if (processed % 25 === 0 || processed === deputies.length) {
       console.log(
         `\n📊 Progress: ${processed}/${deputies.length} (${successCount} ok, ${failCount} failed)\n`
       );
-    }
-
-    // Small delay between batches to be respectful to the server
-    if (i + batchSize < deputies.length) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
     }
   }
 

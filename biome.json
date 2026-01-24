@@ -16,7 +16,8 @@
       "supabase/.temp",
       "tsconfig*.json",
       "*.d.ts",
-      "**/public/data"
+      "**/public/data",
+      "**/snapshots/**"
     ]
   },
   "organizeImports": {
