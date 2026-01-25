@@ -134,6 +134,11 @@ export const SEO_CONFIGS = {
     description:
       'Introduz o teu código postal e descobre quem são os deputados eleitos pelo teu círculo eleitoral. Avalia o trabalho de quem te representa.',
   },
+  methodology: {
+    title: 'Metodologia',
+    description:
+      'Como calculamos as pontuações, notas e rankings dos deputados. Explicação da metodologia e fontes de dados.',
+  },
 } as const;
 
 /**

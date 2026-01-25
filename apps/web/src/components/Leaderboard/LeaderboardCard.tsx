@@ -74,7 +74,12 @@ export function LeaderboardCard({ deputy, position, isTop = true }: LeaderboardC
 
       {/* Grade */}
       <div className="flex-shrink-0">
-        <GradeCircle grade={deputy.grade} score={deputy.work_score} size="sm" />
+        <GradeCircle
+          grade={deputy.grade}
+          score={deputy.work_score}
+          size="sm"
+          showMethodologyLink={true}
+        />
       </div>
     </Link>
   );

@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
-import { SEO } from '@/components/SEO';
+import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { ArrowLeft } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { Link } from 'react-router-dom';
@@ -10,11 +10,7 @@ import methodologyPtMd from './methodology-pt.md';
 const MethodologyPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
-      <SEO
-        title="Metodologia | Debaixo d'Olho"
-        description="Como calculamos as pontuações, notas e rankings dos deputados. Explicação da metodologia e fontes de dados."
-        url="/metodologia"
-      />
+      <SEO {...SEO_CONFIGS.methodology} url="/metodologia" />
       <MainNav scrollY={0} />
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
