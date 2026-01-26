@@ -87,7 +87,7 @@ export const HELP_TEXTS = {
   bottomWorkers:
     'Deputados com menor atividade parlamentar. A pontuacao baixa pode indicar falta de participacao nos trabalhos da Assembleia.',
   partyRanking:
-    'Ranking calculado com base na media de pontuacao de todos os deputados ativos de cada partido.',
+    'Ranking calculado pela média das pontuações de todos os deputados ativos de cada partido na legislatura atual. A pontuação de cada deputado é baseada em propostas apresentadas, intervenções em debates e perguntas ao Governo. Partidos com mais deputados têm mais dados para a média, mas não são favorecidos na classificação.',
   districtRanking:
     'Ranking calculado com base na media de pontuacao de todos os deputados ativos eleitos por cada circulo eleitoral.',
   fullRanking:
