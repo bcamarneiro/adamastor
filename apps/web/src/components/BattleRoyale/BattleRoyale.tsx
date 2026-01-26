@@ -2,9 +2,9 @@ import { RotateCcw, Swords } from 'lucide-react';
 import { useState } from 'react';
 import type { DeputyDetail } from '../../lib/supabase';
 import { useCompareDeputies } from '../../services/battle/useCompareDeputies';
+import { BattleResults } from './BattleResults';
 import { ComparisonBars } from './ComparisonBars';
 import { DeputySelector } from './DeputySelector';
-import { WinnerDeclaration } from './WinnerDeclaration';
 
 export function BattleRoyale() {
   const [deputyA, setDeputyA] = useState<DeputyDetail | null>(null);
@@ -72,21 +72,14 @@ export function BattleRoyale() {
       {/* Results Phase */}
       {showResults && comparison && (
         <div className="space-y-6">
-          {/* Winner Declaration */}
-          {comparison.winner === 'tie' ? (
-            <WinnerDeclaration
-              winner={comparison.deputyA}
-              loser={comparison.deputyB}
-              winsCount={comparison.winsA}
-              isTie={true}
-            />
-          ) : (
-            <WinnerDeclaration
-              winner={comparison.winner === 'A' ? comparison.deputyA : comparison.deputyB}
-              loser={comparison.winner === 'A' ? comparison.deputyB : comparison.deputyA}
-              winsCount={comparison.winner === 'A' ? comparison.winsA : comparison.winsB}
-            />
-          )}
+          {/* Battle Results - Side by Side */}
+          <BattleResults
+            deputyA={comparison.deputyA}
+            deputyB={comparison.deputyB}
+            winsA={comparison.winsA}
+            winsB={comparison.winsB}
+            winner={comparison.winner}
+          />
 
           {/* Comparison Details */}
           <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5">
@@ -96,24 +89,6 @@ export function BattleRoyale() {
               nameA={comparison.deputyA.short_name}
               nameB={comparison.deputyB.short_name}
             />
-          </div>
-
-          {/* Score Summary */}
-          <div className="bg-neutral-2 rounded-xl p-4 text-center">
-            <div className="text-sm text-neutral-11 mb-1">Resultado final</div>
-            <div className="text-lg font-bold text-neutral-12">
-              {comparison.deputyA.short_name}: {comparison.winsA} vitoria
-              {comparison.winsA !== 1 ? 's' : ''}
-              <span className="text-neutral-9 mx-2">|</span>
-              {comparison.deputyB.short_name}: {comparison.winsB} vitoria
-              {comparison.winsB !== 1 ? 's' : ''}
-              {comparison.ties > 0 && (
-                <>
-                  <span className="text-neutral-9 mx-2">|</span>
-                  {comparison.ties} empate{comparison.ties !== 1 ? 's' : ''}
-                </>
-              )}
-            </div>
           </div>
 
           {/* Reset Button */}

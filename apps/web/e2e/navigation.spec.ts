@@ -196,4 +196,74 @@ test.describe('Navigation', () => {
       test.skip();
     }
   });
+
+  // Issue #52: Battle Royale side-by-side results with profile links
+  // @see https://github.com/bcamarneiro/adamastor/issues/52
+  test('battle royale should show side-by-side results with profile links', async ({ page }) => {
+    await page.goto('/batalha');
+    await page.waitForLoadState('networkidle');
+
+    // Find deputy selectors
+    const firstSelector = page.locator('input[type="text"]').first();
+    const secondSelector = page.locator('input[type="text"]').nth(1);
+
+    // Check if selectors are available
+    if ((await firstSelector.count()) === 0 || (await secondSelector.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    // Type to search for deputies (try common names)
+    await firstSelector.fill('silva');
+    await page.waitForTimeout(500);
+
+    // Select first deputy from dropdown if available
+    const firstOption = page.locator('[role="option"]').first();
+    if ((await firstOption.count()) > 0) {
+      await firstOption.click();
+    } else {
+      test.skip();
+      return;
+    }
+
+    // Search for second deputy
+    await secondSelector.fill('santos');
+    await page.waitForTimeout(500);
+
+    const secondOption = page.locator('[role="option"]').first();
+    if ((await secondOption.count()) > 0) {
+      await secondOption.click();
+    } else {
+      test.skip();
+      return;
+    }
+
+    // Find and click compare button
+    const compareButton = page.getByRole('button', { name: /comparar/i });
+    if ((await compareButton.count()) > 0) {
+      await compareButton.click();
+      await page.waitForTimeout(1000);
+
+      // Check for side-by-side results
+      const profileLinks = page.getByRole('link', { name: /ver perfil/i });
+      const linkCount = await profileLinks.count();
+
+      // Should have exactly 2 profile links (one for each deputy)
+      expect(linkCount).toBe(2);
+
+      // Verify links point to deputy profiles
+      const firstLink = profileLinks.first();
+      const firstHref = await firstLink.getAttribute('href');
+      expect(firstHref).toMatch(/\/deputado\//);
+
+      const secondLink = profileLinks.nth(1);
+      const secondHref = await secondLink.getAttribute('href');
+      expect(secondHref).toMatch(/\/deputado\//);
+
+      // Verify links are different (comparing different deputies)
+      expect(firstHref).not.toBe(secondHref);
+    } else {
+      test.skip();
+    }
+  });
 });
