@@ -7,10 +7,11 @@ import { useDeputyDetail } from '@/services/reportCard/useDeputyDetail';
 import { useDeputyExtendedInfo } from '@/services/reportCard/useDeputyExtendedInfo';
 import { useNationalAverages } from '@/services/reportCard/useNationalAverages';
 import { ArrowLeft } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function DeputyPage() {
   const { deputyId } = useParams<{ deputyId: string }>();
+  const navigate = useNavigate();
 
   const {
     data: deputy,
@@ -37,9 +38,9 @@ export function DeputyPage() {
         <MainNav scrollY={0} />
         <main className="flex-1 flex flex-col items-center justify-center p-4">
           <h1 className="text-2xl font-bold text-neutral-12 mb-4">Deputado nao encontrado</h1>
-          <Link to="/report-card" className="text-accent-9 hover:underline">
+          <button onClick={() => navigate(-1)} className="text-accent-9 hover:underline">
             Voltar ao inicio
-          </Link>
+          </button>
         </main>
         <Footer />
       </div>
@@ -66,13 +67,13 @@ export function DeputyPage() {
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
         <div className="flex items-center justify-between mb-6">
-          <Link
-            to={deputy.district_slug ? `/distrito/${deputy.district_slug}` : '/report-card'}
+          <button
+            onClick={() => navigate(-1)}
             className="inline-flex items-center gap-2 text-neutral-11 hover:text-neutral-12"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar</span>
-          </Link>
+          </button>
 
           <ShareButton deputy={deputy} />
         </div>

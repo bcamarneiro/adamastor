@@ -28,11 +28,11 @@ export function PartyPage() {
         <MainNav scrollY={0} />
         <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-8">
           <button
-            onClick={() => navigate('/partidos')}
+            onClick={() => navigate(-1)}
             className="inline-flex items-center gap-2 text-neutral-11 hover:text-neutral-12 mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Voltar aos Partidos</span>
+            <span>Voltar</span>
           </button>
           <div className="bg-danger-3 text-danger-11 p-4 rounded-xl text-center">
             Partido não encontrado
@@ -54,11 +54,11 @@ export function PartyPage() {
 
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-8">
         <button
-          onClick={() => navigate('/partidos')}
+          onClick={() => navigate(-1)}
           className="inline-flex items-center gap-2 text-neutral-11 hover:text-neutral-12 mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Voltar aos Partidos</span>
+          <span>Voltar</span>
         </button>
 
         {/* Party Header */}
