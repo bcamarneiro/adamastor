@@ -105,5 +105,17 @@ test.describe('Parties Page', () => {
     // Verify the card contains party information
     await expect(firstPartyCard).toContainText(/[A-Z]{2,}/); // Party acronym
     await expect(firstPartyCard).toContainText(/pontos/); // Score label
+
+    // Click the link and verify the party details page loads
+    await firstPartyCard.click();
+    await page.waitForLoadState('networkidle');
+
+    // Verify we're on a party details page
+    await expect(page).toHaveURL(/\/partidos\/[a-z]+$/);
+
+    // Verify party page has expected content
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.getByText(/Deputados/i)).toBeVisible();
+    await expect(page.getByText(/Pontuação Média/i)).toBeVisible();
   });
 });
