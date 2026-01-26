@@ -1,6 +1,6 @@
 import { Button } from '@radix-ui/themes';
 import { motion } from 'framer-motion';
-import { BarChart3, Calculator, Flag, Swords, Trophy } from 'lucide-react';
+import { BarChart3, Calculator, FileText, Flag, Swords, Trophy } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer';
@@ -24,6 +24,13 @@ const featureCards = [
     description: 'Compara a atividade parlamentar de todos os deputados.',
     link: '/ranking',
     color: 'success',
+  },
+  {
+    icon: FileText,
+    title: 'Iniciativas',
+    description: 'Pesquisa e acompanha iniciativas parlamentares e votações.',
+    link: '/initiatives',
+    color: 'accent',
   },
   {
     icon: Calculator,
@@ -110,7 +117,7 @@ const LandingPage = () => {
           <motion.div
             variants={fadeInUp}
             custom={5}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-16"
           >
             {featureCards.map((feature) => (
               <Link

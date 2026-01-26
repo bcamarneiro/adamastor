@@ -40,6 +40,23 @@ test.describe('Navigation', () => {
     await expect(page).toHaveURL(/\/desperdicio/);
   });
 
+  // Issue #94: Add links to initiatives page
+  // @see https://github.com/bcamarneiro/adamastor/issues/94
+  test('should navigate to initiatives page from landing page', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Find initiatives link in feature cards or navigation
+    const initiativesLink = page.getByRole('link', { name: /iniciativas/i }).first();
+    await expect(initiativesLink).toBeVisible();
+
+    // Click on initiatives link
+    await initiativesLink.click();
+
+    // Should be on initiatives page
+    await expect(page).toHaveURL(/\/initiatives/);
+  });
+
   test('should return to home page when clicking logo', async ({ page }) => {
     await page.goto('/ranking');
 
