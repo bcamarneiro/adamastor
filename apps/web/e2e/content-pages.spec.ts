@@ -65,7 +65,7 @@ test.describe('Content Pages', () => {
 
       const title = await page.title();
       expect(title).toContain('Metodologia');
-      expect(title).toContain('Debaixo d\'olho');
+      expect(title).toContain("Debaixo d'olho");
     });
 
     test('should have links that are valid', async ({ page }) => {
@@ -148,7 +148,7 @@ test.describe('Content Pages', () => {
 
       const title = await page.title();
       expect(title).toContain('Contribuir');
-      expect(title).toContain('Debaixo d\'olho');
+      expect(title).toContain("Debaixo d'olho");
     });
 
     test('should have GitHub links', async ({ page }) => {
@@ -246,7 +246,7 @@ test.describe('Content Pages', () => {
 
       const title = await page.title();
       expect(title).toContain('Missão');
-      expect(title).toContain('Debaixo d\'olho');
+      expect(title).toContain("Debaixo d'olho");
     });
 
     test('should have GitHub links', async ({ page }) => {
