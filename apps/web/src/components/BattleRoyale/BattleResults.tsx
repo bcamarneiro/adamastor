@@ -87,7 +87,7 @@ export function BattleResults({ deputyA, deputyB, winsA, winsB, winner }: Battle
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-neutral-11">Classificação:</span>
-          <span className="font-semibold text-neutral-12">#{deputy.ranking_position ?? 'N/A'}</span>
+          <span className="font-semibold text-neutral-12">#{deputy.national_rank ?? 'N/A'}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-neutral-11">Presença:</span>
@@ -97,9 +97,7 @@ export function BattleResults({ deputyA, deputyB, winsA, winsB, winner }: Battle
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-neutral-11">Propostas:</span>
-          <span className="font-semibold text-neutral-12">
-            {deputy.authored_proposals ?? 'N/A'}
-          </span>
+          <span className="font-semibold text-neutral-12">{deputy.proposal_count ?? 'N/A'}</span>
         </div>
       </div>
 
