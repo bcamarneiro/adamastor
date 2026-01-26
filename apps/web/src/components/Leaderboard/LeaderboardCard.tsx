@@ -21,7 +21,7 @@ export function LeaderboardCard({ deputy, position, isTop = true }: LeaderboardC
   return (
     <Link
       to={`/deputado/${deputy.id}`}
-      data-testid="deputy-card"
+      data-testid="leaderboard-link"
       className={`flex items-center gap-4 p-4 rounded-xl shadow-sm border transition-all hover:shadow-md ${
         isTop
           ? 'bg-neutral-1 border-success-6 hover:border-success-8'
@@ -74,7 +74,12 @@ export function LeaderboardCard({ deputy, position, isTop = true }: LeaderboardC
 
       {/* Grade */}
       <div className="flex-shrink-0">
-        <GradeCircle grade={deputy.grade} score={deputy.work_score} size="sm" />
+        <GradeCircle
+          grade={deputy.grade}
+          score={deputy.work_score}
+          size="sm"
+          showMethodologyLink={true}
+        />
       </div>
     </Link>
   );

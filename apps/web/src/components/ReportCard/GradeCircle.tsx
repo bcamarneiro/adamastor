@@ -1,7 +1,11 @@
+import { Info } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 interface GradeCircleProps {
   grade: string;
   score: number;
   size?: 'sm' | 'md' | 'lg';
+  showMethodologyLink?: boolean;
 }
 
 // Using design system tokens: success (green), warning (yellow/orange), danger (red)
@@ -19,9 +23,21 @@ const sizes = {
   lg: { circle: 'w-32 h-32', grade: 'text-5xl', score: 'text-lg' },
 };
 
-export function GradeCircle({ grade, score, size = 'md' }: GradeCircleProps) {
+export function GradeCircle({
+  grade,
+  score,
+  size = 'md',
+  showMethodologyLink = false,
+}: GradeCircleProps) {
   const colors = gradeColors[grade] || gradeColors.F;
   const sizeClasses = sizes[size];
+  const navigate = useNavigate();
+
+  const handleMethodologyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate('/metodologia');
+  };
 
   return (
     <div className="flex flex-col items-center">
@@ -30,7 +46,19 @@ export function GradeCircle({ grade, score, size = 'md' }: GradeCircleProps) {
       >
         <span className={`${sizeClasses.grade} ${colors.text} font-bold`}>{grade}</span>
       </div>
-      <span className={`${sizeClasses.score} text-neutral-11 mt-1`}>{score.toFixed(0)} pts</span>
+      <div className="flex items-center gap-1 mt-1">
+        <span className={`${sizeClasses.score} text-neutral-11`}>{score.toFixed(0)} pts</span>
+        {showMethodologyLink && (
+          <button
+            type="button"
+            onClick={handleMethodologyClick}
+            className="text-neutral-9 hover:text-neutral-11 transition-colors"
+            aria-label="Como são calculados os pontos?"
+          >
+            <Info className="w-3.5 h-3.5" aria-hidden="true" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

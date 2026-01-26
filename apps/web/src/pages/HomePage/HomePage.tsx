@@ -3,8 +3,9 @@ import MainNav from '@/components/MainNav';
 import { PostalCodeInput } from '@/components/ReportCard/PostalCodeInput';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { useDistrictByPostal } from '@/services/reportCard/useDistrictByPostal';
+import { Info } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -67,6 +68,16 @@ export function HomePage() {
                 Consulta o desempenho de cada deputado e partilha
               </p>
             </div>
+          </div>
+
+          <div className="mt-12">
+            <Link
+              to="/metodologia"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-neutral-1 border border-neutral-6 text-neutral-11 hover:text-neutral-12 hover:border-neutral-8 transition-colors shadow-sm"
+            >
+              <Info className="w-4 h-4" />
+              <span className="font-medium">Como são calculados os pontos?</span>
+            </Link>
           </div>
         </div>
       </main>
