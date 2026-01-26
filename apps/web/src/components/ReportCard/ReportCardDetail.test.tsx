@@ -37,6 +37,12 @@ vi.mock('../../store/useFeatureFlags', () => ({
   }),
 }));
 
+// Mock useNavigate for GradeCircle
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+}));
+
 // Helper to reset flags before each test
 function resetFlags() {
   currentFlags = { ...defaultFlags };
