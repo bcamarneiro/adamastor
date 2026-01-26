@@ -14,9 +14,8 @@
 
 ### New Features
 
-- [ ] District Comparison Page (`/distritos`)
-- [ ] Global search component
-- [ ] Advanced ranking filters (by party, district, grade)
+- [ ] Global search component (see issue #12 for testing)
+- [ ] Advanced ranking filters (by party, district, grade) - see issue #10
 
 ## Completed
 
@@ -53,10 +52,18 @@
 - [x] Create robots.txt
 - [x] Create sitemap.xml
 
-### Features (2024-12-28)
+### Features (2024-12-28 to 2026-01)
 
 - [x] Party Comparison Page (`/partidos`, `/partidos/comparar`)
+- [x] District Comparison Page (`/distritos`, `/distritos/comparar`)
+- [x] Initiatives Page (`/initiatives`) with detail view
+- [x] Parliament Page (`/parliament`) - full deputy listing
+- [x] Battle Royale feature (`/batalha`) - side-by-side deputy comparison with profile links
+- [x] Waste Calculator (`/desperdicio`)
 - [x] Help tooltips for metrics (work score, grade, attendance, rankings)
+- [x] Methodology, Contribute, and Mission pages (`/metodologia`, `/contribuir`, `/missao`)
+- [x] Back button navigation using browser history (issue #24)
+- [x] Party ranking calculation explanation (issue #47)
 
 ### CI/CD (Previous)
 
