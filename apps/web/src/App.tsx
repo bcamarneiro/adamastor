@@ -42,6 +42,7 @@ const PartiesPage = lazy(() =>
 const PartyComparisonPage = lazy(() =>
   import('./pages/PartiesPage').then((m) => ({ default: m.PartyComparisonPage }))
 );
+const PartyPage = lazy(() => import('./pages/PartiesPage').then((m) => ({ default: m.PartyPage })));
 const DistrictsPage = lazy(() =>
   import('./pages/DistrictsPage').then((m) => ({ default: m.DistrictsPage }))
 );
@@ -115,6 +116,7 @@ const App = () => {
             {/* Parties Feature */}
             <Route path="partidos" element={<PartiesPage />} />
             <Route path="partidos/comparar" element={<PartyComparisonPage />} />
+            <Route path="partidos/:partySlug" element={<PartyPage />} />
 
             {/* Districts Feature */}
             <Route path="distritos" element={<DistrictsPage />} />
