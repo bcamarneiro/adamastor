@@ -404,7 +404,7 @@ describe('LandingPage', () => {
 
         // Feature card links have border border-neutral-5 hover:border-accent-7 classes
         const cardsWithBorder = container.querySelectorAll('a.border.border-neutral-5');
-        expect(cardsWithBorder.length).toBe(4);
+        expect(cardsWithBorder.length).toBe(5);
       });
     });
 
@@ -450,7 +450,7 @@ describe('LandingPage', () => {
 
         // All hrefs should be unique
         const uniqueHrefs = new Set(hrefs);
-        expect(uniqueHrefs.size).toBe(4);
+        expect(uniqueHrefs.size).toBe(5);
       });
 
       it('should link to correct routes for each feature', () => {
@@ -572,9 +572,9 @@ describe('LandingPage', () => {
       it('should render tab triggers with correct labels', () => {
         render(<LandingPage />);
 
-        expect(screen.getByText('Funcionalidades')).toBeTruthy();
-        expect(screen.getByText('Cronologia')).toBeTruthy();
-        expect(screen.getByText('Iniciativas')).toBeTruthy();
+        expect(screen.getByRole('tab', { name: 'Funcionalidades' })).toBeTruthy();
+        expect(screen.getByRole('tab', { name: 'Cronologia' })).toBeTruthy();
+        expect(screen.getByRole('tab', { name: 'Iniciativas' })).toBeTruthy();
       });
 
       it('should render tab triggers as buttons', () => {
