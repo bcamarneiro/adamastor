@@ -60,8 +60,7 @@ adamastor/
 │   └── web/         # React frontend - displays deputy performance
 ├── packages/
 │   └── shared/      # Shared TypeScript types
-├── supabase/        # Database migrations and seed data
-└── specs/           # Feature specifications
+└── supabase/        # Database migrations and seed data
 ```
 
 ### How the pieces fit together

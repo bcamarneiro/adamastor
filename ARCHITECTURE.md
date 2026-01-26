@@ -97,9 +97,6 @@ adamastor/
 │   ├── migrations/       # Database schema (SQL files)
 │   └── seed.sql          # Initial data (districts, parties)
 │
-├── specs/                # Feature specifications
-│   └── data/             # Data pipeline documentation
-│
 └── docs/                 # Setup guides
 ```
 
