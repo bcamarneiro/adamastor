@@ -1,6 +1,18 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import { describe, expect, it, vi } from 'vitest';
 import { GradeCircle } from './GradeCircle';
+
+// Mock useNavigate
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 describe('GradeCircle', () => {
   it('should render the grade letter', () => {
@@ -82,5 +94,63 @@ describe('GradeCircle', () => {
   it('should display integer score (rounds up)', () => {
     render(<GradeCircle grade="A" score={89.6} />);
     expect(screen.getByText('90 pts')).toBeTruthy();
+  });
+
+  describe('methodology link', () => {
+    it('should not show methodology link by default', () => {
+      render(
+        <MemoryRouter>
+          <GradeCircle grade="A" score={90} />
+        </MemoryRouter>
+      );
+      expect(screen.queryByRole('button', { name: /como são calculados os pontos/i })).toBeFalsy();
+    });
+
+    it('should show methodology link when showMethodologyLink is true', () => {
+      render(
+        <MemoryRouter>
+          <GradeCircle grade="A" score={90} showMethodologyLink={true} />
+        </MemoryRouter>
+      );
+      expect(screen.getByRole('button', { name: /como são calculados os pontos/i })).toBeTruthy();
+    });
+
+    it('should navigate to methodology page when clicking the info button', async () => {
+      const user = userEvent.setup();
+      mockNavigate.mockClear();
+
+      render(
+        <MemoryRouter>
+          <GradeCircle grade="A" score={90} showMethodologyLink={true} />
+        </MemoryRouter>
+      );
+
+      const button = screen.getByRole('button', { name: /como são calculados os pontos/i });
+      await user.click(button);
+
+      expect(mockNavigate).toHaveBeenCalledWith('/metodologia');
+    });
+
+    it('should have accessible label on the methodology button', () => {
+      render(
+        <MemoryRouter>
+          <GradeCircle grade="A" score={90} showMethodologyLink={true} />
+        </MemoryRouter>
+      );
+
+      const button = screen.getByRole('button', { name: 'Como são calculados os pontos?' });
+      expect(button.getAttribute('aria-label')).toBe('Como são calculados os pontos?');
+    });
+
+    it('should have aria-hidden on the icon', () => {
+      const { container } = render(
+        <MemoryRouter>
+          <GradeCircle grade="A" score={90} showMethodologyLink={true} />
+        </MemoryRouter>
+      );
+
+      const icon = container.querySelector('svg');
+      expect(icon?.getAttribute('aria-hidden')).toBe('true');
+    });
   });
 });

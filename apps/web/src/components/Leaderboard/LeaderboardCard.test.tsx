@@ -3,17 +3,25 @@ import { describe, expect, it, vi } from 'vitest';
 import type { DeputyDetail } from '../../lib/supabase';
 import { LeaderboardCard } from './LeaderboardCard';
 
-// Mock react-router-dom Link
+// Mock react-router-dom
+const mockNavigate = vi.fn();
 vi.mock('react-router-dom', () => ({
   Link: ({
     to,
     children,
     className,
-  }: { to: string; children: React.ReactNode; className?: string }) => (
-    <a href={to} className={className} data-testid="leaderboard-link">
+    'data-testid': dataTestId,
+  }: {
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+    'data-testid'?: string;
+  }) => (
+    <a href={to} className={className} data-testid={dataTestId}>
       {children}
     </a>
   ),
+  useNavigate: () => mockNavigate,
 }));
 
 const mockDeputy: DeputyDetail = {
