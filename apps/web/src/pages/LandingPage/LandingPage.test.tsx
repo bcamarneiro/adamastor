@@ -1100,7 +1100,7 @@ describe('LandingPage', () => {
 
         // The section should contain the feature cards grid
         const featureCardsGrid = section?.querySelector(
-          '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4'
+          '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5'
         );
         expect(featureCardsGrid).toBeTruthy();
       });
@@ -1379,7 +1379,7 @@ describe('LandingPage', () => {
 
         // Find section containing feature cards
         const featureSection = Array.from(container.querySelectorAll('section')).find((section) =>
-          section.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4')
+          section.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5')
         );
 
         expect(featureSection).toBeTruthy();
