@@ -1,5 +1,5 @@
 import { Info } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface GradeCircleProps {
   grade: string;
@@ -31,6 +31,13 @@ export function GradeCircle({
 }: GradeCircleProps) {
   const colors = gradeColors[grade] || gradeColors.F;
   const sizeClasses = sizes[size];
+  const navigate = useNavigate();
+
+  const handleMethodologyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate('/metodologia');
+  };
 
   return (
     <div className="flex flex-col items-center">
@@ -42,14 +49,14 @@ export function GradeCircle({
       <div className="flex items-center gap-1 mt-1">
         <span className={`${sizeClasses.score} text-neutral-11`}>{score.toFixed(0)} pts</span>
         {showMethodologyLink && (
-          <Link
-            to="/metodologia"
+          <button
+            type="button"
+            onClick={handleMethodologyClick}
             className="text-neutral-9 hover:text-neutral-11 transition-colors"
-            title="Como são calculados os pontos?"
-            onClick={(e) => e.stopPropagation()}
+            aria-label="Como são calculados os pontos?"
           >
-            <Info className="w-3.5 h-3.5" />
-          </Link>
+            <Info className="w-3.5 h-3.5" aria-hidden="true" />
+          </button>
         )}
       </div>
     </div>
