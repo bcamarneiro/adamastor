@@ -328,12 +328,12 @@ describe('LandingPage', () => {
         expect(screen.getByText('Battle Royale')).toBeTruthy();
       });
 
-      it('should render exactly 4 feature card links', () => {
+      it('should render exactly 6 feature card links', () => {
         const { container } = render(<LandingPage />);
 
         // Find all feature card links by looking at the group class on the links
         const featureCardLinks = container.querySelectorAll('a.group');
-        expect(featureCardLinks.length).toBe(5);
+        expect(featureCardLinks.length).toBe(6);
       });
 
       it('should render all feature card descriptions', () => {
@@ -382,7 +382,7 @@ describe('LandingPage', () => {
 
         // Each feature card has an icon container with w-12 h-12 rounded-xl classes
         const iconContainers = container.querySelectorAll('.w-12.h-12.rounded-xl');
-        expect(iconContainers.length).toBe(5);
+        expect(iconContainers.length).toBe(6);
       });
 
       it('should render feature card titles with correct styling', () => {
@@ -390,7 +390,7 @@ describe('LandingPage', () => {
 
         // Feature card titles have text-lg font-semibold text-neutral-12 classes
         const titles = container.querySelectorAll('h3.text-lg.font-semibold.text-neutral-12');
-        expect(titles.length).toBe(5);
+        expect(titles.length).toBe(6);
       });
 
       it('should render feature card descriptions with correct styling', () => {
@@ -406,7 +406,7 @@ describe('LandingPage', () => {
 
         // Feature card links have border border-neutral-5 hover:border-accent-7 classes
         const cardsWithBorder = container.querySelectorAll('a.border.border-neutral-5');
-        expect(cardsWithBorder.length).toBe(5);
+        expect(cardsWithBorder.length).toBe(6);
       });
     });
 
@@ -452,7 +452,7 @@ describe('LandingPage', () => {
 
         // All hrefs should be unique
         const uniqueHrefs = new Set(hrefs);
-        expect(uniqueHrefs.size).toBe(5);
+        expect(uniqueHrefs.size).toBe(6);
       });
 
       it('should link to correct routes for each feature', () => {

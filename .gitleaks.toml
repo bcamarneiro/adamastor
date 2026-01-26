@@ -19,8 +19,7 @@ paths = [
   '''\.github/workflows/.*\.yml''',  # CI files have local keys for testing
 ]
 
-# Stop scanning at certain paths (performance optimization)
-[allowlist.stopwords]
+# Stop scanning at certain words (performance optimization)
 stopwords = [
   "example",
   "sample",
