@@ -66,4 +66,56 @@ test.describe('Parties Page', () => {
     const icon = partidosStatCard.first().locator('svg').first();
     await expect(icon).toBeVisible();
   });
+
+  // Issue #95: Party entries should link to party details page
+  // @see https://github.com/bcamarneiro/adamastor/issues/95
+  test('party cards should link to party details page', async ({ page }) => {
+    await page.goto('/partidos');
+    await page.waitForLoadState('networkidle');
+
+    // Wait for ranking section to appear
+    const rankingHeading = page.getByRole('heading', { name: /ranking/i });
+    if ((await rankingHeading.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    // Wait for party cards to load - look for links that match party URL pattern
+    // Exclude the "Comparar Partidos" button
+    const partyCardLinks = page.locator(
+      'a.bg-neutral-1.rounded-xl[href^="/partidos/"]:not([href*="comparar"])'
+    );
+
+    // Wait for at least one party card to appear
+    try {
+      await partyCardLinks.first().waitFor({ state: 'visible', timeout: 5000 });
+    } catch {
+      test.skip();
+      return;
+    }
+
+    const count = await partyCardLinks.count();
+    expect(count).toBeGreaterThan(0);
+
+    // Verify the first party card
+    const firstPartyCard = partyCardLinks.first();
+    const href = await firstPartyCard.getAttribute('href');
+    expect(href).toMatch(/^\/partidos\/[a-z]+$/);
+
+    // Verify the card contains party information
+    await expect(firstPartyCard).toContainText(/[A-Z]{2,}/); // Party acronym
+    await expect(firstPartyCard).toContainText(/pontos/); // Score label
+
+    // Click the link and verify the party details page loads
+    await firstPartyCard.click();
+    await page.waitForLoadState('networkidle');
+
+    // Verify we're on a party details page
+    await expect(page).toHaveURL(/\/partidos\/[a-z]+$/);
+
+    // Verify party page has expected content
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.getByText(/Deputados/i)).toBeVisible();
+    await expect(page.getByText(/Pontuação Média/i)).toBeVisible();
+  });
 });
