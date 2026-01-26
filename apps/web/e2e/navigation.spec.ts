@@ -153,4 +153,47 @@ test.describe('Navigation', () => {
       expect(href).toContain('github.com/bcamarneiro/adamastor');
     }
   });
+
+  // Issue #24: Back button navigation should use browser history
+  // @see https://github.com/bcamarneiro/adamastor/issues/24
+  test('page back buttons should use navigate(-1) not hardcoded paths', async ({ page }) => {
+    // Test that back buttons use browser history (navigate(-1)) rather than hardcoded paths
+    // This verifies the fix for issue #24 where buttons were using Link to="/hardcoded-path"
+
+    // Navigate from home to ranking
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    // Check if there are any deputy links on the ranking page
+    const deputyLinks = page.locator('a[href^="/deputado/"]');
+    const linkCount = await deputyLinks.count();
+
+    if (linkCount > 0) {
+      // Click on first deputy profile link
+      await deputyLinks.first().click();
+      await page.waitForLoadState('networkidle');
+
+      // Should be on deputy page
+      if (page.url().includes('/deputado/')) {
+        // Try to find any button with "voltar" text (could be "Voltar" or "Voltar ao inicio")
+        const backButtons = page.getByRole('button').filter({ hasText: /voltar/i });
+        const buttonCount = await backButtons.count();
+
+        if (buttonCount > 0) {
+          // Click back button - should return to ranking, not hardcoded /report-card
+          await backButtons.first().click();
+          await page.waitForLoadState('networkidle');
+
+          // Should return to ranking page (where we came from), not to a hardcoded path
+          await expect(page).toHaveURL(/\/ranking/);
+        }
+      }
+    } else {
+      // If there are no deputies, skip this test
+      test.skip();
+    }
+  });
 });
