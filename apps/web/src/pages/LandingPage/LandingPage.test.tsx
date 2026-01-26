@@ -333,7 +333,7 @@ describe('LandingPage', () => {
 
         // Find all feature card links by looking at the group class on the links
         const featureCardLinks = container.querySelectorAll('a.group');
-        expect(featureCardLinks.length).toBe(4);
+        expect(featureCardLinks.length).toBe(5);
       });
 
       it('should render all feature card descriptions', () => {
@@ -357,7 +357,9 @@ describe('LandingPage', () => {
         const { container } = render(<LandingPage />);
 
         // The feature cards grid has specific grid classes
-        const grid = container.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+        const grid = container.querySelector(
+          '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5'
+        );
         expect(grid).toBeTruthy();
       });
 
@@ -380,7 +382,7 @@ describe('LandingPage', () => {
 
         // Each feature card has an icon container with w-12 h-12 rounded-xl classes
         const iconContainers = container.querySelectorAll('.w-12.h-12.rounded-xl');
-        expect(iconContainers.length).toBe(4);
+        expect(iconContainers.length).toBe(5);
       });
 
       it('should render feature card titles with correct styling', () => {
@@ -388,7 +390,7 @@ describe('LandingPage', () => {
 
         // Feature card titles have text-lg font-semibold text-neutral-12 classes
         const titles = container.querySelectorAll('h3.text-lg.font-semibold.text-neutral-12');
-        expect(titles.length).toBe(4);
+        expect(titles.length).toBe(5);
       });
 
       it('should render feature card descriptions with correct styling', () => {
@@ -404,7 +406,7 @@ describe('LandingPage', () => {
 
         // Feature card links have border border-neutral-5 hover:border-accent-7 classes
         const cardsWithBorder = container.querySelectorAll('a.border.border-neutral-5');
-        expect(cardsWithBorder.length).toBe(4);
+        expect(cardsWithBorder.length).toBe(5);
       });
     });
 
@@ -450,7 +452,7 @@ describe('LandingPage', () => {
 
         // All hrefs should be unique
         const uniqueHrefs = new Set(hrefs);
-        expect(uniqueHrefs.size).toBe(4);
+        expect(uniqueHrefs.size).toBe(5);
       });
 
       it('should link to correct routes for each feature', () => {
@@ -572,9 +574,9 @@ describe('LandingPage', () => {
       it('should render tab triggers with correct labels', () => {
         render(<LandingPage />);
 
-        expect(screen.getByText('Funcionalidades')).toBeTruthy();
-        expect(screen.getByText('Cronologia')).toBeTruthy();
-        expect(screen.getByText('Iniciativas')).toBeTruthy();
+        expect(screen.getByRole('tab', { name: 'Funcionalidades' })).toBeTruthy();
+        expect(screen.getByRole('tab', { name: 'Cronologia' })).toBeTruthy();
+        expect(screen.getByRole('tab', { name: 'Iniciativas' })).toBeTruthy();
       });
 
       it('should render tab triggers as buttons', () => {
@@ -1100,7 +1102,7 @@ describe('LandingPage', () => {
 
         // The section should contain the feature cards grid
         const featureCardsGrid = section?.querySelector(
-          '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4'
+          '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5'
         );
         expect(featureCardsGrid).toBeTruthy();
       });
@@ -1379,7 +1381,9 @@ describe('LandingPage', () => {
 
         // Find section containing feature cards
         const featureSection = Array.from(container.querySelectorAll('section')).find((section) =>
-          section.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4')
+          section.querySelector(
+            '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-5'
+          )
         );
 
         expect(featureSection).toBeTruthy();
