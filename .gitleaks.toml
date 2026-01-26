@@ -1,0 +1,30 @@
+# Gitleaks configuration for Adamastor
+# Prevents false positives on legitimate local development keys
+
+[allowlist]
+description = "Allowlist for known safe values"
+
+# Allow local Supabase dev keys (these are safe, publicly documented keys)
+regexes = [
+  # Local Supabase anon key (from Supabase local dev docs)
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9\.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0''',
+
+  # Local Supabase service role key (from Supabase local dev docs)
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0\.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU''',
+]
+
+# Allow specific files that contain example/documentation keys
+paths = [
+  '''apps/web/\.env\.example''',
+  '''\.github/workflows/.*\.yml''',  # CI files have local keys for testing
+]
+
+# Stop scanning at certain paths (performance optimization)
+[allowlist.stopwords]
+stopwords = [
+  "example",
+  "sample",
+  "test",
+  "demo",
+  "placeholder",
+]
