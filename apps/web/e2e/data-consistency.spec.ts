@@ -148,6 +148,29 @@ test.describe('Data Consistency - Deputy Detail', () => {
       }
     }
   });
+
+  // Issue #42: Party voting section should NOT be displayed
+  // @see https://github.com/bcamarneiro/adamastor/issues/42
+  test('deputy detail page should NOT show party voting section', async ({ page }) => {
+    await page.goto('/ranking');
+    await page.waitForLoadState('networkidle');
+
+    const deputyLink = page.locator('a[href*="/deputado/"]').first();
+
+    if ((await deputyLink.count()) === 0) {
+      test.skip();
+      return;
+    }
+
+    await deputyLink.click();
+    await page.waitForLoadState('networkidle');
+
+    // Party voting section should NOT be present
+    // The section was confusing because it showed party aggregate voting,
+    // not the individual deputy's votes
+    const partyVotingHeading = page.getByText(/Votacoes do Partido/i);
+    await expect(partyVotingHeading).not.toBeVisible();
+  });
 });
 
 test.describe('Data Consistency - Deputy Profile Math Validation', () => {
