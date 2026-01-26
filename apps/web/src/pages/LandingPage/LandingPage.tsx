@@ -1,6 +1,6 @@
 import { Button } from '@radix-ui/themes';
 import { motion } from 'framer-motion';
-import { BarChart3, Calculator, FileText, Flag, Swords, Trophy } from 'lucide-react';
+import { BarChart3, Calculator, FileText, Flag, Swords, Trophy, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer';
@@ -24,6 +24,13 @@ const featureCards = [
     description: 'Compara a atividade parlamentar de todos os deputados.',
     link: '/ranking',
     color: 'success',
+  },
+  {
+    icon: Users,
+    title: 'Todos os Deputados',
+    description: 'Explora a lista completa de todos os deputados da Assembleia.',
+    link: '/parliament',
+    color: 'accent',
   },
   {
     icon: FileText,
