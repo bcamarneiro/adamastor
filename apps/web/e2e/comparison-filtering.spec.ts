@@ -379,7 +379,7 @@ test.describe('Party Comparison - Selection and Filtering', () => {
     await expect(winnerSection).toBeVisible();
 
     // Should show comparison details
-    const comparisonHeading = page.getByText(/comparacao detalhada/i);
+    const comparisonHeading = page.getByRole('heading', { name: /comparacao detalhada/i });
     await expect(comparisonHeading).toBeVisible();
   });
 
