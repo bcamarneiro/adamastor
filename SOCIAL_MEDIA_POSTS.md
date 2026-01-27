@@ -1,4 +1,252 @@
-# Social Media Posts - Recrutamento de Testadores
+# Social Media Posts
+
+---
+
+## 🔎 O Que É o Debaixo d'Olho?
+
+### 📱 X/Twitter - Explicação Curta (280 caracteres)
+
+```
+🏛️ Debaixo d'Olho: plataforma que mostra o trabalho real dos deputados portugueses.
+
+✅ Assiduidade
+✅ Votações
+✅ Propostas
+✅ Comparações
+
+100% open source | Apartidário | Dados públicos
+
+👉 https://adamastor-prod.vercel.app
+#TransparenciaJa
+```
+
+### 💼 LinkedIn - Explicação Completa
+
+```
+🔎 Apresento: Debaixo d'Olho
+
+Uma plataforma que torna o Parlamento português mais transparente, mostrando dados objetivos sobre o trabalho dos deputados.
+
+🎯 O QUE FAZEMOS
+
+Transformamos dados públicos da Assembleia da República em informação acessível:
+
+📊 **Rankings de Deputados**
+Quem falta mais? Quem trabalha mais? Métricas objetivas baseadas em assiduidade, votações e propostas.
+
+⚔️ **Batalha Real**
+Compara deputados, distritos ou partidos lado a lado. Vê diferenças reais de desempenho.
+
+💡 **Iniciativas Legislativas**
+Acompanha propostas desde a submissão até à votação final. Quem propôs? Quem apoiou? Quem votou contra?
+
+💰 **Calculadora de Desperdício**
+Quanto custam as ausências? Calcula o custo real de deputados ausentes.
+
+🎖️ **Perfis Individuais**
+Vê o histórico completo de cada deputado: votos, propostas, presenças, gráficos de evolução.
+
+✨ OS NOSSOS VALORES
+
+🔓 **100% Open Source**
+Todo o código está no GitHub. Qualquer pessoa pode verificar como calculamos as métricas.
+
+⚖️ **Apartidário**
+Não apoiamos nenhum partido. Apresentamos dados objetivos sobre todos.
+
+📋 **Factos, não opiniões**
+Usamos apenas dados públicos oficiais da Assembleia da República.
+
+🔒 **Privacidade**
+Não rastreamos utilizadores nem vendemos dados.
+
+❌ O QUE NÃO SOMOS
+
+• Não fazemos recomendações de voto
+• Não somos financiados por partidos ou empresas
+• Não editamos ou manipulamos dados
+• Não substituímos fontes oficiais
+
+✅ PORQUÊ "DEBAIXO D'OLHO"?
+
+O nome reflete a nossa missão: manter a atividade parlamentar debaixo d'olho - visível, acompanhada e escrutinada pelos cidadãos.
+
+Não é vigilância hostil, é cidadania ativa. Os deputados trabalham em nosso nome - temos o direito de acompanhar esse trabalho.
+
+🚀 EXPERIMENTA
+
+👉 https://adamastor-prod.vercel.app
+💻 GitHub: https://github.com/bcamarneiro/adamastor
+📖 Metodologia: https://adamastor-prod.vercel.app/metodologia
+
+Este projeto só faz sentido se for útil para ti. Testa, reporta bugs, sugere melhorias.
+
+Juntos, tornamos a democracia portuguesa mais transparente. 🇵🇹
+
+#Transparencia #Democracia #Portugal #CivicTech #OpenSource
+```
+
+### 🗣️ Ponto Livre / Reddit - Versão Técnica
+
+```
+# 🔎 Debaixo d'Olho - Transparência Parlamentar Open Source
+
+Olá! Queria partilhar um projeto que tenho vindo a desenvolver: **Debaixo d'Olho**, uma plataforma open-source que torna a Assembleia da República portuguesa mais transparente.
+
+## 💡 A Ideia
+
+A informação sobre deputados existe publicamente, mas está dispersa e em formatos pouco acessíveis. O Debaixo d'Olho organiza esses dados e apresenta-os de forma clara e interativa.
+
+## 🎯 Principais Funcionalidades
+
+### 1. **Ranking de Deputados**
+Lista ordenável com métricas objetivas:
+- Taxa de assiduidade (presenças em plenários)
+- Propostas submetidas
+- Participação em votações
+- Nota global calculada com base nestes fatores
+
+### 2. **Batalha Real (Deputy Royale)**
+Comparações 1v1:
+- Deputado vs Deputado
+- Distrito vs Distrito
+- Partido vs Partido
+Mostra diferenças reais de desempenho lado a lado.
+
+### 3. **Perfis de Deputados**
+Página individual para cada deputado com:
+- Histórico completo de votações
+- Gráficos de evolução de métricas
+- Lista de propostas apresentadas
+- Currículo e contactos
+
+### 4. **Iniciativas Legislativas**
+Acompanha todas as propostas:
+- Quem propôs
+- Estado atual (em discussão, aprovada, rejeitada, etc.)
+- Histórico de votos
+- Documentos associados
+
+### 5. **Calculadora de Desperdício**
+Calcula o custo real das ausências de deputados (com base nos seus vencimentos).
+
+## 📊 Stack Técnica
+
+**Frontend:**
+- Next.js 15 (App Router)
+- TypeScript
+- Radix UI (componentes acessíveis)
+- Tailwind CSS
+- Framer Motion (animações)
+
+**Backend:**
+- Supabase (PostgreSQL)
+- Edge Functions
+
+**Data Pipeline:**
+- Bun runtime
+- Scraping de dados públicos da AR
+- Transformações e validações
+
+**Testing:**
+- Vitest (unit tests)
+- Playwright (E2E)
+- GitHub Actions (CI/CD)
+
+**Infra:**
+- Vercel (frontend)
+- Turborepo (monorepo)
+- Staging + Production environments
+
+## 🔓 Valores
+
+### Open Source
+Todo o código está no GitHub. Qualquer pessoa pode:
+- Verificar como calculamos as métricas
+- Sugerir melhorias
+- Reportar bugs
+- Contribuir com código
+
+### Apartidário
+Não financiados por partidos nem empresas. O projeto apresenta dados objetivos sobre todos, independentemente de afiliação política.
+
+### Transparente
+Metodologia pública. Dados públicos. Código público.
+
+## 🤝 Como Contribuir
+
+1. **Testa e reporta bugs** (não precisas de saber programar!)
+2. **Sugere melhorias** de UX/features
+3. **Contribui com código** (issues no GitHub)
+4. **Partilha** se achares útil
+
+## 🔗 Links
+
+- **Plataforma:** https://adamastor-prod.vercel.app
+- **GitHub:** https://github.com/bcamarneiro/adamastor
+- **Staging:** https://adamastor-staging.vercel.app (para testar features antes de prod)
+
+## 🧪 Estado Atual
+
+Em fase de **beta aberto**. Estou a recrutar testadores para encontrar bugs antes do lançamento público oficial.
+
+Se te interessa transparência democrática ou civic tech, experimenta e diz o que achas!
+
+---
+
+**PS:** Grande parte foi desenvolvida com ajuda de IA (Claude/Cursor). Acredito que a IA é uma ferramenta que permite a pequenas equipas criar projetos que de outra forma seriam impossíveis. Todo o código está aberto para escrutínio - o que importa é o resultado final e a sua utilidade.
+
+Feedback é bem-vindo! 🇵🇹
+```
+
+### 📧 Email - Apresentação do Projeto
+
+**Assunto:** Debaixo d'Olho - Nova Plataforma de Transparência Parlamentar
+
+```
+Olá [Nome],
+
+Espero que estejas bem!
+
+Queria partilhar contigo um projeto que tenho desenvolvido e que pensei que te pudesse interessar.
+
+🔎 **Debaixo d'Olho**
+Uma plataforma que torna o Parlamento português mais transparente, mostrando dados objetivos sobre o trabalho dos deputados.
+
+**Como funciona?**
+
+Recolhemos dados públicos da Assembleia da República (assiduidade, votações, propostas) e apresentamos de forma clara:
+
+✅ Rankings de deputados por desempenho objetivo
+✅ Comparações lado a lado (deputados, distritos, partidos)
+✅ Perfis individuais com histórico completo
+✅ Acompanhamento de iniciativas legislativas
+✅ Cálculo de custos de ausências
+
+**Valores:**
+• 100% Open Source (código no GitHub)
+• Apartidário (dados objetivos sobre todos)
+• Dados públicos (sem manipulação)
+• Zero tracking de utilizadores
+
+**Porquê isto é importante?**
+
+A informação existe, mas está dispersa e pouco acessível. O Debaixo d'Olho organiza-a e torna-a útil para qualquer cidadão que queira acompanhar o trabalho dos eleitos.
+
+**Experimenta:**
+👉 https://adamastor-prod.vercel.app
+
+Qualquer feedback é bem-vindo! Se encontrares bugs ou tiveres sugestões, avisa-me.
+
+Abraço,
+[Teu Nome]
+
+P.S.: É totalmente open source e sem fins lucrativos. O objetivo é mesmo transparência democrática.
+```
+
+---
+
+## 📣 Recrutamento de Testadores
 
 ## 📱 X/Twitter (280 caracteres)
 
