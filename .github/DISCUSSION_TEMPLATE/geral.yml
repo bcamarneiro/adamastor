@@ -1,7 +1,0 @@
-body:
-  - type: textarea
-    id: message
-    attributes:
-      label: Mensagem
-    validations:
-      required: true
