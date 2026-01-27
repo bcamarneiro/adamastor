@@ -114,7 +114,7 @@ test.describe('District Comparison - Selection and Filtering', () => {
     await firstDistrictOption.click();
 
     // Try to select same district in second selector
-    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').first();
+    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').nth(1);
     await secondInput.click();
     await page.waitForTimeout(500);
 
