@@ -72,18 +72,6 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
   const avgQuestions = averages?.avg_questions || 0;
   const avgAttendance = averages?.avg_attendance || 0;
 
-  const totalVotes = deputy.party_total_votes || 0;
-  const hasVoteData = totalVotes > 0;
-  const favorPercent = hasVoteData
-    ? (((deputy.party_votes_favor || 0) / totalVotes) * 100).toFixed(1)
-    : '0.0';
-  const againstPercent = hasVoteData
-    ? (((deputy.party_votes_against || 0) / totalVotes) * 100).toFixed(1)
-    : '0.0';
-  const abstainPercent = hasVoteData
-    ? (((deputy.party_votes_abstain || 0) / totalVotes) * 100).toFixed(1)
-    : '0.0';
-
   return (
     <div className="bg-neutral-1 rounded-xl shadow-lg overflow-hidden">
       {/* Header */}
@@ -224,31 +212,6 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
               />
             </div>
           )}
-      </div>
-
-      {/* Party Voting Section */}
-      <div className="p-6 bg-neutral-2 border-t border-neutral-5">
-        <h2 className="text-lg font-semibold text-neutral-12 mb-4 flex items-center gap-1">
-          Votacoes do Partido ({deputy.party_acronym})
-          <HelpTooltip content={HELP_TEXTS.partyVoting} />
-        </h2>
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="p-4 bg-neutral-1 rounded-lg shadow-sm">
-            <div className="text-2xl font-bold text-success-9">{favorPercent}%</div>
-            <div className="text-sm text-neutral-11">A favor</div>
-            <div className="text-xs text-neutral-9">{deputy.party_votes_favor} votos</div>
-          </div>
-          <div className="p-4 bg-neutral-1 rounded-lg shadow-sm">
-            <div className="text-2xl font-bold text-danger-9">{againstPercent}%</div>
-            <div className="text-sm text-neutral-11">Contra</div>
-            <div className="text-xs text-neutral-9">{deputy.party_votes_against} votos</div>
-          </div>
-          <div className="p-4 bg-neutral-1 rounded-lg shadow-sm">
-            <div className="text-2xl font-bold text-warning-9">{abstainPercent}%</div>
-            <div className="text-sm text-neutral-11">Abstencao</div>
-            <div className="text-xs text-neutral-9">{deputy.party_votes_abstain} votos</div>
-          </div>
-        </div>
       </div>
 
       {/* Extended Info Section */}
