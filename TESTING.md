@@ -160,19 +160,20 @@ Adicionar um tooltip ou link "Como são calculadas as notas?"
 
 ### Exemplo 3: Erro de Dados
 ```markdown
-**Página:** Perfil de Deputado (André Ventura)
+**Página:** Perfil de Deputado (Padeira de Aljubarrota)
 **Dispositivo:** Desktop
 **Browser:** Firefox
 
 **O que esperava:**
-Ver a cor do partido correta (Chega)
+Ver a cor do partido correta para o deputado
 
 **O que aconteceu:**
-A cor do partido aparece como azul (PSD) em vez da cor do Chega
+A cor do partido aparece incorreta no cabeçalho (mostra cor de outro partido)
 
 **Como reproduzir:**
-1. Ir para /deputados/andre-ventura
+1. Ir para o perfil de um deputado qualquer
 2. Ver a cor do partido no cabeçalho
+3. Comparar com a cor esperada para aquele partido
 ```
 
 ## ❌ O Que NÃO Reportar
