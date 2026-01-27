@@ -1,9 +1,27 @@
 labels: ["status:from-qa"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Reportar Bug
+
+        Obrigado por ajudar a melhorar o Adamastor! Preenche os campos abaixo para reportar um problema.
+
+  - type: dropdown
+    id: page
+    attributes:
+      label: Página
+      description: Em que página encontraste o problema?
+      options:
+        - Batalha Real (/batalha-real)
+        - Outra
+    validations:
+      required: true
+
   - type: textarea
     id: bug_report
     attributes:
-      label: Reportar Bug
-      description: Descreve o problema encontrado na Batalha Real
+      label: Descreve o problema
+      description: O que está errado?
     validations:
       required: true
