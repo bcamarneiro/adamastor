@@ -81,9 +81,24 @@ Antes de reportar, verifica as [Discussões](https://github.com/bcamarneiro/adam
 - **Sugestões** - Ideias de melhorias
 - **Perguntas** - Dúvidas sobre a plataforma
 
-### Passo 3: Usa Este Template
+### Passo 3: Preenche o Formulário Automático
 
-Copia e cola isto na tua discussão:
+Quando crias uma nova discussion, o GitHub mostra um **formulário automático** com campos pré-definidos:
+
+- 📄 **Página** - Dropdown com todas as páginas
+- 💻 **Dispositivo** - Desktop, Tablet, Mobile
+- 🌐 **Browser** - Chrome, Firefox, Safari, etc.
+- ✅ **O que esperava** - Campo de texto
+- ❌ **O que aconteceu** - Campo de texto
+- 🔄 **Como reproduzir** - Passos numerados
+- 📸 **Screenshot** - Arrasta e larga imagens (opcional)
+
+Basta preencher os campos! O template já está formatado automaticamente.
+
+<details>
+<summary>💡 Se preferires usar texto livre (clica para expandir)</summary>
+
+Podes também copiar este template:
 
 ```markdown
 **Página:** [Nome da página]
@@ -104,6 +119,7 @@ Copia e cola isto na tua discussão:
 **Screenshot (opcional):**
 [Se ajudar, anexa uma imagem]
 ```
+</details>
 
 ## ✅ Exemplos de Bons Reports
 
