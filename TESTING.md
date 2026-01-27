@@ -174,13 +174,32 @@ A cor do partido aparece como azul (PSD) em vez da cor do Chega
 - **Aprendizagem** - Vês como funciona o desenvolvimento de software open-source
 - **Comunidade** - Fazes parte de um projeto importante
 
-## 📊 Acompanha o Progresso
+## 🌐 Ambientes de Testing
 
-Depois de reportares um problema:
-1. A tua discussão será vista pela equipa
-2. Se for válido, criaremos um **issue** no GitHub
-3. Podes acompanhar o progresso no [Project Board](https://github.com/bcamarneiro/adamastor/projects)
-4. Quando o problema for resolvido, avisamos-te na discussão
+### PRODUÇÃO (testa aqui!)
+**URL**: https://adamastor-prod.vercel.app
+
+- É aqui que deves testar e reportar bugs
+- Versão pública da plataforma que todos usam
+
+### STAGING (validação de correções)
+**URL**: https://adamastor-staging.vercel.app
+
+- Quando reportas um bug, a correção aparece primeiro aqui
+- Podes testar aqui para confirmar que o bug foi resolvido
+- Depois de confirmado, fazemos deploy para PRODUÇÃO
+
+## 📊 O Que Acontece Depois do Teu Report
+
+1. **Reportas** na discussion (categoria apropriada)
+2. **Maintainer valida** se é bug real (testa, verifica duplicados)
+3. **Issue criada** no GitHub se for válido
+4. **Correção implementada** em STAGING primeiro
+5. **Pedes-te validação** em STAGING (opcional mas útil!)
+6. **Deploy para PRODUÇÃO** após confirmação
+7. **Avisamos-te** na discussion quando estiver resolvido
+
+💡 **Nota**: NÃO precisas de criar GitHub Issues. Usa apenas Discussions para reportar. Os issues são criados pelo maintainer após validação.
 
 ## 💡 Dicas para Testar Bem
 
@@ -198,8 +217,14 @@ Não! Só precisas de saber usar o site normalmente.
 **Quanto tempo devo dedicar?**
 O que puderes! Mesmo 10 minutos ajudam.
 
-**Posso testar em produção?**
-Sim, testa em https://adamastor.vercel.app (ou o URL atual)
+**Onde devo testar?**
+Testa em PRODUÇÃO: https://adamastor-prod.vercel.app
+
+**Devo testar em STAGING também?**
+Só se te pedirmos para validar uma correção. Normalmente testa apenas em PRODUÇÃO.
+
+**Devo criar GitHub Issues?**
+Não! Usa apenas Discussions para reportar. Os issues são criados pelo maintainer após validar o teu report.
 
 **E se não tiver a certeza se é um bug?**
 Reporta na mesma! É melhor reportar demais que reportar de menos.
