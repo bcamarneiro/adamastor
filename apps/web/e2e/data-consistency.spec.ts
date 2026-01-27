@@ -169,7 +169,7 @@ test.describe('Data Consistency - Deputy Detail', () => {
     // The section was confusing because it showed party aggregate voting,
     // not the individual deputy's votes
     const partyVotingHeading = page.getByText(/Votacoes do Partido/i);
-    await expect(partyVotingHeading).not.toBeVisible();
+    await expect(partyVotingHeading).toHaveCount(0);
   });
 });
 
