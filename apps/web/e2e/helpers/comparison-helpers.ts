@@ -95,11 +95,11 @@ export async function selectOption(
 }
 
 /**
- * Selects the first available district
+ * Selects the first available option from the dropdown
  * 
  * @param page - Playwright page object
- * @param config - Selector configuration
- * @returns The name of the selected district, or null if no options available
+ * @param config - Selector configuration (district or party)
+ * @returns The name of the selected option, or null if no options available
  */
 export async function selectFirstOption(
   page: Page,
@@ -119,14 +119,15 @@ export async function selectFirstOption(
  * Selects the second available option (different from first)
  * 
  * @param page - Playwright page object
- * @param config - Selector configuration
+ * @param config - Selector configuration (district or party)
  * @returns The name of the selected option, or null if no options available
  */
 export async function selectSecondOption(
   page: Page,
   config: SelectorConfig
 ): Promise<string | null> {
-  // After first selection, open second selector (still index 1 as the first is replaced)
+  // Open the second selector (index 1). The first selector at index 0 is now hidden
+  // since it displays the selected item, so the second selector becomes the first visible input.
   await openSelector(page, 1, config);
   
   const count = await getOptionCount(page, config);
@@ -134,7 +135,7 @@ export async function selectSecondOption(
     return null;
   }
   
-  // Select the second option in the list (index 1)
+  // Select the second option in the list (index 1) to ensure we pick a different item
   return await selectOption(page, 1, config);
 }
 
@@ -155,17 +156,16 @@ export async function searchInSelector(
   const input = await openSelector(page, selectorIndex, config);
   await input.fill(searchTerm);
   
-  // Wait for filtering to complete by waiting for the dropdown to stabilize
-  // Either options appear or "Nenhum ... encontrado" message appears
+  // Wait for filtering to complete by checking that the dropdown content has stabilized
   await page.waitForFunction(
-    (text) => {
+    () => {
       const dropdown = document.querySelector('.bg-neutral-2.rounded-lg');
       return dropdown && dropdown.textContent !== '';
     },
-    config.optionIndicatorText,
+    undefined,
     { timeout: 2000 }
   ).catch(() => {
-    // Timeout is acceptable - dropdown might be empty
+    // Timeout is acceptable - dropdown might be empty after filtering
   });
 }
 
