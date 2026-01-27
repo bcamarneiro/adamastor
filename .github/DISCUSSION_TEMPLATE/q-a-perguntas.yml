@@ -4,9 +4,9 @@ body:
     attributes:
       value: |
         ## ❓ Pergunta
-
+        
         Tem uma dúvida sobre a plataforma? Faz a tua pergunta abaixo!
-
+        
         **Antes de perguntar**: Verifica se a resposta está em [TESTING.md](https://github.com/bcamarneiro/adamastor/blob/staging/TESTING.md) ou nas [discussões existentes](https://github.com/bcamarneiro/adamastor/discussions).
 
   - type: dropdown
