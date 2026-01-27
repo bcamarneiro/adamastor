@@ -252,7 +252,7 @@ P.S.: É totalmente open source e sem fins lucrativos. O objetivo é mesmo trans
 
 ### Versão 1 - Curta e Direta
 ```
-🧪 Ajuda a testar o Adamastor!
+🧪 Ajuda a testar o Debaixo d'Olho!
 
 Queremos tornar o Parlamento mais transparente, mas precisamos da tua ajuda para encontrar bugs e melhorar a experiência.
 
@@ -266,7 +266,7 @@ Queremos tornar o Parlamento mais transparente, mas precisamos da tua ajuda para
 ```
 🏛️ Queres ajudar a melhorar a democracia portuguesa?
 
-Testa o Adamastor - plataforma que rastreia deputados e torna o Parlamento transparente.
+Testa o Debaixo d'Olho - plataforma que rastreia deputados e torna o Parlamento transparente.
 
 Não precisas de saber programar!
 
@@ -278,7 +278,7 @@ Não precisas de saber programar!
 
 ### Versão 3 - Gamificada
 ```
-🎯 DESAFIO: Consegues encontrar bugs no Adamastor?
+🎯 DESAFIO: Consegues encontrar bugs no Debaixo d'Olho?
 
 Plataforma de transparência parlamentar está em testes. Quanto mais bugs encontrares, melhor fica para todos os portugueses! 🇵🇹
 
@@ -357,7 +357,7 @@ Demora 10 minutos e ajudas muita gente. Interessado/a?
 ```
 Pessoal, preciso de uma ajuda! 🙏
 
-Estou a desenvolver o Adamastor, uma plataforma open-source para tornar o Parlamento português mais transparente. Basicamente, rastreia deputados, mede assiduidade, compara desempenhos, etc - tudo com dados objetivos.
+Estou a desenvolver o Debaixo d'Olho, uma plataforma open-source para tornar o Parlamento português mais transparente. Basicamente, rastreia deputados, mede assiduidade, compara desempenhos, etc - tudo com dados objetivos.
 
 🧪 Fase de Testes
 
@@ -407,7 +407,7 @@ PS: Projeto é totalmente open-source e sem fins lucrativos. O objetivo é mesmo
 
 ## 📧 Email para Convite Direto (Opcional)
 
-**Assunto:** Convite para Testar o Adamastor - Transparência Parlamentar
+**Assunto:** Convite para Testar o Debaixo d'Olho - Transparência Parlamentar
 
 ```
 Olá [Nome],
@@ -416,7 +416,7 @@ Espero que estejas bem!
 
 Estou a contactar-te porque sei que tens interesse em [transparência/democracia/civic tech/open source] e pensei que poderias estar interessado/a em ajudar num projeto nesta área.
 
-Estou a desenvolver o Adamastor, uma plataforma open-source que torna a atividade parlamentar portuguesa mais transparente. Rastreia assiduidade de deputados, mede desempenho, permite comparações objetivas, etc.
+Estou a desenvolver o Debaixo d'Olho, uma plataforma open-source que torna a atividade parlamentar portuguesa mais transparente. Rastreia assiduidade de deputados, mede desempenho, permite comparações objetivas, etc.
 
 Estamos agora em fase de testes e procuro pessoas para ajudar a encontrar bugs e melhorar a experiência. Não é preciso saber programar - basta usar a plataforma e reportar o que não funciona ou parece confuso.
 
@@ -458,20 +458,19 @@ PS: É totalmente open-source e sem fins lucrativos. O objetivo é mesmo transpa
 
 ### Opção 4: Infográfico "Como Ajudar"
 ```
-╔═══════════════════════════════════╗
-║   🧪 AJUDA A TESTAR ADAMASTOR   ║
-╠═══════════════════════════════════╣
-║                                   ║
-║  1️⃣ Escolhe uma página           ║
-║  2️⃣ Usa normalmente               ║
-║  3️⃣ Reporta problemas             ║
-║                                   ║
-║  ⏱️ 10 minutos = impacto real    ║
-║  🇵🇹 Democracia mais transparente ║
-║                                   ║
-║  👉 github.com/bcamarneiro/      ║
-║      adamastor                    ║
-╚═══════════════════════════════════╝
+╔════════════════════════════════════════╗
+║   🧪 AJUDA A TESTAR DEBAIXO D'OLHO   ║
+╠════════════════════════════════════════╣
+║                                        ║
+║  1️⃣ Escolhe uma página                ║
+║  2️⃣ Usa normalmente                    ║
+║  3️⃣ Reporta problemas                  ║
+║                                        ║
+║  ⏱️ 10 minutos = impacto real         ║
+║  🇵🇹 Democracia mais transparente      ║
+║                                        ║
+║  👉 github.com/bcamarneiro/adamastor  ║
+╚════════════════════════════════════════╝
 ```
 
 ---
