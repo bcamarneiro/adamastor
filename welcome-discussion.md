@@ -7,9 +7,21 @@ Esta é a área de testes e feedback da plataforma. Aqui podes reportar problema
 ## 📚 Como Começar
 
 1. **Lê o guia completo:** [TESTING.md](https://github.com/bcamarneiro/adamastor/blob/staging/TESTING.md)
-2. **Escolhe uma página** para testar da lista abaixo
-3. **Reporta problemas** na categoria apropriada das Discussões
-4. **Acompanha o progresso** - vamos criar issues para problemas validados
+2. **Testa em PRODUÇÃO:** https://adamastor-prod.vercel.app
+3. **Escolhe uma página** para testar da lista abaixo
+4. **Reporta problemas** na categoria apropriada das Discussões
+5. **Acompanha o progresso** - vamos criar issues para problemas validados
+
+## 🌐 Ambientes de Testing
+
+**PRODUÇÃO** (testa aqui!): https://adamastor-prod.vercel.app
+- É aqui que deves testar e reportar bugs
+- Versão pública da plataforma
+
+**STAGING** (validação de correções): https://adamastor-staging.vercel.app
+- Quando reportas um bug, a correção aparece primeiro aqui
+- Podes testar para confirmar que o bug foi resolvido
+- Depois de confirmado, fazemos deploy para PRODUÇÃO
 
 ## 🏷️ Categorias de Testing
 

@@ -42,42 +42,64 @@ Plataforma de transparência parlamentar está em testes. Quanto mais bugs encon
 
 ---
 
-## 💼 LinkedIn (Versão Profissional)
+## 💼 LinkedIn (Versão Simplificada para Não-Técnicos)
 
 ```
-🧪 Chamada para Testes: Adamastor - Plataforma de Transparência Parlamentar
+🧪 Preciso da Tua Ajuda para Tornar o Parlamento Mais Transparente
 
-Estou a recrutar testadores para o Adamastor, um projeto open-source que torna a atividade parlamentar portuguesa mais transparente e acessível aos cidadãos.
+Criei uma plataforma onde podes ver o desempenho dos deputados: quem falta mais, quem trabalha mais, como votam, etc.
 
-🎯 O que é o Adamastor?
-Uma plataforma que rastreia:
-• Assiduidade de deputados
-• Desempenho em comissões
-• Iniciativas legislativas
-• Comparações objetivas (deputados, distritos, partidos)
+Antes de lançar publicamente, preciso que pessoas normais (não programadores!) testem e me digam se encontram problemas.
 
-🔍 Como podes ajudar?
-Precisamos de pessoas para testar a plataforma e reportar:
-• Funcionalidades que não funcionam
-• Confusões na interface
-• Problemas em mobile/tablet
-• Sugestões de melhoria
+📱 O QUE FAZER (10 minutos):
 
-Não precisas de saber programar - basta usar a plataforma naturalmente!
+**Passo 1: Entra no site de PRODUÇÃO**
+👉 https://adamastor-prod.vercel.app (abre no telemóvel ou computador)
 
-📖 Guia completo: https://github.com/bcamarneiro/adamastor/blob/staging/TESTING.md
-💬 Reportar problemas: https://github.com/bcamarneiro/adamastor/discussions
-⏱️ Tempo estimado: 10-30 minutos (o que puderes!)
+**Passo 2: Experimenta estas páginas**
+• Clica em "Classificação" - vês a lista de deputados?
+• Pesquisa um deputado pelo nome - funciona?
+• Clica num deputado - aparece a informação dele?
+• Tenta comparar dois distritos ou partidos - consegues?
 
-🎁 O teu impacto:
-• Contribuis para a transparência democrática
-• Ajudas a responsabilizar representantes eleitos
-• Tornas informação complexa acessível a todos
-• Fazes parte de um projeto open-source de impacto cívico
+**Passo 3: Se encontrares algo estranho, diz-me!**
+Exemplos do que procurar:
+❌ Um botão que não funciona
+❌ Informação que não aparece
+❌ Algo confuso que não percebes
+❌ No telemóvel, coisas sobrepostas ou difíceis de clicar
 
-Interessado/a? Comenta aqui ou vai diretamente ao link do guia!
+💡 **Como funcionam as correções:**
+Quando reportas um bug, eu corrijo-o primeiro em STAGING (https://adamastor-staging.vercel.app).
+Podes testar lá se quiseres confirmar que foi resolvido.
+Depois de confirmado, faço deploy para PRODUÇÃO.
 
-#CivicTech #OpenSource #TransparenciaPublica #Democracia #Portugal #Testing #QA
+🗣️ COMO REPORTAR (escolhe o mais fácil para ti):
+
+**Opção A: Aqui no LinkedIn**
+Comenta este post com:
+- Que página testaste
+- O que correu mal
+- Computador ou telemóvel
+
+**Opção B: No site de feedback**
+👉 github.com/bcamarneiro/adamastor/discussions
+Clica "New discussion" > escolhe a categoria > descreve o problema
+
+📋 **Modelo simples:**
+Página: [ex: Classificação]
+Dispositivo: [Computador / Telemóvel]
+Problema: [ex: Quando clico em "Ordenar" não acontece nada]
+
+🎁 PORQUÊ AJUDAR?
+Estás a contribuir para:
+✅ Cidadãos terem acesso fácil a informação sobre deputados
+✅ Mais transparência na política portuguesa
+✅ Responsabilizar quem nos representa
+
+Demora 10 minutos e ajudas muita gente. Interessado/a?
+
+#TransparenciaPublica #Democracia #Portugal #Politica #Parlamento
 ```
 
 ---
