@@ -48,7 +48,10 @@ export async function openSelector(
     .locator(`input[placeholder*="${config.searchPlaceholder}"]`)
     .nth(selectorIndex);
   await input.click();
-  await page.waitForTimeout(500); // Wait for dropdown to populate
+  
+  // Wait for dropdown container to appear
+  await page.locator('.bg-neutral-2.rounded-lg').first().waitFor({ state: 'visible' });
+  
   return input;
 }
 
@@ -151,7 +154,19 @@ export async function searchInSelector(
 ): Promise<void> {
   const input = await openSelector(page, selectorIndex, config);
   await input.fill(searchTerm);
-  await page.waitForTimeout(300); // Wait for filtering
+  
+  // Wait for filtering to complete by waiting for the dropdown to stabilize
+  // Either options appear or "Nenhum ... encontrado" message appears
+  await page.waitForFunction(
+    (text) => {
+      const dropdown = document.querySelector('.bg-neutral-2.rounded-lg');
+      return dropdown && dropdown.textContent !== '';
+    },
+    config.optionIndicatorText,
+    { timeout: 2000 }
+  ).catch(() => {
+    // Timeout is acceptable - dropdown might be empty
+  });
 }
 
 /**
@@ -174,7 +189,9 @@ export async function clearSelection(page: Page, index: number): Promise<void> {
 export async function clickCompareButton(page: Page, config: SelectorConfig): Promise<void> {
   const compareButton = page.getByRole('button', { name: config.compareButtonText });
   await compareButton.click();
-  await page.waitForTimeout(500); // Wait for results to render
+  
+  // Wait for results to render by checking for winner/tie section
+  await page.locator('text=/venceu|Empate/i').first().waitFor({ state: 'visible', timeout: 5000 });
 }
 
 /**
