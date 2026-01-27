@@ -10,7 +10,7 @@ Queremos tornar o Parlamento mais transparente, mas precisamos da tua ajuda para
 
 10 minutos do teu tempo = democracia mais transparente 🇵🇹
 
-👉 github.com/bcamarneiro/adamastor
+👉 github.com/bcamarneiro/adamastor/discussions/203
 #TransparenciaJa #ParticipaçaoCivica
 ```
 
@@ -22,8 +22,8 @@ Testa o Adamastor - plataforma que rastreia deputados e torna o Parlamento trans
 
 Não precisas de saber programar!
 
-📖 Lê como: github.com/bcamarneiro/adamastor/TESTING.md
-💬 Reporta: github.com/bcamarneiro/adamastor/discussions
+📖 Como testar: github.com/bcamarneiro/adamastor/discussions/203
+💬 Reporta bugs: github.com/bcamarneiro/adamastor/discussions/203
 
 #OpenSource
 ```
@@ -83,7 +83,7 @@ Comenta este post com:
 - Computador ou telemóvel
 
 **Opção B: No site de feedback**
-👉 github.com/bcamarneiro/adamastor/discussions
+👉 github.com/bcamarneiro/adamastor/discussions/203/discussions
 Clica "New discussion" > escolhe a categoria > descreve o problema
 
 📋 **Modelo simples:**

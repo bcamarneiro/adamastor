@@ -47,6 +47,7 @@ To populate with data, see [CONTRIBUTING.md](CONTRIBUTING.md#running-the-full-pi
 |----------|----------------|
 | **[ARCHITECTURE.md](ARCHITECTURE.md)** | How the system works - data flow, transforms, database |
 | **[CONTRIBUTING.md](CONTRIBUTING.md)** | Setup guide, development workflow, how to contribute |
+| **[TESTING.md](TESTING.md)** | How to test the platform and report bugs |
 | **[docs/AI_AGENTS.md](docs/AI_AGENTS.md)** | Guidelines for AI agents and AI-assisted development |
 
 ---
@@ -122,7 +123,29 @@ This project is **non-partisan**. We measure activity metrics only:
 
 ---
 
-## Contributing
+## Help Us Test
+
+Want to help improve Adamastor? **No coding required!**
+
+We're looking for testers to explore the platform and report bugs, UX issues, or suggest improvements.
+
+👉 **[Start Testing](https://github.com/bcamarneiro/adamastor/discussions/203)** - Complete guide in Portuguese
+
+**What to test:**
+
+- Desktop & mobile experience
+- All pages (Rankings, Battle Royale, Deputy Profiles, etc.)
+- Report anything confusing or broken
+
+**Where to report:**
+
+- 🐛 [Bug reports](https://github.com/bcamarneiro/adamastor/discussions/new?category=testing-pagina-inicial)
+- 💡 [Suggestions](https://github.com/bcamarneiro/adamastor/discussions/new?category=sugestoes)
+- ❓ [Questions](https://github.com/bcamarneiro/adamastor/discussions/new?category=perguntas)
+
+---
+
+## Contributing Code
 
 1. Fork the repo
 2. Create branch from `staging`: `git checkout -b fix/my-fix`
