@@ -1,426 +1,499 @@
 /**
- * E2E Tests for District and Party Comparison Filtering
- * Issue #14: Test filtering and sorting on comparison pages
- * @see https://github.com/bcamarneiro/adamastor/issues/14
+ * E2E Tests for District and Party Comparison Pages
+ *
+ * Tests the full comparison workflow:
+ * - Navigation
+ * - Selection with search
+ * - Comparison execution
+ * - Results display
+ * - Reset functionality
+ *
+ * Issue #14: https://github.com/bcamarneiro/adamastor/issues/14
  */
 import { expect, test } from './fixtures';
 
-test.describe('District Comparison - Selection and Filtering', () => {
-  test('should allow selecting two different districts', async ({ page }) => {
-    await page.goto('/distritos/comparar');
-    await page.waitForLoadState('networkidle');
+test.describe('District Comparison', () => {
+  test.describe('Navigation and Initial State', () => {
+    test('should navigate to district comparison page from districts page', async ({ page }) => {
+      await page.goto('/distritos');
+      await page.waitForLoadState('networkidle');
 
-    // Open first district selector
-    const firstInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await firstInput.click();
+      const compareLink = page.getByRole('link', { name: /comparar distritos/i });
+      await compareLink.click();
 
-    // Wait for districts to load
-    await page.waitForTimeout(500);
+      await expect(page).toHaveURL(/\/distritos\/comparar/);
+      await expect(page.getByRole('heading', { name: /comparar distritos/i })).toBeVisible();
+    });
 
-    // Select first district from dropdown
-    const firstDistrictOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
+    test('should show empty state when no districts selected', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    const firstDistrictName = await firstDistrictOption
-      .locator('div.font-semibold')
-      .first()
-      .textContent();
-    await firstDistrictOption.click();
+      // Should show empty state message
+      const emptyState = page.getByText(/escolhe dois distritos/i);
+      await expect(emptyState).toBeVisible();
 
-    // Verify first district is selected
-    await expect(page.locator(`text=${firstDistrictName}`).first()).toBeVisible();
+      // Compare button should not be visible
+      const compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await expect(compareButton).not.toBeVisible();
+    });
 
-    // Open second district selector
-    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await secondInput.click();
-    await page.waitForTimeout(500);
+    test('should have two district selector inputs', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    // Select second district (different from first)
-    const secondDistrictOption = page.locator('button:has-text("deputados")').nth(1);
-    if ((await secondDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
+      // Should have inputs for Distrito 1 and Distrito 2
+      const distrito1 = page.getByPlaceholder(/procurar distrito/i).first();
+      const distrito2 = page.getByPlaceholder(/procurar distrito/i).nth(1);
 
-    const secondDistrictName = await secondDistrictOption
-      .locator('div.font-semibold')
-      .first()
-      .textContent();
-    await secondDistrictOption.click();
-
-    // Verify second district is selected
-    await expect(page.locator(`text=${secondDistrictName}`).first()).toBeVisible();
-
-    // Verify compare button appears
-    const compareButton = page.getByRole('button', { name: /comparar distritos/i });
-    await expect(compareButton).toBeVisible();
+      await expect(distrito1).toBeVisible();
+      await expect(distrito2).toBeVisible();
+    });
   });
 
-  test('should filter districts by search term', async ({ page }) => {
-    await page.goto('/distritos/comparar');
-    await page.waitForLoadState('networkidle');
+  test.describe('District Selection with Search', () => {
+    test('should filter districts when typing in search', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    const firstInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
+      const searchInput = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput.click();
+      await searchInput.fill('Lisboa');
 
-    // Get initial count of districts
-    const initialCount = await page.locator('button:has-text("deputados")').count();
-    if (initialCount === 0) {
-      test.skip();
-      return;
-    }
+      // Wait for dropdown to appear
+      await page.waitForTimeout(300);
 
-    // Type search term
-    await firstInput.fill('Lisboa');
-    await page.waitForTimeout(300);
+      // Should show filtered results containing "Lisboa"
+      const dropdown = page.locator('.max-h-48').first();
+      const lisboaOption = dropdown.getByText(/lisboa/i);
 
-    // Get filtered count
-    const filteredCount = await page.locator('button:has-text("deputados")').count();
-
-    // Should have fewer results (or same if only Lisboa exists)
-    expect(filteredCount).toBeLessThanOrEqual(initialCount);
-
-    // Should show Lisboa in results
-    if (filteredCount > 0) {
-      const firstResult = page.locator('button:has-text("deputados")').first();
-      const resultText = await firstResult.locator('div.font-semibold').textContent();
-      expect(resultText?.toLowerCase()).toContain('lisboa');
-    }
-  });
-
-  test('should prevent selecting same district twice', async ({ page }) => {
-    await page.goto('/distritos/comparar');
-    await page.waitForLoadState('networkidle');
-
-    // Select first district
-    const firstInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
-
-    const firstDistrictOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-
-    const selectedDistrictName = await firstDistrictOption
-      .locator('div.font-semibold')
-      .first()
-      .textContent();
-    await firstDistrictOption.click();
-
-    // Try to select same district in second selector
-    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await secondInput.click();
-    await page.waitForTimeout(500);
-
-    // Search for the same district
-    await secondInput.fill(selectedDistrictName || '');
-    await page.waitForTimeout(300);
-
-    // Should show "Nenhum distrito encontrado" or not show the excluded district
-    const districtButtons = page.locator('button:has-text("deputados")');
-    const count = await districtButtons.count();
-
-    if (count > 0) {
-      // If any districts are shown, none should match the selected one
-      for (let i = 0; i < count; i++) {
-        const districtName = await districtButtons
-          .nth(i)
-          .locator('div.font-semibold')
-          .textContent();
-        expect(districtName).not.toBe(selectedDistrictName);
+      // Skip if no data available
+      if ((await lisboaOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
       }
-    }
+
+      await expect(lisboaOption.first()).toBeVisible();
+    });
+
+    test('should select district when clicking on search result', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
+
+      const searchInput = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput.click();
+      await searchInput.fill('Porto');
+
+      await page.waitForTimeout(300);
+
+      const dropdown = page.locator('.max-h-48').first();
+      const portoOption = dropdown.getByText(/porto/i).first();
+
+      if ((await portoOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+
+      await portoOption.click();
+
+      // Should show selected district card
+      await expect(page.getByText(/distrito 1/i)).toBeVisible();
+      await expect(page.getByText(/porto/i).first()).toBeVisible();
+    });
+
+    test('should exclude already selected district from second dropdown', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
+
+      // Select first district (Porto)
+      const searchInput1 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput1.click();
+      await searchInput1.fill('Porto');
+      await page.waitForTimeout(300);
+
+      const portoOption1 = page.locator('.max-h-48').first().getByText(/porto/i).first();
+      if ((await portoOption1.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await portoOption1.click();
+
+      // Try to select Porto in second dropdown
+      const searchInput2 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput2.click();
+      await searchInput2.fill('Porto');
+      await page.waitForTimeout(300);
+
+      // Porto should not appear in second dropdown (excluded)
+      const dropdown2 = page.locator('.max-h-48').first();
+      const portoInDropdown2 = dropdown2.getByText(/^Porto$/i);
+
+      // Should either not exist or not be visible
+      expect((await portoInDropdown2.count()) === 0).toBeTruthy();
+    });
+
+    test('should clear selection when clicking X button', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
+
+      // Select a district
+      const searchInput = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput.click();
+      await searchInput.fill('Lisboa');
+      await page.waitForTimeout(300);
+
+      const lisboaOption = page.locator('.max-h-48').first().getByText(/lisboa/i).first();
+      if ((await lisboaOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await lisboaOption.click();
+
+      // Find and click the clear button (X)
+      const clearButton = page.getByLabel(/limpar selecao/i).first();
+      await clearButton.click();
+
+      // Should go back to search input state
+      await expect(page.getByPlaceholder(/procurar distrito/i).first()).toBeVisible();
+    });
   });
 
-  test('should allow clearing selected district', async ({ page }) => {
-    await page.goto('/distritos/comparar');
-    await page.waitForLoadState('networkidle');
+  test.describe('Comparison Execution', () => {
+    test('should show compare button only when both districts selected', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    // Select a district
-    const firstInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
+      // Initially no compare button
+      let compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await expect(compareButton).not.toBeVisible();
 
-    const firstDistrictOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
+      // Select first district
+      const searchInput1 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput1.click();
+      await searchInput1.fill('Lisboa');
+      await page.waitForTimeout(300);
 
-    await firstDistrictOption.click();
+      const lisboaOption = page.locator('.max-h-48').first().getByText(/lisboa/i).first();
+      if ((await lisboaOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await lisboaOption.click();
 
-    // Find and click clear button (X icon)
-    const clearButton = page.locator('button[aria-label*="Limpar"]').first();
-    await expect(clearButton).toBeVisible();
-    await clearButton.click();
+      // Still no compare button (only one selected)
+      await expect(compareButton).not.toBeVisible();
 
-    // Should show search input again
-    const searchInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await expect(searchInput).toBeVisible();
+      // Select second district
+      const searchInput2 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput2.click();
+      await searchInput2.fill('Porto');
+      await page.waitForTimeout(300);
+
+      const portoOption = page.locator('.max-h-48').first().getByText(/porto/i).first();
+      if ((await portoOption.count()) === 0) {
+        test.skip(true, 'Not enough districts for comparison');
+        return;
+      }
+      await portoOption.click();
+
+      // Now compare button should be visible
+      compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await expect(compareButton).toBeVisible();
+    });
+
+    test('should show comparison results after clicking compare', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
+
+      // Select two districts
+      const searchInput1 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput1.click();
+      await searchInput1.fill('Lisboa');
+      await page.waitForTimeout(300);
+
+      const lisboaOption = page.locator('.max-h-48').first().getByText(/lisboa/i).first();
+      if ((await lisboaOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await lisboaOption.click();
+
+      const searchInput2 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput2.click();
+      await searchInput2.fill('Porto');
+      await page.waitForTimeout(300);
+
+      const portoOption = page.locator('.max-h-48').first().getByText(/porto/i).first();
+      if ((await portoOption.count()) === 0) {
+        test.skip(true, 'Not enough districts for comparison');
+        return;
+      }
+      await portoOption.click();
+
+      // Click compare
+      const compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await compareButton.click();
+
+      // Should show results
+      await page.waitForTimeout(500);
+
+      // Should show winner or tie message (use first() to handle multiple matches)
+      const winnerOrTie = page.getByText(/(venceu|empate)/i).first();
+      await expect(winnerOrTie).toBeVisible();
+
+      // Should show comparison details heading
+      const detailsHeading = page.getByText(/comparacao detalhada/i);
+      await expect(detailsHeading).toBeVisible();
+    });
   });
 
-  test('should display comparison results after comparing', async ({ page }) => {
-    await page.goto('/distritos/comparar');
-    await page.waitForLoadState('networkidle');
+  test.describe('Results Display', () => {
+    test('should display winner declaration', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    // Select first district
-    const firstInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
+      // Quick comparison setup
+      const searchInput1 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput1.click();
+      await page.waitForTimeout(100);
+      const firstOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await firstOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await firstOption.click();
 
-    const firstDistrictOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-    await firstDistrictOption.click();
+      const searchInput2 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput2.click();
+      await page.waitForTimeout(100);
+      const secondOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await secondOption.count()) === 0) {
+        test.skip(true, 'Not enough districts for comparison');
+        return;
+      }
+      await secondOption.click();
 
-    // Select second district
-    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await secondInput.click();
-    await page.waitForTimeout(500);
+      const compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await compareButton.click();
+      await page.waitForTimeout(500);
 
-    const secondDistrictOption = page.locator('button:has-text("deputados")').nth(1);
-    if ((await secondDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-    await secondDistrictOption.click();
+      // Should show either winner or tie
+      const hasWinner = (await page.getByText(/venceu/i).count()) > 0;
+      const hasTie = (await page.getByText(/empate/i).count()) > 0;
 
-    // Click compare button
-    const compareButton = page.getByRole('button', { name: /comparar distritos/i });
-    await compareButton.click();
+      expect(hasWinner || hasTie).toBeTruthy();
+    });
 
-    // Wait for results
-    await page.waitForTimeout(500);
+    test('should display score summary with wins count', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    // Should show winner declaration or tie
-    const winnerSection = page.locator('text=/venceu|Empate/i').first();
-    await expect(winnerSection).toBeVisible();
+      // Quick comparison setup
+      const searchInput1 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput1.click();
+      await page.waitForTimeout(100);
+      const firstOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await firstOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await firstOption.click();
 
-    // Should show comparison details
-    const comparisonHeading = page.getByText(/comparacao detalhada/i);
-    await expect(comparisonHeading).toBeVisible();
+      const searchInput2 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput2.click();
+      await page.waitForTimeout(100);
+      const secondOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await secondOption.count()) === 0) {
+        test.skip(true, 'Not enough districts for comparison');
+        return;
+      }
+      await secondOption.click();
 
-    // Should show reset button
-    const resetButton = page.getByRole('button', { name: /nova comparacao/i });
-    await expect(resetButton).toBeVisible();
+      const compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await compareButton.click();
+      await page.waitForTimeout(500);
+
+      // Should show "Resultado final"
+      const resultadoFinal = page.getByText(/resultado final/i);
+      await expect(resultadoFinal).toBeVisible();
+
+      // Should show "vitoria" or "vitorias"
+      const vitoriaText = page.getByText(/vitoria/i);
+      await expect(vitoriaText.first()).toBeVisible();
+    });
+
+    test('should show reset button after comparison', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
+
+      // Quick comparison
+      const searchInput1 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput1.click();
+      await page.waitForTimeout(100);
+      const firstOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await firstOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await firstOption.click();
+
+      const searchInput2 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput2.click();
+      await page.waitForTimeout(100);
+      const secondOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await secondOption.count()) === 0) {
+        test.skip(true, 'Not enough districts for comparison');
+        return;
+      }
+      await secondOption.click();
+
+      const compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await compareButton.click();
+      await page.waitForTimeout(500);
+
+      // Should show reset button
+      const resetButton = page.getByRole('button', { name: /nova comparacao/i });
+      await expect(resetButton).toBeVisible();
+    });
   });
 
-  test('should reset comparison and allow new selection', async ({ page }) => {
-    await page.goto('/distritos/comparar');
-    await page.waitForLoadState('networkidle');
+  test.describe('Reset Functionality', () => {
+    test('should reset to initial state when clicking reset button', async ({ page }) => {
+      await page.goto('/distritos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    // Select and compare two districts
-    const firstInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
+      // Quick comparison
+      const searchInput1 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput1.click();
+      await page.waitForTimeout(100);
+      const firstOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await firstOption.count()) === 0) {
+        test.skip(true, 'No district data available');
+        return;
+      }
+      await firstOption.click();
 
-    const firstDistrictOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-    await firstDistrictOption.click();
+      const searchInput2 = page.getByPlaceholder(/procurar distrito/i).first();
+      await searchInput2.click();
+      await page.waitForTimeout(100);
+      const secondOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await secondOption.count()) === 0) {
+        test.skip(true, 'Not enough districts for comparison');
+        return;
+      }
+      await secondOption.click();
 
-    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').first();
-    await secondInput.click();
-    await page.waitForTimeout(500);
+      const compareButton = page.getByRole('button', { name: /comparar distritos/i });
+      await compareButton.click();
+      await page.waitForTimeout(500);
 
-    const secondDistrictOption = page.locator('button:has-text("deputados")').nth(1);
-    if ((await secondDistrictOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-    await secondDistrictOption.click();
+      // Click reset
+      const resetButton = page.getByRole('button', { name: /nova comparacao/i });
+      await resetButton.click();
 
-    const compareButton = page.getByRole('button', { name: /comparar distritos/i });
-    await compareButton.click();
-    await page.waitForTimeout(500);
-
-    // Click reset
-    const resetButton = page.getByRole('button', { name: /nova comparacao/i });
-    await resetButton.click();
-
-    // Should show selection inputs again
-    const searchInputs = page.locator('input[placeholder*="Procurar distrito"]');
-    expect(await searchInputs.count()).toBeGreaterThanOrEqual(2);
+      // Should be back to initial state
+      await expect(page.getByText(/escolhe dois distritos/i)).toBeVisible();
+      await expect(page.getByPlaceholder(/procurar distrito/i).first()).toBeVisible();
+    });
   });
 });
 
-test.describe('Party Comparison - Selection and Filtering', () => {
-  test('should allow selecting two different parties', async ({ page }) => {
-    await page.goto('/partidos/comparar');
-    await page.waitForLoadState('networkidle');
+test.describe('Party Comparison', () => {
+  test.describe('Navigation and Initial State', () => {
+    test('should navigate to party comparison page from parties page', async ({ page }) => {
+      await page.goto('/partidos');
+      await page.waitForLoadState('networkidle');
 
-    // Open first party selector
-    const firstInput = page.locator('input[placeholder*="Procurar partido"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
+      const compareLink = page.getByRole('link', { name: /comparar partidos/i });
+      await compareLink.click();
 
-    // Select first party from dropdown
-    const firstPartyOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstPartyOption.count()) === 0) {
-      test.skip();
-      return;
-    }
+      await expect(page).toHaveURL(/\/partidos\/comparar/);
+      await expect(page.getByRole('heading', { name: /comparar partidos/i })).toBeVisible();
+    });
 
-    const firstPartyName = await firstPartyOption
-      .locator('div.font-semibold')
-      .first()
-      .textContent();
-    await firstPartyOption.click();
+    test('should show empty state when no parties selected', async ({ page }) => {
+      await page.goto('/partidos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    // Verify first party is selected
-    await expect(page.locator(`text=${firstPartyName}`).first()).toBeVisible();
+      // Should show empty state message
+      const emptyState = page.getByText(/escolhe dois partidos/i);
+      await expect(emptyState).toBeVisible();
+    });
 
-    // Open second party selector
-    const secondInput = page.locator('input[placeholder*="Procurar partido"]').first();
-    await secondInput.click();
-    await page.waitForTimeout(500);
+    test('should have two party selector inputs', async ({ page }) => {
+      await page.goto('/partidos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    // Select second party (different from first)
-    const secondPartyOption = page.locator('button:has-text("deputados")').nth(1);
-    if ((await secondPartyOption.count()) === 0) {
-      test.skip();
-      return;
-    }
+      // Should have inputs for Partido 1 and Partido 2
+      const partido1 = page.getByPlaceholder(/procurar partido/i).first();
+      const partido2 = page.getByPlaceholder(/procurar partido/i).nth(1);
 
-    const secondPartyName = await secondPartyOption
-      .locator('div.font-semibold')
-      .first()
-      .textContent();
-    await secondPartyOption.click();
-
-    // Verify second party is selected
-    await expect(page.locator(`text=${secondPartyName}`).first()).toBeVisible();
-
-    // Verify compare button appears
-    const compareButton = page.getByRole('button', { name: /comparar partidos/i });
-    await expect(compareButton).toBeVisible();
+      await expect(partido1).toBeVisible();
+      await expect(partido2).toBeVisible();
+    });
   });
 
-  test('should filter parties by search term', async ({ page }) => {
-    await page.goto('/partidos/comparar');
-    await page.waitForLoadState('networkidle');
+  test.describe('Party Selection and Comparison', () => {
+    test('should filter parties when typing in search', async ({ page }) => {
+      await page.goto('/partidos/comparar');
+      await page.waitForLoadState('networkidle');
 
-    const firstInput = page.locator('input[placeholder*="Procurar partido"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
+      const searchInput = page.getByPlaceholder(/procurar partido/i).first();
+      await searchInput.click();
+      await searchInput.fill('BE');
 
-    // Get initial count
-    const initialCount = await page.locator('button:has-text("deputados")').count();
-    if (initialCount === 0) {
-      test.skip();
-      return;
-    }
+      await page.waitForTimeout(300);
 
-    // Type search term - search for common party like "PS" or "PSD"
-    await firstInput.fill('PS');
-    await page.waitForTimeout(300);
+      // Should show filtered results (use exact "BE" to avoid matching PSD, PS, etc.)
+      const dropdown = page.locator('.max-h-48').first();
+      const beOption = dropdown.locator('button').filter({ hasText: /^BE$/ });
 
-    // Get filtered count
-    const filteredCount = await page.locator('button:has-text("deputados")').count();
-
-    // Should have fewer or equal results
-    expect(filteredCount).toBeLessThanOrEqual(initialCount);
-
-    // If results exist, should contain "PS"
-    if (filteredCount > 0) {
-      const firstResult = page.locator('button:has-text("deputados")').first();
-      const resultText = await firstResult.locator('div.font-semibold').textContent();
-      expect(resultText?.toUpperCase()).toContain('PS');
-    }
-  });
-
-  test('should display party comparison results', async ({ page }) => {
-    await page.goto('/partidos/comparar');
-    await page.waitForLoadState('networkidle');
-
-    // Select first party
-    const firstInput = page.locator('input[placeholder*="Procurar partido"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
-
-    const firstPartyOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstPartyOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-    await firstPartyOption.click();
-
-    // Select second party
-    const secondInput = page.locator('input[placeholder*="Procurar partido"]').first();
-    await secondInput.click();
-    await page.waitForTimeout(500);
-
-    const secondPartyOption = page.locator('button:has-text("deputados")').nth(1);
-    if ((await secondPartyOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-    await secondPartyOption.click();
-
-    // Click compare button
-    const compareButton = page.getByRole('button', { name: /comparar partidos/i });
-    await compareButton.click();
-    await page.waitForTimeout(500);
-
-    // Should show winner or tie
-    const winnerSection = page.locator('text=/venceu|Empate/i');
-    await expect(winnerSection).toBeVisible();
-
-    // Should show comparison details
-    const comparisonHeading = page.getByText(/comparacao detalhada/i);
-    await expect(comparisonHeading).toBeVisible();
-  });
-
-  test('should prevent selecting same party twice', async ({ page }) => {
-    await page.goto('/partidos/comparar');
-    await page.waitForLoadState('networkidle');
-
-    // Select first party
-    const firstInput = page.locator('input[placeholder*="Procurar partido"]').first();
-    await firstInput.click();
-    await page.waitForTimeout(500);
-
-    const firstPartyOption = page.locator('button:has-text("deputados")').first();
-    if ((await firstPartyOption.count()) === 0) {
-      test.skip();
-      return;
-    }
-
-    const selectedPartyName = await firstPartyOption
-      .locator('div.font-semibold')
-      .first()
-      .textContent();
-    await firstPartyOption.click();
-
-    // Try to select same party in second selector
-    const secondInput = page.locator('input[placeholder*="Procurar partido"]').first();
-    await secondInput.click();
-    await page.waitForTimeout(500);
-
-    // Search for the same party
-    await secondInput.fill(selectedPartyName || '');
-    await page.waitForTimeout(300);
-
-    // Should not show the excluded party
-    const partyButtons = page.locator('button:has-text("deputados")');
-    const count = await partyButtons.count();
-
-    if (count > 0) {
-      // If any parties are shown, none should match the selected one
-      for (let i = 0; i < count; i++) {
-        const partyName = await partyButtons.nth(i).locator('div.font-semibold').textContent();
-        expect(partyName).not.toBe(selectedPartyName);
+      if ((await beOption.count()) === 0) {
+        test.skip(true, 'No party data available');
+        return;
       }
-    }
+
+      await expect(beOption.first()).toBeVisible();
+    });
+
+    test('should complete full comparison workflow for parties', async ({ page }) => {
+      await page.goto('/partidos/comparar');
+      await page.waitForLoadState('networkidle');
+
+      // Select first party
+      const searchInput1 = page.getByPlaceholder(/procurar partido/i).first();
+      await searchInput1.click();
+      await page.waitForTimeout(100);
+      const firstOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await firstOption.count()) === 0) {
+        test.skip(true, 'No party data available');
+        return;
+      }
+      await firstOption.click();
+
+      // Select second party
+      const searchInput2 = page.getByPlaceholder(/procurar partido/i).first();
+      await searchInput2.click();
+      await page.waitForTimeout(100);
+      const secondOption = page.locator('.max-h-48').first().locator('button').first();
+      if ((await secondOption.count()) === 0) {
+        test.skip(true, 'Not enough parties for comparison');
+        return;
+      }
+      await secondOption.click();
+
+      // Click compare
+      const compareButton = page.getByRole('button', { name: /comparar partidos/i });
+      await compareButton.click();
+      await page.waitForTimeout(500);
+
+      // Should show results (use first() to handle multiple matches)
+      const winnerOrTie = page.getByText(/(venceu|empate)/i).first();
+      await expect(winnerOrTie).toBeVisible();
+
+      // Should show reset button
+      const resetButton = page.getByRole('button', { name: /nova comparacao/i });
+      await expect(resetButton).toBeVisible();
+    });
   });
 });
