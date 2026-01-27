@@ -82,8 +82,8 @@ Comenta este post com:
 - O que correu mal
 - Computador ou telemóvel
 
-**Opção B: No site de feedback**
-👉 github.com/bcamarneiro/adamastor/discussions/203/discussions
+**Opção B: No GitHub Discussions**
+👉 github.com/bcamarneiro/adamastor/discussions/203
 Clica "New discussion" > escolhe a categoria > descreve o problema
 
 📋 **Modelo simples:**
