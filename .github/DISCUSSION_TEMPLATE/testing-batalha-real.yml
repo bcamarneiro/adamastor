@@ -18,10 +18,82 @@ body:
     validations:
       required: true
 
-  - type: textarea
-    id: bug_report
+  - type: dropdown
+    id: device
     attributes:
-      label: Descreve o problema
-      description: O que está errado?
+      label: Dispositivo
+      description: Onde estás a testar?
+      options:
+        - Desktop
+        - Tablet
+        - Mobile (iPhone)
+        - Mobile (Android)
     validations:
       required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Que browser usaste?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Outro
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: URL completo onde viste o problema
+      placeholder: https://adamastor-prod.vercel.app/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: O que esperava
+      description: Descreve o que deveria acontecer
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: O que aconteceu
+      description: Descreve o que realmente aconteceu
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Como reproduzir
+      description: Passos para reproduzir o problema
+      placeholder: |
+        1. Vou para a página X
+        2. Clico em Y
+        3. Acontece Z
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots (opcional)
+      description: Arrasta e larga imagens se ajudar
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Informação Adicional (opcional)
+      description: Qualquer outra informação útil
+    validations:
+      required: false
