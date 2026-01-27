@@ -135,8 +135,10 @@ export async function selectSecondOption(
     return null;
   }
   
-  // Select the second option in the list (index 1) to ensure we pick a different item
-  return await selectOption(page, 1, config);
+  // Select the second option in the list (index 1) if available, otherwise select the first (index 0)
+  // This handles cases where only one option remains after the first selection
+  const optionIndex = count >= 2 ? 1 : 0;
+  return await selectOption(page, optionIndex, config);
 }
 
 /**
