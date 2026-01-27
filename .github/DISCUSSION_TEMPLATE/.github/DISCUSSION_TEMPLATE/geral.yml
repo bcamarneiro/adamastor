@@ -1,0 +1,8 @@
+body:
+  - type: textarea
+    id: content
+    attributes:
+      label: Message
+      description: What would you like to discuss?
+    validations:
+      required: true
