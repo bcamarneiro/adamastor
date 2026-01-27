@@ -49,10 +49,10 @@ export default defineConfig({
 ```
 
 **Key Features**:
-- Source maps are generated in production builds
-- Sentry plugin only runs in production (`NODE_ENV === 'production'`)
-- Uses environment variables for configuration
-- Plugin is properly filtered to avoid null values
+- Source maps are generated in all builds
+- Sentry plugin only runs when `NODE_ENV === 'production'` (Vite sets this automatically during production builds)
+- Uses environment variables for configuration (auth token, org, project)
+- Plugin is properly filtered to avoid null values when disabled
 
 ### 3. Sentry SDK Configuration ✅
 
@@ -133,18 +133,22 @@ After configuring environment variables and deploying:
 
 ### How It Works
 
-1. **Development**: 
-   - Source maps are generated but NOT uploaded
-   - Sentry plugin is disabled (not production)
-   - Errors are not sent to Sentry
+1. **Development (`vite dev`)**:
+   - Source maps are generated for debugging
+   - Sentry plugin is disabled (`NODE_ENV !== 'production'`)
+   - Sentry SDK is disabled (`import.meta.env.DEV === true`)
+   - No errors sent to Sentry
 
-2. **Production Build**:
-   - Vite generates source maps (`build.sourcemap: true`)
-   - Sentry plugin uploads source maps to Sentry servers
+2. **Production Build (`vite build`)**:
+   - Vite sets `NODE_ENV=production` automatically
+   - Source maps are generated (`build.sourcemap: true`)
+   - Sentry plugin uploads source maps to Sentry servers (if auth token is set)
    - Uploaded maps are associated with the release/commit
 
 3. **Production Runtime**:
-   - Errors are captured by Sentry SDK
+   - Sentry SDK initializes only if `VITE_SENTRY_DSN` is set
+   - Errors are captured and sent to Sentry
+   - Additional safety check: `beforeSend` returns `null` if `import.meta.env.DEV` is true
    - Sentry matches minified stack traces to source maps
    - Developers see readable stack traces with original file paths
 
