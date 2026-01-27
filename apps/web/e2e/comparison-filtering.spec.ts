@@ -335,7 +335,9 @@ test.describe('Party Comparison - Selection and Filtering', () => {
     if (filteredCount > 0) {
       const firstResult = page.locator('button:has-text("deputados")').first();
       const resultText = await firstResult.locator('div.font-semibold').textContent();
-      expect(resultText?.toUpperCase()).toContain('PS');
+      const upperText = resultText?.toUpperCase() ?? '';
+      const tokens = upperText.split(/\s+/);
+      expect(tokens).toContain('PS');
     }
   });
 
