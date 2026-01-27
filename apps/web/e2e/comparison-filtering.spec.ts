@@ -34,7 +34,7 @@ test.describe('District Comparison - Selection and Filtering', () => {
     await expect(page.locator(`text=${firstDistrictName}`).first()).toBeVisible();
 
     // Open second district selector
-    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').first();
+    const secondInput = page.locator('input[placeholder*="Procurar distrito"]').nth(1);
     await secondInput.click();
     await page.waitForTimeout(500);
 
