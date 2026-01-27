@@ -36,29 +36,19 @@ Quando reportares um problema, escolhe a categoria certa:
 - 💡 **Sugestões** - Ideias de melhorias e novas funcionalidades
 - ❓ **Perguntas** - Dúvidas sobre a plataforma
 
-## ✅ Template para Reportar Problemas
+## ✅ Como Reportar Problemas
 
-Copia e cola isto quando reportares um problema:
+Quando criares uma nova discussion na categoria apropriada, o GitHub mostra um **formulário automático** com campos pré-definidos:
 
-```markdown
-**Página:** [Nome da página]
-**Dispositivo:** [Desktop / Tablet / Mobile]
-**Browser:** [Chrome, Firefox, Safari, etc.]
+- 📄 **Página** - Dropdown com todas as páginas
+- 💻 **Dispositivo** - Desktop, Tablet, Mobile
+- 🌐 **Browser** - Chrome, Firefox, Safari, etc.
+- ✅ **O que esperava** - Campo de texto
+- ❌ **O que aconteceu** - Campo de texto
+- 🔄 **Como reproduzir** - Passos numerados
+- 📸 **Screenshot** - Arrasta e larga imagens (opcional)
 
-**O que esperava:**
-[Descreve o que deveria acontecer]
-
-**O que aconteceu:**
-[Descreve o que realmente aconteceu]
-
-**Como reproduzir:**
-1. Vou para a página X
-2. Clico no botão Y
-3. Vejo o erro Z
-
-**Screenshot (opcional):**
-[Se ajudar, anexa uma imagem]
-```
+Basta preencher os campos! O formulário está formatado automaticamente.
 
 ## 📱 Páginas Principais para Testar
 

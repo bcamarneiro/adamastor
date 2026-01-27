@@ -10,6 +10,27 @@
 
 ## 📝 O Que Falta (5-10 minutos)
 
+### 0. Atualizar Welcome Discussion 📝
+
+**Tempo:** 1 minuto
+
+A Discussion #203 ainda tem o template manual antigo. Precisa de ser atualizada para mencionar os formulários automáticos.
+
+1. Vai para: https://github.com/bcamarneiro/adamastor/discussions/203
+2. Clica em **"Edit"** (ícone lápis no topo direito)
+3. Substitui o corpo da discussion pelo conteúdo de `welcome-discussion.md`:
+
+   ```bash
+   cat welcome-discussion.md
+   ```
+
+4. Copia todo o output e cola no editor
+5. Clica em **"Update comment"**
+
+✅ **Resultado:** Discussion menciona formulários automáticos em vez de template manual.
+
+---
+
 ### 1. Pin Welcome Discussion ⭐
 **Tempo:** 30 segundos
 
