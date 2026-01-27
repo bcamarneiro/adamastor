@@ -1,0 +1,77 @@
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 Sugestão de Melhoria
+
+        Obrigado por partilhar a tua ideia! Descreve a tua sugestão abaixo.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Tipo de Sugestão
+      description: Que tipo de melhoria sugerem?
+      options:
+        - Nova funcionalidade
+        - Melhoria de UX/UI
+        - Melhoria de performance
+        - Melhoria de dados
+        - Outra
+    validations:
+      required: true
+
+  - type: dropdown
+    id: page
+    attributes:
+      label: Página afetada (se aplicável)
+      description: A que página se refere esta sugestão?
+      options:
+        - Geral (toda a plataforma)
+        - Página Inicial
+        - Classificação
+        - Perfil de Deputado
+        - Parlamento
+        - Batalha Real
+        - Distritos
+        - Partidos
+        - Iniciativas
+        - Calculadora de Desperdício
+        - Outra
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema que resolve
+      description: Que problema ou necessidade esta sugestão resolve?
+      placeholder: "Exemplo: É difícil comparar mais de 2 deputados ao mesmo tempo"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solução proposta
+      description: Como resolverias este problema?
+      placeholder: "Exemplo: Adicionar uma funcionalidade de comparação múltipla onde posso selecionar 3-5 deputados"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas (opcional)
+      description: Pensaste noutras formas de resolver isto?
+    validations:
+      required: false
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Exemplos ou referências (opcional)
+      description: Links ou exemplos de outras plataformas que fazem algo similar
+      placeholder: "Exemplo: A plataforma X tem uma funcionalidade parecida: [link]"
+    validations:
+      required: false

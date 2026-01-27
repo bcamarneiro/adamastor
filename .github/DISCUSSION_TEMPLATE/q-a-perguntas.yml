@@ -1,0 +1,43 @@
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ❓ Pergunta
+
+        Tem uma dúvida sobre a plataforma? Faz a tua pergunta abaixo!
+
+        **Antes de perguntar**: Verifica se a resposta está em [TESTING.md](https://github.com/bcamarneiro/adamastor/blob/staging/TESTING.md) ou nas [discussões existentes](https://github.com/bcamarneiro/adamastor/discussions).
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Categoria
+      description: Sobre o que é a tua pergunta?
+      options:
+        - Como usar a plataforma
+        - Como reportar problemas
+        - Sobre os dados (fontes, atualização)
+        - Sobre as métricas (como são calculadas)
+        - Sobre contribuir com código
+        - Outra
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: A tua pergunta
+      description: Descreve a tua dúvida de forma clara
+      placeholder: "Exemplo: Como é calculada a nota de cada deputado?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto adicional (opcional)
+      description: Informação adicional que possa ajudar a responder
+      placeholder: "Exemplo: Estou a ver o perfil do deputado X e não entendo porque tem nota B"
+    validations:
+      required: false
