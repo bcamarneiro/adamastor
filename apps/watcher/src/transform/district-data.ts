@@ -120,7 +120,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '6260',
     '6270',
     '6280',
-    '6290',
+    // 6290 belongs to Guarda (Gouveia)
     // 6300, 6305, 6320 belong to Guarda
   ],
   Coimbra: [
@@ -200,6 +200,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '8970',
   ],
   Guarda: [
+    '6290',
     '6300',
     '6305',
     '6320',
