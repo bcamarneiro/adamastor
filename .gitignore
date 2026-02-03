@@ -54,4 +54,5 @@ CLAUDE.md
 .auto-claude/
 .worktrees/
 .claude_settings.json
-.auto-claude-status
+.auto-claude-status*.tar.zst
+.turbo/cache/
