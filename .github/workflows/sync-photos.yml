@@ -39,7 +39,7 @@ jobs:
             console.log(`Using release: ${tag}`);
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.environment == 'production' && steps.latest_release.outputs.tag || 'staging' }}
 
