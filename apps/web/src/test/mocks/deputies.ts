@@ -83,11 +83,15 @@ export function createMockNationalAverages(
   overrides: Partial<NationalAverages> = {}
 ): NationalAverages {
   return {
-    avg_proposals: 12.5,
-    avg_interventions: 35.2,
-    avg_questions: 6.8,
+    legislature: 17,
+    avg_attendance_rate: 85.0,
+    avg_proposal_count: 12.5,
+    avg_intervention_count: 35.2,
+    avg_question_count: 6.8,
     avg_work_score: 65.0,
-    avg_attendance: 85.0,
+    total_deputies: 248,
+    total_active_deputies: 230,
+    absence_rate: 15.0,
     ...overrides,
   };
 }

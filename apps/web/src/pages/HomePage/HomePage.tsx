@@ -2,9 +2,10 @@ import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { PostalCodeInput } from '@/components/ReportCard/PostalCodeInput';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
+import { supabase } from '@/lib/supabase';
 import { useDistrictByPostal } from '@/services/reportCard/useDistrictByPostal';
-import { Info } from 'lucide-react';
-import { useState } from 'react';
+import { AlertTriangle, Info } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export function HomePage() {
@@ -13,13 +14,22 @@ export function HomePage() {
 
   const { data, isLoading, error } = useDistrictByPostal(postalCode);
 
-  // Navigate when district is found
-  if (data?.district) {
-    navigate(`/distrito/${data.district.slug}`);
-  }
+  // Navigate when district is found and NOT ambiguous
+  // Use replace so back button returns to the page before HomePage
+  useEffect(() => {
+    if (data?.district && !data.ambiguous) {
+      navigate(`/distrito/${data.district.slug}`, { replace: true });
+      setPostalCode(null); // Reset so back navigation doesn't re-trigger
+    }
+  }, [data?.district, data?.ambiguous, navigate]);
 
   const handleSubmit = (code: string) => {
     setPostalCode(code);
+  };
+
+  const handleDistrictChoice = (slug: string) => {
+    setPostalCode(null);
+    navigate(`/distrito/${slug}`, { replace: true });
   };
 
   return (
@@ -45,6 +55,16 @@ export function HomePage() {
               error={data?.error || (error ? 'Erro ao procurar distrito' : null)}
             />
           </div>
+
+          {/* Ambiguous postal code — show district choice */}
+          {data?.ambiguous && data.district && data.alternativeDistrict && (
+            <AmbiguousPostalChoice
+              postalCode={postalCode || ''}
+              districtA={data.district}
+              alternativeDistrictName={data.alternativeDistrict}
+              onChoice={handleDistrictChoice}
+            />
+          )}
 
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div className="p-6">
@@ -83,6 +103,67 @@ export function HomePage() {
       </main>
 
       <Footer />
+    </div>
+  );
+}
+
+/**
+ * When a CP4 code spans two districts, let the user choose.
+ */
+function AmbiguousPostalChoice({
+  postalCode,
+  districtA,
+  alternativeDistrictName,
+  onChoice,
+}: {
+  postalCode: string;
+  districtA: { name: string; slug: string };
+  alternativeDistrictName: string;
+  onChoice: (slug: string) => void;
+}) {
+  const [altSlug, setAltSlug] = useState<string | null>(null);
+
+  // Fetch the slug for the alternative district
+  useEffect(() => {
+    supabase
+      .from('districts')
+      .select('slug')
+      .eq('name', alternativeDistrictName)
+      .single()
+      .then(({ data }) => {
+        if (data?.slug) setAltSlug(data.slug);
+      });
+  }, [alternativeDistrictName]);
+
+  return (
+    <div className="mt-6 bg-warning-2 border border-warning-6 rounded-xl p-6 text-left">
+      <div className="flex items-start gap-3">
+        <AlertTriangle className="w-5 h-5 text-warning-9 mt-0.5 flex-shrink-0" />
+        <div className="flex-1">
+          <h3 className="font-semibold text-warning-11 mb-2">
+            O codigo postal {postalCode} abrange dois distritos
+          </h3>
+          <p className="text-sm text-neutral-11 mb-4">
+            Este codigo postal inclui localidades de distritos diferentes. Escolhe o teu distrito:
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => onChoice(districtA.slug)}
+              className="flex-1 px-4 py-3 bg-accent-9 text-monochrome-white rounded-lg hover:bg-accent-10 transition-colors font-medium"
+            >
+              {districtA.name}
+            </button>
+            {altSlug && (
+              <button
+                onClick={() => onChoice(altSlug)}
+                className="flex-1 px-4 py-3 bg-accent-9 text-monochrome-white rounded-lg hover:bg-accent-10 transition-colors font-medium"
+              >
+                {alternativeDistrictName}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
