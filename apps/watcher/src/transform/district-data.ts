@@ -6,6 +6,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '3700', // São João da Madeira (electoral circle: Aveiro)
     '3720', // Oliveira de Azeméis (electoral circle: Aveiro)
     '3730', // Vale de Cambra (electoral circle: Aveiro)
+    '3020', // AMBIGUOUS: Aveiro (Mealhada) / Coimbra (Coimbra)
     '3750',
     '3800',
     '3810',
@@ -55,7 +56,9 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '4800',
     '4805',
     '4810',
-    '4815', // Vizela
+    '4615', // AMBIGUOUS: Braga (Celorico de Basto) / Porto (Amarante, Felgueiras)
+    '4620', // AMBIGUOUS: Braga (Vizela) / Porto (Lousada)
+    '4815', // Vizela — AMBIGUOUS: Braga (Guimarães, Vizela) / Porto (Felgueiras)
     '4820', // Guimarães
     '4825',
     '4830',
@@ -121,7 +124,8 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '6270',
     '6280',
     // 6290 belongs to Guarda (Gouveia)
-    // 6300, 6305, 6320 belong to Guarda
+    // 6300, 6305 belong to Guarda
+    '6320', // AMBIGUOUS: Castelo Branco (Penamacor) / Guarda (Sabugal)
   ],
   Coimbra: [
     '3000',
@@ -170,6 +174,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '7150',
     '7160',
     '7170',
+    '2965', // AMBIGUOUS: Setúbal (Palmela) / Évora (Vendas Novas)
     '7200',
     '7220',
     '7250',
@@ -200,6 +205,8 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '8970',
   ],
   Guarda: [
+    '3640', // AMBIGUOUS: Guarda (Trancoso) / Viseu (Sernancelhe)
+    '6250', // AMBIGUOUS: Castelo Branco (Belmonte) / Guarda (Sabugal)
     '6290',
     '6300',
     '6305',
@@ -422,6 +429,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     // 4690 belongs to Viseu (Cinfães)
     '4695',
     '4745',
+    '4815', // AMBIGUOUS: Braga (Guimarães, Vizela) / Porto (Felgueiras)
     // 4760 belongs to Braga (V.N. Famalicão)
     '4780',
     '4785',
@@ -430,6 +438,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     // 4905 belongs to Braga (Barcelos)
     '4915',
     // 4990 belongs to Viana do Castelo (Ponte de Lima)
+    '5040', // AMBIGUOUS: Porto (Baião) / Vila Real (Mesão Frio, Peso da Régua)
   ],
   Santarém: [
     '2000',
@@ -457,8 +466,11 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2240',
     '2250',
     '2260',
+    '2495', // AMBIGUOUS: Leiria (Batalha, Leiria) / Santarém (Ourém)
+    '2890', // AMBIGUOUS: Santarém (Benavente) / Setúbal (Alcochete)
   ],
   Setúbal: [
+    '2100', // AMBIGUOUS: Santarém (Coruche) / Setúbal (Montijo)
     '2800', // Almada (electoral circle: Setúbal)
     '2805',
     '2810',
@@ -473,6 +485,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
     '2855',
     '2860',
     '2870',
+    '2890', // AMBIGUOUS: Santarém (Benavente) / Setúbal (Alcochete)
     '2900',
     '2910',
     '2920',
@@ -495,6 +508,7 @@ export const DISTRICT_POSTAL_PREFIXES: Record<string, string[]> = {
   ],
   'Viana do Castelo': [
     '4900',
+    '4905', // AMBIGUOUS: Braga (Barcelos) / Viana do Castelo
     '4910',
     '4920',
     '4925',

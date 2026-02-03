@@ -40,10 +40,10 @@ export function HomePage() {
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-neutral-12 mb-4">
-            O Teu Deputado em Numeros
+            O Teu Deputado em Números
           </h1>
           <p className="text-xl text-neutral-11 mb-8">
-            Descobre quem te representa na Assembleia da Republica e avalia o trabalho do teu
+            Descobre quem te representa na Assembleia da República e avalia o trabalho do teu
             deputado.
           </p>
 
@@ -69,16 +69,16 @@ export function HomePage() {
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div className="p-6">
               <div className="text-4xl mb-2">1</div>
-              <h3 className="font-semibold text-neutral-12 mb-2">Codigo Postal</h3>
+              <h3 className="font-semibold text-neutral-12 mb-2">Código Postal</h3>
               <p className="text-sm text-neutral-11">
-                Introduz o teu codigo postal para encontrar o teu distrito
+                Introduz o teu código postal para encontrar o teu distrito
               </p>
             </div>
             <div className="p-6">
               <div className="text-4xl mb-2">2</div>
               <h3 className="font-semibold text-neutral-12 mb-2">Deputados</h3>
               <p className="text-sm text-neutral-11">
-                Ve a lista de deputados eleitos pelo teu distrito
+                Vê a lista de deputados eleitos pelo teu distrito
               </p>
             </div>
             <div className="p-6">
@@ -141,10 +141,10 @@ function AmbiguousPostalChoice({
         <AlertTriangle className="w-5 h-5 text-warning-9 mt-0.5 flex-shrink-0" />
         <div className="flex-1">
           <h3 className="font-semibold text-warning-11 mb-2">
-            O codigo postal {postalCode} abrange dois distritos
+            O código postal {postalCode} abrange dois distritos
           </h3>
           <p className="text-sm text-neutral-11 mb-4">
-            Este codigo postal inclui localidades de distritos diferentes. Escolhe o teu distrito:
+            Este código postal inclui localidades de distritos diferentes. Escolhe o teu distrito:
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <button
