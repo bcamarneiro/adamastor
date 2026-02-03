@@ -66,7 +66,7 @@ export const HELP_TEXTS = {
     'Pontuacao calculada com base em propostas (50%), intervencoes (35%) e perguntas (15%). Quanto maior, melhor o desempenho.',
   grade:
     'Nota atribuida com base na pontuacao: A (≥120), B (≥90), C (≥60), D (≥30), F (<30). A media nacional e 100.',
-  nationalRank: 'Posicao do deputado entre os 230 deputados ativos da Assembleia da Republica.',
+  nationalRank: 'Posicao do deputado entre todos os deputados ativos da legislatura atual.',
   districtRank: 'Posicao do deputado entre os deputados eleitos pelo mesmo circulo eleitoral.',
   attendance:
     'Percentagem de sessoes plenarias em que o deputado esteve presente, com base nos registos oficiais.',
