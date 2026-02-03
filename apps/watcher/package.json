@@ -29,7 +29,7 @@
     "@supabase/supabase-js": "^2.89.0",
     "@types/backblaze-b2": "^1.5.6",
     "@types/deep-diff": "^1.0.5",
-    "@vercel/blob": "^1.0.2",
+    "@vercel/blob": "^2.0.1",
     "ajv": "^8.17.1",
     "backblaze-b2": "^1.7.0",
     "date-fns": "^4.1.0",
