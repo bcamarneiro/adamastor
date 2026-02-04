@@ -67,10 +67,10 @@ function formatDate(dateStr: string | null): string {
 
 export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardDetailProps) {
   const { flags } = useFeatureFlags();
-  const avgProposals = averages?.avg_proposals || 0;
-  const avgInterventions = averages?.avg_interventions || 0;
-  const avgQuestions = averages?.avg_questions || 0;
-  const avgAttendance = averages?.avg_attendance || 0;
+  const avgProposals = averages?.avg_proposal_count || 0;
+  const avgInterventions = averages?.avg_intervention_count || 0;
+  const avgQuestions = averages?.avg_question_count || 0;
+  const avgAttendance = averages?.avg_attendance_rate || 0;
 
   return (
     <div className="bg-neutral-1 rounded-xl shadow-lg overflow-hidden">

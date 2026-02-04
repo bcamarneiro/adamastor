@@ -4,9 +4,9 @@ body:
     attributes:
       value: |
         ## 🐛 Reportar Bug
-
+        
         Obrigado por ajudar a melhorar o Adamastor! Preenche os campos abaixo para reportar um problema.
-
+        
         **Antes de começar**: Procura se este problema já foi reportado em [Discussions existentes](https://github.com/bcamarneiro/adamastor/discussions).
 
   - type: dropdown
@@ -59,7 +59,7 @@ body:
     id: url
     attributes:
       label: URL
-      description: URL completo onde viste o problema (ex: https://adamastor-prod.vercel.app/classificacao)
+      description: URL completo onde viste o problema (ex https://adamastor-prod.vercel.app/classificacao)
       placeholder: https://adamastor-prod.vercel.app/...
     validations:
       required: false

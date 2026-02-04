@@ -97,7 +97,7 @@ export const SEO_CONFIGS = {
   leaderboard: {
     title: 'Ranking de Atividade',
     description:
-      'Ranking completo dos 230 deputados portugueses ordenados por atividade parlamentar registada.',
+      'Ranking completo dos deputados portugueses da legislatura atual, ordenados por atividade parlamentar registada.',
   },
   battle: {
     title: 'Battle Royale',
