@@ -6,6 +6,7 @@
 import { expect, test } from './fixtures';
 import {
   DISTRICT_CONFIG,
+  DROPDOWN_BUTTON_SELECTOR,
   PARTY_CONFIG,
   checkComparisonResults,
   clearSelection,
@@ -72,11 +73,7 @@ test.describe('District Comparison - Selection and Filtering', () => {
 
     // Should show Lisboa in results
     if (filteredCount > 0) {
-      const firstResult = page
-        .locator(
-          `.bg-neutral-2.rounded-lg button:has-text("${DISTRICT_CONFIG.optionIndicatorText}")`
-        )
-        .first();
+      const firstResult = page.locator(DROPDOWN_BUTTON_SELECTOR).first();
       const resultText = await firstResult.locator('div.font-semibold').textContent();
       expect(resultText?.toLowerCase()).toContain('lisboa');
     }
@@ -93,13 +90,11 @@ test.describe('District Comparison - Selection and Filtering', () => {
       return;
     }
 
-    // Try to select same district in second selector
-    await searchInSelector(page, 1, selectedDistrictName, DISTRICT_CONFIG);
+    // Try to select same district in second selector (now at index 0 since first selector shows selected card)
+    await searchInSelector(page, 0, selectedDistrictName, DISTRICT_CONFIG);
 
     // Should show "Nenhum distrito encontrado" or not show the excluded district
-    const districtButtons = page.locator(
-      `.bg-neutral-2.rounded-lg button:has-text("${DISTRICT_CONFIG.optionIndicatorText}")`
-    );
+    const districtButtons = page.locator(DROPDOWN_BUTTON_SELECTOR);
     const count = await districtButtons.count();
 
     if (count > 0) {
@@ -245,13 +240,9 @@ test.describe('Party Comparison - Selection and Filtering', () => {
 
     // If results exist, should contain "PS"
     if (filteredCount > 0) {
-      const firstResult = page
-        .locator(`.bg-neutral-2.rounded-lg button:has-text("${PARTY_CONFIG.optionIndicatorText}")`)
-        .first();
+      const firstResult = page.locator(DROPDOWN_BUTTON_SELECTOR).first();
       const resultText = await firstResult.locator('div.font-semibold').textContent();
-      const upperText = resultText?.toUpperCase() ?? '';
-      const tokens = upperText.split(/\s+/);
-      expect(tokens).toContain('PS');
+      expect(resultText?.toUpperCase()).toContain('PS');
     }
   });
 
@@ -293,13 +284,11 @@ test.describe('Party Comparison - Selection and Filtering', () => {
       return;
     }
 
-    // Try to select same party in second selector
-    await searchInSelector(page, 1, selectedPartyName, PARTY_CONFIG);
+    // Try to select same party in second selector (now at index 0 since first selector shows selected card)
+    await searchInSelector(page, 0, selectedPartyName, PARTY_CONFIG);
 
     // Should not show the excluded party
-    const partyButtons = page.locator(
-      `.bg-neutral-2.rounded-lg button:has-text("${PARTY_CONFIG.optionIndicatorText}")`
-    );
+    const partyButtons = page.locator(DROPDOWN_BUTTON_SELECTOR);
     const count = await partyButtons.count();
 
     if (count > 0) {

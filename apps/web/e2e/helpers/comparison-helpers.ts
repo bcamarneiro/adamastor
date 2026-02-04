@@ -13,23 +13,22 @@ import type { Page } from '@playwright/test';
 interface SelectorConfig {
   /** Placeholder text in the search input */
   searchPlaceholder: string;
-  /** Text that appears in option buttons (e.g., "deputados") */
-  optionIndicatorText: string;
   /** Name of the compare button */
   compareButtonText: RegExp;
 }
 
 export const DISTRICT_CONFIG: SelectorConfig = {
   searchPlaceholder: 'Procurar distrito',
-  optionIndicatorText: 'deputados',
   compareButtonText: /comparar distritos/i,
 };
 
 export const PARTY_CONFIG: SelectorConfig = {
   searchPlaceholder: 'Procurar partido',
-  optionIndicatorText: 'deputados',
   compareButtonText: /comparar partidos/i,
 };
+
+/** CSS selector for option buttons inside the dropdown */
+export const DROPDOWN_BUTTON_SELECTOR = '.bg-neutral-2.rounded-lg button';
 
 /**
  * Opens a selector dropdown and waits for options to load
@@ -62,11 +61,8 @@ export async function openSelector(
  * @param config - Selector configuration
  * @returns Number of visible options
  */
-export async function getOptionCount(page: Page, config: SelectorConfig): Promise<number> {
-  // Use more robust selector: buttons within the dropdown container that contain the indicator text
-  const options = page.locator(
-    `.bg-neutral-2.rounded-lg button:has-text("${config.optionIndicatorText}")`
-  );
+export async function getOptionCount(page: Page, _config: SelectorConfig): Promise<number> {
+  const options = page.locator(DROPDOWN_BUTTON_SELECTOR);
   return await options.count();
 }
 
@@ -81,11 +77,9 @@ export async function getOptionCount(page: Page, config: SelectorConfig): Promis
 export async function selectOption(
   page: Page,
   optionIndex: number,
-  config: SelectorConfig
+  _config: SelectorConfig
 ): Promise<string | null> {
-  const option = page
-    .locator(`.bg-neutral-2.rounded-lg button:has-text("${config.optionIndicatorText}")`)
-    .nth(optionIndex);
+  const option = page.locator(DROPDOWN_BUTTON_SELECTOR).nth(optionIndex);
 
   // Get the name before clicking (it's in the semibold div)
   const name = await option.locator('div.font-semibold').first().textContent();
@@ -126,9 +120,9 @@ export async function selectSecondOption(
   page: Page,
   config: SelectorConfig
 ): Promise<string | null> {
-  // Open the second selector (index 1). The first selector at index 0 is now hidden
-  // since it displays the selected item, so the second selector becomes the first visible input.
-  await openSelector(page, 1, config);
+  // After the first selection, the first selector replaces its input with a selected-item card.
+  // Only one input remains on the page, so the second selector is at index 0.
+  await openSelector(page, 0, config);
 
   const count = await getOptionCount(page, config);
   if (count === 0) {
