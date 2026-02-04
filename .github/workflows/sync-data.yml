@@ -99,7 +99,7 @@ jobs:
       # Checkout appropriate ref based on environment
       - name: Checkout code
         if: needs.determine-environment.outputs.environment != 'production' || steps.latest_release.outputs.skip != 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.determine-environment.outputs.environment == 'production' && steps.latest_release.outputs.tag || 'staging' }}
 
