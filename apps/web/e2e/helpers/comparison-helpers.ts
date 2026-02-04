@@ -1,6 +1,6 @@
 /**
  * E2E Test Helpers for Comparison Pages
- * 
+ *
  * Provides reusable helper functions for testing district and party comparison pages.
  * Reduces code duplication and makes tests more maintainable.
  */
@@ -33,7 +33,7 @@ export const PARTY_CONFIG: SelectorConfig = {
 
 /**
  * Opens a selector dropdown and waits for options to load
- * 
+ *
  * @param page - Playwright page object
  * @param selectorIndex - Which selector to open (0 for first, 1 for second)
  * @param config - Selector configuration (district or party)
@@ -48,16 +48,16 @@ export async function openSelector(
     .locator(`input[placeholder*="${config.searchPlaceholder}"]`)
     .nth(selectorIndex);
   await input.click();
-  
+
   // Wait for dropdown container to appear
   await page.locator('.bg-neutral-2.rounded-lg').first().waitFor({ state: 'visible' });
-  
+
   return input;
 }
 
 /**
  * Gets the count of available options in the dropdown
- * 
+ *
  * @param page - Playwright page object
  * @param config - Selector configuration
  * @returns Number of visible options
@@ -72,7 +72,7 @@ export async function getOptionCount(page: Page, config: SelectorConfig): Promis
 
 /**
  * Selects an option from the dropdown by index
- * 
+ *
  * @param page - Playwright page object
  * @param optionIndex - Which option to select (0-based)
  * @param config - Selector configuration
@@ -86,17 +86,17 @@ export async function selectOption(
   const option = page
     .locator(`.bg-neutral-2.rounded-lg button:has-text("${config.optionIndicatorText}")`)
     .nth(optionIndex);
-  
+
   // Get the name before clicking (it's in the semibold div)
   const name = await option.locator('div.font-semibold').first().textContent();
   await option.click();
-  
+
   return name;
 }
 
 /**
  * Selects the first available option from the dropdown
- * 
+ *
  * @param page - Playwright page object
  * @param config - Selector configuration (district or party)
  * @returns The name of the selected option, or null if no options available
@@ -106,18 +106,18 @@ export async function selectFirstOption(
   config: SelectorConfig
 ): Promise<string | null> {
   await openSelector(page, 0, config);
-  
+
   const count = await getOptionCount(page, config);
   if (count === 0) {
     return null;
   }
-  
+
   return await selectOption(page, 0, config);
 }
 
 /**
  * Selects the second available option (different from first)
- * 
+ *
  * @param page - Playwright page object
  * @param config - Selector configuration (district or party)
  * @returns The name of the selected option, or null if no options available
@@ -129,12 +129,12 @@ export async function selectSecondOption(
   // Open the second selector (index 1). The first selector at index 0 is now hidden
   // since it displays the selected item, so the second selector becomes the first visible input.
   await openSelector(page, 1, config);
-  
+
   const count = await getOptionCount(page, config);
   if (count === 0) {
     return null;
   }
-  
+
   // Select the second option in the list (index 1) if available, otherwise select the first (index 0)
   // This handles cases where only one option remains after the first selection
   const optionIndex = count >= 2 ? 1 : 0;
@@ -143,7 +143,7 @@ export async function selectSecondOption(
 
 /**
  * Performs a search in the selector input
- * 
+ *
  * @param page - Playwright page object
  * @param selectorIndex - Which selector to search in
  * @param searchTerm - Text to search for
@@ -157,23 +157,25 @@ export async function searchInSelector(
 ): Promise<void> {
   const input = await openSelector(page, selectorIndex, config);
   await input.fill(searchTerm);
-  
+
   // Wait for filtering to complete by checking that the dropdown content has stabilized
-  await page.waitForFunction(
-    () => {
-      const dropdown = document.querySelector('.bg-neutral-2.rounded-lg');
-      return dropdown && dropdown.textContent !== '';
-    },
-    undefined,
-    { timeout: 2000 }
-  ).catch(() => {
-    // Timeout is acceptable - dropdown might be empty after filtering
-  });
+  await page
+    .waitForFunction(
+      () => {
+        const dropdown = document.querySelector('.bg-neutral-2.rounded-lg');
+        return dropdown && dropdown.textContent !== '';
+      },
+      undefined,
+      { timeout: 2000 }
+    )
+    .catch(() => {
+      // Timeout is acceptable - dropdown might be empty after filtering
+    });
 }
 
 /**
  * Clicks the clear button for a selected item
- * 
+ *
  * @param page - Playwright page object
  * @param index - Which selector to clear (0 or 1)
  */
@@ -184,21 +186,21 @@ export async function clearSelection(page: Page, index: number): Promise<void> {
 
 /**
  * Clicks the compare button
- * 
+ *
  * @param page - Playwright page object
  * @param config - Selector configuration
  */
 export async function clickCompareButton(page: Page, config: SelectorConfig): Promise<void> {
   const compareButton = page.getByRole('button', { name: config.compareButtonText });
   await compareButton.click();
-  
+
   // Wait for results to render by checking for winner/tie section
   await page.locator('text=/venceu|Empate/i').first().waitFor({ state: 'visible', timeout: 5000 });
 }
 
 /**
  * Clicks the reset/new comparison button
- * 
+ *
  * @param page - Playwright page object
  */
 export async function clickResetButton(page: Page): Promise<void> {
@@ -208,7 +210,7 @@ export async function clickResetButton(page: Page): Promise<void> {
 
 /**
  * Checks if comparison results are displayed
- * 
+ *
  * @param page - Playwright page object
  * @returns Object with visibility status of result elements
  */

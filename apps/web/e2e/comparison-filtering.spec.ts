@@ -5,17 +5,16 @@
  */
 import { expect, test } from './fixtures';
 import {
+  DISTRICT_CONFIG,
+  PARTY_CONFIG,
   checkComparisonResults,
   clearSelection,
   clickCompareButton,
   clickResetButton,
-  DISTRICT_CONFIG,
   getOptionCount,
   openSelector,
-  PARTY_CONFIG,
   searchInSelector,
   selectFirstOption,
-  selectOption,
   selectSecondOption,
 } from './helpers/comparison-helpers';
 
@@ -74,7 +73,9 @@ test.describe('District Comparison - Selection and Filtering', () => {
     // Should show Lisboa in results
     if (filteredCount > 0) {
       const firstResult = page
-        .locator(`.bg-neutral-2.rounded-lg button:has-text("${DISTRICT_CONFIG.optionIndicatorText}")`)
+        .locator(
+          `.bg-neutral-2.rounded-lg button:has-text("${DISTRICT_CONFIG.optionIndicatorText}")`
+        )
         .first();
       const resultText = await firstResult.locator('div.font-semibold').textContent();
       expect(resultText?.toLowerCase()).toContain('lisboa');
@@ -128,7 +129,9 @@ test.describe('District Comparison - Selection and Filtering', () => {
     await clearSelection(page, 0);
 
     // Should show search input again
-    const searchInput = page.locator(`input[placeholder*="${DISTRICT_CONFIG.searchPlaceholder}"]`).first();
+    const searchInput = page
+      .locator(`input[placeholder*="${DISTRICT_CONFIG.searchPlaceholder}"]`)
+      .first();
     await expect(searchInput).toBeVisible();
   });
 
