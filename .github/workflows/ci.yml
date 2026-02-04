@@ -167,7 +167,7 @@ jobs:
           bunx playwright install chromium
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: web-build
           path: apps/web/dist
