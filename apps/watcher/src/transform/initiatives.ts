@@ -94,12 +94,14 @@ export async function transformInitiatives(
   initiativeMap: Map<string, string>;
   partyVotes: DbPartyVote[];
   authorCounts: Map<string, number>;
+  questionCounts: Map<string, number>;
 }> {
   console.log(`📦 Transforming ${iniciativas.length} initiatives...`);
 
   const initiativeMap = new Map<string, string>(); // external_id (string) -> uuid
   const partyVotes: DbPartyVote[] = [];
-  const authorCounts = new Map<string, number>(); // deputy_id -> count
+  const authorCounts = new Map<string, number>(); // deputy_id -> count (all initiatives)
+  const questionCounts = new Map<string, number>(); // deputy_id -> count (questions only)
 
   // Process in batches
   const batchSize = 100;
@@ -135,6 +137,11 @@ export async function transformInitiatives(
       const initiativeId = initiativeMap.get(String(ini.IniId));
       if (!initiativeId) continue;
 
+      // Detect if this initiative is a question (Pergunta) or request (Requerimento)
+      const isQuestion =
+        ini.IniDescTipo?.toLowerCase().includes('pergunta') ||
+        ini.IniDescTipo?.toLowerCase().includes('requerimento');
+
       // Count deputy authors (for proposals stat)
       if (ini.IniAutorDeputados) {
         for (const autor of ini.IniAutorDeputados) {
@@ -143,6 +150,11 @@ export async function transformInitiatives(
           const deputyId = deputyMap.get(cadastroId);
           if (deputyId) {
             authorCounts.set(deputyId, (authorCounts.get(deputyId) || 0) + 1);
+
+            // Count questions separately
+            if (isQuestion) {
+              questionCounts.set(deputyId, (questionCounts.get(deputyId) || 0) + 1);
+            }
           }
         }
       }
@@ -174,9 +186,10 @@ export async function transformInitiatives(
     );
   }
 
-  console.log(`\n✅ Initiatives: ${initiativeMap.size} loaded, ${partyVotes.length} votes found\n`);
+  console.log(`\n✅ Initiatives: ${initiativeMap.size} loaded, ${partyVotes.length} votes found`);
+  console.log(`   Questions identified: ${questionCounts.size} deputies with questions\n`);
 
-  return { initiativeMap, partyVotes, authorCounts };
+  return { initiativeMap, partyVotes, authorCounts, questionCounts };
 }
 
 function getInitiativeStatus(ini: ParliamentIniciativa): string | undefined {

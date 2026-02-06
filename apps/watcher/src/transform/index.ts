@@ -15,6 +15,7 @@ import {
   recalculateAllStats,
   updateDeputyInterventionCounts,
   updateDeputyProposalCounts,
+  updateDeputyQuestionCounts,
   updatePartyVoteStats,
 } from './stats.js';
 
@@ -130,6 +131,7 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
 
   // Variables to capture results from parallel tasks
   let authorCounts: Map<string, number> = new Map();
+  let questionCounts: Map<string, number> = new Map();
   let interventionsByDeputy: Map<string, number> = new Map();
 
   const phase3Results = await Promise.allSettled([
@@ -139,6 +141,7 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
       const result = await transformInitiatives(iniciativas, deputyMaps.byCadastroId);
       await upsertPartyVotes(result.partyVotes);
       authorCounts = result.authorCounts;
+      questionCounts = result.questionCounts;
       console.log('  ✅ Initiatives complete');
       return result;
     })(),
@@ -205,6 +208,9 @@ export async function runTransformPipeline(snapshotTs: string): Promise<number> 
 
   // Update intervention counts
   await updateDeputyInterventionCounts(interventionsByDeputy);
+
+  // Update question counts
+  await updateDeputyQuestionCounts(questionCounts);
 
   // Update party vote stats
   await updatePartyVoteStats(partyMap);

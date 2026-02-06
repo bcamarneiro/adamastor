@@ -62,6 +62,25 @@ export async function updateDeputyInterventionCounts(
   console.log('✅ Updated intervention counts\n');
 }
 
+export async function updateDeputyQuestionCounts(
+  questionCounts: Map<string, number>
+): Promise<void> {
+  console.log(`📊 Updating question counts for ${questionCounts.size} deputies...`);
+
+  for (const [deputyId, count] of questionCounts) {
+    const { error } = await supabase
+      .from('deputy_stats')
+      .update({ question_count: count })
+      .eq('deputy_id', deputyId);
+
+    if (error) {
+      console.error('  ❌ Error updating question count:', error.message);
+    }
+  }
+
+  console.log('✅ Updated question counts\n');
+}
+
 export async function updatePartyVoteStats(partyMap: Map<string, string>): Promise<void> {
   console.log('📊 Calculating party vote statistics...');
 
