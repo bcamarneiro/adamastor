@@ -154,9 +154,9 @@ const InitiativeList = () => {
   });
 
   // Force remeasurement when expanded rows change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional - remeasure when expandedRows changes, virtualizer.measure is stable
   useLayoutEffect(() => {
     virtualizer.measure();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandedRows]);
 
   if (isError) {
