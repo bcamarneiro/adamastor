@@ -104,11 +104,15 @@ export interface DeputyDetail {
 }
 
 export interface NationalAverages {
-  avg_proposals: number;
-  avg_interventions: number;
-  avg_questions: number;
+  legislature: number;
+  avg_attendance_rate: number;
+  avg_proposal_count: number;
+  avg_intervention_count: number;
+  avg_question_count: number;
   avg_work_score: number;
-  avg_attendance: number;
+  total_deputies: number;
+  total_active_deputies: number;
+  absence_rate: number;
 }
 
 // Extended deputy information types

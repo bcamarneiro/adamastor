@@ -1,0 +1,8 @@
+body:
+  - type: textarea
+    id: announcement
+    attributes:
+      label: Anúncio
+      description: O que queres anunciar?
+    validations:
+      required: true

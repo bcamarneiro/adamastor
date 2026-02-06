@@ -11,14 +11,14 @@ const ONBOARDING_STEPS = [
     icon: null, // Will use logo
     title: "Bem-vindo ao Debaixo d'olho!",
     description:
-      'Uma plataforma de transparencia parlamentar que te permite acompanhar o trabalho dos deputados portugueses.',
+      'Uma plataforma de transparência parlamentar que te permite acompanhar o trabalho dos deputados portugueses.',
   },
   {
     id: 'deputies',
     icon: Users,
     title: 'Descobre o Teu Deputado',
     description:
-      'Insere o teu codigo postal para descobrir quem te representa na Assembleia da Republica e ver o seu desempenho.',
+      'Insere o teu código postal para descobrir quem te representa na Assembleia da República e ver o seu desempenho.',
     link: '/report-card',
   },
   {
@@ -32,7 +32,7 @@ const ONBOARDING_STEPS = [
     id: 'parties',
     icon: BarChart3,
     title: 'Compara Partidos',
-    description: 'Analisa o desempenho medio de cada partido e compara-os lado a lado.',
+    description: 'Analisa o desempenho médio de cada partido e compara-os lado a lado.',
     link: '/partidos',
   },
   {
@@ -176,7 +176,7 @@ export function OnboardingModal() {
             onClick={handleNext}
             className="px-6 py-2 text-sm font-medium bg-accent-9 text-monochrome-white rounded-lg hover:bg-accent-10 transition-colors"
           >
-            {isLastStep ? 'Comecar' : 'Proximo'}
+            {isLastStep ? 'Começar' : 'Próximo'}
           </button>
         </div>
       </div>
