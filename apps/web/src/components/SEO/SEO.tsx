@@ -139,6 +139,11 @@ export const SEO_CONFIGS = {
     description:
       'Como calculamos as pontuações, notas e rankings dos deputados. Explicação da metodologia e fontes de dados.',
   },
+  privacidade: {
+    title: 'Política de Privacidade',
+    description:
+      "Como o Debaixo d'olho protege a tua privacidade. Explicação sobre que dados recolhemos, como os utilizamos, e os teus direitos.",
+  },
 } as const;
 
 /**
