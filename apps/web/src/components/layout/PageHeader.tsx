@@ -9,7 +9,7 @@ interface Breadcrumb {
 }
 
 interface PageHeaderProps {
-  title: string;
+  title: ReactNode;
   description?: string;
   breadcrumbs?: Breadcrumb[];
   actions?: ReactNode;
@@ -25,7 +25,7 @@ const fadeInUp = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   }),
 };
