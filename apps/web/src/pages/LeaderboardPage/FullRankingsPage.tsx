@@ -10,6 +10,7 @@ import { type District, type Party, supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
 import { BarChart3, Filter, TrendingUp, Users, X } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const GRADES = ['A', 'B', 'C', 'D', 'F'] as const;
 
