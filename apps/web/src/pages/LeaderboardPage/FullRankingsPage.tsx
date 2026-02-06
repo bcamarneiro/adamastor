@@ -177,7 +177,6 @@ export function FullRankingsPage() {
 
       <Section variant="muted" size="md">
         <div className="max-w-4xl mx-auto">
-
           {/* Filters Panel */}
           {showFilters && (
             <div className="bg-neutral-1 rounded-2xl p-6 mb-6 border border-neutral-5 shadow-sm">
