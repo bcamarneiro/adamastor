@@ -242,28 +242,38 @@ const InitiativeList = () => {
         {isLoading ? (
           <div
             className="flex justify-center items-center h-full min-h-64 transition-opacity duration-200"
+            // biome-ignore lint/a11y/useSemanticElements: role="status" is correct for loading indicators
             role="status"
             aria-label="Loading initiatives"
           >
             <Spinner size="lg" />
           </div>
         ) : (
+          // biome-ignore lint/a11y/useSemanticElements: ARIA table roles on divs enable accessible virtualized grid layouts
           <div role="table" aria-label="Initiatives list" className="flex flex-col min-h-0 h-full">
             {/* Sticky Header */}
+            {/* biome-ignore lint/a11y/useSemanticElements: ARIA roles required for accessible virtualized table */}
             <div role="rowgroup" className="flex-none bg-neutral-2 border-b border-neutral-3">
+              {/* biome-ignore lint/a11y/useSemanticElements: ARIA row role for grid layout */}
+              {/* biome-ignore lint/a11y/useFocusableInteractive: Header row doesn't need focus */}
               <div role="row" className={gridColsClass}>
+                {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
                 <div role="columnheader" className="p-3" aria-label="Expand/collapse">
                   <span className="sr-only">Expand</span>
                 </div>
+                {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   #
                 </div>
+                {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   Phase
                 </div>
+                {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   Title
                 </div>
+                {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   Actions
                 </div>
@@ -271,12 +281,16 @@ const InitiativeList = () => {
             </div>
 
             {/* Virtualized Table Body */}
+            {/* biome-ignore lint/a11y/useSemanticElements: rowgroup role for virtualized table body */}
             <div ref={scrollContainerRef} role="rowgroup" className="flex-1 overflow-auto">
               {filteredInitiatives.length === 0 ? (
+                // biome-ignore lint/a11y/useSemanticElements: row/cell roles for empty state in table
+                // biome-ignore lint/a11y/useFocusableInteractive: Empty state row doesn't need focus
                 <div
                   role="row"
                   className="flex items-center justify-center h-full min-h-48 text-neutral-11 transition-opacity duration-200"
                 >
+                  {/* biome-ignore lint/a11y/useSemanticElements: cell role for table consistency */}
                   <div role="cell" className="flex flex-col items-center gap-3 p-8">
                     <FaSearch className="w-8 h-8 opacity-50" aria-hidden="true" />
                     <p className="text-center">
