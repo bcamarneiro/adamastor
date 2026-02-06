@@ -117,6 +117,7 @@ export function PartyCard({ party, rank, onClick, isSelected }: PartyCardProps) 
       <div
         onClick={onClick}
         onKeyDown={handleKeyDown}
+        // biome-ignore lint/a11y/useSemanticElements: interactive card with custom styling
         role="button"
         tabIndex={0}
         className={cardClassName}

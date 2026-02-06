@@ -66,7 +66,20 @@ vi.mock('framer-motion', () => {
   };
 
   const createMotionComponent = (Tag: string) => (props: MotionProps) => {
-    const { children, initial, animate, exit, variants, whileInView, viewport, transition, custom, whileHover, whileTap, ...rest } = props;
+    const {
+      children,
+      initial,
+      animate,
+      exit,
+      variants,
+      whileInView,
+      viewport,
+      transition,
+      custom,
+      whileHover,
+      whileTap,
+      ...rest
+    } = props;
     return React.createElement(Tag, rest, children);
   };
 
@@ -155,7 +168,9 @@ describe('ParliamentList', () => {
       const { container } = render(<ParliamentList />);
 
       // LoadingState component renders skeleton elements with animate-pulse
-      const loadingElements = container.querySelectorAll('[class*="animate-pulse"], [class*="rounded-full"], [class*="rounded-xl"]');
+      const loadingElements = container.querySelectorAll(
+        '[class*="animate-pulse"], [class*="rounded-full"], [class*="rounded-xl"]'
+      );
       expect(loadingElements.length).toBeGreaterThan(0);
     });
 

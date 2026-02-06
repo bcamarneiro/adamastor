@@ -83,10 +83,7 @@ const ParliamentList = () => {
         <PageHeader
           title="Parlamento"
           description="Explore os deputados da Assembleia da República."
-          breadcrumbs={[
-            { label: 'Início', href: '/' },
-            { label: 'Parlamento' },
-          ]}
+          breadcrumbs={[{ label: 'Início', href: '/' }, { label: 'Parlamento' }]}
         />
         <Section size="lg">
           <ErrorState
@@ -104,10 +101,7 @@ const ParliamentList = () => {
       <PageHeader
         title="Parlamento"
         description="Conhece os 230 deputados eleitos para a Assembleia da República e os círculos eleitorais que representam."
-        breadcrumbs={[
-          { label: 'Início', href: '/' },
-          { label: 'Parlamento' },
-        ]}
+        breadcrumbs={[{ label: 'Início', href: '/' }, { label: 'Parlamento' }]}
       />
 
       {/* Stats Section */}
@@ -297,7 +291,8 @@ const ParliamentList = () => {
                 </>
               ) : (
                 <>
-                  A mostrar <span className="font-semibold text-neutral-12">{filteredMPs.length}</span>{' '}
+                  A mostrar{' '}
+                  <span className="font-semibold text-neutral-12">{filteredMPs.length}</span>{' '}
                   deputados
                 </>
               )}
