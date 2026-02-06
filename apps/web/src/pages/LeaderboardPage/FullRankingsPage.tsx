@@ -8,8 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Filter, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TOTAL_DEPUTIES } from 'shared';
-
 const GRADES = ['A', 'B', 'C', 'D', 'F'] as const;
 
 const gradeColors: Record<string, string> = {
@@ -71,7 +69,7 @@ export function FullRankingsPage() {
     <div className="min-h-screen bg-neutral-2 flex flex-col">
       <SEO
         title="Ranking Completo de Deputados"
-        description={`Ranking completo de todos os ${TOTAL_DEPUTIES} deputados portugueses ordenados por desempenho parlamentar.`}
+        description="Ranking completo de todos os deputados portugueses da legislatura atual, ordenados por desempenho parlamentar."
         url="/ranking/completo"
       />
       <MainNav scrollY={0} />
@@ -92,7 +90,7 @@ export function FullRankingsPage() {
               <LegislatureBadge />
             </div>
             <p className="text-neutral-11">
-              Todos os {TOTAL_DEPUTIES} deputados ordenados por desempenho
+              Todos os deputados da legislatura atual ordenados por desempenho
             </p>
           </div>
 

@@ -446,8 +446,8 @@ describe('ReportCardDetail', () => {
     describe('Averages comparison', () => {
       it('should use national averages for metric comparisons', () => {
         const averages = createMockNationalAverages({
-          avg_proposals: 20.0,
-          avg_interventions: 50.0,
+          avg_proposal_count: 20.0,
+          avg_intervention_count: 50.0,
         });
         const deputy = createMockDeputyDetail({
           proposal_count: 10, // Below avg of 20
@@ -477,7 +477,7 @@ describe('ReportCardDetail', () => {
 
       it('should display average values in MetricBar', () => {
         const averages = createMockNationalAverages({
-          avg_proposals: 12.5,
+          avg_proposal_count: 12.5,
         });
         const deputy = createMockDeputyDetail({ proposal_count: 15 });
 
@@ -583,7 +583,7 @@ describe('ReportCardDetail', () => {
           meetings_attended: 76,
           meetings_total: 80,
         });
-        const averages = createMockNationalAverages({ avg_attendance: 85.0 });
+        const averages = createMockNationalAverages({ avg_attendance_rate: 85.0 });
 
         render(<ReportCardDetail deputy={deputy} averages={averages} />);
 
@@ -597,7 +597,7 @@ describe('ReportCardDetail', () => {
           meetings_attended: 56,
           meetings_total: 80,
         });
-        const averages = createMockNationalAverages({ avg_attendance: 85.0 });
+        const averages = createMockNationalAverages({ avg_attendance_rate: 85.0 });
 
         render(<ReportCardDetail deputy={deputy} averages={averages} />);
 
