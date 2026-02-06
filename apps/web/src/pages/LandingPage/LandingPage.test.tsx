@@ -5,10 +5,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 // Mock framer-motion to avoid animation issues in tests
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: React.PropsWithChildren<object>) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: React.PropsWithChildren<object>) => (
+      <div {...props}>{children}</div>
+    ),
     p: ({ children, ...props }: React.PropsWithChildren<object>) => <p {...props}>{children}</p>,
     h2: ({ children, ...props }: React.PropsWithChildren<object>) => <h2 {...props}>{children}</h2>,
-    span: ({ children, ...props }: React.PropsWithChildren<object>) => <span {...props}>{children}</span>,
+    span: ({ children, ...props }: React.PropsWithChildren<object>) => (
+      <span {...props}>{children}</span>
+    ),
     a: ({ children, ...props }: React.PropsWithChildren<object>) => <a {...props}>{children}</a>,
   },
   AnimatePresence: ({ children }: React.PropsWithChildren<object>) => <>{children}</>,
@@ -238,7 +242,7 @@ describe('LandingPage', () => {
 
     it('should render components in correct order', () => {
       renderLandingPage();
-      
+
       const mainNav = screen.getByTestId('main-nav-component');
       const hero = screen.getByTestId('hero-component');
       const keyMetrics = screen.getByTestId('key-metrics-component');
@@ -254,9 +258,9 @@ describe('LandingPage', () => {
   describe('Accessibility', () => {
     it('should have accessible feature card links', () => {
       renderLandingPage();
-      
+
       const links = screen.getAllByRole('link');
-      links.forEach(link => {
+      links.forEach((link) => {
         // Each link should have accessible text content
         expect(link.textContent?.trim().length).toBeGreaterThan(0);
       });
@@ -264,7 +268,7 @@ describe('LandingPage', () => {
 
     it('should render sections with semantic structure', () => {
       const { container } = renderLandingPage();
-      
+
       const sections = container.querySelectorAll('section');
       expect(sections.length).toBeGreaterThanOrEqual(2);
     });
