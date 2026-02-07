@@ -3,11 +3,13 @@ import { FullRankings } from '@/components/Leaderboard/FullRankings';
 import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { SEO } from '@/components/SEO';
+import PageHeader from '@/components/layout/PageHeader';
+import Section from '@/components/layout/Section';
+import StatCard from '@/components/layout/StatCard';
 import { type District, type Party, supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Filter, X } from 'lucide-react';
+import { BarChart3, Filter, TrendingUp, Users, X } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 const GRADES = ['A', 'B', 'C', 'D', 'F'] as const;
 
 const gradeColors: Record<string, string> = {
@@ -38,6 +40,31 @@ async function fetchDistricts(): Promise<District[]> {
   return data || [];
 }
 
+async function fetchAggregateStats() {
+  const { data, error } = await supabase
+    .from('deputy_detail')
+    .select('work_score, grade')
+    .not('work_score', 'is', null);
+
+  if (error) {
+    console.error('Error fetching aggregate stats:', error);
+    return { totalDeputies: 0, avgScore: 0, gradeDistribution: {} as Record<string, number> };
+  }
+
+  const totalDeputies = data.length;
+  const avgScore = data.reduce((sum, d) => sum + (d.work_score || 0), 0) / totalDeputies;
+  const gradeDistribution = data.reduce(
+    (acc, d) => {
+      const grade = d.grade || 'F';
+      acc[grade] = (acc[grade] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  return { totalDeputies, avgScore, gradeDistribution };
+}
+
 export function FullRankingsPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedParty, setSelectedParty] = useState<string | null>(null);
@@ -54,6 +81,12 @@ export function FullRankingsPage() {
     queryKey: ['districts'],
     queryFn: fetchDistricts,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours - static reference data
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ['aggregate-stats'],
+    queryFn: fetchAggregateStats,
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   const clearFilters = () => {
@@ -74,129 +107,166 @@ export function FullRankingsPage() {
       />
       <MainNav scrollY={0} />
 
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
-        <Link
-          to="/ranking"
-          className="inline-flex items-center gap-2 text-neutral-11 hover:text-neutral-12 mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Voltar</span>
-        </Link>
-
-        <div className="flex items-start justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-neutral-12">Ranking Completo</h1>
+      <PageHeader
+        variant="dark"
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Ranking', href: '/ranking' },
+          { label: 'Completo' },
+        ]}
+        title={
+          <div className="flex flex-col gap-2">
+            <span className="font-serif text-sm uppercase tracking-widest text-accent-11">
+              Todos os Deputados
+            </span>
+            <div className="flex items-center gap-3">
+              <span>Ranking Completo</span>
               <LegislatureBadge />
             </div>
-            <p className="text-neutral-11">
-              Todos os deputados da legislatura atual ordenados por desempenho
-            </p>
           </div>
-
+        }
+        description="Todos os deputados da legislatura atual ordenados por desempenho"
+        actions={
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+            className={`inline-flex items-center gap-2 rounded-full h-12 px-6 font-semibold transition-colors ${
               showFilters || hasFilters
-                ? 'bg-accent-9 text-monochrome-white'
-                : 'bg-neutral-3 text-neutral-11 hover:bg-neutral-4'
+                ? 'bg-white text-neutral-12 hover:bg-neutral-3'
+                : 'bg-neutral-11 text-white hover:bg-neutral-10'
             }`}
           >
             <Filter className="w-4 h-4" />
             <span>Filtros</span>
             {hasFilters && (
-              <span className="bg-monochrome-white text-accent-9 text-xs px-1.5 py-0.5 rounded-full">
+              <span className="bg-accent-9 text-white text-xs px-2 py-0.5 rounded-full">
                 {filterCount}
               </span>
             )}
           </button>
-        </div>
+        }
+      />
 
-        {/* Filters Panel */}
-        {showFilters && (
-          <div className="bg-neutral-1 rounded-xl p-4 mb-6 border border-neutral-5">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label
-                  htmlFor="party-filter"
-                  className="block text-sm font-medium text-neutral-11 mb-2"
-                >
-                  Partido
-                </label>
-                <select
-                  id="party-filter"
-                  value={selectedParty || ''}
-                  onChange={(e) => setSelectedParty(e.target.value || null)}
-                  className="w-full px-3 py-2 bg-neutral-2 border border-neutral-5 rounded-lg text-neutral-12 focus:ring-2 focus:ring-accent-9 focus:border-accent-9"
-                >
-                  <option value="">Todos os partidos</option>
-                  {parties.map((party) => (
-                    <option key={party.id} value={party.id}>
-                      {party.acronym} - {party.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="district-filter"
-                  className="block text-sm font-medium text-neutral-11 mb-2"
-                >
-                  Distrito
-                </label>
-                <select
-                  id="district-filter"
-                  value={selectedDistrict || ''}
-                  onChange={(e) => setSelectedDistrict(e.target.value || null)}
-                  className="w-full px-3 py-2 bg-neutral-2 border border-neutral-5 rounded-lg text-neutral-12 focus:ring-2 focus:ring-accent-9 focus:border-accent-9"
-                >
-                  <option value="">Todos os distritos</option>
-                  {districts.map((district) => (
-                    <option key={district.id} value={district.id}>
-                      {district.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <fieldset className="border-0 p-0 m-0">
-                <legend className="block text-sm font-medium text-neutral-11 mb-2">
-                  Classificacao
-                </legend>
-                <div className="flex flex-wrap gap-2">
-                  {GRADES.map((grade) => (
-                    <button
-                      key={grade}
-                      type="button"
-                      onClick={() => setSelectedGrade(selectedGrade === grade ? null : grade)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all ${
-                        selectedGrade === grade
-                          ? `${gradeColors[grade]} ring-2 ring-offset-1`
-                          : 'bg-neutral-2 text-neutral-11 border-neutral-5 hover:bg-neutral-3'
-                      }`}
-                    >
-                      {grade}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-            </div>
-
-            {hasFilters && (
-              <button
-                onClick={clearFilters}
-                className="mt-4 inline-flex items-center gap-1 text-sm text-accent-9 hover:text-accent-10"
-              >
-                <X className="w-3 h-3" />
-                Limpar filtros
-              </button>
-            )}
+      {/* Stats Section */}
+      {stats && (
+        <Section variant="light" size="sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <StatCard
+              value={stats.totalDeputies}
+              label="Total de Deputados"
+              description="Na legislatura atual"
+              icon={<Users className="w-6 h-6" />}
+              variant="accent"
+            />
+            <StatCard
+              value={stats.avgScore.toFixed(1)}
+              label="Pontuação Média"
+              description="Média de todos os deputados"
+              icon={<BarChart3 className="w-6 h-6" />}
+              variant="default"
+            />
+            <StatCard
+              value={stats.gradeDistribution.A || 0}
+              label="Deputados com Nota A"
+              description="Melhor desempenho"
+              icon={<TrendingUp className="w-6 h-6" />}
+              variant="success"
+            />
           </div>
-        )}
+        </Section>
+      )}
 
-        <FullRankings partyId={selectedParty} districtId={selectedDistrict} grade={selectedGrade} />
-      </main>
+      <Section variant="muted" size="md">
+        <div className="max-w-4xl mx-auto">
+          {/* Filters Panel */}
+          {showFilters && (
+            <div className="bg-neutral-1 rounded-2xl p-6 mb-6 border border-neutral-5 shadow-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                  <label
+                    htmlFor="party-filter"
+                    className="block text-sm font-semibold text-neutral-12 mb-2"
+                  >
+                    Partido
+                  </label>
+                  <select
+                    id="party-filter"
+                    value={selectedParty || ''}
+                    onChange={(e) => setSelectedParty(e.target.value || null)}
+                    className="w-full h-12 px-4 bg-neutral-2 border border-neutral-6 rounded-full text-neutral-12 focus:ring-2 focus:ring-accent-7 focus:border-accent-7 transition-all"
+                  >
+                    <option value="">Todos os partidos</option>
+                    {parties.map((party) => (
+                      <option key={party.id} value={party.id}>
+                        {party.acronym} - {party.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="district-filter"
+                    className="block text-sm font-semibold text-neutral-12 mb-2"
+                  >
+                    Distrito
+                  </label>
+                  <select
+                    id="district-filter"
+                    value={selectedDistrict || ''}
+                    onChange={(e) => setSelectedDistrict(e.target.value || null)}
+                    className="w-full h-12 px-4 bg-neutral-2 border border-neutral-6 rounded-full text-neutral-12 focus:ring-2 focus:ring-accent-7 focus:border-accent-7 transition-all"
+                  >
+                    <option value="">Todos os distritos</option>
+                    {districts.map((district) => (
+                      <option key={district.id} value={district.id}>
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <fieldset className="border-0 p-0 m-0">
+                  <legend className="block text-sm font-semibold text-neutral-12 mb-2">
+                    Classificacao
+                  </legend>
+                  <div className="flex flex-wrap gap-2">
+                    {GRADES.map((grade) => (
+                      <button
+                        key={grade}
+                        type="button"
+                        onClick={() => setSelectedGrade(selectedGrade === grade ? null : grade)}
+                        className={`px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all ${
+                          selectedGrade === grade
+                            ? `${gradeColors[grade]} ring-2 ring-accent-9`
+                            : 'bg-neutral-2 text-neutral-11 border-neutral-6 hover:bg-neutral-3 hover:border-neutral-7'
+                        }`}
+                      >
+                        {grade}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+              </div>
+
+              {hasFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent-9 hover:text-accent-10 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                  Limpar filtros
+                </button>
+              )}
+            </div>
+          )}
+
+          <FullRankings
+            partyId={selectedParty}
+            districtId={selectedDistrict}
+            grade={selectedGrade}
+          />
+        </div>
+      </Section>
 
       <Footer />
     </div>

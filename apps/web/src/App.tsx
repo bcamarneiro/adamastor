@@ -1,4 +1,5 @@
 import { Suspense, lazy } from 'react';
+const PrivacidadePage = lazy(() => import('./pages/PrivacidadePage/PrivacidadePage'));
 import { Route, Routes } from 'react-router-dom';
 
 import { useAppSettingsStore } from '@store/useAppSettingsStore';
@@ -121,6 +122,8 @@ const App = () => {
             {/* Districts Feature */}
             <Route path="distritos" element={<DistrictsPage />} />
             <Route path="distritos/comparar" element={<DistrictComparisonPage />} />
+
+            <Route path="privacidade" element={<PrivacidadePage />} />
 
             <Route path="*" element={<FourOFour />} />
           </Routes>

@@ -27,7 +27,7 @@ const LoadingScreen = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-white/95 dark:bg-neutral-900/95 backdrop-blur-sm"
-          // biome-ignore lint/a11y/useSemanticElements: status role for loading state
+          // biome-ignore lint/a11y/useSemanticElements: role="status" is the correct ARIA pattern for loading indicators
           role="status"
           aria-live="polite"
           aria-label="Loading content"
