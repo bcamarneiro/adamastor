@@ -89,16 +89,48 @@ SECURITY DEFINER;
 -- ===================
 DROP TRIGGER IF EXISTS validate_ranking_before_upsert ON deputy_stats;
 
-CREATE TRIGGER validate_ranking_before_upsert
-  BEFORE INSERT OR UPDATE OF national_rank, district_rank
+-- Use CONSTRAINT TRIGGER with DEFERRABLE to allow intermediate states
+-- during transactions (e.g., recalculate_all_stats() updates in multiple steps)
+CREATE CONSTRAINT TRIGGER validate_ranking_before_upsert
+  AFTER INSERT OR UPDATE OF national_rank, district_rank
   ON deputy_stats
+  DEFERRABLE INITIALLY DEFERRED
   FOR EACH ROW
   EXECUTE FUNCTION validate_deputy_ranking();
+
+-- ===================
+-- REVERSE TRIGGER FOR DEPUTY DEACTIVATION
+-- ===================
+-- When a deputy becomes inactive, clear their rankings automatically
+CREATE OR REPLACE FUNCTION clear_deputy_rankings()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Only clear rankings when deputy becomes inactive
+  IF NEW.is_active = false AND OLD.is_active = true THEN
+    UPDATE deputy_stats 
+    SET national_rank = NULL, district_rank = NULL 
+    WHERE deputy_id = NEW.id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS clear_rankings_when_inactive ON deputies;
+
+CREATE TRIGGER clear_rankings_when_inactive
+  AFTER UPDATE OF is_active
+  ON deputies
+  FOR EACH ROW
+  WHEN (NEW.is_active = false AND OLD.is_active = true)
+  EXECUTE FUNCTION clear_deputy_rankings();
 
 -- ===================
 -- PERMISSIONS
 -- ===================
 GRANT EXECUTE ON FUNCTION validate_deputy_ranking() TO service_role;
+GRANT EXECUTE ON FUNCTION clear_deputy_rankings() TO service_role;
 
 -- ===================
 -- COMMENTS
@@ -106,7 +138,16 @@ GRANT EXECUTE ON FUNCTION validate_deputy_ranking() TO service_role;
 COMMENT ON FUNCTION validate_deputy_ranking() IS 
 'Validates that deputy rankings do not exceed the number of active deputies in their legislature/district. 
 Prevents data integrity issues when stats are inserted/updated outside of recalculate_all_stats().
-Inactive deputies must have NULL rankings.';
+Inactive deputies must have NULL rankings.
+Uses DEFERRABLE CONSTRAINT TRIGGER to allow intermediate states during transactions.';
 
 COMMENT ON TRIGGER validate_ranking_before_upsert ON deputy_stats IS
-'Enforces ranking constraints before insert/update to prevent invalid ranking values (Issue #85)';
+'Enforces ranking constraints at transaction commit to prevent invalid ranking values (Issue #85).
+DEFERRABLE allows recalculate_all_stats() to update ranks in multiple steps.';
+
+COMMENT ON FUNCTION clear_deputy_rankings() IS
+'Automatically clears national_rank and district_rank when a deputy becomes inactive.
+Ensures consistency between deputies.is_active and deputy_stats rankings.';
+
+COMMENT ON TRIGGER clear_rankings_when_inactive ON deputies IS
+'Clears rankings when deputy is marked inactive (prevents orphaned rankings)';
