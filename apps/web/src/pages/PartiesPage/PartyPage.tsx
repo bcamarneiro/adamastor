@@ -27,10 +27,13 @@ export function PartyPage() {
   const { data: deputies = [], isLoading: deputiesLoading } = useDeputiesByParty(party?.id || null);
 
   // Calculate additional metrics from deputies
+  // Filter out null attendance_rate values to avoid skewing averages downward
+  const deputiesWithAttendance = deputies.filter((d) => d.attendance_rate != null);
   const avgAttendance =
-    deputies.length > 0
-      ? deputies.reduce((sum, d) => sum + (d.attendance_rate || 0), 0) / deputies.length
-      : 0;
+    deputiesWithAttendance.length > 0
+      ? deputiesWithAttendance.reduce((sum, d) => sum + d.attendance_rate!, 0) /
+        deputiesWithAttendance.length
+      : null;
 
   if (isLoading) {
     return (
@@ -151,7 +154,7 @@ export function PartyPage() {
               <CheckCircle className="w-5 h-5 text-accent-9" />
               <div>
                 <div className="text-2xl font-bold text-neutral-12">
-                  {avgAttendance > 0 ? `${avgAttendance.toFixed(1)}%` : 'N/A'}
+                  {avgAttendance != null ? `${avgAttendance.toFixed(1)}%` : 'N/A'}
                 </div>
                 <div className="text-sm text-neutral-11">Presença Média em Plenário</div>
               </div>

@@ -36,11 +36,15 @@ vi.mock('../../store/useFeatureFlags', () => ({
   }),
 }));
 
-// Mock useNavigate for GradeCircle
+// Mock useNavigate for GradeCircle and Link for party badge
 const mockNavigate = vi.fn();
-vi.mock('react-router-dom', () => ({
-  useNavigate: () => mockNavigate,
-}));
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 // Helper to reset flags before each test
 function resetFlags() {
