@@ -11,20 +11,8 @@ import { StatCard } from '@/components/layout/StatCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { PARTY_COLORS } from '@/services/parliament/constants';
 import { useParliament } from '@/services/parliament/useParliament';
-
-// Party colors mapping
-const PARTY_COLORS: Record<string, string> = {
-  PS: '#FF66B2',
-  PSD: '#FF9933',
-  CH: '#202056',
-  IL: '#00AEEF',
-  BE: '#C4161C',
-  PCP: '#FF0000',
-  L: '#00AA4F',
-  PAN: '#00875A',
-  'CDS-PP': '#0066CC',
-};
 
 const ParliamentList = () => {
   const { parliament, metadata, isLoading, isError, error } = useParliament();

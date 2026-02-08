@@ -298,6 +298,22 @@ describe('ParliamentList', () => {
       expect(screen.queryByText('Maria Costa')).toBeNull();
     });
 
+    it('should filter MPs by full name', () => {
+      setMockState({
+        parliament: createMockParliamentData({ mps: createSearchableMPs() }),
+        metadata: createMockParliamentMetadata({ total: 5 }),
+      });
+
+      render(<ParliamentList />);
+
+      const searchInput = screen.getByPlaceholderText('Pesquisar deputados...');
+      // Search for "Manuel" which is in João's full name but not parliamentary name
+      fireEvent.change(searchInput, { target: { value: 'Manuel' } });
+
+      expect(screen.getByText('João Silva')).toBeTruthy();
+      expect(screen.queryByText('Maria Costa')).toBeNull();
+    });
+
     it('should perform case-insensitive search', () => {
       setMockState({
         parliament: createMockParliamentData({ mps: createSearchableMPs() }),
