@@ -125,7 +125,7 @@ export function useCompareDeputies(
       winsB: genericResult.winsB,
       ties: genericResult.ties,
       winner: genericResult.winner,
-      // scoreDifference is always defined here because we provide getScore
+      // biome-ignore lint/style/noNonNullAssertion: scoreDifference is always defined when getScore is provided
       scoreDifference: genericResult.scoreDifference!,
     };
   }, [genericResult]);

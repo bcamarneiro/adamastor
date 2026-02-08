@@ -260,10 +260,10 @@ describe('LandingPage', () => {
       renderLandingPage();
 
       const links = screen.getAllByRole('link');
-      links.forEach((link) => {
+      for (const link of links) {
         // Each link should have accessible text content
         expect(link.textContent?.trim().length).toBeGreaterThan(0);
-      });
+      }
     });
 
     it('should render sections with semantic structure', () => {
