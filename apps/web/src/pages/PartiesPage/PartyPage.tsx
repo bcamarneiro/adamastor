@@ -3,8 +3,8 @@ import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { PartyDeputyList } from '@/components/ReportCard/PartyDeputyList';
 import { SEO } from '@/components/SEO';
-import { useDeputiesByParty } from '@/services/reportCard';
 import { usePartyStats } from '@/services/parties';
+import { useDeputiesByParty } from '@/services/reportCard';
 import {
   ArrowLeft,
   CheckCircle,
