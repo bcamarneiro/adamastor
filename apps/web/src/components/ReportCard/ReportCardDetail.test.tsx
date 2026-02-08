@@ -644,7 +644,7 @@ describe('ReportCardDetail', () => {
       it('should NOT render extended info sections when extendedInfo is null', () => {
         const deputy = createMockDeputyDetail();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -666,7 +666,7 @@ describe('ReportCardDetail', () => {
           roles: [createMockDeputyRole()],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -683,7 +683,7 @@ describe('ReportCardDetail', () => {
           roles: [],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -703,7 +703,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -727,7 +727,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -751,7 +751,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -767,7 +767,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithMultipleRoles();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -787,7 +787,7 @@ describe('ReportCardDetail', () => {
           partyHistory: [createMockDeputyPartyHistory()],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -803,7 +803,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithPartyChanges();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -820,7 +820,7 @@ describe('ReportCardDetail', () => {
           partyHistory: [],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -840,7 +840,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -871,7 +871,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -889,7 +889,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithPartyChanges();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -910,7 +910,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory()],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -927,7 +927,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -947,7 +947,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -972,7 +972,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -988,7 +988,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithStatusChanges();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1007,7 +1007,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Efetivo' })],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1026,7 +1026,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Suspenso' })],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1045,7 +1045,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Renunciou' })],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1067,7 +1067,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1093,7 +1093,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Efetivo' })],
         };
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1124,7 +1124,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [], // Empty - should not render
         };
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1146,7 +1146,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Efetivo' })],
         };
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1251,7 +1251,7 @@ describe('ReportCardDetail', () => {
           biography_source_url: 'https://www.parlamento.pt/deputado/bio',
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
@@ -1272,7 +1272,7 @@ describe('ReportCardDetail', () => {
           biography_source_url: 'https://www.parlamento.pt/deputado/12345/bio',
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
@@ -1399,7 +1399,7 @@ describe('ReportCardDetail', () => {
       it('should have proper footer styling with bg-neutral-2', () => {
         const deputy = createMockDeputyDetail();
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
@@ -1411,7 +1411,7 @@ describe('ReportCardDetail', () => {
       it('should contain both source icons (Database and Globe)', () => {
         const deputy = createMockDeputyDetail();
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
