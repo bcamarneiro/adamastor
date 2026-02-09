@@ -31,7 +31,7 @@ export function PartyPage() {
   const deputiesWithAttendance = deputies.filter((d) => d.attendance_rate != null);
   const avgAttendance =
     deputiesWithAttendance.length > 0
-      ? deputiesWithAttendance.reduce((sum, d) => sum + d.attendance_rate!, 0) /
+      ? deputiesWithAttendance.reduce((sum, d) => sum + (d.attendance_rate ?? 0), 0) /
         deputiesWithAttendance.length
       : null;
 

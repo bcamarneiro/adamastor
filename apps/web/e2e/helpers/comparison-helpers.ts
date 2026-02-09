@@ -190,7 +190,9 @@ export async function clickCompareButton(page: Page, config: SelectorConfig): Pr
   // Use Promise.race to accept either condition
   await Promise.race([
     page.locator('text=/venceu|Empate/i').first().waitFor({ state: 'visible', timeout: 10000 }),
-    page.getByRole('heading', { name: /comparacao detalhada/i }).waitFor({ state: 'visible', timeout: 10000 }),
+    page
+      .getByRole('heading', { name: /comparacao detalhada/i })
+      .waitFor({ state: 'visible', timeout: 10000 }),
   ]).catch(() => {
     // If results don't appear, the test will handle it via subsequent assertions
   });
