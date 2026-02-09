@@ -37,7 +37,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [location.pathname]);
+  }, [location]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -123,7 +123,12 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
         <div
           className="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-200"
           onClick={() => setMobileMenuOpen(false)}
-          aria-hidden="true"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setMobileMenuOpen(false);
+          }}
+          role="button"
+          tabIndex={-1}
+          aria-label="Fechar menu"
         />
       )}
 
