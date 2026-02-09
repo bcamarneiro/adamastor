@@ -68,7 +68,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
       }`}
     >
       <div className="container px-6 md:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex items-center justify-between" style={{ height: 'var(--header-height, 4rem)' }}>
           <Link to="/" className="flex items-center gap-2">
             <DebaixoDolhoLogo size="md" className="text-neutral-12" />
             <span className="text-lg font-medium text-neutral-12">Debaixo d'olho</span>
@@ -121,46 +121,45 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
       </div>
 
       {/* Mobile Navigation Backdrop */}
-      {mobileMenuOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-200"
-          onClick={() => setMobileMenuOpen(false)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') setMobileMenuOpen(false);
-          }}
-          role="button"
-          tabIndex={-1}
-          aria-label="Fechar menu"
-        />
-      )}
+      <div
+        className={`md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-200 ${
+          mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') setMobileMenuOpen(false);
+        }}
+        aria-label="Fechar menu"
+      />
 
       {/* Mobile Navigation - Only render on mobile when menu is open */}
-      {mobileMenuOpen && (
-        <div
-          id="mobile-navigation"
-          className="md:hidden fixed top-16 left-0 right-0 bottom-0 z-50 bg-neutral-1 transform translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto"
-          aria-hidden={false}
-        >
-          <div className="container px-6 py-4">
-            {/* Mobile Search - Only visible on mobile */}
-            <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
-            <nav className="flex flex-col gap-3">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`text-base font-medium py-2 transition-colors ${
-                    isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
+      <div
+        id="mobile-navigation"
+        className={`md:hidden fixed left-0 right-0 bottom-0 z-50 bg-neutral-1 transition-transform duration-300 ease-in-out overflow-y-auto ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        style={{ top: 'var(--header-height, 4rem)' }}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <div className="container px-6 py-4">
+          {/* Mobile Search - Only visible on mobile */}
+          <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
+          <nav className="flex flex-col gap-3">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`text-base font-medium py-2 transition-colors ${
+                  isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-      )}
+      </div>
     </header>
   );
 };
