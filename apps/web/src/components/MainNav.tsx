@@ -143,8 +143,10 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
         aria-hidden={!mobileMenuOpen}
       >
         <div className="container px-6 py-4">
-          {/* Mobile Search */}
-          <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
+          {/* Mobile Search - Only render when menu is open */}
+          {mobileMenuOpen && (
+            <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
+          )}
           <nav className="flex flex-col gap-3">
             {navItems.map((item) => (
               <Link
