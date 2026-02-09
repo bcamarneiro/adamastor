@@ -3,7 +3,7 @@ import { expect, test } from './fixtures';
 test.describe('Navigation', () => {
   // Desktop navigation tests - skip on mobile viewport since nav is hidden
   test.describe('Desktop navigation', () => {
-    test.skip(({ browserName, viewport }) => {
+    test.skip(({ viewport }) => {
       // Skip if using mobile viewport (width < 768px, which is md breakpoint)
       return viewport ? viewport.width < 768 : false;
     });
