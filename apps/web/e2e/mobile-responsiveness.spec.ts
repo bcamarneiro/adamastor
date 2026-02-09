@@ -9,7 +9,7 @@ test.describe('Mobile Responsiveness', () => {
     await expect(page).toHaveTitle(/Debaixo d'olho/i);
 
     // Check that main heading is visible
-    await expect(page.getByRole('heading', { name: /acompanha o teu deputado/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /O Teu Deputado em Números/i })).toBeVisible();
 
     // Check for the footer
     await expect(page.locator('footer')).toBeVisible();
