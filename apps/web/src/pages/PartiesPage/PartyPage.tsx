@@ -65,7 +65,7 @@ export function PartyPage() {
   }
 
   // Calculate party ranking
-  const partyRank = parties?.findIndex((p) => p.id === party.id) + 1 || 0;
+  const partyRank = parties ? parties.findIndex((p) => p.id === party.id) + 1 : 0;
 
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
