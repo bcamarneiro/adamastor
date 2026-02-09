@@ -241,10 +241,19 @@ jobs:
             echo "No supabase file changes - skipping db-migrations"
           fi
 
+      - name: Cache Supabase CLI
+        if: steps.check-paths.outputs.should_run == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/supabase
+            /usr/local/bin/supabase
+          key: supabase-cli-${{ runner.os }}-2.75.0
+
       - uses: supabase/setup-cli@v1
         if: steps.check-paths.outputs.should_run == 'true'
         with:
-          version: latest
+          version: 2.75.0
 
       # Step 1: Start Supabase with minimal services (required for db lint)
       - name: Start Supabase (DB only)
