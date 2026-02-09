@@ -46,23 +46,23 @@ export async function openSelector(
   const input = page
     .locator(`input[placeholder*="${config.searchPlaceholder}"]`)
     .nth(selectorIndex);
-  
+
   // Get the parent container of the input (the selector component)
   const selectorContainer = input.locator('..').locator('..');
-  
+
   await input.click();
 
   // Wait for the dropdown to appear within this specific selector container
   // The dropdown is a sibling of the input's parent, has mt-2 class and specific styling
   const dropdown = selectorContainer.locator('div.mt-2.max-h-48');
-  
+
   await dropdown.waitFor({ state: 'visible', timeout: 5000 });
 
   // Wait for loading to complete - dropdown should show either:
   // 1. Button elements (data loaded successfully)
   // 2. "A carregar..." (still loading)
   // 3. "Nenhum...encontrado" (no data/filtered out)
-  
+
   // First, wait for loading state to finish
   await page
     .waitForFunction(
