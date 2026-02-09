@@ -6,6 +6,8 @@ test.describe('Mobile Responsiveness', () => {
 
   test('Homepage should render correctly on mobile', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
     // Check for the main heading (LandingPage Hero)
     await expect(
       page.getByRole('heading', { name: /O Parlamento debaixo d'olho/i, level: 1 })
