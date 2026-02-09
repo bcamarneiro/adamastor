@@ -1,7 +1,7 @@
 import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
 import { useOnboardingDismissed } from '@/hooks/useFirstVisit';
 import { cn } from '@/utils/cn';
-import { BarChart3, Calculator, Scale, Swords, Trophy, Users, X } from 'lucide-react';
+import { BarChart3, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,44 +11,24 @@ const ONBOARDING_STEPS = [
     icon: null, // Will use logo
     title: "Bem-vindo ao Debaixo d'olho!",
     description:
-      'Uma plataforma de transparência parlamentar que te permite acompanhar o trabalho dos deputados portugueses.',
+      'Transparência parlamentar: acompanha o trabalho dos teus deputados em tempo real.',
+    cta: 'Começar',
   },
   {
     id: 'deputies',
     icon: Users,
     title: 'Descobre o Teu Deputado',
-    description:
-      'Insere o teu código postal para descobrir quem te representa na Assembleia da República e ver o seu desempenho.',
+    description: 'Insere o teu código postal e vê quem te representa na Assembleia da República.',
     link: '/report-card',
+    cta: 'Ver Agora',
   },
   {
-    id: 'ranking',
-    icon: Trophy,
-    title: 'Ranking de Deputados',
-    description: 'Compara a atividade parlamentar de todos os deputados, ordenados por pontuação.',
-    link: '/ranking',
-  },
-  {
-    id: 'parties',
+    id: 'explore',
     icon: BarChart3,
-    title: 'Compara Partidos',
-    description: 'Analisa o desempenho médio de cada partido e compara-os lado a lado.',
-    link: '/partidos',
-  },
-  {
-    id: 'battle',
-    icon: Swords,
-    title: 'Battle Royale',
+    title: 'Explora Mais',
     description:
-      'Escolhe dois deputados quaisquer e descobre qual deles tem melhor desempenho parlamentar.',
-    link: '/batalha',
-  },
-  {
-    id: 'calculator',
-    icon: Calculator,
-    title: 'Calculadora de Desperdício',
-    description: 'Calcula quanto do teu IRS vai para deputados com baixa assiduidade registada.',
-    link: '/desperdicio',
+      'Rankings, comparações entre partidos, batalhas de deputados e calculadora de desperdício.',
+    cta: 'Explorar',
   },
 ];
 
@@ -127,10 +107,9 @@ export function OnboardingModal() {
             <Link
               to={step.link}
               onClick={dismiss}
-              className="inline-flex items-center gap-2 text-accent-9 hover:text-accent-10 font-medium text-sm mb-4"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent-9 text-monochrome-white rounded-lg hover:bg-accent-10 font-medium transition-colors mb-4"
             >
-              <Scale className="w-4 h-4" />
-              Experimentar agora
+              {step.cta || 'Experimentar agora'}
             </Link>
           )}
         </div>
@@ -151,32 +130,34 @@ export function OnboardingModal() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-4 border-t border-neutral-4 bg-neutral-2">
-          <button
-            onClick={handlePrev}
-            disabled={isFirstStep}
-            className={cn(
-              'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
-              isFirstStep
-                ? 'text-neutral-8 cursor-not-allowed'
-                : 'text-neutral-11 hover:text-neutral-12 hover:bg-neutral-3'
-            )}
-          >
-            Anterior
-          </button>
+        <div className="p-4 border-t border-neutral-4 bg-neutral-2 space-y-3">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handlePrev}
+              disabled={isFirstStep}
+              className={cn(
+                'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                isFirstStep
+                  ? 'text-neutral-8 cursor-not-allowed'
+                  : 'text-neutral-11 hover:text-neutral-12 hover:bg-neutral-3'
+              )}
+            >
+              Anterior
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="px-6 py-2 text-sm font-medium bg-accent-9 text-monochrome-white rounded-lg hover:bg-accent-10 transition-colors"
+            >
+              {isLastStep ? 'Começar' : 'Próximo'}
+            </button>
+          </div>
 
           <button
             onClick={handleSkip}
-            className="px-4 py-2 text-sm text-neutral-10 hover:text-neutral-11"
+            className="w-full px-4 py-2 text-sm font-medium text-neutral-11 hover:text-neutral-12 border border-neutral-6 hover:border-neutral-7 rounded-lg transition-colors bg-neutral-1 hover:bg-neutral-2"
           >
-            Saltar
-          </button>
-
-          <button
-            onClick={handleNext}
-            className="px-6 py-2 text-sm font-medium bg-accent-9 text-monochrome-white rounded-lg hover:bg-accent-10 transition-colors"
-          >
-            {isLastStep ? 'Começar' : 'Próximo'}
+            Não mostrar novamente
           </button>
         </div>
       </div>
