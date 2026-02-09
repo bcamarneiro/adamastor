@@ -12,9 +12,7 @@ type ParliamentMetadata = {
 export const useParliament = () => {
   const fetchParliament = useCallback(async (): Promise<ParliamentData> => {
     const url = import.meta.env.VITE_BASE_INFO_URL;
-    if (!url) {
-      throw new Error('VITE_BASE_INFO_URL is not defined');
-    }
+    if (!url) throw new Error('VITE_BASE_INFO_URL is not defined');
     const response = await fetch(url);
 
     if (!response.ok) {

@@ -54,6 +54,23 @@ export function HomePage() {
               isLoading={isLoading}
               error={data?.error || (error ? 'Erro ao procurar distrito' : null)}
             />
+            <p className="text-sm text-neutral-11 mt-4">
+              Para ver círculos internacionais, navega directamente para{' '}
+              <Link
+                to="/distrito/europa"
+                className="text-accent-11 hover:text-accent-12 font-medium underline"
+              >
+                Europa
+              </Link>{' '}
+              e{' '}
+              <Link
+                to="/distrito/fora-da-europa"
+                className="text-accent-11 hover:text-accent-12 font-medium underline"
+              >
+                Fora da Europa
+              </Link>
+              .
+            </p>
           </div>
 
           {/* Ambiguous postal code — show district choice */}

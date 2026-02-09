@@ -22,7 +22,7 @@ jobs:
       - name: Get latest release tag (production only)
         if: inputs.environment == 'production'
         id: latest_release
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const releases = await github.rest.repos.listReleases({
@@ -39,7 +39,7 @@ jobs:
             console.log(`Using release: ${tag}`);
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.environment == 'production' && steps.latest_release.outputs.tag || 'staging' }}
 

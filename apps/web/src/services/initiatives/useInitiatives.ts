@@ -38,9 +38,7 @@ type InitiativesListMetadata = {
 export const useInitiatives = () => {
   const fetchInitiatives = useCallback(async (): Promise<Initiative[]> => {
     const url = import.meta.env.VITE_INITIATIVES_URL;
-    if (!url) {
-      throw new Error('VITE_INITIATIVES_URL is not defined');
-    }
+    if (!url) throw new Error('VITE_INITIATIVES_URL is not defined');
     const response = await fetch(url);
 
     if (!response.ok) {

@@ -39,13 +39,6 @@ export function PartyCard({ party, rank, onClick, isSelected }: PartyCardProps) 
   const grade = getGradeFromScore(party.avg_work_score);
   const gradeColor = getGradeColor(grade);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
-      e.preventDefault();
-      onClick();
-    }
-  };
-
   const partySlug = party.acronym.toLowerCase();
   const partyUrl = `/partidos/${partySlug}`;
 
@@ -111,18 +104,12 @@ export function PartyCard({ party, rank, onClick, isSelected }: PartyCardProps) 
     </div>
   );
 
-  // If onClick is provided (comparison page), use div with onClick
+  // If onClick is provided (comparison page), use button with onClick
   if (onClick) {
     return (
-      <div
-        onClick={onClick}
-        onKeyDown={handleKeyDown}
-        role="button"
-        tabIndex={0}
-        className={cardClassName}
-      >
+      <button type="button" onClick={onClick} className={cardClassName}>
         {cardContent}
-      </div>
+      </button>
     );
   }
 

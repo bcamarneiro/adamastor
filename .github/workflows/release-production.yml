@@ -25,7 +25,7 @@ jobs:
   e2e-staging:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: staging
 
@@ -34,7 +34,7 @@ jobs:
           bun-version: latest
 
       - name: Cache bun dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.bun/install/cache
           key: bun-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}
@@ -45,7 +45,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('**/bun.lock') }}
@@ -61,7 +61,7 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: https://adamastor-staging.vercel.app
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: playwright-report-staging
@@ -74,7 +74,7 @@ jobs:
     needs: e2e-staging
     steps:
       - name: Checkout staging
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: staging
           fetch-depth: 0
