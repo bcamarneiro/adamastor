@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   createDeputyWithNoAttendance,
@@ -18,6 +19,12 @@ import {
 } from '../../test/mocks/deputies';
 import { ReportCardDetail } from './ReportCardDetail';
 
+// Helper function to render with router
+// biome-ignore lint/suspicious/noExplicitAny: test helper
+const renderWithRouter = (ui: any) => {
+  return render(<MemoryRouter>{ui}</MemoryRouter>);
+};
+
 // Default feature flags mock
 const defaultFlags = {
   wasteCalculator: false,
@@ -34,12 +41,6 @@ vi.mock('../../store/useFeatureFlags', () => ({
   useFeatureFlags: () => ({
     flags: currentFlags,
   }),
-}));
-
-// Mock useNavigate for GradeCircle
-const mockNavigate = vi.fn();
-vi.mock('react-router-dom', () => ({
-  useNavigate: () => mockNavigate,
 }));
 
 // Helper to reset flags before each test
@@ -63,7 +64,7 @@ describe('ReportCardDetail', () => {
           short_name: 'João Silva',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         const img = screen.getByRole('img');
         expect(img).toBeTruthy();
@@ -76,7 +77,7 @@ describe('ReportCardDetail', () => {
           photo_url: null,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Placeholder shows a "?" character
         expect(screen.getByText('?')).toBeTruthy();
@@ -89,7 +90,7 @@ describe('ReportCardDetail', () => {
           photo_url: '',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Empty string is falsy, so should show placeholder
         expect(screen.getByText('?')).toBeTruthy();
@@ -102,7 +103,7 @@ describe('ReportCardDetail', () => {
           short_name: 'Maria Santos',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         const heading = screen.getByRole('heading', { name: 'Maria Santos' });
         expect(heading).toBeTruthy();
@@ -115,7 +116,7 @@ describe('ReportCardDetail', () => {
           short_name: 'Maria Santos',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('Maria José Alves Santos')).toBeTruthy();
       });
@@ -127,7 +128,7 @@ describe('ReportCardDetail', () => {
           party_acronym: 'PS',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('PS')).toBeTruthy();
       });
@@ -137,7 +138,7 @@ describe('ReportCardDetail', () => {
           party_acronym: null,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // The party acronym should not appear in the header badge area
         // Note: party_acronym might still appear in other sections (Party Voting), so we check the header specifically
@@ -152,7 +153,7 @@ describe('ReportCardDetail', () => {
           district_name: 'Lisboa',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('Lisboa')).toBeTruthy();
       });
@@ -162,7 +163,7 @@ describe('ReportCardDetail', () => {
           district_name: null,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Ensure no district text is rendered in header
         expect(screen.queryByText('Lisboa')).toBeNull();
@@ -176,7 +177,7 @@ describe('ReportCardDetail', () => {
             profession: 'Advogado',
           });
 
-          render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+          renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
           expect(screen.getByText('Advogado')).toBeTruthy();
         });
@@ -186,7 +187,7 @@ describe('ReportCardDetail', () => {
             profession: null,
           });
 
-          render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+          renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
           expect(screen.queryByText('Advogado')).toBeNull();
         });
@@ -198,7 +199,7 @@ describe('ReportCardDetail', () => {
             education: 'Licenciatura em Direito',
           });
 
-          render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+          renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
           expect(screen.getByText('Licenciatura em Direito')).toBeTruthy();
         });
@@ -208,7 +209,7 @@ describe('ReportCardDetail', () => {
             education: null,
           });
 
-          render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+          renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
           expect(screen.queryByText('Licenciatura em Direito')).toBeNull();
         });
@@ -220,7 +221,7 @@ describe('ReportCardDetail', () => {
           education: 'Mestrado em Medicina',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('Médico')).toBeTruthy();
         expect(screen.getByText('Mestrado em Medicina')).toBeTruthy();
@@ -232,7 +233,9 @@ describe('ReportCardDetail', () => {
           education: null,
         });
 
-        const { container } = render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        const { container } = renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={mockAverages} />
+        );
 
         // The biography badges wrapper should not exist
         const header = container.querySelector('.bg-linear-to-r');
@@ -248,7 +251,7 @@ describe('ReportCardDetail', () => {
       it('should render correctly with minimal data', () => {
         const deputy = createMinimalDeputy();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Should show placeholder for photo
         expect(screen.getByText('?')).toBeTruthy();
@@ -267,7 +270,7 @@ describe('ReportCardDetail', () => {
       it('should render the grade section heading', () => {
         const deputy = createMockDeputyDetail();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByRole('heading', { name: /Classificacao/i })).toBeTruthy();
       });
@@ -275,7 +278,7 @@ describe('ReportCardDetail', () => {
       it('should render GradeCircle with deputy grade', () => {
         const deputy = createMockDeputyDetail({ grade: 'A' });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // GradeCircle renders the grade letter
         expect(screen.getByText('A')).toBeTruthy();
@@ -284,7 +287,7 @@ describe('ReportCardDetail', () => {
       it('should render GradeCircle with deputy work score', () => {
         const deputy = createMockDeputyDetail({ work_score: 85.3 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // GradeCircle renders the score with "pts" suffix (rounded)
         expect(screen.getByText('85 pts')).toBeTruthy();
@@ -293,7 +296,7 @@ describe('ReportCardDetail', () => {
       it('should render GradeCircle with "Pontuacao" label', () => {
         const deputy = createMockDeputyDetail();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('Pontuacao')).toBeTruthy();
       });
@@ -303,7 +306,7 @@ describe('ReportCardDetail', () => {
       it('should render national rank', () => {
         const deputy = createMockDeputyDetail({ national_rank: 45 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('#45')).toBeTruthy();
         expect(screen.getByText('nacional')).toBeTruthy();
@@ -312,7 +315,7 @@ describe('ReportCardDetail', () => {
       it('should render district rank', () => {
         const deputy = createMockDeputyDetail({ district_rank: 12 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('#12')).toBeTruthy();
         expect(screen.getByText('no distrito')).toBeTruthy();
@@ -321,7 +324,7 @@ describe('ReportCardDetail', () => {
       it('should render high ranks for top-performing deputies', () => {
         const deputy = createTopPerformingDeputy();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // #1 appears twice (national and district rank for top performer)
         expect(screen.getAllByText('#1').length).toBeGreaterThan(0);
@@ -331,7 +334,7 @@ describe('ReportCardDetail', () => {
       it('should render low ranks for low-performing deputies', () => {
         const deputy = createLowPerformingDeputy();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('#230')).toBeTruthy();
         expect(screen.getByText('F')).toBeTruthy();
@@ -346,7 +349,7 @@ describe('ReportCardDetail', () => {
       it('should render the metrics section heading', () => {
         const deputy = createMockDeputyDetail();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('Atividade Parlamentar')).toBeTruthy();
       });
@@ -356,7 +359,7 @@ describe('ReportCardDetail', () => {
       it('should render proposals label', () => {
         const deputy = createMockDeputyDetail();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('Propostas apresentadas')).toBeTruthy();
       });
@@ -364,7 +367,7 @@ describe('ReportCardDetail', () => {
       it('should render proposals count', () => {
         const deputy = createMockDeputyDetail({ proposal_count: 15 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // MetricBar renders the value as rounded integer
         expect(screen.getByText('15')).toBeTruthy();
@@ -373,7 +376,7 @@ describe('ReportCardDetail', () => {
       it('should show above average indicator when proposals exceed average', () => {
         const deputy = createMockDeputyDetail({ proposal_count: 25 }); // Avg is 12.5
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Should show "acima" text (multiple MetricBars may show this)
         expect(screen.getAllByText(/acima/).length).toBeGreaterThan(0);
@@ -382,7 +385,7 @@ describe('ReportCardDetail', () => {
       it('should show below average indicator when proposals are below average', () => {
         const deputy = createMockDeputyDetail({ proposal_count: 5 }); // Avg is 12.5
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Should show "abaixo" text (multiple MetricBars may show this)
         expect(screen.getAllByText(/abaixo/).length).toBeGreaterThan(0);
@@ -393,7 +396,7 @@ describe('ReportCardDetail', () => {
       it('should render interventions label', () => {
         const deputy = createMockDeputyDetail();
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         expect(screen.getByText('Intervencoes em debates')).toBeTruthy();
       });
@@ -401,7 +404,7 @@ describe('ReportCardDetail', () => {
       it('should render interventions count', () => {
         const deputy = createMockDeputyDetail({ intervention_count: 42 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // MetricBar renders the value as rounded integer
         expect(screen.getByText('42')).toBeTruthy();
@@ -414,7 +417,7 @@ describe('ReportCardDetail', () => {
         setFlags({ questionCount: false });
         const deputy = createMockDeputyDetail({ question_count: 8 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Should NOT find the questions label
         expect(screen.queryByText('Perguntas ao Governo')).toBeNull();
@@ -425,7 +428,7 @@ describe('ReportCardDetail', () => {
         setFlags({ questionCount: true });
         const deputy = createMockDeputyDetail({ question_count: 8 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // Should find the questions label
         expect(screen.getByText('Perguntas ao Governo')).toBeTruthy();
@@ -436,7 +439,7 @@ describe('ReportCardDetail', () => {
         setFlags({ questionCount: true });
         const deputy = createMockDeputyDetail({ question_count: 10 });
 
-        render(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
         // MetricBar renders the value as rounded integer
         expect(screen.getByText('10')).toBeTruthy();
@@ -454,7 +457,7 @@ describe('ReportCardDetail', () => {
           intervention_count: 25, // Below avg of 50
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={averages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={averages} />);
 
         // Both metrics should show "abaixo" text (below average)
         const belowTexts = screen.getAllByText(/abaixo/);
@@ -468,7 +471,7 @@ describe('ReportCardDetail', () => {
         });
 
         // Should not throw with null averages
-        render(<ReportCardDetail deputy={deputy} averages={null} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={null} />);
 
         // Component should still render
         expect(screen.getByText('15')).toBeTruthy();
@@ -481,7 +484,7 @@ describe('ReportCardDetail', () => {
         });
         const deputy = createMockDeputyDetail({ proposal_count: 15 });
 
-        render(<ReportCardDetail deputy={deputy} averages={averages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={averages} />);
 
         // MetricBar shows average as rounded integer: "da media (13)" for avg 12.5
         expect(screen.getByText(/da media \(13\)/i)).toBeTruthy();
@@ -500,7 +503,9 @@ describe('ReportCardDetail', () => {
           meetings_total: 80,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Section heading should be rendered
         expect(screen.getByText('Presenca em Plenario')).toBeTruthy();
@@ -509,7 +514,9 @@ describe('ReportCardDetail', () => {
       it('should NOT render attendance section when meetings_total is 0', () => {
         const deputy = createDeputyWithZeroMeetings();
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Section heading should NOT be rendered
         expect(screen.queryByText('Presenca em Plenario')).toBeNull();
@@ -518,7 +525,9 @@ describe('ReportCardDetail', () => {
       it('should NOT render attendance section when meetings_total is null', () => {
         const deputy = createDeputyWithNoAttendance();
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Section heading should NOT be rendered
         expect(screen.queryByText('Presenca em Plenario')).toBeNull();
@@ -531,7 +540,9 @@ describe('ReportCardDetail', () => {
           meetings_total: 80,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Section heading should NOT be rendered
         expect(screen.queryByText('Presenca em Plenario')).toBeNull();
@@ -546,7 +557,9 @@ describe('ReportCardDetail', () => {
           meetings_total: 80,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         expect(screen.getByText('Presente em 74 de 80 sessoes')).toBeTruthy();
       });
@@ -558,7 +571,9 @@ describe('ReportCardDetail', () => {
           meetings_total: 80,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Should use 0 as fallback for null meetings_attended
         expect(screen.getByText('Presente em 0 de 80 sessoes')).toBeTruthy();
@@ -571,7 +586,9 @@ describe('ReportCardDetail', () => {
           meetings_total: 80,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // MetricBar in percentage mode displays value with one decimal: "92.5%"
         expect(screen.getByText('92.5%')).toBeTruthy();
@@ -585,7 +602,7 @@ describe('ReportCardDetail', () => {
         });
         const averages = createMockNationalAverages({ avg_attendance_rate: 85.0 });
 
-        render(<ReportCardDetail deputy={deputy} averages={averages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={averages} />);
 
         // Should show "acima" text for above-average attendance (multiple MetricBars may show this)
         expect(screen.getAllByText(/acima/).length).toBeGreaterThan(0);
@@ -599,7 +616,7 @@ describe('ReportCardDetail', () => {
         });
         const averages = createMockNationalAverages({ avg_attendance_rate: 85.0 });
 
-        render(<ReportCardDetail deputy={deputy} averages={averages} />);
+        renderWithRouter(<ReportCardDetail deputy={deputy} averages={averages} />);
 
         // Should show "abaixo" text for below-average attendance (multiple MetricBars may show this)
         expect(screen.getAllByText(/abaixo/).length).toBeGreaterThan(0);
@@ -614,7 +631,9 @@ describe('ReportCardDetail', () => {
       it('should NOT render extended info sections when extendedInfo is undefined', () => {
         const deputy = createMockDeputyDetail();
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // None of the extended info sections should be rendered
         expect(screen.queryByText('Cargos e Funcoes')).toBeNull();
@@ -625,7 +644,7 @@ describe('ReportCardDetail', () => {
       it('should NOT render extended info sections when extendedInfo is null', () => {
         const deputy = createMockDeputyDetail();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -647,7 +666,7 @@ describe('ReportCardDetail', () => {
           roles: [createMockDeputyRole()],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -664,7 +683,7 @@ describe('ReportCardDetail', () => {
           roles: [],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -684,7 +703,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -708,7 +727,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -732,7 +751,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -748,7 +767,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithMultipleRoles();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -768,7 +787,7 @@ describe('ReportCardDetail', () => {
           partyHistory: [createMockDeputyPartyHistory()],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -784,7 +803,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithPartyChanges();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -801,7 +820,7 @@ describe('ReportCardDetail', () => {
           partyHistory: [],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -821,7 +840,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -852,7 +871,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -870,7 +889,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithPartyChanges();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -891,7 +910,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory()],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -908,7 +927,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -928,7 +947,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -953,7 +972,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -969,7 +988,7 @@ describe('ReportCardDetail', () => {
         const deputy = createMockDeputyDetail();
         const extendedInfo = createExtendedInfoWithStatusChanges();
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -988,7 +1007,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Efetivo' })],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1007,7 +1026,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Suspenso' })],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1026,7 +1045,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Renunciou' })],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1048,7 +1067,7 @@ describe('ReportCardDetail', () => {
           ],
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1074,7 +1093,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Efetivo' })],
         };
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1105,7 +1124,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [], // Empty - should not render
         };
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1127,7 +1146,7 @@ describe('ReportCardDetail', () => {
           statusHistory: [createMockDeputyStatusHistory({ status: 'Efetivo' })],
         };
 
-        render(
+        renderWithRouter(
           <ReportCardDetail
             deputy={deputy}
             averages={createMockNationalAverages()}
@@ -1152,7 +1171,9 @@ describe('ReportCardDetail', () => {
           bio_narrative: 'Esta é uma biografia de teste do deputado.',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         expect(screen.getByText('Biografia')).toBeTruthy();
       });
@@ -1162,7 +1183,9 @@ describe('ReportCardDetail', () => {
           bio_narrative: null,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         expect(screen.queryByText('Biografia')).toBeNull();
       });
@@ -1170,7 +1193,9 @@ describe('ReportCardDetail', () => {
       it('should NOT render biography section when bio_narrative is undefined', () => {
         const deputy = createMinimalDeputy();
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         expect(screen.queryByText('Biografia')).toBeNull();
       });
@@ -1180,7 +1205,9 @@ describe('ReportCardDetail', () => {
           bio_narrative: '',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Empty string is falsy, so should not render
         expect(screen.queryByText('Biografia')).toBeNull();
@@ -1195,7 +1222,9 @@ describe('ReportCardDetail', () => {
           bio_narrative: bioText,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         expect(screen.getByText(bioText)).toBeTruthy();
       });
@@ -1207,7 +1236,9 @@ describe('ReportCardDetail', () => {
           bio_narrative: longBio,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         expect(screen.getByText(longBio)).toBeTruthy();
       });
@@ -1220,7 +1251,7 @@ describe('ReportCardDetail', () => {
           biography_source_url: 'https://www.parlamento.pt/deputado/bio',
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
@@ -1241,7 +1272,7 @@ describe('ReportCardDetail', () => {
           biography_source_url: 'https://www.parlamento.pt/deputado/12345/bio',
         });
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
@@ -1260,7 +1291,9 @@ describe('ReportCardDetail', () => {
           biography_source_url: null,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Find the biography section
         const biographyHeading = screen.getByText('Biografia');
@@ -1285,7 +1318,9 @@ describe('ReportCardDetail', () => {
       it('should always render the data sources footer', () => {
         const deputy = createMockDeputyDetail();
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Footer should contain API source description
         expect(screen.getByText('API: Dados base, votos')).toBeTruthy();
@@ -1296,7 +1331,9 @@ describe('ReportCardDetail', () => {
       it('should render footer even for minimal deputy', () => {
         const deputy = createMinimalDeputy();
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         expect(screen.getByText('API: Dados base, votos')).toBeTruthy();
         expect(screen.getByText('Scraper: Presenca, biografia')).toBeTruthy();
@@ -1309,7 +1346,9 @@ describe('ReportCardDetail', () => {
           last_synced_at: '2024-10-15T08:00:00Z',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Node.js without full-icu formats dates as "10/2024"
         expect(screen.getByText(/Atualizado:/)).toBeTruthy();
@@ -1321,7 +1360,9 @@ describe('ReportCardDetail', () => {
           last_synced_at: null,
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // The "Atualizado:" text should not appear
         expect(screen.queryByText(/Atualizado:/)).toBeNull();
@@ -1332,7 +1373,9 @@ describe('ReportCardDetail', () => {
           last_synced_at: '2024-03-01T14:30:00Z',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Node.js without full-icu formats dates as "03/2024"
         expect(screen.getByText(/03\/2024/i)).toBeTruthy();
@@ -1343,7 +1386,9 @@ describe('ReportCardDetail', () => {
           last_synced_at: '2023-12-25T10:00:00Z',
         });
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Node.js without full-icu formats dates as "12/2023"
         expect(screen.getByText(/12\/2023/i)).toBeTruthy();
@@ -1354,7 +1399,7 @@ describe('ReportCardDetail', () => {
       it('should have proper footer styling with bg-neutral-2', () => {
         const deputy = createMockDeputyDetail();
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
@@ -1366,7 +1411,7 @@ describe('ReportCardDetail', () => {
       it('should contain both source icons (Database and Globe)', () => {
         const deputy = createMockDeputyDetail();
 
-        const { container } = render(
+        const { container } = renderWithRouter(
           <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
         );
 
@@ -1384,7 +1429,9 @@ describe('ReportCardDetail', () => {
       it('should render footer but without Atualizado for minimal deputy', () => {
         const deputy = createMinimalDeputy();
 
-        render(<ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />);
+        renderWithRouter(
+          <ReportCardDetail deputy={deputy} averages={createMockNationalAverages()} />
+        );
 
         // Footer sources should still render
         expect(screen.getByText('API: Dados base, votos')).toBeTruthy();

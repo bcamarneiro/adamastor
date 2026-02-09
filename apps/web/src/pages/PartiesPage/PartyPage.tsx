@@ -1,9 +1,19 @@
 import Footer from '@/components/Footer';
 import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
+import { PartyDeputyList } from '@/components/ReportCard/PartyDeputyList';
 import { SEO } from '@/components/SEO';
 import { usePartyStats } from '@/services/parties';
-import { ArrowLeft, FileText, HelpCircle, MessageSquare, Users } from 'lucide-react';
+import { useDeputiesByParty } from '@/services/reportCard';
+import {
+  ArrowLeft,
+  CheckCircle,
+  FileText,
+  HelpCircle,
+  MessageSquare,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export function PartyPage() {
@@ -13,6 +23,17 @@ export function PartyPage() {
 
   // Find party by slug (case-insensitive acronym match)
   const party = parties?.find((p) => p.acronym.toLowerCase() === partySlug?.toLowerCase());
+
+  const { data: deputies = [], isLoading: deputiesLoading } = useDeputiesByParty(party?.id || null);
+
+  // Calculate additional metrics from deputies
+  // Filter out null attendance_rate values to avoid skewing averages downward
+  const deputiesWithAttendance = deputies.filter((d) => d.attendance_rate != null);
+  const avgAttendance =
+    deputiesWithAttendance.length > 0
+      ? deputiesWithAttendance.reduce((sum, d) => sum + d.attendance_rate!, 0) /
+        deputiesWithAttendance.length
+      : null;
 
   if (isLoading) {
     return (
@@ -42,6 +63,9 @@ export function PartyPage() {
       </div>
     );
   }
+
+  // Calculate party ranking
+  const partyRank = parties ? parties.findIndex((p) => p.id === party.id) + 1 : 0;
 
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
@@ -74,6 +98,14 @@ export function PartyPage() {
                 <LegislatureBadge />
               </div>
               <p className="text-lg text-neutral-11 mb-2">{party.name}</p>
+              {partyRank > 0 && (
+                <div className="flex items-center gap-2 text-sm text-neutral-11">
+                  <TrendingUp className="w-4 h-4 text-accent-9" />
+                  <span>
+                    #{partyRank} no ranking de partidos ({parties?.length ?? 0} partidos)
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -118,15 +150,24 @@ export function PartyPage() {
                 <div className="text-sm text-neutral-11">Perguntas ao Governo</div>
               </div>
             </div>
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-accent-9" />
+              <div>
+                <div className="text-2xl font-bold text-neutral-12">
+                  {avgAttendance != null ? `${avgAttendance.toFixed(1)}%` : 'N/A'}
+                </div>
+                <div className="text-sm text-neutral-11">Presença Média em Plenário</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Placeholder for future content */}
-        <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5 text-center">
-          <p className="text-neutral-11">
-            Mais informações sobre o partido estarão disponíveis em breve.
-          </p>
-        </div>
+        {/* Deputies List */}
+        <PartyDeputyList
+          partyAcronym={party.acronym}
+          deputies={deputies}
+          isLoading={deputiesLoading}
+        />
       </main>
 
       <Footer />

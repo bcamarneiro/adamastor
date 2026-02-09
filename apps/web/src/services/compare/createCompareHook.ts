@@ -34,6 +34,7 @@ export function createCompareHook<T>(
   options?: CompareOptions<T>
 ): (entityA: T | null, entityB: T | null) => ComparisonResult<T> | null {
   return function useCompare(entityA: T | null, entityB: T | null): ComparisonResult<T> | null {
+    // biome-ignore lint/correctness/useExhaustiveDependencies: metricsConfig and options are stable factory params
     return useMemo(() => {
       if (!entityA || !entityB) return null;
 
