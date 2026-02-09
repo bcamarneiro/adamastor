@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  /* layout */
+  --header-height: 4rem;
+
   /* neutral */
   --color-neutral-1: #fcfcfc;
   --color-neutral-2: #f9f9f9;
