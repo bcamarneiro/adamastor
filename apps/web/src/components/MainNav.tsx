@@ -1,5 +1,5 @@
 import { Menu, Search, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { type FeatureFlags, useFeatureFlags } from '../store/useFeatureFlags';
 import { GlobalSearch } from './Search';
@@ -33,6 +33,23 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   const { flags } = useFeatureFlags();
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   // Filter nav items based on feature flags
   const navItems = useMemo(() => {
@@ -92,37 +109,53 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
           {/* Mobile Menu Button */}
           <button
             type="button"
-            className="md:hidden p-2 text-neutral-11 hover:text-neutral-12"
+            className="md:hidden p-2 text-neutral-11 hover:text-neutral-12 transition-colors focus:outline-none focus:ring-2 focus:ring-accent-7 rounded"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation Backdrop */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-neutral-1 border-t border-neutral-5">
-          <div className="container px-6 py-4">
-            {/* Mobile Search */}
-            <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
-            <nav className="flex flex-col gap-3">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`text-base font-medium py-2 transition-colors ${
-                    isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-200"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
       )}
+
+      {/* Mobile Navigation */}
+      <div
+        id="mobile-navigation"
+        className={`md:hidden fixed top-16 left-0 right-0 bottom-0 z-50 bg-neutral-1 transform transition-transform duration-300 ease-in-out overflow-y-auto ${
+          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <div className="container px-6 py-4">
+          {/* Mobile Search */}
+          <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
+          <nav className="flex flex-col gap-3">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`text-base font-medium py-2 transition-colors ${
+                  isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
     </header>
   );
 };
