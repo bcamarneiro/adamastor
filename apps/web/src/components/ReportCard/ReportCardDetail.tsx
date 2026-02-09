@@ -11,6 +11,7 @@ import {
   User,
   Users,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type {
   DeputyDetail,
   DeputyPartyHistory,
@@ -97,12 +98,13 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             <p className="text-accent-3">{deputy.name}</p>
             <div className="flex items-center gap-3 mt-2">
               {deputy.party_acronym && (
-                <span
+                <Link
+                  to={`/partidos/${deputy.party_acronym.toLowerCase()}`}
                   data-testid="party-badge"
-                  className="px-3 py-1 rounded-full text-sm font-medium bg-monochrome-white/20"
+                  className="px-3 py-1 rounded-full text-sm font-medium bg-monochrome-white/20 hover:bg-monochrome-white/30 transition-colors"
                 >
                   {deputy.party_acronym}
-                </span>
+                </Link>
               )}
               {deputy.district_name && (
                 <span className="text-accent-3">{deputy.district_name}</span>
