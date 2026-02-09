@@ -1,73 +1,81 @@
 import { expect, test } from './fixtures';
 
 test.describe('Navigation', () => {
-  test('should navigate to leaderboard page', async ({ page }) => {
-    await page.goto('/');
+  // Desktop navigation tests - skip on mobile viewport since nav is hidden
+  test.describe('Desktop navigation', () => {
+    test.skip(({ browserName, viewport }) => {
+      // Skip if using mobile viewport (width < 768px, which is md breakpoint)
+      return viewport ? viewport.width < 768 : false;
+    });
 
-    // Click on leaderboard link (labeled "Ranking" in MainNav)
-    await page
-      .getByRole('link', { name: /ranking/i })
-      .first()
-      .click();
+    test('should navigate to leaderboard page', async ({ page }) => {
+      await page.goto('/');
 
-    // Should be on leaderboard page
-    await expect(page).toHaveURL(/\/ranking/);
-  });
+      // Click on leaderboard link (labeled "Ranking" in MainNav)
+      await page
+        .getByRole('link', { name: /ranking/i })
+        .first()
+        .click();
 
-  test('should navigate to battle page', async ({ page }) => {
-    await page.goto('/');
+      // Should be on leaderboard page
+      await expect(page).toHaveURL(/\/ranking/);
+    });
 
-    // Click on battle link (labeled "Battle Royale" in MainNav)
-    await page
-      .getByRole('link', { name: /battle royale/i })
-      .first()
-      .click();
+    test('should navigate to battle page', async ({ page }) => {
+      await page.goto('/');
 
-    // Should be on battle page
-    await expect(page).toHaveURL(/\/batalha/);
-  });
+      // Click on battle link (labeled "Battle Royale" in MainNav)
+      await page
+        .getByRole('link', { name: /battle royale/i })
+        .first()
+        .click();
 
-  test('should navigate to waste calculator page', async ({ page }) => {
-    await page.goto('/');
+      // Should be on battle page
+      await expect(page).toHaveURL(/\/batalha/);
+    });
 
-    // Click on waste calculator link (labeled "Calculadora" in MainNav)
-    await page
-      .getByRole('link', { name: /calculadora/i })
-      .first()
-      .click();
+    test('should navigate to waste calculator page', async ({ page }) => {
+      await page.goto('/');
 
-    // Should be on waste calculator page
-    await expect(page).toHaveURL(/\/desperdicio/);
-  });
+      // Click on waste calculator link (labeled "Calculadora" in MainNav)
+      await page
+        .getByRole('link', { name: /calculadora/i })
+        .first()
+        .click();
 
-  // Issue #94: Add links to initiatives page
-  // @see https://github.com/bcamarneiro/adamastor/issues/94
-  test('should navigate to initiatives page from landing page', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+      // Should be on waste calculator page
+      await expect(page).toHaveURL(/\/desperdicio/);
+    });
 
-    // Find initiatives link in feature cards or navigation
-    const initiativesLink = page.getByRole('link', { name: /iniciativas/i }).first();
-    await expect(initiativesLink).toBeVisible();
+    // Issue #94: Add links to initiatives page
+    // @see https://github.com/bcamarneiro/adamastor/issues/94
+    test('should navigate to initiatives page from landing page', async ({ page }) => {
+      await page.goto('/');
+      await page.waitForLoadState('networkidle');
 
-    // Click on initiatives link
-    await initiativesLink.click();
+      // Find initiatives link in feature cards or navigation
+      const initiativesLink = page.getByRole('link', { name: /iniciativas/i }).first();
+      await expect(initiativesLink).toBeVisible();
 
-    // Should be on initiatives page
-    await expect(page).toHaveURL(/\/initiatives/);
-  });
+      // Click on initiatives link
+      await initiativesLink.click();
 
-  test('should return to home page when clicking logo', async ({ page }) => {
-    await page.goto('/ranking');
+      // Should be on initiatives page
+      await expect(page).toHaveURL(/\/initiatives/);
+    });
 
-    // Click on logo/home link
-    await page
-      .getByRole('link', { name: /Debaixo d'olho/i })
-      .first()
-      .click();
+    test('should return to home page when clicking logo', async ({ page }) => {
+      await page.goto('/ranking');
 
-    // Should be back on home page
-    await expect(page).toHaveURL('/');
+      // Click on logo/home link
+      await page
+        .getByRole('link', { name: /Debaixo d'olho/i })
+        .first()
+        .click();
+
+      // Should be back on home page
+      await expect(page).toHaveURL('/');
+    });
   });
 
   // Issue #20: Hidden pages navigation
