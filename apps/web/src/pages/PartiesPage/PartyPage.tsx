@@ -14,7 +14,7 @@ import {
   TrendingUp,
   Users,
 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export function PartyPage() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export function PartyPage() {
   const deputiesWithAttendance = deputies.filter((d) => d.attendance_rate != null);
   const avgAttendance =
     deputiesWithAttendance.length > 0
-      ? deputiesWithAttendance.reduce((sum, d) => sum + d.attendance_rate!, 0) /
+      ? deputiesWithAttendance.reduce((sum, d) => sum + (d.attendance_rate ?? 0), 0) /
         deputiesWithAttendance.length
       : null;
 
@@ -159,6 +159,35 @@ export function PartyPage() {
                 <div className="text-sm text-neutral-11">Presença Média em Plenário</div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Cross-links */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="bg-neutral-1 rounded-xl p-4 border border-neutral-5">
+            <Link
+              to="/initiatives"
+              className="inline-flex items-center gap-2 text-accent-9 hover:text-accent-10 transition-colors font-medium"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Ver iniciativas do partido</span>
+            </Link>
+            <p className="text-sm text-neutral-11 mt-2">
+              Pesquise pelo nome do partido para ver as suas propostas e intervenções
+            </p>
+          </div>
+
+          <div className="bg-neutral-1 rounded-xl p-4 border border-neutral-5">
+            <Link
+              to="/report-card"
+              className="inline-flex items-center gap-2 text-accent-9 hover:text-accent-10 transition-colors font-medium"
+            >
+              <Users className="w-4 h-4" />
+              <span>Ver todos os deputados</span>
+            </Link>
+            <p className="text-sm text-neutral-11 mt-2">
+              Veja a lista completa de deputados e filtre por {party.acronym}
+            </p>
           </div>
         </div>
 
