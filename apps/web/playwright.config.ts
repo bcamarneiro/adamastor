@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 // Use environment variable for base URL, fallback to localhost
-const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'https://adamastor-staging.vercel.app';
 const isLiveEnvironment = baseURL.includes('https://');
 
 export default defineConfig({
@@ -28,6 +28,12 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'chromium-mobile',
+      use: {
+        ...devices['Pixel 5'],
+      },
     },
   ],
 
