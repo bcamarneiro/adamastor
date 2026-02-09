@@ -5,8 +5,8 @@ import { SEO } from '@/components/SEO';
 import { type District, supabase } from '@/lib/supabase';
 import { useDeputiesByDistrict } from '@/services/reportCard/useDeputiesByDistrict';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 async function fetchDistrictBySlug(slug: string): Promise<District | null> {
   const { data, error } = await supabase.from('districts').select('*').eq('slug', slug).single();
@@ -77,6 +77,40 @@ export function DistrictPage() {
         </button>
 
         <DistrictDeputyList district={district} deputies={deputies} isLoading={deputiesLoading} />
+
+        {/* Cross-links Section */}
+        <div className="mt-8 bg-neutral-1 rounded-xl p-6 border border-neutral-5">
+          <h2 className="text-lg font-semibold text-neutral-12 mb-4">Ver também</h2>
+          <div className="space-y-3">
+            <Link
+              to="/distritos/comparar"
+              className="flex items-center justify-between p-3 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <span className="text-neutral-12">
+                <strong>Comparar Distritos</strong>
+              </span>
+              <ExternalLink className="w-4 h-4 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+            <Link
+              to="/initiatives"
+              className="flex items-center justify-between p-3 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <span className="text-neutral-12">
+                <strong>Iniciativas Legislativas</strong>
+              </span>
+              <ExternalLink className="w-4 h-4 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+            <Link
+              to="/ranking"
+              className="flex items-center justify-between p-3 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <span className="text-neutral-12">
+                <strong>Ranking Nacional</strong>
+              </span>
+              <ExternalLink className="w-4 h-4 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+          </div>
+        </div>
       </main>
 
       <Footer />

@@ -3,8 +3,8 @@ import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
 import { SEO } from '@/components/SEO';
 import { usePartyStats } from '@/services/parties';
-import { ArrowLeft, FileText, HelpCircle, MessageSquare, Users } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, ExternalLink, FileText, HelpCircle, MessageSquare, Users } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export function PartyPage() {
   const navigate = useNavigate();
@@ -121,11 +121,35 @@ export function PartyPage() {
           </div>
         </div>
 
-        {/* Placeholder for future content */}
-        <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5 text-center">
-          <p className="text-neutral-11">
-            Mais informações sobre o partido estarão disponíveis em breve.
-          </p>
+        {/* Cross-links Section */}
+        <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5">
+          <h2 className="text-xl font-semibold text-neutral-12 mb-4">Ver também</h2>
+          <div className="space-y-3">
+            <Link
+              to="/initiatives"
+              className="flex items-center justify-between p-4 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <div>
+                <div className="text-neutral-12 font-medium">Iniciativas Legislativas</div>
+                <div className="text-sm text-neutral-11">
+                  Vê as propostas e iniciativas do {party.acronym}
+                </div>
+              </div>
+              <ExternalLink className="w-5 h-5 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+            <Link
+              to="/partidos/comparar"
+              className="flex items-center justify-between p-4 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <div>
+                <div className="text-neutral-12 font-medium">Comparar Partidos</div>
+                <div className="text-sm text-neutral-11">
+                  Compara o desempenho entre diferentes partidos
+                </div>
+              </div>
+              <ExternalLink className="w-5 h-5 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+          </div>
         </div>
       </main>
 
