@@ -89,7 +89,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
             ))}
           </nav>
 
-          {/* Desktop Search */}
+          {/* Desktop Search - Only render on desktop */}
           <div className="hidden md:flex items-center gap-2">
             {searchOpen ? (
               <GlobalSearch className="w-64" onClose={() => setSearchOpen(false)} />
@@ -134,33 +134,33 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
         />
       )}
 
-      {/* Mobile Navigation */}
-      <div
-        id="mobile-navigation"
-        className={`md:hidden fixed top-16 left-0 right-0 bottom-0 z-50 bg-neutral-1 transform transition-transform duration-300 ease-in-out overflow-y-auto ${
-          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-        aria-hidden={!mobileMenuOpen}
-      >
-        <div className="container px-6 py-4">
-          {/* Mobile Search */}
-          <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
-          <nav className="flex flex-col gap-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`text-base font-medium py-2 transition-colors ${
-                  isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+      {/* Mobile Navigation - Only render on mobile when menu is open */}
+      {mobileMenuOpen && (
+        <div
+          id="mobile-navigation"
+          className="md:hidden fixed top-16 left-0 right-0 bottom-0 z-50 bg-neutral-1 transform translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto"
+          aria-hidden={false}
+        >
+          <div className="container px-6 py-4">
+            {/* Mobile Search - Only visible on mobile */}
+            <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
+            <nav className="flex flex-col gap-3">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`text-base font-medium py-2 transition-colors ${
+                    isActive(item.path) ? 'text-accent-9' : 'text-neutral-11 hover:text-neutral-12'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
-      </div>
+      )}
     </header>
   );
 };
