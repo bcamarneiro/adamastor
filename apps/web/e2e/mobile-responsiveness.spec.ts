@@ -6,9 +6,9 @@ test.describe('Mobile Responsiveness', () => {
 
   test('Homepage should render correctly on mobile', async ({ page }) => {
     await page.goto('/');
-    // Check for the main heading
+    // Check for the main heading (LandingPage Hero)
     await expect(
-      page.getByRole('heading', { name: /O Teu Deputado em Números/i, level: 1 })
+      page.getByRole('heading', { name: /O Parlamento debaixo d'olho/i, level: 1 })
     ).toBeVisible();
     // Check that the main content is present
     await expect(page.getByRole('main')).toBeVisible();
