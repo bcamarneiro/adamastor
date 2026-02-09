@@ -6,8 +6,8 @@ import { SEO, getDeputySchema } from '@/components/SEO';
 import { useDeputyDetail } from '@/services/reportCard/useDeputyDetail';
 import { useDeputyExtendedInfo } from '@/services/reportCard/useDeputyExtendedInfo';
 import { useNationalAverages } from '@/services/reportCard/useNationalAverages';
-import { ArrowLeft } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export function DeputyPage() {
   const { deputyId } = useParams<{ deputyId: string }>();
@@ -79,6 +79,44 @@ export function DeputyPage() {
         </div>
 
         <ReportCardDetail deputy={deputy} averages={averages || null} extendedInfo={extendedInfo} />
+
+        {/* Cross-links Section */}
+        <div className="mt-8 bg-neutral-1 rounded-xl p-6 border border-neutral-5">
+          <h2 className="text-lg font-semibold text-neutral-12 mb-4">Ver também</h2>
+          <div className="space-y-3">
+            {deputy.party_acronym && (
+              <Link
+                to={`/partidos/${deputy.party_acronym.toLowerCase()}`}
+                className="flex items-center justify-between p-3 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+              >
+                <span className="text-neutral-12">
+                  Partido <strong>{deputy.party_acronym}</strong>
+                </span>
+                <ExternalLink className="w-4 h-4 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+              </Link>
+            )}
+            {deputy.district_name && (
+              <Link
+                to={`/distrito/${deputy.district_name.toLowerCase().replace(/\s+/g, '-')}`}
+                className="flex items-center justify-between p-3 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+              >
+                <span className="text-neutral-12">
+                  Deputados de <strong>{deputy.district_name}</strong>
+                </span>
+                <ExternalLink className="w-4 h-4 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+              </Link>
+            )}
+            <Link
+              to="/initiatives"
+              className="flex items-center justify-between p-3 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <span className="text-neutral-12">
+                Todas as <strong>Iniciativas Legislativas</strong>
+              </span>
+              <ExternalLink className="w-4 h-4 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+          </div>
+        </div>
       </main>
 
       <Footer />

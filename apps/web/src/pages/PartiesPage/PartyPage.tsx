@@ -8,13 +8,14 @@ import { useDeputiesByParty } from '@/services/reportCard';
 import {
   ArrowLeft,
   CheckCircle,
+  ExternalLink,
   FileText,
   HelpCircle,
   MessageSquare,
   TrendingUp,
   Users,
 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export function PartyPage() {
   const navigate = useNavigate();
@@ -168,6 +169,37 @@ export function PartyPage() {
           deputies={deputies}
           isLoading={deputiesLoading}
         />
+
+        {/* Cross-links Section */}
+        <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5 mt-8">
+          <h2 className="text-xl font-semibold text-neutral-12 mb-4">Ver também</h2>
+          <div className="space-y-3">
+            <Link
+              to="/initiatives"
+              className="flex items-center justify-between p-4 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <div>
+                <div className="text-neutral-12 font-medium">Iniciativas Legislativas</div>
+                <div className="text-sm text-neutral-11">
+                  Vê as propostas e iniciativas do {party.acronym}
+                </div>
+              </div>
+              <ExternalLink className="w-5 h-5 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+            <Link
+              to="/partidos/comparar"
+              className="flex items-center justify-between p-4 bg-neutral-2 hover:bg-neutral-3 rounded-lg transition-colors group"
+            >
+              <div>
+                <div className="text-neutral-12 font-medium">Comparar Partidos</div>
+                <div className="text-sm text-neutral-11">
+                  Compara o desempenho entre diferentes partidos
+                </div>
+              </div>
+              <ExternalLink className="w-5 h-5 text-neutral-11 group-hover:text-accent-9 transition-colors" />
+            </Link>
+          </div>
+        </div>
       </main>
 
       <Footer />
