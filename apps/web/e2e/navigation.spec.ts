@@ -203,9 +203,10 @@ test.describe('Navigation', () => {
     await page.goto('/batalha');
     await page.waitForLoadState('networkidle');
 
-    // Find deputy selectors
-    const firstSelector = page.locator('input[type="text"]').first();
-    const secondSelector = page.locator('input[type="text"]').nth(1);
+    // Find deputy selectors (filter for visible inputs to avoid mobile menu search)
+    const textInputs = page.locator('input[type="text"]:visible');
+    const firstSelector = textInputs.first();
+    const secondSelector = textInputs.nth(1);
 
     // Check if selectors are available
     if ((await firstSelector.count()) === 0 || (await secondSelector.count()) === 0) {
