@@ -8,8 +8,8 @@ test.describe('Mobile Responsiveness', () => {
     // Check that the page title is correct
     await expect(page).toHaveTitle(/Debaixo d'olho/i);
 
-    // Check that main heading is visible
-    await expect(page.getByRole('heading', { name: /O Teu Deputado em Números/i })).toBeVisible();
+    // Check that main heading is visible (LandingPage Hero)
+    await expect(page.getByRole('heading', { name: /O Parlamento debaixo d'olho/i })).toBeVisible();
 
     // Check for the footer
     await expect(page.locator('footer')).toBeVisible();
