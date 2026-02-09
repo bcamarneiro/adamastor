@@ -63,7 +63,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrollY > 0
-          ? 'bg-neutral-1 md:bg-neutral-1/80 md:backdrop-blur-sm shadow-sm'
+          ? 'bg-neutral-1 md:bg-neutral-1/80 backdrop-blur-sm shadow-sm'
           : 'bg-neutral-1 md:bg-transparent'
       }`}
     >
