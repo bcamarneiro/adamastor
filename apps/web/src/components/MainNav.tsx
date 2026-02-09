@@ -35,6 +35,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   const isActive = (path: string) => location.pathname === path;
 
   // Close mobile menu on route change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: We intentionally want to run this effect when the route changes
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
@@ -123,7 +124,13 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
         <div
           className="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-200"
           onClick={() => setMobileMenuOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setMobileMenuOpen(false);
+            }
+          }}
           aria-hidden="true"
+          role="presentation"
         />
       )}
 
