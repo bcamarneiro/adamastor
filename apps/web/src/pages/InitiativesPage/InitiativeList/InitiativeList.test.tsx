@@ -36,6 +36,7 @@ vi.mock('../../../services/initiatives/useInitiatives', () => ({
 // Mock @tanstack/react-virtual to render all items in tests
 // The real virtualizer only renders visible items, but in tests we want all items visible
 vi.mock('@tanstack/react-virtual', () => ({
+  // biome-ignore lint/suspicious/noExplicitAny: mock implementation requires any for flexibility
   useVirtualizer: (options: any) => {
     // Make functions that compute values dynamically from options
     // This way when options.count changes, we get updated values
@@ -116,6 +117,7 @@ const mockIntersectionObserver = vi.fn(() => ({
   takeRecords: vi.fn(() => []),
 }));
 
+// biome-ignore lint/suspicious/noExplicitAny: mock assignment for testing
 globalThis.IntersectionObserver = mockIntersectionObserver as any;
 
 // Mock ResizeObserver for virtualization height measurement
@@ -152,6 +154,7 @@ const mockResizeObserver = vi.fn((callback: ResizeObserverCallback) => ({
   }),
 }));
 
+// biome-ignore lint/suspicious/noExplicitAny: mock assignment for testing
 globalThis.ResizeObserver = mockResizeObserver as any;
 
 // Mock element dimensions for virtualization

@@ -1,10 +1,11 @@
 /**
  * Debaixo d'olho Logo
  *
- * A stylized pixelated eye logo inspired by Camões (the one-eyed Portuguese poet).
- * The design represents "watching" politicians - the project's mission.
+ * Two overlapping leaf shapes (green + red) forming an eye,
+ * with a white pupil at the intersection. Portuguese flag colors.
  *
  * Sizes: sm (24px), md (32px), lg (48px)
+ * Pass className with width/height classes to override dimensions.
  */
 
 interface DebaixoDolhoLogoProps {
@@ -20,58 +21,21 @@ const sizes = {
 
 const DebaixoDolhoLogo = ({ className = '', size = 'md' }: DebaixoDolhoLogoProps) => {
   const dimension = sizes[size];
+  const hasExplicitSize = /\bw-\d|h-\d/.test(className);
 
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
+    <img
+      src="/images/logo.png"
+      alt="Debaixo d'olho"
       width={dimension}
       height={dimension}
-      viewBox="0 0 32 32"
-      fill="none"
       className={className}
-    >
-      <title>Debaixo d'olho</title>
-
-      {/* Eye outline - pixelated style */}
-      <g fill="currentColor">
-        {/* Top of eye */}
-        <rect x="8" y="8" width="4" height="4" />
-        <rect x="12" y="4" width="4" height="4" />
-        <rect x="16" y="4" width="4" height="4" />
-        <rect x="20" y="8" width="4" height="4" />
-
-        {/* Sides of eye */}
-        <rect x="4" y="12" width="4" height="4" />
-        <rect x="24" y="12" width="4" height="4" />
-        <rect x="4" y="16" width="4" height="4" />
-        <rect x="24" y="16" width="4" height="4" />
-
-        {/* Bottom of eye */}
-        <rect x="8" y="20" width="4" height="4" />
-        <rect x="12" y="24" width="4" height="4" />
-        <rect x="16" y="24" width="4" height="4" />
-        <rect x="20" y="20" width="4" height="4" />
-      </g>
-
-      {/* Iris - green (Portuguese flag color) */}
-      <g fill="#046A38">
-        <rect x="10" y="12" width="4" height="4" />
-        <rect x="10" y="16" width="4" height="4" />
-        <rect x="14" y="12" width="4" height="4" />
-        <rect x="14" y="16" width="4" height="4" />
-        <rect x="18" y="12" width="4" height="4" />
-        <rect x="18" y="16" width="4" height="4" />
-      </g>
-
-      {/* Pupil - dark center */}
-      <g fill="#1a1a1a">
-        <rect x="14" y="12" width="4" height="4" />
-        <rect x="14" y="16" width="4" height="4" />
-      </g>
-
-      {/* Highlight - top right of pupil */}
-      <rect x="16" y="12" width="2" height="2" fill="white" opacity="0.7" />
-    </svg>
+      style={
+        hasExplicitSize
+          ? { objectFit: 'contain' }
+          : { width: dimension, height: dimension, objectFit: 'contain' }
+      }
+    />
   );
 };
 

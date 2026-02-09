@@ -22,10 +22,10 @@ export function LeaderboardCard({ deputy, position, isTop = true }: LeaderboardC
     <Link
       to={`/deputado/${deputy.id}`}
       data-testid="leaderboard-link"
-      className={`flex items-center gap-4 p-4 rounded-xl shadow-sm border transition-all hover:shadow-md ${
+      className={`group flex items-center gap-4 p-4 rounded-2xl shadow-sm border transition-all hover:shadow-lg ${
         isTop
-          ? 'bg-neutral-1 border-success-6 hover:border-success-8'
-          : 'bg-neutral-1 border-danger-6 hover:border-danger-8'
+          ? 'bg-neutral-1 border-success-6 hover:border-accent-7'
+          : 'bg-neutral-1 border-danger-6 hover:border-accent-7'
       }`}
     >
       {/* Position Badge */}

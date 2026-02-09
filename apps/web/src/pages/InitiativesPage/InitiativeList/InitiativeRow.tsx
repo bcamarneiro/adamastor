@@ -79,8 +79,10 @@ const InitiativeRow = memo(function InitiativeRow({
   );
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: rowgroup role required for virtualized table structure
     <div role="rowgroup">
       {/* Main Row */}
+      {/* biome-ignore lint/a11y/useSemanticElements: row role for grid-based accessible table */}
       <div
         role="row"
         className={`${gridColsClass} hover:bg-neutral-1 transition-colors cursor-pointer border-b border-neutral-3`}
@@ -94,6 +96,7 @@ const InitiativeRow = memo(function InitiativeRow({
         }}
         aria-expanded={isExpanded}
       >
+        {/* biome-ignore lint/a11y/useSemanticElements: cell role for table consistency */}
         <div role="cell" className="p-3 flex items-center justify-center">
           {isExpanded ? (
             <FaChevronDown className="text-neutral-11" aria-hidden="true" />
@@ -101,9 +104,11 @@ const InitiativeRow = memo(function InitiativeRow({
             <FaChevronRight className="text-neutral-11" aria-hidden="true" />
           )}
         </div>
+        {/* biome-ignore lint/a11y/useSemanticElements: rowheader role for table structure */}
         <div role="rowheader" className="p-3 font-medium">
           {initiative.IniNr}
         </div>
+        {/* biome-ignore lint/a11y/useSemanticElements: cell role for table consistency */}
         <div role="cell" className="p-3">
           <div className="flex items-center gap-2">
             <span className="inline-flex px-2 py-1 rounded-full text-sm bg-neutral-2">
@@ -115,9 +120,11 @@ const InitiativeRow = memo(function InitiativeRow({
             )}
           </div>
         </div>
+        {/* biome-ignore lint/a11y/useSemanticElements: cell role for table consistency */}
         <div role="cell" className="p-3 truncate">
           {initiative.IniTitulo}
         </div>
+        {/* biome-ignore lint/a11y/useSemanticElements: cell role for table consistency */}
         <div role="cell" className="p-3">
           <Link
             to={`/initiatives/${initiative.IniId}/details`}
@@ -132,7 +139,10 @@ const InitiativeRow = memo(function InitiativeRow({
 
       {/* Expanded Content Row */}
       {isExpanded && (
+        // biome-ignore lint/a11y/useSemanticElements: row role for expanded content in table
+        // biome-ignore lint/a11y/useFocusableInteractive: Expanded content doesn't need independent focus
         <div role="row" className="bg-neutral-1 border-b border-neutral-3">
+          {/* biome-ignore lint/a11y/useSemanticElements: cell role for table consistency */}
           <div role="cell" className="p-4">
             <div className="space-y-6">
               {/* Description Section */}
