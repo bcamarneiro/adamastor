@@ -48,13 +48,20 @@ export async function openSelector(
     .nth(selectorIndex);
   await input.click();
 
-  // Wait for dropdown container with buttons to appear
+  // Wait for dropdown container to appear (may be in loading state initially)
   // Using a more specific selector to avoid conflicts with global search input
-  await page
+  const dropdown = page
     .locator('.bg-neutral-2.rounded-lg')
-    .filter({ has: page.locator('button') })
+    .filter({ has: page.locator('button, div:has-text("carregar")') })
+    .first();
+  
+  await dropdown.waitFor({ state: 'visible' });
+
+  // Wait for loading to complete - dropdown should have button elements (not just loading text)
+  await dropdown
+    .locator('button')
     .first()
-    .waitFor({ state: 'visible' });
+    .waitFor({ state: 'visible', timeout: 10000 });
 
   return input;
 }
