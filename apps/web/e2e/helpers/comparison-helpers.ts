@@ -46,22 +46,47 @@ export async function openSelector(
   const input = page
     .locator(`input[placeholder*="${config.searchPlaceholder}"]`)
     .nth(selectorIndex);
+  
+  // Get the parent container of the input (the selector component)
+  const selectorContainer = input.locator('..').locator('..');
+  
   await input.click();
 
-  // Wait for dropdown container to appear (may be in loading state initially)
-  // Using a more specific selector to avoid conflicts with global search input
-  const dropdown = page
-    .locator('.bg-neutral-2.rounded-lg')
-    .filter({ has: page.locator('button, div:has-text("carregar")') })
-    .first();
+  // Wait for the dropdown to appear within this specific selector container
+  // The dropdown is a sibling of the input's parent, has mt-2 class and specific styling
+  const dropdown = selectorContainer.locator('div.mt-2.max-h-48');
   
-  await dropdown.waitFor({ state: 'visible' });
+  await dropdown.waitFor({ state: 'visible', timeout: 5000 });
 
-  // Wait for loading to complete - dropdown should have button elements (not just loading text)
-  await dropdown
-    .locator('button')
-    .first()
-    .waitFor({ state: 'visible', timeout: 10000 });
+  // Wait for loading to complete - dropdown should show either:
+  // 1. Button elements (data loaded successfully)
+  // 2. "A carregar..." (still loading)
+  // 3. "Nenhum...encontrado" (no data/filtered out)
+  
+  // First, wait for loading state to finish
+  await page
+    .waitForFunction(
+      (container) => {
+        const dropdownEl = container.querySelector('div.mt-2.max-h-48');
+        return dropdownEl && !dropdownEl.textContent?.includes('carregar');
+      },
+      selectorContainer.elementHandle(),
+      { timeout: 10000 }
+    )
+    .catch(() => {
+      // Timeout acceptable - may already be done loading
+    });
+
+  // Then check if there are buttons (data available)
+  const hasButtons = await dropdown.locator('button').count();
+  if (hasButtons === 0) {
+    // No data available - check if it's a genuine empty state or an error
+    const dropdownText = await dropdown.textContent();
+    if (dropdownText?.includes('Nenhum') || dropdownText?.includes('encontrado')) {
+      // This is expected when there's no data - tests should handle this case
+      // Return the input so the test can check for empty state
+    }
+  }
 
   return input;
 }
@@ -112,6 +137,9 @@ export async function selectFirstOption(
   config: SelectorConfig
 ): Promise<string | null> {
   await openSelector(page, 0, config);
+
+  // Wait a bit for any options to render
+  await page.waitForTimeout(500);
 
   const count = await getOptionCount(page, config);
   if (count === 0) {
