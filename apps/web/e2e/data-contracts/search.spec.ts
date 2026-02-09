@@ -29,8 +29,8 @@ test('search results match API response', async ({ page }) => {
     await page.waitForTimeout(200); // Wait for search input to appear
   }
 
-  // Perform search
-  const searchInput = page.locator('[data-testid="global-search-input"]');
+  // Perform search (use .first() since both desktop and mobile inputs exist)
+  const searchInput = page.locator('[data-testid="global-search-input"]').first();
   await searchInput.waitFor({ state: 'visible' });
   await searchInput.fill('Silva');
   await page.waitForTimeout(500); // Wait for debounce and API call
@@ -96,8 +96,8 @@ test('search query parameters match API request', async ({ page }) => {
     await page.waitForTimeout(200);
   }
 
-  // Perform search with specific term
-  const searchInput = page.locator('[data-testid="global-search-input"]');
+  // Perform search with specific term (use .first() since both desktop and mobile inputs exist)
+  const searchInput = page.locator('[data-testid="global-search-input"]').first();
   await searchInput.waitFor({ state: 'visible' });
   const searchTerm = 'Costa';
   await searchInput.fill(searchTerm);
