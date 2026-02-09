@@ -37,7 +37,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [location]);
+  }, [location.pathname]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -68,7 +68,10 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
       }`}
     >
       <div className="container px-6 md:px-8">
-        <div className="flex items-center justify-between" style={{ height: 'var(--header-height, 4rem)' }}>
+        <div
+          className="flex items-center justify-between"
+          style={{ height: 'var(--header-height, 4rem)' }}
+        >
           <Link to="/" className="flex items-center gap-2">
             <DebaixoDolhoLogo size="md" className="text-neutral-12" />
             <span className="text-lg font-medium text-neutral-12">Debaixo d'olho</span>
