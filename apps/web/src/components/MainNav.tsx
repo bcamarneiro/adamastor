@@ -92,7 +92,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
           {/* Desktop Search */}
           <div className="hidden md:flex items-center gap-2">
             {searchOpen ? (
-              <GlobalSearch className="w-64 hidden md:block" onClose={() => setSearchOpen(false)} />
+              <GlobalSearch className="w-64" onClose={() => setSearchOpen(false)} />
             ) : (
               <button
                 type="button"
@@ -144,7 +144,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
       >
         <div className="container px-6 py-4">
           {/* Mobile Search */}
-          <GlobalSearch className="mb-4 block md:hidden" onClose={() => setMobileMenuOpen(false)} />
+          <GlobalSearch className="mb-4" onClose={() => setMobileMenuOpen(false)} />
           <nav className="flex flex-col gap-3">
             {navItems.map((item) => (
               <Link
