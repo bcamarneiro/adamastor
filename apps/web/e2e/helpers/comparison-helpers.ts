@@ -48,8 +48,13 @@ export async function openSelector(
     .nth(selectorIndex);
   await input.click();
 
-  // Wait for dropdown container to appear
-  await page.locator('.bg-neutral-2.rounded-lg').first().waitFor({ state: 'visible' });
+  // Wait for dropdown container with buttons to appear
+  // Using a more specific selector to avoid conflicts with global search input
+  await page
+    .locator('.bg-neutral-2.rounded-lg')
+    .filter({ has: page.locator('button') })
+    .first()
+    .waitFor({ state: 'visible' });
 
   return input;
 }
@@ -153,11 +158,13 @@ export async function searchInSelector(
   await input.fill(searchTerm);
 
   // Wait for filtering to complete by checking that the dropdown content has stabilized
+  // Using a more specific selector to target only comparison selector dropdowns
   await page
     .waitForFunction(
       () => {
-        const dropdown = document.querySelector('.bg-neutral-2.rounded-lg');
-        return dropdown && dropdown.textContent !== '';
+        const dropdowns = Array.from(document.querySelectorAll('.bg-neutral-2.rounded-lg'));
+        const comparisonDropdown = dropdowns.find((el) => el.querySelector('button'));
+        return comparisonDropdown && comparisonDropdown.textContent !== '';
       },
       undefined,
       { timeout: 2000 }
