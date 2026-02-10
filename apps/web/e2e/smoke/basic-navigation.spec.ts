@@ -57,12 +57,22 @@ test.describe('Deployment Smoke Tests', () => {
     }
   });
 
-  test('navigation header is present', async ({ page }) => {
+  test('navigation header is present', async ({ page, viewport }) => {
     await page.goto('/');
 
-    // Should have at least one navigation element
-    const nav = page.locator('nav').first();
-    await expect(nav).toBeVisible();
+    // On mobile (< 768px), navigation is hidden by default (hamburger menu)
+    // On desktop (>= 768px), navigation is visible
+    const isMobile = viewport && viewport.width < 768;
+
+    if (isMobile) {
+      // On mobile, check that mobile menu button exists
+      const menuButton = page.getByRole('button', { name: /abrir menu/i });
+      await expect(menuButton).toBeVisible();
+    } else {
+      // On desktop, navigation should be visible
+      const nav = page.locator('nav').first();
+      await expect(nav).toBeVisible();
+    }
   });
 
   // TODO: Re-enable once footer is added to the app

@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures';
+import { expect, isMobileViewport, openMobileMenu, test } from './fixtures';
 
 test.describe('Loading Screen', () => {
   test('should display loading screen during page data fetch', async ({ page }) => {
@@ -94,10 +94,15 @@ test.describe('Loading Screen', () => {
     await expect(page.getByText(/maior atividade parlamentar/i).first()).toBeVisible();
   });
 
-  test('should display loading screen when navigating between pages', async ({ page }) => {
+  test('should display loading screen when navigating between pages', async ({ page, viewport }) => {
     // Start on home page
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+
+    // Open mobile menu if on mobile viewport
+    if (isMobileViewport(viewport)) {
+      await openMobileMenu(page);
+    }
 
     // Navigate to parties page (triggers data fetch)
     await page.click('a[href="/partidos"]');
