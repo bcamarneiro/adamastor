@@ -6,8 +6,8 @@ import { SEO, getDeputySchema } from '@/components/SEO';
 import { useDeputyDetail } from '@/services/reportCard/useDeputyDetail';
 import { useDeputyExtendedInfo } from '@/services/reportCard/useDeputyExtendedInfo';
 import { useNationalAverages } from '@/services/reportCard/useNationalAverages';
-import { ArrowLeft } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, FileText } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export function DeputyPage() {
   const { deputyId } = useParams<{ deputyId: string }>();
@@ -79,6 +79,20 @@ export function DeputyPage() {
         </div>
 
         <ReportCardDetail deputy={deputy} averages={averages || null} extendedInfo={extendedInfo} />
+
+        {/* Cross-link to initiatives */}
+        <div className="mt-6 bg-neutral-1 rounded-xl p-4 border border-neutral-5">
+          <Link
+            to="/initiatives"
+            className="inline-flex items-center gap-2 text-accent-9 hover:text-accent-10 transition-colors"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Ver iniciativas parlamentares</span>
+          </Link>
+          <p className="text-sm text-neutral-11 mt-1">
+            Pesquise pelo nome do deputado para ver as suas propostas e intervenções
+          </p>
+        </div>
       </main>
 
       <Footer />
