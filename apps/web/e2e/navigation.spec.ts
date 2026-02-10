@@ -1,15 +1,15 @@
-import { expect, test } from './fixtures';
+import { expect, isMobileViewport, openMobileMenu, test } from './fixtures';
 
 test.describe('Navigation', () => {
-  // Desktop navigation tests - skip on mobile viewport since nav is hidden
-  test.describe('Desktop navigation', () => {
-    test.skip(({ viewport }) => {
-      // Skip if using mobile viewport (width < 768px, which is md breakpoint)
-      return viewport ? viewport.width < 768 : false;
-    });
-
-    test('should navigate to leaderboard page', async ({ page }) => {
+  test.describe('Main navigation', () => {
+    test('should navigate to leaderboard page', async ({ page, viewport }) => {
       await page.goto('/');
+      await page.waitForLoadState('networkidle');
+
+      // Open mobile menu if on mobile viewport
+      if (isMobileViewport(viewport)) {
+        await openMobileMenu(page);
+      }
 
       // Click on leaderboard link (labeled "Ranking" in MainNav)
       await page
@@ -21,8 +21,14 @@ test.describe('Navigation', () => {
       await expect(page).toHaveURL(/\/ranking/);
     });
 
-    test('should navigate to battle page', async ({ page }) => {
+    test('should navigate to battle page', async ({ page, viewport }) => {
       await page.goto('/');
+      await page.waitForLoadState('networkidle');
+
+      // Open mobile menu if on mobile viewport
+      if (isMobileViewport(viewport)) {
+        await openMobileMenu(page);
+      }
 
       // Click on battle link (labeled "Battle Royale" in MainNav)
       await page
@@ -34,8 +40,14 @@ test.describe('Navigation', () => {
       await expect(page).toHaveURL(/\/batalha/);
     });
 
-    test('should navigate to waste calculator page', async ({ page }) => {
+    test('should navigate to waste calculator page', async ({ page, viewport }) => {
       await page.goto('/');
+      await page.waitForLoadState('networkidle');
+
+      // Open mobile menu if on mobile viewport
+      if (isMobileViewport(viewport)) {
+        await openMobileMenu(page);
+      }
 
       // Click on waste calculator link (labeled "Calculadora" in MainNav)
       await page
@@ -49,9 +61,14 @@ test.describe('Navigation', () => {
 
     // Issue #94: Add links to initiatives page
     // @see https://github.com/bcamarneiro/adamastor/issues/94
-    test('should navigate to initiatives page from landing page', async ({ page }) => {
+    test('should navigate to initiatives page from landing page', async ({ page, viewport }) => {
       await page.goto('/');
       await page.waitForLoadState('networkidle');
+
+      // Open mobile menu if on mobile viewport
+      if (isMobileViewport(viewport)) {
+        await openMobileMenu(page);
+      }
 
       // Find initiatives link in feature cards or navigation
       const initiativesLink = page.getByRole('link', { name: /iniciativas/i }).first();
@@ -66,8 +83,9 @@ test.describe('Navigation', () => {
 
     test('should return to home page when clicking logo', async ({ page }) => {
       await page.goto('/ranking');
+      await page.waitForLoadState('networkidle');
 
-      // Click on logo/home link
+      // Logo/home link is always visible (not in hamburger menu)
       await page
         .getByRole('link', { name: /Debaixo d'olho/i })
         .first()

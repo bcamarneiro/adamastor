@@ -8,11 +8,18 @@ test.describe('Home Page', () => {
     await expect(page).toHaveTitle(/Debaixo d'olho/i);
   });
 
-  test('should display the main navigation', async ({ page }) => {
+  test('should display the main navigation', async ({ page, viewport }) => {
     await page.goto('/');
 
-    // Check for navigation links
-    await expect(page.getByRole('navigation')).toBeVisible();
+    // On mobile, check for hamburger menu button; on desktop, check for nav links
+    if (viewport && viewport.width < 768) {
+      // Mobile: verify hamburger menu button is visible
+      const menuButton = page.getByRole('button', { name: /abrir menu/i });
+      await expect(menuButton).toBeVisible();
+    } else {
+      // Desktop: check for navigation links directly
+      await expect(page.getByRole('navigation')).toBeVisible();
+    }
   });
 
   test('should display the footer', async ({ page }) => {
