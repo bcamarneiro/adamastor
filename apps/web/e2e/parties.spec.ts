@@ -115,7 +115,7 @@ test.describe('Parties Page', () => {
 
     // Verify party page has expected content
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByText(/Deputados/i)).toBeVisible();
+    await expect(page.getByRole('main').getByText(/Deputados/i)).toBeVisible();
     await expect(page.getByText(/Pontuação Média/i)).toBeVisible();
   });
 

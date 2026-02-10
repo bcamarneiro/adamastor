@@ -1,9 +1,9 @@
-import { expect, test } from '../fixtures';
+import { expect, isMobileViewport, openMobileMenu, test } from '../fixtures';
 
 // Issue #171: Search Functionality Data Contract Tests
 // @see https://github.com/bcamarneiro/adamastor/issues/171
 
-test('search results match API response', async ({ page }) => {
+test('search results match API response', async ({ page, viewport }) => {
   let apiSearchResults: unknown;
 
   // Listen for API responses (don't intercept)
@@ -21,6 +21,11 @@ test('search results match API response', async ({ page }) => {
 
   await page.goto('/');
   await page.waitForLoadState('networkidle');
+
+  // Open mobile menu if on mobile viewport
+  if (isMobileViewport(viewport)) {
+    await openMobileMenu(page);
+  }
 
   // Open search (click search toggle button)
   const searchToggle = page.locator('[data-testid="search-toggle"]');
@@ -74,7 +79,7 @@ test('search results match API response', async ({ page }) => {
   }
 });
 
-test('search query parameters match API request', async ({ page }) => {
+test('search query parameters match API request', async ({ page, viewport }) => {
   let capturedUrl: string | undefined;
 
   // Listen for API requests
@@ -88,6 +93,11 @@ test('search query parameters match API request', async ({ page }) => {
 
   await page.goto('/');
   await page.waitForLoadState('networkidle');
+
+  // Open mobile menu if on mobile viewport
+  if (isMobileViewport(viewport)) {
+    await openMobileMenu(page);
+  }
 
   // Open search
   const searchToggle = page.locator('[data-testid="search-toggle"]');

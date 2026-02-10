@@ -8,7 +8,7 @@
  * Tests run against whatever environment the dev server is connected to.
  * For CI, this should be a seeded local Supabase instance.
  */
-import { expect, test } from './fixtures';
+import { expect, getNavContainer, isMobileViewport, openMobileMenu, test } from './fixtures';
 
 test.describe('Data Consistency - Leaderboard', () => {
   test('top worker in leaderboard should have rank 1 displayed', async ({ page }) => {
@@ -576,7 +576,7 @@ test.describe('Data Consistency - Navigation', () => {
     await expect(page).toHaveURL(/\/ranking/);
   });
 
-  test('all main navigation links should work', async ({ page }) => {
+  test('all main navigation links should work', async ({ page, viewport }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
@@ -588,7 +588,13 @@ test.describe('Data Consistency - Navigation', () => {
     ];
 
     for (const link of navLinks) {
-      const navLink = page.locator('nav a, header a').filter({ hasText: link.text }).first();
+      // Open mobile menu if on mobile viewport
+      if (isMobileViewport(viewport)) {
+        await openMobileMenu(page);
+      }
+
+      const nav = getNavContainer(page, viewport);
+      const navLink = nav.locator('nav a, a').filter({ hasText: link.text }).first();
 
       if ((await navLink.count()) > 0) {
         await navLink.click();

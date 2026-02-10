@@ -17,7 +17,8 @@
       "tsconfig*.json",
       "*.d.ts",
       "**/public/data",
-      "**/snapshots/**"
+      "**/snapshots/**",
+      "playwright-report"
     ]
   },
   "organizeImports": {

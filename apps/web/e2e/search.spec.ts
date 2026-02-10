@@ -1,13 +1,18 @@
-import { expect, test } from './fixtures';
+import { expect, isMobileViewport, openMobileMenu, test } from './fixtures';
 
 test.describe('Global Search', () => {
   test.describe('Issue #44: Click on search results should navigate', () => {
-    test('clicking a search result navigates to deputy page', async ({ page }) => {
+    test('clicking a search result navigates to deputy page', async ({ page, viewport }) => {
       await page.goto('/');
 
-      // On desktop, click the search toggle button first to show the search input
-      const searchToggle = page.getByTestId('search-toggle');
-      await searchToggle.click();
+      if (isMobileViewport(viewport)) {
+        // On mobile, opening the menu reveals the search input directly (no toggle needed)
+        await openMobileMenu(page);
+      } else {
+        // On desktop, click the search toggle button to show the search input
+        const searchToggle = page.getByTestId('search-toggle');
+        await searchToggle.click();
+      }
 
       // Find and focus the search input
       const searchInput = page.getByTestId('global-search-input');
@@ -39,12 +44,17 @@ test.describe('Global Search', () => {
       await expect(page).toHaveURL(/\/deputado\//, { timeout: 5000 });
     });
 
-    test('keyboard navigation works (Enter key)', async ({ page }) => {
+    test('keyboard navigation works (Enter key)', async ({ page, viewport }) => {
       await page.goto('/');
 
-      // On desktop, click the search toggle button first to show the search input
-      const searchToggle = page.getByTestId('search-toggle');
-      await searchToggle.click();
+      if (isMobileViewport(viewport)) {
+        // On mobile, opening the menu reveals the search input directly (no toggle needed)
+        await openMobileMenu(page);
+      } else {
+        // On desktop, click the search toggle button to show the search input
+        const searchToggle = page.getByTestId('search-toggle');
+        await searchToggle.click();
+      }
 
       const searchInput = page.getByTestId('global-search-input');
       await expect(searchInput).toBeVisible({ timeout: 5000 });

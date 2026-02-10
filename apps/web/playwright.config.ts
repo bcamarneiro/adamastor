@@ -29,6 +29,12 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'chromium-mobile',
+      use: {
+        ...devices['Pixel 5'],
+      },
+    },
   ],
 
   // Only start local web server when not testing against live environment

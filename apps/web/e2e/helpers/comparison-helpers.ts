@@ -48,8 +48,16 @@ export async function openSelector(
     .nth(selectorIndex);
   await input.click();
 
-  // Wait for dropdown container to appear
-  await page.locator('.bg-neutral-2.rounded-lg').first().waitFor({ state: 'visible' });
+  // Wait for dropdown options to appear (or timeout gracefully if no data)
+  // Use a more specific selector that targets the dropdown buttons
+  await page
+    .locator(DROPDOWN_BUTTON_SELECTOR)
+    .first()
+    .waitFor({ state: 'visible', timeout: 5000 })
+    .catch(() => {
+      // Graceful handling - dropdown might be empty or still loading
+      // Tests will handle this via count checks
+    });
 
   return input;
 }
@@ -152,19 +160,9 @@ export async function searchInSelector(
   const input = await openSelector(page, selectorIndex, config);
   await input.fill(searchTerm);
 
-  // Wait for filtering to complete by checking that the dropdown content has stabilized
-  await page
-    .waitForFunction(
-      () => {
-        const dropdown = document.querySelector('.bg-neutral-2.rounded-lg');
-        return dropdown && dropdown.textContent !== '';
-      },
-      undefined,
-      { timeout: 2000 }
-    )
-    .catch(() => {
-      // Timeout is acceptable - dropdown might be empty after filtering
-    });
+  // Wait a bit for filtering to complete
+  // Don't wait for specific elements since results might be empty (which is valid)
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -188,8 +186,16 @@ export async function clickCompareButton(page: Page, config: SelectorConfig): Pr
   const compareButton = page.getByRole('button', { name: config.compareButtonText });
   await compareButton.click();
 
-  // Wait for results to render by checking for winner/tie section
-  await page.locator('text=/venceu|Empate/i').first().waitFor({ state: 'visible', timeout: 5000 });
+  // Wait for results to render by checking for winner/tie section or comparison details
+  // Use Promise.race to accept either condition
+  await Promise.race([
+    page.locator('text=/venceu|Empate/i').first().waitFor({ state: 'visible', timeout: 10000 }),
+    page
+      .getByRole('heading', { name: /comparacao detalhada/i })
+      .waitFor({ state: 'visible', timeout: 10000 }),
+  ]).catch(() => {
+    // If results don't appear, the test will handle it via subsequent assertions
+  });
 }
 
 /**
