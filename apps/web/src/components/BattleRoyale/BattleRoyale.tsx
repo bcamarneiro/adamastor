@@ -45,6 +45,8 @@ export function BattleRoyale() {
       <div className="bg-neutral-3 rounded-xl p-1 flex gap-1">
         <button
           onClick={() => handleModeChange('deputies')}
+          aria-label="Modo comparação de deputados"
+          aria-pressed={mode === 'deputies'}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
             mode === 'deputies'
               ? 'bg-neutral-1 text-neutral-12 shadow-sm'
@@ -56,6 +58,8 @@ export function BattleRoyale() {
         </button>
         <button
           onClick={() => handleModeChange('parties')}
+          aria-label="Modo comparação de partidos"
+          aria-pressed={mode === 'parties'}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-colors ${
             mode === 'parties'
               ? 'bg-neutral-1 text-neutral-12 shadow-sm'
@@ -125,7 +129,7 @@ export function BattleRoyale() {
               {/* Comparison Details */}
               <div className="bg-neutral-1 rounded-xl p-6 border border-neutral-5">
                 <h3 className="font-semibold text-neutral-12 mb-4 text-center">
-                  Comparacao Detalhada
+                  Comparação Detalhada
                 </h3>
                 <ComparisonBars
                   metrics={comparison.metrics}
