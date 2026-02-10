@@ -1,4 +1,4 @@
-import { type Page, test as base } from '@playwright/test';
+import { type Locator, type Page, test as base } from '@playwright/test';
 
 /**
  * Opens the mobile navigation menu by clicking the hamburger button.
@@ -17,6 +17,21 @@ export async function openMobileMenu(page: Page) {
  */
 export function isMobileViewport(viewport: { width: number; height: number } | null): boolean {
   return viewport ? viewport.width < 768 : false;
+}
+
+/**
+ * Returns the navigation container scoped to the current viewport.
+ * On mobile, returns the #mobile-navigation container (must call openMobileMenu first).
+ * On desktop, returns the full page.
+ */
+export function getNavContainer(
+  page: Page,
+  viewport: { width: number; height: number } | null
+): Locator | Page {
+  if (isMobileViewport(viewport)) {
+    return page.locator('#mobile-navigation');
+  }
+  return page;
 }
 
 /**

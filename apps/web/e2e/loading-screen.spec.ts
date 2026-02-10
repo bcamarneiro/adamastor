@@ -1,4 +1,4 @@
-import { expect, isMobileViewport, openMobileMenu, test } from './fixtures';
+import { expect, getNavContainer, isMobileViewport, openMobileMenu, test } from './fixtures';
 
 test.describe('Loading Screen', () => {
   test('should display loading screen during page data fetch', async ({ page }) => {
@@ -108,7 +108,8 @@ test.describe('Loading Screen', () => {
     }
 
     // Navigate to parties page (triggers data fetch)
-    await page.click('a[href="/partidos"]');
+    const nav = getNavContainer(page, viewport);
+    await nav.locator('a[href="/partidos"]').click();
 
     // After navigation completes, loading screen should be hidden
     await page.waitForLoadState('networkidle');

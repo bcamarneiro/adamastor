@@ -1,4 +1,4 @@
-import { expect, isMobileViewport, openMobileMenu, test } from './fixtures';
+import { expect, getNavContainer, isMobileViewport, openMobileMenu, test } from './fixtures';
 
 test.describe('Navigation', () => {
   test.describe('Main navigation', () => {
@@ -11,8 +11,10 @@ test.describe('Navigation', () => {
         await openMobileMenu(page);
       }
 
+      const nav = getNavContainer(page, viewport);
+
       // Click on leaderboard link (labeled "Ranking" in MainNav)
-      await page
+      await nav
         .getByRole('link', { name: /ranking/i })
         .first()
         .click();
@@ -30,8 +32,10 @@ test.describe('Navigation', () => {
         await openMobileMenu(page);
       }
 
+      const nav = getNavContainer(page, viewport);
+
       // Click on battle link (labeled "Battle Royale" in MainNav)
-      await page
+      await nav
         .getByRole('link', { name: /battle royale/i })
         .first()
         .click();
@@ -49,8 +53,10 @@ test.describe('Navigation', () => {
         await openMobileMenu(page);
       }
 
+      const nav = getNavContainer(page, viewport);
+
       // Click on waste calculator link (labeled "Calculadora" in MainNav)
-      await page
+      await nav
         .getByRole('link', { name: /calculadora/i })
         .first()
         .click();
@@ -70,8 +76,10 @@ test.describe('Navigation', () => {
         await openMobileMenu(page);
       }
 
+      const nav = getNavContainer(page, viewport);
+
       // Find initiatives link in feature cards or navigation
-      const initiativesLink = page.getByRole('link', { name: /iniciativas/i }).first();
+      const initiativesLink = nav.getByRole('link', { name: /iniciativas/i }).first();
       await expect(initiativesLink).toBeVisible();
 
       // Click on initiatives link
