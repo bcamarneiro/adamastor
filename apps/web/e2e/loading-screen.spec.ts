@@ -94,7 +94,10 @@ test.describe('Loading Screen', () => {
     await expect(page.getByText(/maior atividade parlamentar/i).first()).toBeVisible();
   });
 
-  test('should display loading screen when navigating between pages', async ({ page, viewport }) => {
+  test('should display loading screen when navigating between pages', async ({
+    page,
+    viewport,
+  }) => {
     // Start on home page
     await page.goto('/');
     await page.waitForLoadState('networkidle');
