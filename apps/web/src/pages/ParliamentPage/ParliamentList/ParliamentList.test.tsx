@@ -34,8 +34,8 @@ let mockHookState: UseParliamentReturn = {
   error: null,
 };
 
-// Mock the useParliament hook
-vi.mock('../../../services/parliament/useParliament', () => ({
+// Mock the useParliament hook (use @/ alias to match component import)
+vi.mock('@/services/parliament/useParliament', () => ({
   useParliament: () => mockHookState,
 }));
 
