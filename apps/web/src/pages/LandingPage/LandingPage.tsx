@@ -121,7 +121,7 @@ const LandingPage = () => {
       <SEO {...SEO_CONFIGS.landing} url="/" structuredData={getOrganizationSchema()} />
       <MainNav scrollY={scrollY} />
 
-      <div className="flex flex-col overflow-x-hidden">
+      <main className="flex flex-col overflow-x-hidden">
         {/* Hero */}
         <Hero />
 
@@ -340,9 +340,9 @@ const LandingPage = () => {
             </motion.div>
           </div>
         </section>
+      </main>
 
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };
