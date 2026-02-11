@@ -25,7 +25,7 @@ export function BattlePage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-neutral-12 mb-2">Battle Royale</h1>
           <p className="text-neutral-11">
-            Compara a atividade parlamentar de dois deputados lado a lado
+            Compara a atividade parlamentar de dois deputados ou partidos lado a lado
           </p>
         </div>
 

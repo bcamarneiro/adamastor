@@ -9,8 +9,8 @@ test.describe('Global Search', () => {
       const searchToggle = page.getByTestId('search-toggle');
       await searchToggle.click();
 
-      // Find and focus the search input
-      const searchInput = page.getByTestId('global-search-input');
+      // Find and focus the search input (use .first() since both desktop and mobile inputs exist)
+      const searchInput = page.getByTestId('global-search-input').first();
       await expect(searchInput).toBeVisible({ timeout: 5000 });
       await searchInput.click();
 
@@ -46,7 +46,7 @@ test.describe('Global Search', () => {
       const searchToggle = page.getByTestId('search-toggle');
       await searchToggle.click();
 
-      const searchInput = page.getByTestId('global-search-input');
+      const searchInput = page.getByTestId('global-search-input').first();
       await expect(searchInput).toBeVisible({ timeout: 5000 });
       await searchInput.click();
       // Use a common letter combination to find any deputy
