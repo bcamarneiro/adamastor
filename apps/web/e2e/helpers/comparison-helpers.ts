@@ -64,18 +64,21 @@ export async function openSelector(
   // 3. "Nenhum...encontrado" (no data/filtered out)
 
   // First, wait for loading state to finish
-  await page
-    .waitForFunction(
-      (container) => {
-        const dropdownEl = container.querySelector('div.mt-2.max-h-48');
-        return dropdownEl && !dropdownEl.textContent?.includes('carregar');
-      },
-      selectorContainer.elementHandle(),
-      { timeout: 10000 }
-    )
-    .catch(() => {
-      // Timeout acceptable - may already be done loading
-    });
+  const containerHandle = await selectorContainer.elementHandle();
+  if (containerHandle) {
+    await page
+      .waitForFunction(
+        (container) => {
+          const dropdownEl = container.querySelector('div.mt-2.max-h-48');
+          return dropdownEl && !dropdownEl.textContent?.includes('carregar');
+        },
+        containerHandle,
+        { timeout: 10000 }
+      )
+      .catch(() => {
+        // Timeout acceptable - may already be done loading
+      });
+  }
 
   // Then check if there are buttons (data available)
   const hasButtons = await dropdown.locator('button').count();

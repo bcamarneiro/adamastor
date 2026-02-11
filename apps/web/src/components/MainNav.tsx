@@ -37,7 +37,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [location.pathname]);
+  }, [location]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -48,6 +48,20 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
     }
     return () => {
       document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Handle Escape key to close mobile menu
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [mobileMenuOpen]);
 
@@ -125,12 +139,17 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
 
       {/* Mobile Navigation Backdrop */}
       <div
+        role="button"
+        tabIndex={mobileMenuOpen ? 0 : -1}
         className={`md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-200 ${
           mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setMobileMenuOpen(false)}
         onKeyDown={(e) => {
-          if (e.key === 'Escape') setMobileMenuOpen(false);
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setMobileMenuOpen(false);
+          }
         }}
         aria-label="Fechar menu"
       />
