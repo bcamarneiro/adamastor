@@ -9,6 +9,27 @@ async function loadLegislatureService() {
   return await import('../services/legislature.js');
 }
 
+// Probe whether Supabase is actually reachable (not just configured).
+// Env vars can be set (e.g. from .env) while local Supabase is offline,
+// in which case integration tests must be skipped, not run-and-fail.
+async function isSupabaseReachable(): Promise<boolean> {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return false;
+  }
+  try {
+    const { supabase } = await import('../supabase.js');
+    const { error } = await supabase
+      .from('legislature_config')
+      .select('legislature_number')
+      .limit(1);
+    return !error;
+  } catch {
+    return false;
+  }
+}
+
+const hasSupabase = await isSupabaseReachable();
+
 // Helper to create minimal informacao_base data
 function createInfoBase(
   overrides: Partial<ParliamentInformacaoBase> = {}
@@ -29,9 +50,6 @@ function createInfoBase(
 }
 
 describe('Legislature Detection Integration', () => {
-  // Skip if Supabase is not configured
-  const hasSupabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY;
-
   it.skipIf(!hasSupabase)('should detect and store legislature in database', async () => {
     const { getCurrentLegislature, updateLegislatureFromDetection } =
       await loadLegislatureService();

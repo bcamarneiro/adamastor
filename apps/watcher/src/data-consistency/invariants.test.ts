@@ -14,7 +14,7 @@ import { scoreToGrade } from './helpers.js';
 
 let supabase: SupabaseClient;
 
-beforeAll(() => {
+beforeAll(async () => {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -23,9 +23,20 @@ beforeAll(() => {
     return;
   }
 
-  supabase = createClient(url, key, {
+  const client = createClient(url, key, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
+
+  // Env vars can be set (e.g. from .env) while local Supabase is offline.
+  // Probe reachability before exposing the client; otherwise queries below
+  // would fail with confusing assertion errors instead of skipping cleanly.
+  const { error } = await client.from('deputy_details').select('id').limit(1);
+  if (error) {
+    console.warn(`⚠️ Supabase not reachable (${error.message}), skipping invariant tests`);
+    return;
+  }
+
+  supabase = client;
 });
 
 describe('Database Data Invariants', () => {
