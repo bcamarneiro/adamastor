@@ -14,10 +14,10 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 ### Staging (`.env.staging`)
-Uses adamastor-staging project:
+Uses the `staging` preview branch on the adamastor-prod project:
 ```bash
-VITE_SUPABASE_URL=https://gwzxoqzktnluqiilxiew.supabase.co
-VITE_SUPABASE_ANON_KEY=sb_publishable_AJxjHs7QJ8zd1JYAPOB0ow_JI7zmxHl
+VITE_SUPABASE_URL=https://cbgdzoaivmhtqhzkscmm.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_axMh_OyFZ7N8tAcRuZE47w_HP2_5rlN
 ```
 
 ### Production (`.env.production`)
