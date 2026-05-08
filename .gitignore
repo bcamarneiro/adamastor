@@ -56,3 +56,4 @@ CLAUDE.md
 .claude_settings.json
 .auto-claude-status*.tar.zst
 .turbo/cache/
+.local-backups/
