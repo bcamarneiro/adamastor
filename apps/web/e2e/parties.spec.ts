@@ -113,10 +113,12 @@ test.describe('Parties Page', () => {
     // Verify we're on a party details page
     await expect(page).toHaveURL(/\/partidos\/[a-z]+$/);
 
-    // Verify party page has expected content
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByText(/Deputados/i)).toBeVisible();
-    await expect(page.getByText(/Pontuação Média/i)).toBeVisible();
+    // Verify party page has expected content. Use .first() since the page
+    // may render multiple H1s and "Deputados"/"Pontuação Média" labels
+    // (header label + per-deputy listing entries).
+    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+    await expect(page.getByText(/Deputados/i).first()).toBeVisible();
+    await expect(page.getByText(/Pontuação Média/i).first()).toBeVisible();
   });
 
   // Issue #47: Party ranking calculation explanation should be visible
