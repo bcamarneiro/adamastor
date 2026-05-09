@@ -8,42 +8,50 @@
  * Run with: SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=... bun test invariants
  */
 
-import { beforeAll, describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { scoreToGrade } from './helpers.js';
 
-let supabase: SupabaseClient;
-
-beforeAll(async () => {
+// Probe whether Supabase is actually reachable (not just configured).
+// Env vars can be set (e.g. from .env) while local Supabase is offline,
+// in which case these tests must be skipped (loudly), not run-and-fail
+// or — worse — silently pass with zero assertions.
+async function probeSupabase(): Promise<SupabaseClient | null> {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !key) {
     console.warn('⚠️ SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set, skipping invariant tests');
-    return;
+    return null;
   }
 
   const client = createClient(url, key, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  // Env vars can be set (e.g. from .env) while local Supabase is offline.
-  // Probe reachability before exposing the client; otherwise queries below
-  // would fail with confusing assertion errors instead of skipping cleanly.
-  const { error } = await client.from('deputy_details').select('id').limit(1);
-  if (error) {
-    console.warn(`⚠️ Supabase not reachable (${error.message}), skipping invariant tests`);
-    return;
+  try {
+    const { error } = await client.from('deputy_details').select('id').limit(1);
+    if (error) {
+      console.warn(`⚠️ Supabase not reachable (${error.message}), skipping invariant tests`);
+      return null;
+    }
+  } catch (err) {
+    console.warn(`⚠️ Supabase not reachable (${(err as Error).message}), skipping invariant tests`);
+    return null;
   }
 
-  supabase = client;
-});
+  return client;
+}
+
+const probedClient = await probeSupabase();
+const hasSupabase = probedClient !== null;
+// Safe to cast: every test using `supabase` is guarded by it.skipIf(!hasSupabase),
+// so the body only executes when the client is non-null.
+const supabase = probedClient as SupabaseClient;
 
 describe('Database Data Invariants', () => {
   describe('Work Score Consistency', () => {
-    it('all active deputies should have a work_score', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('all active deputies should have a work_score', async () => {
       const { data, error } = await supabase
         .from('deputy_details')
         .select('id, name, work_score')
@@ -54,29 +62,28 @@ describe('Database Data Invariants', () => {
       expect(data).toHaveLength(0);
     });
 
-    it('work_score should be between 0 and 200 (capped components allow >100)', async () => {
-      if (!supabase) return;
+    it.skipIf(!hasSupabase)(
+      'work_score should be between 0 and 200 (capped components allow >100)',
+      async () => {
+        const { data: tooLow, error: errLow } = await supabase
+          .from('deputy_stats')
+          .select('deputy_id, work_score')
+          .lt('work_score', 0);
 
-      const { data: tooLow, error: errLow } = await supabase
-        .from('deputy_stats')
-        .select('deputy_id, work_score')
-        .lt('work_score', 0);
+        expect(errLow).toBeNull();
+        expect(tooLow).toHaveLength(0);
 
-      expect(errLow).toBeNull();
-      expect(tooLow).toHaveLength(0);
+        const { data: tooHigh, error: errHigh } = await supabase
+          .from('deputy_stats')
+          .select('deputy_id, work_score')
+          .gt('work_score', 200);
 
-      const { data: tooHigh, error: errHigh } = await supabase
-        .from('deputy_stats')
-        .select('deputy_id, work_score')
-        .gt('work_score', 200);
+        expect(errHigh).toBeNull();
+        expect(tooHigh).toHaveLength(0);
+      }
+    );
 
-      expect(errHigh).toBeNull();
-      expect(tooHigh).toHaveLength(0);
-    });
-
-    it('grade should match work_score thresholds', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('grade should match work_score thresholds', async () => {
       const { data, error } = await supabase.from('deputy_stats').select('work_score, grade');
 
       expect(error).toBeNull();
@@ -103,25 +110,24 @@ describe('Database Data Invariants', () => {
   });
 
   describe('Ranking Consistency', () => {
-    it('national_rank should be unique for all deputies with stats', async () => {
-      if (!supabase) return;
+    it.skipIf(!hasSupabase)(
+      'national_rank should be unique for all deputies with stats',
+      async () => {
+        const { data, error } = await supabase
+          .from('deputy_stats')
+          .select('national_rank')
+          .not('national_rank', 'is', null);
 
-      const { data, error } = await supabase
-        .from('deputy_stats')
-        .select('national_rank')
-        .not('national_rank', 'is', null);
+        expect(error).toBeNull();
+        expect(data).not.toBeNull();
 
-      expect(error).toBeNull();
-      expect(data).not.toBeNull();
+        const ranks = (data || []).map((d) => d.national_rank);
+        const uniqueRanks = new Set(ranks);
+        expect(ranks.length).toBe(uniqueRanks.size);
+      }
+    );
 
-      const ranks = (data || []).map((d) => d.national_rank);
-      const uniqueRanks = new Set(ranks);
-      expect(ranks.length).toBe(uniqueRanks.size);
-    });
-
-    it('national_rank should be sequential (1 to N)', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('national_rank should be sequential (1 to N)', async () => {
       const { data, error } = await supabase
         .from('deputy_stats')
         .select('national_rank')
@@ -145,36 +151,35 @@ describe('Database Data Invariants', () => {
       expect(gaps).toHaveLength(0);
     });
 
-    it('top 10 by work_score should match top 10 by national_rank', async () => {
-      if (!supabase) return;
+    it.skipIf(!hasSupabase)(
+      'top 10 by work_score should match top 10 by national_rank',
+      async () => {
+        const { data: byScore, error: err1 } = await supabase
+          .from('deputy_stats')
+          .select('deputy_id')
+          .not('work_score', 'is', null)
+          .order('work_score', { ascending: false })
+          .limit(10);
 
-      const { data: byScore, error: err1 } = await supabase
-        .from('deputy_stats')
-        .select('deputy_id')
-        .not('work_score', 'is', null)
-        .order('work_score', { ascending: false })
-        .limit(10);
+        expect(err1).toBeNull();
 
-      expect(err1).toBeNull();
+        const { data: byRank, error: err2 } = await supabase
+          .from('deputy_stats')
+          .select('deputy_id')
+          .not('national_rank', 'is', null)
+          .order('national_rank', { ascending: true })
+          .limit(10);
 
-      const { data: byRank, error: err2 } = await supabase
-        .from('deputy_stats')
-        .select('deputy_id')
-        .not('national_rank', 'is', null)
-        .order('national_rank', { ascending: true })
-        .limit(10);
+        expect(err2).toBeNull();
 
-      expect(err2).toBeNull();
+        const scoreIds = (byScore || []).map((d) => d.deputy_id);
+        const rankIds = (byRank || []).map((d) => d.deputy_id);
 
-      const scoreIds = (byScore || []).map((d) => d.deputy_id);
-      const rankIds = (byRank || []).map((d) => d.deputy_id);
+        expect(scoreIds).toEqual(rankIds);
+      }
+    );
 
-      expect(scoreIds).toEqual(rankIds);
-    });
-
-    it('district_rank should be unique within each district', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('district_rank should be unique within each district', async () => {
       const { data, error } = await supabase
         .from('deputy_details')
         .select('district_id, district_rank')
@@ -208,9 +213,7 @@ describe('Database Data Invariants', () => {
   });
 
   describe('Count Consistency', () => {
-    it('attendance_rate should be between 0 and 100', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('attendance_rate should be between 0 and 100', async () => {
       const { data: tooLow, error: err1 } = await supabase
         .from('deputy_stats')
         .select('deputy_id, attendance_rate')
@@ -228,9 +231,7 @@ describe('Database Data Invariants', () => {
       expect(tooHigh).toHaveLength(0);
     });
 
-    it('proposal_count should be non-negative', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('proposal_count should be non-negative', async () => {
       const { data, error } = await supabase
         .from('deputy_stats')
         .select('deputy_id, proposal_count')
@@ -240,9 +241,7 @@ describe('Database Data Invariants', () => {
       expect(data).toHaveLength(0);
     });
 
-    it('intervention_count should be non-negative', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('intervention_count should be non-negative', async () => {
       const { data, error } = await supabase
         .from('deputy_stats')
         .select('deputy_id, intervention_count')
@@ -252,9 +251,7 @@ describe('Database Data Invariants', () => {
       expect(data).toHaveLength(0);
     });
 
-    it('meetings_attended should not exceed meetings_total', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('meetings_attended should not exceed meetings_total', async () => {
       const { data, error } = await supabase
         .from('deputy_stats')
         .select('deputy_id, meetings_attended, meetings_total');
@@ -273,9 +270,7 @@ describe('Database Data Invariants', () => {
   });
 
   describe('Deputy Data Consistency', () => {
-    it('all deputies should have a party', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('all deputies should have a party', async () => {
       const { data, error } = await supabase
         .from('deputies')
         .select('id, name, party_id')
@@ -288,9 +283,7 @@ describe('Database Data Invariants', () => {
       }
     });
 
-    it('all active deputies should have a district', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('all active deputies should have a district', async () => {
       const { data, error } = await supabase
         .from('deputies')
         .select('id, name, district_id')
@@ -301,9 +294,7 @@ describe('Database Data Invariants', () => {
       expect(data).toHaveLength(0);
     });
 
-    it('all deputies should have a corresponding stats record', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('all deputies should have a corresponding stats record', async () => {
       // Get all deputy IDs
       const { data: deputies, error: err1 } = await supabase.from('deputies').select('id');
 
@@ -327,9 +318,7 @@ describe('Database Data Invariants', () => {
   });
 
   describe('Cross-View Consistency', () => {
-    it('deputy_details view should match joined data', async () => {
-      if (!supabase) return;
-
+    it.skipIf(!hasSupabase)('deputy_details view should match joined data', async () => {
       // Get first 5 from view
       const { data: viewData, error: err1 } = await supabase
         .from('deputy_details')
