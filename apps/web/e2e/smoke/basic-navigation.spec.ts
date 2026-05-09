@@ -21,7 +21,7 @@ test.describe('Deployment Smoke Tests', () => {
   });
 
   test('main routes are accessible', async ({ page }) => {
-    const routes = ['/', '/ranking', '/deputies', '/initiatives', '/parties'];
+    const routes = ['/', '/ranking', '/parliament', '/initiatives', '/partidos'];
 
     for (const route of routes) {
       const response = await page.goto(route);
@@ -67,7 +67,7 @@ test.describe('Deployment Smoke Tests', () => {
 
   // TODO: Re-enable once footer is added to the app
   test.skip('footer is present on all main pages', async ({ page }) => {
-    const routes = ['/', '/ranking', '/deputies'];
+    const routes = ['/', '/ranking', '/parliament'];
 
     for (const route of routes) {
       await page.goto(route);
@@ -122,7 +122,7 @@ test.describe('Deployment Smoke Tests', () => {
     const pageChecks = [
       { route: '/', titlePattern: /Adamastor|Debaixo/i },
       { route: '/ranking', titlePattern: /ranking|deputad/i },
-      { route: '/deputies', titlePattern: /deputad/i },
+      { route: '/parliament', titlePattern: /parlamento|deputad/i },
     ];
 
     for (const { route, titlePattern } of pageChecks) {

@@ -54,8 +54,10 @@ test.describe('Direct-URL detail routes (ADA-211)', () => {
       // URL preserved (not redirected to 404).
       await expect(page).toHaveURL(new RegExp(`/deputado/${deputyId}$`));
 
-      // Deputy name rendered as the H1 (DeputyPage uses ReportCardDetail).
-      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      // Deputy name rendered as an H1. DeputyPage may render multiple H1s
+      // (page heading + ReportCardDetail's heading), so .first() avoids
+      // strict-mode violation.
+      await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
       await expect(page.getByText(deputyName, { exact: false }).first()).toBeVisible();
 
       // The "not found" fallback must NOT be visible.
@@ -115,8 +117,8 @@ test.describe('Direct-URL detail routes (ADA-211)', () => {
 
       await expect(page).toHaveURL(new RegExp(`/partidos/${partySlug}$`));
 
-      // Acronym renders as the H1.
-      const h1 = page.getByRole('heading', { level: 1 });
+      // Acronym renders as an H1.
+      const h1 = page.getByRole('heading', { level: 1 }).first();
       await expect(h1).toBeVisible();
       await expect(h1).toContainText(partyAcronym);
 
