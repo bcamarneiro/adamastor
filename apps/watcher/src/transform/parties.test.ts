@@ -1,17 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-
-// Party colors - extracted from parties.ts for testing
-const PARTY_COLORS: Record<string, string> = {
-  PS: '#FF66B2',
-  PSD: '#FF6600',
-  CH: '#202056',
-  IL: '#00ADEF',
-  BE: '#C40000',
-  PCP: '#C41200',
-  L: '#00AA00',
-  PAN: '#009639',
-  'CDS-PP': '#0066CC',
-};
+import { PARTY_COLORS, getPartyColor } from './parties-colors.js';
 
 describe('PARTY_COLORS', () => {
   it('should have colors for all major Portuguese parties', () => {
@@ -29,9 +17,7 @@ describe('PARTY_COLORS', () => {
   });
 
   it('should have distinct colors for left and right parties', () => {
-    // PS (left) should be different from PSD (right)
     expect(PARTY_COLORS.PS).not.toBe(PARTY_COLORS.PSD);
-    // BE (left) should be different from CH (right)
     expect(PARTY_COLORS.BE).not.toBe(PARTY_COLORS.CH);
   });
 
@@ -56,24 +42,19 @@ describe('PARTY_COLORS', () => {
   });
 
   it('should have green parties (L, PAN) with green colors', () => {
-    // Both should contain green (00 in the G component)
     expect(PARTY_COLORS.L).toMatch(/#00[A-F0-9]{2}00/i);
     expect(PARTY_COLORS.PAN).toMatch(/#00[A-F0-9]{4}/i);
   });
 });
 
-describe('Party color fallback', () => {
+describe('getPartyColor', () => {
   it('should return gray for unknown party', () => {
-    const getPartyColor = (acronym: string) => PARTY_COLORS[acronym] || '#808080';
-
     expect(getPartyColor('UNKNOWN')).toBe('#808080');
     expect(getPartyColor('')).toBe('#808080');
     expect(getPartyColor('XYZ')).toBe('#808080');
   });
 
   it('should return correct color for known party', () => {
-    const getPartyColor = (acronym: string) => PARTY_COLORS[acronym] || '#808080';
-
     expect(getPartyColor('PS')).toBe('#FF66B2');
     expect(getPartyColor('PSD')).toBe('#FF6600');
   });

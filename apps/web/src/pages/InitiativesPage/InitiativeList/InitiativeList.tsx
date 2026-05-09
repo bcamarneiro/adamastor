@@ -173,7 +173,7 @@ const InitiativeList = () => {
   return (
     <div className="w-full h-full flex flex-col p-5 overflow-hidden">
       <div className="flex-none">
-        <h1 className="text-2xl font-bold mb-4">Initiatives List</h1>
+        <h1 className="text-2xl font-bold mb-4">Lista de Iniciativas</h1>
 
         <Accordion.Root type="single" collapsible className="mb-6">
           <Accordion.Item value="details" className="border rounded-lg overflow-hidden">
