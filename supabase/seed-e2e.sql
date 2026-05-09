@@ -43,7 +43,7 @@ SELECT
   (SELECT id FROM parties WHERE acronym = 'PS'),
   (SELECT id FROM districts WHERE slug = 'lisboa'),
   true,
-  16,
+  17,
   999001,
   '2024-01-01'::DATE;
 
@@ -59,7 +59,7 @@ SELECT
   (SELECT id FROM parties WHERE acronym = 'PSD'),
   (SELECT id FROM districts WHERE slug = 'porto'),
   true,
-  16,
+  17,
   999002,
   '2024-01-01'::DATE;
 
@@ -75,7 +75,7 @@ SELECT
   (SELECT id FROM parties WHERE acronym = 'CH'),
   (SELECT id FROM districts WHERE slug = 'braga'),
   true,
-  16,
+  17,
   999003,
   '2024-01-01'::DATE;
 
@@ -91,7 +91,7 @@ SELECT
   (SELECT id FROM parties WHERE acronym = 'BE'),
   (SELECT id FROM districts WHERE slug = 'faro'),
   false,
-  16,
+  17,
   999004,
   '2024-01-01'::DATE,
   '2024-06-15'::DATE;
@@ -200,9 +200,9 @@ FROM deputies d WHERE d.external_id = 'E2E-DELTA-004';
 
 INSERT INTO initiatives (external_id, title, number, type, type_desc, status, submitted_at, legislature)
 VALUES
-  ('E2E-INIT-001', 'E2E Test: Lei de Teste Alpha', 'PL 999/XVI', 'PL', 'Projeto de Lei', 'approved', '2024-03-15', 16),
-  ('E2E-INIT-002', 'E2E Test: Lei de Teste Beta', 'PL 998/XVI', 'PL', 'Projeto de Lei', 'pending', '2024-04-01', 16),
-  ('E2E-INIT-003', 'E2E Test: Resolucao Gamma', 'PR 500/XVI', 'PR', 'Projeto de Resolucao', 'rejected', '2024-02-20', 16);
+  ('E2E-INIT-001', 'E2E Test: Lei de Teste Alpha', 'PL 999/XVII', 'PL', 'Projeto de Lei', 'approved', '2024-03-15', 17),
+  ('E2E-INIT-002', 'E2E Test: Lei de Teste Beta', 'PL 998/XVII', 'PL', 'Projeto de Lei', 'pending', '2024-04-01', 17),
+  ('E2E-INIT-003', 'E2E Test: Resolucao Gamma', 'PR 500/XVII', 'PR', 'Projeto de Resolucao', 'rejected', '2024-02-20', 17);
 
 -- Link initiatives to authors
 INSERT INTO initiative_authors (initiative_id, deputy_id)
@@ -219,9 +219,9 @@ WHERE i.external_id = 'E2E-INIT-002' AND d.external_id = 'E2E-BETA-002';
 
 INSERT INTO sessions (external_id, date, type, legislature)
 VALUES
-  ('E2E-SESSION-001', '2024-03-01', 'plenary', 16),
-  ('E2E-SESSION-002', '2024-03-15', 'plenary', 16),
-  ('E2E-SESSION-003', '2024-04-01', 'committee', 16);
+  ('E2E-SESSION-001', '2024-03-01', 'plenary', 17),
+  ('E2E-SESSION-002', '2024-03-15', 'plenary', 17),
+  ('E2E-SESSION-003', '2024-04-01', 'committee', 17);
 
 -- ===================
 -- INTERVENTIONS (For activity tracking tests)
@@ -315,9 +315,9 @@ FROM deputies d WHERE d.external_id = 'E2E-DELTA-004';
 
 INSERT INTO plenary_meetings (external_id, meeting_date, legislature)
 VALUES
-  (900001, '2024-03-01', 16),
-  (900002, '2024-03-15', 16),
-  (900003, '2024-04-01', 16);
+  (900001, '2024-03-01', 17),
+  (900002, '2024-03-15', 17),
+  (900003, '2024-04-01', 17);
 
 -- ===================
 -- PLENARY ATTENDANCE (For attendance tracking tests)
