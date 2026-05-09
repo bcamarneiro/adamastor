@@ -144,6 +144,20 @@ export const SEO_CONFIGS = {
     description:
       "Como o Debaixo d'olho protege a tua privacidade. Explicação sobre que dados recolhemos, como os utilizamos, e os teus direitos.",
   },
+  parliament: {
+    title: 'Parlamento',
+    description:
+      'Acompanha a atividade do Parlamento português. Vê sessões, votações e o trabalho dos deputados.',
+  },
+  initiatives: {
+    title: 'Iniciativas',
+    description:
+      'Consulta as iniciativas legislativas apresentadas no Parlamento português. Acompanha propostas, projetos de lei e o estado de cada iniciativa.',
+  },
+  notFound: {
+    title: 'Página não encontrada',
+    description: 'A página que procuras não existe ou foi movida.',
+  },
 } as const;
 
 /**
