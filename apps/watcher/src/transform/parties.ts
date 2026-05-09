@@ -2,7 +2,7 @@ import { supabase } from '../supabase.js';
 import { pipelineResult } from '../utils/pipeline-result.js';
 
 // Party colors - official or commonly used
-const PARTY_COLORS: Record<string, string> = {
+export const PARTY_COLORS: Record<string, string> = {
   PS: '#FF66B2', // Pink (Socialist Party)
   PSD: '#FF6600', // Orange (Social Democratic Party)
   CH: '#202056', // Dark blue (Chega)
@@ -13,6 +13,12 @@ const PARTY_COLORS: Record<string, string> = {
   PAN: '#009639', // Dark green (People-Animals-Nature)
   'CDS-PP': '#0066CC', // Blue (CDS)
 };
+
+const FALLBACK_PARTY_COLOR = '#808080';
+
+export function getPartyColor(acronym: string): string {
+  return PARTY_COLORS[acronym] || FALLBACK_PARTY_COLOR;
+}
 
 interface ParliamentGrupoParlamentar {
   sigla: string;
@@ -33,7 +39,7 @@ export async function transformParties(
       external_id: gp.sigla, // Use acronym as external_id (TEXT)
       acronym: gp.sigla,
       name: gp.nome,
-      color: PARTY_COLORS[gp.sigla] || '#808080',
+      color: getPartyColor(gp.sigla),
     };
 
     // Upsert by external_id (which is unique in the schema)

@@ -43,7 +43,7 @@ async function fetchDistricts(): Promise<District[]> {
 
 async function fetchAggregateStats() {
   const { data, error } = await supabase
-    .from('deputy_detail')
+    .from('deputy_details')
     .select('work_score, grade')
     .not('work_score', 'is', null);
 
