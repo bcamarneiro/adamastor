@@ -272,7 +272,7 @@ describe('ReportCardDetail', () => {
 
         renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
-        expect(screen.getByRole('heading', { name: /Classificacao/i })).toBeTruthy();
+        expect(screen.getByRole('heading', { name: /Classificação/i })).toBeTruthy();
       });
 
       it('should render GradeCircle with deputy grade', () => {
@@ -293,12 +293,12 @@ describe('ReportCardDetail', () => {
         expect(screen.getByText('85 pts')).toBeTruthy();
       });
 
-      it('should render GradeCircle with "Pontuacao" label', () => {
+      it('should render GradeCircle with "Pontuação" label', () => {
         const deputy = createMockDeputyDetail();
 
         renderWithRouter(<ReportCardDetail deputy={deputy} averages={mockAverages} />);
 
-        expect(screen.getByText('Pontuacao')).toBeTruthy();
+        expect(screen.getByText('Pontuação')).toBeTruthy();
       });
     });
 
