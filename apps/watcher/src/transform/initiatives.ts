@@ -1,4 +1,5 @@
 import { supabase } from '../supabase.js';
+import { getInitiativeStatus, parsePartyVoteDetail } from './initiatives-helpers.js';
 
 interface ParliamentVotacao {
   id: string;
@@ -40,51 +41,6 @@ interface DbPartyVote {
   parties_favor: string[];
   parties_against: string[];
   parties_abstain: string[];
-}
-
-function parsePartyVoteDetail(detalhe: string): {
-  favor: string[];
-  against: string[];
-  abstain: string[];
-} {
-  const result = { favor: [] as string[], against: [] as string[], abstain: [] as string[] };
-
-  // Parse format like:
-  // "A Favor: <I>PSD</I>, <I> CDS-PP</I><BR>Contra:<I>CH</I>, <I> BE</I><BR>Abstenção:<I>PS</I>"
-
-  // Clean HTML
-  const clean = detalhe
-    .replace(/<BR>/gi, '\n')
-    .replace(/<\/?I>/gi, '')
-    .replace(/&nbsp;/gi, ' ')
-    .trim();
-
-  const lines = clean.split('\n');
-
-  for (const line of lines) {
-    const lowerLine = line.toLowerCase();
-    let parties: string[] = [];
-
-    // Extract party names after the colon
-    const colonIndex = line.indexOf(':');
-    if (colonIndex > -1) {
-      const partyPart = line.substring(colonIndex + 1);
-      parties = partyPart
-        .split(',')
-        .map((p) => p.trim())
-        .filter((p) => p.length > 0 && p.length < 20); // Sanity check
-    }
-
-    if (lowerLine.startsWith('a favor')) {
-      result.favor = parties;
-    } else if (lowerLine.startsWith('contra')) {
-      result.against = parties;
-    } else if (lowerLine.startsWith('abstenção') || lowerLine.startsWith('abstencao')) {
-      result.abstain = parties;
-    }
-  }
-
-  return result;
 }
 
 export async function transformInitiatives(
@@ -190,16 +146,6 @@ export async function transformInitiatives(
   console.log(`   Questions identified: ${questionCounts.size} deputies with questions\n`);
 
   return { initiativeMap, partyVotes, authorCounts, questionCounts };
-}
-
-function getInitiativeStatus(ini: ParliamentIniciativa): string | undefined {
-  // Find the latest event
-  if (!ini.IniEventos || ini.IniEventos.length === 0) return undefined;
-
-  const sorted = [...ini.IniEventos].sort((a, b) =>
-    (a.DataFase || '').localeCompare(b.DataFase || '')
-  );
-  return sorted[sorted.length - 1]?.Fase;
 }
 
 export async function upsertPartyVotes(votes: DbPartyVote[]): Promise<void> {

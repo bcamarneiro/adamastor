@@ -1,77 +1,16 @@
-import sharp from 'sharp';
 import { downloadBiographyPhoto, fetchBiographyPhotoUrl } from '../scrapers/biography.js';
 import { supabase } from '../supabase.js';
+import { detectImageType, validatePhoto } from './photos-helpers.js';
+
+export { validatePhoto } from './photos-helpers.js';
 
 const PARLIAMENT_PHOTO_URL = 'https://app.parlamento.pt/webutils/getimage.aspx';
 const NOPHOTO_REDIRECT_PATH = '/webutils/nophoto.jpg';
-
-// Thresholds for detecting placeholder images
-const MIN_PHOTO_FILE_SIZE = 5000; // 5KB - placeholders are usually smaller
-const MIN_PHOTO_DIMENSION = 50; // 50px - minimum width/height for valid photos
 
 interface PhotoUploadResult {
   success: boolean;
   url?: string;
   error?: string;
-}
-
-interface PhotoValidation {
-  isValid: boolean;
-  isPlaceholder: boolean;
-  width?: number;
-  height?: number;
-  fileSize: number;
-  reason?: string;
-}
-
-/**
- * Validate photo buffer to detect placeholders
- */
-export async function validatePhoto(buffer: Buffer): Promise<PhotoValidation> {
-  const fileSize = buffer.length;
-
-  // Too small - likely a placeholder
-  if (fileSize < MIN_PHOTO_FILE_SIZE) {
-    return {
-      isValid: false,
-      isPlaceholder: true,
-      fileSize,
-      reason: `File too small (${fileSize} bytes < ${MIN_PHOTO_FILE_SIZE})`,
-    };
-  }
-
-  try {
-    const metadata = await sharp(buffer).metadata();
-    const width = metadata.width || 0;
-    const height = metadata.height || 0;
-
-    // Check dimensions
-    if (width < MIN_PHOTO_DIMENSION || height < MIN_PHOTO_DIMENSION) {
-      return {
-        isValid: false,
-        isPlaceholder: true,
-        width,
-        height,
-        fileSize,
-        reason: `Dimensions too small (${width}x${height})`,
-      };
-    }
-
-    return {
-      isValid: true,
-      isPlaceholder: false,
-      width,
-      height,
-      fileSize,
-    };
-  } catch (err) {
-    return {
-      isValid: false,
-      isPlaceholder: false,
-      fileSize,
-      reason: `Failed to parse image metadata: ${err}`,
-    };
-  }
 }
 
 /**
@@ -149,14 +88,7 @@ export async function uploadPhotoToStorage(
   photoBuffer: Buffer
 ): Promise<PhotoUploadResult> {
   // Detect image type from magic bytes
-  const isPng =
-    photoBuffer[0] === 0x89 &&
-    photoBuffer[1] === 0x50 &&
-    photoBuffer[2] === 0x4e &&
-    photoBuffer[3] === 0x47;
-
-  const extension = isPng ? 'png' : 'jpg';
-  const contentType = isPng ? 'image/png' : 'image/jpeg';
+  const { extension, contentType } = detectImageType(photoBuffer);
   const fileName = `${depId}.${extension}`;
 
   try {

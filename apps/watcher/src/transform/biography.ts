@@ -9,11 +9,9 @@
 
 import { type BiographyData, fetchBiography } from '../scrapers/biography.js';
 import { supabase } from '../supabase.js';
+import { BIOGRAPHY_TTL_DAYS, getStaleCutoffIso, isBiographyStale } from './biography-helpers.js';
 
 const POLITENESS_DELAY_MS = 500;
-
-/** Number of days before a biography is considered stale and needs re-scraping */
-const BIOGRAPHY_TTL_DAYS = 7;
 
 async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -33,9 +31,7 @@ interface DeputyWithBiographyId {
  */
 async function getDeputiesWithBiographyId(forceAll = false): Promise<DeputyWithBiographyId[]> {
   // Calculate stale date threshold
-  const staleDate = new Date();
-  staleDate.setDate(staleDate.getDate() - BIOGRAPHY_TTL_DAYS);
-  const staleDateIso = staleDate.toISOString();
+  const staleDateIso = getStaleCutoffIso();
 
   // First, get all active deputies with biography_id
   const query = supabase
@@ -80,11 +76,9 @@ async function getDeputiesWithBiographyId(forceAll = false): Promise<DeputyWithB
   }
 
   // Filter to only deputies that need scraping (no biography or stale)
-  const needsScraping = deputies.filter((d) => {
-    const scrapedAt = scrapedAtMap.get(d.id);
-    if (!scrapedAt) return true; // Never scraped
-    return scrapedAt < staleDateIso; // Stale (older than TTL)
-  });
+  const needsScraping = deputies.filter((d) =>
+    isBiographyStale(scrapedAtMap.get(d.id), staleDateIso)
+  );
 
   return needsScraping.map((d) => ({
     id: d.id,
