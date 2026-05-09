@@ -136,7 +136,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
       <div className="p-6 border-b border-neutral-5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-neutral-12">Classificacao</h2>
+            <h2 className="text-lg font-semibold text-neutral-12">Classificação</h2>
             <div className="flex items-center gap-4 mt-2 text-sm text-neutral-11">
               <span className="flex items-center gap-1" data-testid="national-rank">
                 <span className="font-medium">#{deputy.national_rank}</span> nacional
@@ -148,7 +148,7 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
           </div>
           <div className="flex flex-col items-center">
             <GradeCircle grade={deputy.grade} score={deputy.work_score} size="lg" />
-            <span className="text-xs text-neutral-9 mt-1">Pontuacao</span>
+            <span className="text-xs text-neutral-9 mt-1">Pontuação</span>
           </div>
         </div>
         <ClassificationPanel
