@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { PARTY_COLORS, getPartyColor } from './parties.js';
+import { PARTY_COLORS, getPartyColor } from './parties-colors.js';
 
 describe('PARTY_COLORS', () => {
   it('should have colors for all major Portuguese parties', () => {

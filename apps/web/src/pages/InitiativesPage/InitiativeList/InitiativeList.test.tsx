@@ -339,7 +339,7 @@ describe('InitiativeList', () => {
       render(<InitiativeList />);
 
       // The page title should still be visible during loading
-      expect(screen.getByRole('heading', { name: 'Initiatives List' })).toBeTruthy();
+      expect(screen.getByRole('heading', { name: 'Lista de Iniciativas' })).toBeTruthy();
     });
 
     it('should still display filter controls when loading', () => {
@@ -487,7 +487,7 @@ describe('InitiativeList', () => {
       render(<InitiativeList />);
 
       // The component returns early with error, so page header should not render
-      expect(screen.queryByRole('heading', { name: 'Initiatives List' })).toBeNull();
+      expect(screen.queryByRole('heading', { name: 'Lista de Iniciativas' })).toBeNull();
     });
 
     it('should NOT display filter controls when in error state', () => {
@@ -609,7 +609,7 @@ describe('InitiativeList', () => {
 
       render(<InitiativeList />);
 
-      expect(screen.getByRole('heading', { name: 'Initiatives List' })).toBeTruthy();
+      expect(screen.getByRole('heading', { name: 'Lista de Iniciativas' })).toBeTruthy();
       expect(screen.getByPlaceholderText('Search initiatives...')).toBeTruthy();
       expect(screen.getByLabelText('Filter by phase')).toBeTruthy();
     });
@@ -1292,7 +1292,7 @@ describe('InitiativeList', () => {
 
       render(<InitiativeList />);
 
-      expect(screen.getByRole('heading', { name: 'Initiatives List' })).toBeTruthy();
+      expect(screen.getByRole('heading', { name: 'Lista de Iniciativas' })).toBeTruthy();
     });
   });
 });
