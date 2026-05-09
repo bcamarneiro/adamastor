@@ -11,50 +11,13 @@
 import { CURRENT_LEGISLATURE } from '../config.js';
 import type { AttendanceRecord, PlenaryMeeting } from '../scrapers/attendance.js';
 import { supabase } from '../supabase.js';
+import { namesMatch } from './attendance-helpers.js';
 
 interface DeputyMatch {
   id: string;
   name: string;
   short_name: string | null;
   biography_id: number | null;
-}
-
-/**
- * Normalize name for fuzzy matching
- */
-function normalizeName(name: string): string {
-  return (
-    name
-      .toLowerCase()
-      .normalize('NFD')
-      // biome-ignore lint/suspicious/noMisleadingCharacterClass: Unicode range for diacritical marks is intentional
-      .replace(/[\u0300-\u036f]/g, '') // Remove accents
-      .replace(/[^a-z\s]/g, '') // Remove non-letters
-      .trim()
-  );
-}
-
-/**
- * Check if two names match (fuzzy)
- */
-function namesMatch(name1: string, name2: string): boolean {
-  const n1 = normalizeName(name1);
-  const n2 = normalizeName(name2);
-
-  // Exact match
-  if (n1 === n2) return true;
-
-  // Check if one contains the other (for short_name vs full name)
-  if (n1.includes(n2) || n2.includes(n1)) return true;
-
-  // Check if all words from shorter name are in longer name
-  const words1 = n1.split(/\s+/);
-  const words2 = n2.split(/\s+/);
-  const shorter = words1.length <= words2.length ? words1 : words2;
-  const longer = words1.length > words2.length ? words1 : words2;
-
-  const matchingWords = shorter.filter((w) => longer.some((lw) => lw === w || lw.includes(w)));
-  return matchingWords.length >= Math.ceil(shorter.length * 0.7);
 }
 
 /**

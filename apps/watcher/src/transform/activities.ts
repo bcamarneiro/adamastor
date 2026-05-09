@@ -1,35 +1,7 @@
 import { supabase } from '../supabase.js';
+import { type ParliamentAtividades, countInterventionsByParty } from './activities-helpers.js';
 
-interface ParliamentDebate {
-  DebateId: string;
-  Assunto: string;
-  AutoresDeputados: string | null;
-  AutoresGP: string | null;
-  DataDebate: string;
-  Intervencoes: string[];
-  TipoDebateDesig: string;
-}
-
-interface ParliamentAtividades {
-  Debates: ParliamentDebate[];
-}
-
-function extractDeputyFromAuthor(
-  authorString: string | null
-): { name: string; party: string } | null {
-  if (!authorString) return null;
-
-  // Format: "Deputy Name (PARTY)"
-  const match = authorString.match(/^(.+?)\s*\((\w+(?:-\w+)?)\)$/);
-  if (match) {
-    const name = match[1];
-    const party = match[2];
-    if (name && party) {
-      return { name: name.trim(), party };
-    }
-  }
-  return null;
-}
+export type { ParliamentAtividades } from './activities-helpers.js';
 
 export async function countInterventions(
   atividades: ParliamentAtividades,
@@ -37,32 +9,10 @@ export async function countInterventions(
 ): Promise<Map<string, number>> {
   console.log('📦 Counting interventions from debates...');
 
-  const interventionCounts = new Map<string, number>(); // party_acronym -> count
   const debates = atividades.Debates || [];
-
   console.log(`  Found ${debates.length} debates`);
 
-  for (const debate of debates) {
-    // Count interventions per debate (array of intervention IDs)
-    const interventionCount = debate.Intervencoes?.length || 0;
-
-    // Try to attribute to party from authors
-    if (debate.AutoresGP) {
-      // If it's a party debate, attribute all interventions to that party
-      const parties = debate.AutoresGP.split(',').map((p) => p.trim());
-      for (const party of parties) {
-        const current = interventionCounts.get(party) || 0;
-        interventionCounts.set(party, current + interventionCount);
-      }
-    } else if (debate.AutoresDeputados) {
-      // Try to extract party from deputy author
-      const author = extractDeputyFromAuthor(debate.AutoresDeputados);
-      if (author) {
-        const current = interventionCounts.get(author.party) || 0;
-        interventionCounts.set(author.party, current + interventionCount);
-      }
-    }
-  }
+  const interventionCounts = countInterventionsByParty(atividades);
 
   console.log('✅ Intervention counts by party:');
   for (const [party, count] of interventionCounts) {

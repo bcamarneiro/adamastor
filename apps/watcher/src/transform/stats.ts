@@ -1,4 +1,5 @@
 import { supabase } from '../supabase.js';
+import { aggregatePartyVoteCounts } from './stats-helpers.js';
 
 interface DeputyStatsUpdate {
   deputy_id: string;
@@ -95,31 +96,7 @@ export async function updatePartyVoteStats(partyMap: Map<string, string>): Promi
   }
 
   // Count votes per party
-  const partyCounts = new Map<
-    string,
-    { favor: number; against: number; abstain: number; total: number }
-  >();
-
-  for (const vote of votes || []) {
-    for (const party of vote.parties_favor || []) {
-      const current = partyCounts.get(party) || { favor: 0, against: 0, abstain: 0, total: 0 };
-      current.favor++;
-      current.total++;
-      partyCounts.set(party, current);
-    }
-    for (const party of vote.parties_against || []) {
-      const current = partyCounts.get(party) || { favor: 0, against: 0, abstain: 0, total: 0 };
-      current.against++;
-      current.total++;
-      partyCounts.set(party, current);
-    }
-    for (const party of vote.parties_abstain || []) {
-      const current = partyCounts.get(party) || { favor: 0, against: 0, abstain: 0, total: 0 };
-      current.abstain++;
-      current.total++;
-      partyCounts.set(party, current);
-    }
-  }
+  const partyCounts = aggregatePartyVoteCounts(votes || []);
 
   console.log('  Party vote counts:');
   for (const [party, counts] of partyCounts) {
