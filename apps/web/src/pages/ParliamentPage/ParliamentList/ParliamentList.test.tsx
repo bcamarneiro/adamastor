@@ -39,6 +39,14 @@ vi.mock('@/services/parliament/useParliament', () => ({
   useParliament: () => mockHookState,
 }));
 
+// Mock the useDeputyIdMap hook with a permissive default that maps every
+// possible DepId (numeric MP id) to a synthetic Supabase UUID. Individual
+// tests can override behaviour via `mockDeputyIdMap`.
+let mockDeputyIdMap: Map<string, string> = new Map();
+vi.mock('@/services/reportCard/useDeputyIdMap', () => ({
+  useDeputyIdMap: () => ({ data: mockDeputyIdMap }),
+}));
+
 // Mock react-router-dom Link component
 vi.mock('react-router-dom', () => ({
   Link: ({ children, to, ...props }: { children: React.ReactNode; to: string }) => (
@@ -112,6 +120,11 @@ function resetMockState() {
     isSuccess: true,
     error: null,
   };
+  // Build a generous default id map so every mock MP becomes clickable.
+  mockDeputyIdMap = new Map();
+  for (let i = 0; i < 250; i++) {
+    mockDeputyIdMap.set(String(i), `uuid-${i}`);
+  }
 }
 
 // Helper to set mock state for specific test scenarios
@@ -620,6 +633,49 @@ describe('ParliamentList', () => {
       // Should NOT appear when filtering by old party (PS not in the dropdown since MP is in PSD now)
       // The PS option won't exist since there are no MPs currently in PS
       expect(screen.queryByRole('option', { name: 'PS' })).toBeNull();
+    });
+  });
+
+  // Issue ADA-216: deputy rows on /parliament must be clickable links to the
+  // deputy detail page. Regression coverage for the bug where rows rendered
+  // but had no <Link>/<a> wrapping.
+  describe('Deputy row links (ADA-216)', () => {
+    it('should render each deputy row as a link to /deputado/:id', () => {
+      const mp = createMockMP({
+        DepId: 42,
+        DepNomeParlamentar: 'João Silva',
+      });
+      setMockState({
+        parliament: createMockParliamentData({ mps: [mp] }),
+        metadata: createMockParliamentMetadata({ total: 1 }),
+      });
+      // Map the parliament DepId -> a Supabase UUID
+      mockDeputyIdMap.set('42', 'uuid-42');
+
+      render(<ParliamentList />);
+
+      const link = screen.getByRole('link', { name: /Ver perfil de João Silva/i });
+      expect(link).toBeTruthy();
+      expect(link.getAttribute('href')).toBe('/deputado/uuid-42');
+    });
+
+    it('should NOT render a link when the deputy is missing from the id map', () => {
+      const mp = createMockMP({
+        DepId: 999,
+        DepNomeParlamentar: 'Sem Mapeamento',
+      });
+      setMockState({
+        parliament: createMockParliamentData({ mps: [mp] }),
+        metadata: createMockParliamentMetadata({ total: 1 }),
+      });
+      // No entry for DepId 999 in the map
+      mockDeputyIdMap.delete('999');
+
+      render(<ParliamentList />);
+
+      // Name still renders, but not as a link
+      expect(screen.getByText('Sem Mapeamento')).toBeTruthy();
+      expect(screen.queryByRole('link', { name: /Ver perfil de Sem Mapeamento/i })).toBeNull();
     });
   });
 });
