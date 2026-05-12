@@ -374,6 +374,78 @@ export const mockParties = [
 import { mockParties } from './__fixtures__/parties';
 ```
 
+### Avoid Silent-Pass Anti-Patterns
+
+A test that passes when broken is worse than no test — it manufactures
+false confidence. Watch for these patterns and prefer `it.skipIf` or
+explicit assertions instead.
+
+```typescript
+// ❌ Bad: silent pass when env not configured
+it('queries deputies', async () => {
+  if (!supabase) return; // ← test reports as PASS with zero assertions
+  const { data } = await supabase.from('deputies').select();
+  expect(data?.length).toBeGreaterThan(0);
+});
+
+// ✅ Good: skip is loud, pass means assertions ran
+const hasSupabase = await isSupabaseReachable();
+it.skipIf(!hasSupabase)('queries deputies', async () => {
+  const { data } = await supabase.from('deputies').select();
+  expect(data?.length).toBeGreaterThan(0);
+});
+```
+
+```typescript
+// ❌ Bad: comparing full URL to relative path is always truthy
+expect(page.url() !== '/what-happened').toBeTruthy();
+
+// ❌ Bad: getByRole/getByText already throws if not found,
+// then .toBeTruthy() adds nothing — and worse, in non-strict mode
+// can match unrelated elements
+expect(screen.getByText('A')).toBeTruthy();
+
+// ✅ Good: explicit visibility / title / count assertions
+await expect(page).toHaveTitle(/Página não encontrada/i);
+await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+```
+
+```typescript
+// ❌ Bad: conditional assertion — silently passes if data is missing
+if ((await badge.count()) > 0) {
+  expect(await badge.first().textContent()).not.toContain('ª');
+}
+
+// ✅ Good: assert presence first, then content
+await expect(badge.first()).toBeVisible();
+expect(await badge.first().textContent()).not.toContain('ª');
+```
+
+### Beware Eager Imports When Extracting Constants
+
+When a module has top-level side effects (e.g. `apps/watcher/src/supabase.ts`
+throws if env vars are missing), don't add new exports to it for tests to
+import — the import alone triggers the side effect. Extract to a sibling
+module instead.
+
+```typescript
+// ❌ Bad: tests now load supabase just to read color constants
+// parties.ts
+import { supabase } from '../supabase.js'; // throws without env
+export const PARTY_COLORS = { ... };
+export async function transformParties(...) { /* uses supabase */ }
+
+// ✅ Good: pure constants live in a side-effect-free file
+// parties-colors.ts ← no supabase import
+export const PARTY_COLORS = { ... };
+export function getPartyColor(acronym: string) { ... }
+
+// parties.ts ← unchanged behavior, re-exports for backwards compat
+import { supabase } from '../supabase.js';
+import { getPartyColor } from './parties-colors.js';
+export { PARTY_COLORS, getPartyColor } from './parties-colors.js';
+```
+
 ### E2E Regression Tests for Bug Fixes
 
 **Location:** Add tests to the appropriate thematic spec file in `apps/web/e2e/`:
