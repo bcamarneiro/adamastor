@@ -130,11 +130,15 @@ test.describe('Navigation', () => {
 
   // Issue #21: Remove unused WhatHappened page
   // @see https://github.com/bcamarneiro/adamastor/issues/21
-  test('/what-happened should not exist (returns 404)', async ({ page }) => {
-    const response = await page.goto('/what-happened');
+  test('/what-happened should not exist (renders 404 page)', async ({ page }) => {
+    await page.goto('/what-happened');
+    await page.waitForLoadState('networkidle');
 
-    const status = response?.status();
-    expect(status === 404 || page.url() !== '/what-happened').toBeTruthy();
+    // SPA returns 200 for unknown routes (Vercel rewrite), so we assert on
+    // the rendered 404 page instead of the HTTP status. The previous
+    // assertion compared `page.url()` (a full URL) to '/what-happened' (a
+    // relative path), which was always truthy regardless of behavior.
+    await expect(page).toHaveTitle(/Página não encontrada/i);
   });
 
   // Issue #118: Correct GitHub repository link on About page
