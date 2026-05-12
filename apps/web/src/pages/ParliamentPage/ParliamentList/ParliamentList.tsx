@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Building, Filter, Landmark, MapPin, Search, Users, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { EmptyState } from '@/components/data/EmptyState';
 import { ErrorState } from '@/components/data/ErrorState';
@@ -13,9 +14,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { PARTY_COLORS } from '@/services/parliament/constants';
 import { useParliament } from '@/services/parliament/useParliament';
+import { useDeputyIdMap } from '@/services/reportCard/useDeputyIdMap';
 
 const ParliamentList = () => {
   const { parliament, metadata, isLoading, isError, error } = useParliament();
+  const { data: deputyIdMap } = useDeputyIdMap();
   const [filterText, setFilterText] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [selectedParty, setSelectedParty] = useState<string>('');
@@ -308,6 +311,48 @@ const ParliamentList = () => {
               const currentParty = mp.DepGP[mp.DepGP.length - 1]?.gpSigla;
               const currentStatus = mp.DepSituacao[mp.DepSituacao.length - 1]?.sioDes;
               const partyColor = PARTY_COLORS[currentParty] || '#666';
+              const supabaseId = deputyIdMap?.get(String(mp.DepId));
+
+              const cardInner = (
+                <div className="flex items-start gap-4">
+                  {/* Avatar placeholder */}
+                  <div
+                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
+                    style={{ backgroundColor: `${partyColor}20` }}
+                  >
+                    <Building className="h-6 w-6" style={{ color: partyColor }} />
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-neutral-12 truncate group-hover:text-accent-9 transition-colors">
+                      {mp.DepNomeParlamentar}
+                    </div>
+                    <div className="text-sm text-neutral-11 truncate">{mp.DepNomeCompleto}</div>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      {currentParty && (
+                        <Badge
+                          style={{
+                            backgroundColor: partyColor,
+                            color: 'white',
+                          }}
+                        >
+                          {currentParty}
+                        </Badge>
+                      )}
+                      <span className="text-xs text-neutral-9">{mp.DepCPDes}</span>
+                    </div>
+                    {currentStatus && currentStatus !== 'Efetivo' && (
+                      <Badge variant="secondary" className="mt-2">
+                        {currentStatus}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              );
+
+              const cardClassName =
+                'group block rounded-xl border border-neutral-4 bg-white p-4 hover:border-accent-7 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-9 transition-all duration-300';
 
               return (
                 <motion.div
@@ -316,43 +361,18 @@ const ParliamentList = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: Math.min(index * 0.02, 0.3), duration: 0.4 }}
-                  className="group rounded-xl border border-neutral-4 bg-white p-4 hover:border-accent-7 hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="flex items-start gap-4">
-                    {/* Avatar placeholder */}
-                    <div
-                      className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
-                      style={{ backgroundColor: `${partyColor}20` }}
+                  {supabaseId ? (
+                    <Link
+                      to={`/deputado/${supabaseId}`}
+                      aria-label={`Ver perfil de ${mp.DepNomeParlamentar}`}
+                      className={cardClassName}
                     >
-                      <Building className="h-6 w-6" style={{ color: partyColor }} />
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-neutral-12 truncate group-hover:text-accent-9 transition-colors">
-                        {mp.DepNomeParlamentar}
-                      </div>
-                      <div className="text-sm text-neutral-11 truncate">{mp.DepNomeCompleto}</div>
-                      <div className="mt-2 flex flex-wrap items-center gap-2">
-                        {currentParty && (
-                          <Badge
-                            style={{
-                              backgroundColor: partyColor,
-                              color: 'white',
-                            }}
-                          >
-                            {currentParty}
-                          </Badge>
-                        )}
-                        <span className="text-xs text-neutral-9">{mp.DepCPDes}</span>
-                      </div>
-                      {currentStatus && currentStatus !== 'Efetivo' && (
-                        <Badge variant="secondary" className="mt-2">
-                          {currentStatus}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
+                      {cardInner}
+                    </Link>
+                  ) : (
+                    <div className={cardClassName}>{cardInner}</div>
+                  )}
                 </motion.div>
               );
             })}
