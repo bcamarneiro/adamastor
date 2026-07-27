@@ -113,6 +113,7 @@ const App = () => {
 
             {/* Battle Royale Feature */}
             <Route path="batalha" element={<BattlePage />} />
+            <Route path="batalha/deputado/:idA/vs/:idB" element={<BattlePage />} />
 
             {/* Parties Feature */}
             <Route path="partidos" element={<PartiesPage />} />
