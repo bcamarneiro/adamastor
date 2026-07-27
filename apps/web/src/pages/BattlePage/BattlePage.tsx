@@ -44,6 +44,7 @@ export function BattlePage() {
           </div>
         ) : (
           <BattleRoyale
+            key={`${idA ?? 'none'}-${idB ?? 'none'}`}
             initialDeputyA={initialDeputyA ?? null}
             initialDeputyB={initialDeputyB ?? null}
           />

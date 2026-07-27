@@ -1,6 +1,6 @@
 import { PartyComparison } from '@/components/Parties';
 import { RotateCcw, Scale, Swords } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DeputyDetail } from '../../lib/supabase';
 import { useCompareDeputies } from '../../services/battle/useCompareDeputies';
@@ -23,15 +23,6 @@ export function BattleRoyale({ initialDeputyA, initialDeputyB }: BattleRoyalePro
   const [showResults, setShowResults] = useState(!!(initialDeputyA && initialDeputyB));
 
   const comparison = useCompareDeputies(deputyA, deputyB);
-
-  // Sync initial deputies when they arrive asynchronously
-  useEffect(() => {
-    if (initialDeputyA) setDeputyA(initialDeputyA);
-  }, [initialDeputyA]);
-
-  useEffect(() => {
-    if (initialDeputyB) setDeputyB(initialDeputyB);
-  }, [initialDeputyB]);
 
   const handleCompare = () => {
     if (deputyA && deputyB) {
