@@ -1,6 +1,7 @@
 import { PartyComparison } from '@/components/Parties';
 import { RotateCcw, Scale, Swords } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { DeputyDetail } from '../../lib/supabase';
 import { useCompareDeputies } from '../../services/battle/useCompareDeputies';
 import { BattleResults } from './BattleResults';
@@ -9,17 +10,34 @@ import { DeputySelector } from './DeputySelector';
 
 type BattleMode = 'deputies' | 'parties';
 
-export function BattleRoyale() {
+interface BattleRoyaleProps {
+  initialDeputyA?: DeputyDetail | null;
+  initialDeputyB?: DeputyDetail | null;
+}
+
+export function BattleRoyale({ initialDeputyA, initialDeputyB }: BattleRoyaleProps) {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<BattleMode>('deputies');
-  const [deputyA, setDeputyA] = useState<DeputyDetail | null>(null);
-  const [deputyB, setDeputyB] = useState<DeputyDetail | null>(null);
-  const [showResults, setShowResults] = useState(false);
+  const [deputyA, setDeputyA] = useState<DeputyDetail | null>(initialDeputyA ?? null);
+  const [deputyB, setDeputyB] = useState<DeputyDetail | null>(initialDeputyB ?? null);
+  const [showResults, setShowResults] = useState(!!(initialDeputyA && initialDeputyB));
 
   const comparison = useCompareDeputies(deputyA, deputyB);
+
+  // Sync initial deputies when they arrive asynchronously
+  useEffect(() => {
+    if (initialDeputyA) setDeputyA(initialDeputyA);
+  }, [initialDeputyA]);
+
+  useEffect(() => {
+    if (initialDeputyB) setDeputyB(initialDeputyB);
+  }, [initialDeputyB]);
 
   const handleCompare = () => {
     if (deputyA && deputyB) {
       setShowResults(true);
+      // Update URL with selected deputies for shareability
+      navigate(`/batalha/deputado/${deputyA.id}/vs/${deputyB.id}`, { replace: true });
     }
   };
 
@@ -27,6 +45,8 @@ export function BattleRoyale() {
     setDeputyA(null);
     setDeputyB(null);
     setShowResults(false);
+    // Clear URL params
+    navigate('/batalha', { replace: true });
   };
 
   const handleModeChange = (newMode: BattleMode) => {
@@ -35,6 +55,7 @@ export function BattleRoyale() {
     setDeputyA(null);
     setDeputyB(null);
     setShowResults(false);
+    navigate('/batalha', { replace: true });
   };
 
   const canCompare = deputyA && deputyB && !showResults;

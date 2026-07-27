@@ -2,11 +2,19 @@ import { BattleRoyale } from '@/components/BattleRoyale';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
+import { useDeputyDetail } from '@/services/reportCard/useDeputyDetail';
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function BattlePage() {
   const navigate = useNavigate();
+  const { idA, idB } = useParams<{ idA: string; idB: string }>();
+
+  // Fetch deputies from URL params (for shareable links)
+  const { data: initialDeputyA } = useDeputyDetail(idA ?? null);
+  const { data: initialDeputyB } = useDeputyDetail(idB ?? null);
+
+  const hasUrlParams = !!(idA && idB);
 
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
@@ -29,7 +37,17 @@ export function BattlePage() {
           </p>
         </div>
 
-        <BattleRoyale />
+        {hasUrlParams && (!initialDeputyA || !initialDeputyB) ? (
+          <div className="bg-neutral-3 rounded-xl p-6 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-9 mx-auto mb-3" />
+            <p className="text-neutral-11">A carregar deputados...</p>
+          </div>
+        ) : (
+          <BattleRoyale
+            initialDeputyA={initialDeputyA ?? null}
+            initialDeputyB={initialDeputyB ?? null}
+          />
+        )}
       </main>
 
       <Footer />
