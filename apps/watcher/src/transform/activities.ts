@@ -73,10 +73,11 @@ export async function countInterventions(
   return interventionCounts;
 }
 
-// Note: The Parliament API doesn't provide individual deputy intervention counts directly.
-// We can only count at the party level from debates.
-// For individual deputy stats, we'll distribute party interventions proportionally
-// or mark as "estimated from party data".
+// IMPORTANT: The Parliament API only provides debate intervention counts at the
+// party level (countInterventions). This function distributes each party's total
+// evenly across all its active deputies — it does NOT reflect actual per-deputy
+// speech counts. A silent backbencher gets the same value as the party's most
+// vocal member. This limitation is disclosed on the Methodology page.
 
 export async function distributeInterventionsToDeputies(
   interventionsByParty: Map<string, number>,

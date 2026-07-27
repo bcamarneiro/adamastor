@@ -29,6 +29,10 @@ Pontuação = (Assiduidade × 0.40) +
             (Perguntas/Média × 0.10)
 ```
 
+### Nota sobre as Intervenções em Debates
+
+A API do Parlamento fornece o número total de intervenções em debates apenas ao nível do partido — não por deputado individual. Para obter um valor por deputado, dividimos o total do partido de forma igual por todos os deputados ativos desse partido. Isto significa que o componente de intervenções é uma **estimativa ao nível do partido**, não uma contagem real das intervenções individuais de cada deputado. Um deputado que nunca interveio num debate recebe o mesmo valor que um colega de partido que falou dezenas de vezes.
+
 ## Sistema de Notas
 
 As notas de A a F são atribuídas com base na pontuação de trabalho:
