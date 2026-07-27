@@ -80,7 +80,7 @@ async function fetchWithRetry(url: string, retries = MAX_RETRIES): Promise<strin
 /**
  * Parse status text to normalized status enum
  */
-function parseStatus(
+export function parseStatus(
   statusText: string
 ): 'present' | 'absent_quorum' | 'absent_justified' | 'absent_unjustified' {
   const normalized = statusText.toLowerCase().trim();
@@ -129,12 +129,10 @@ export async function fetchMeetingList(): Promise<PlenaryMeeting[]> {
 }
 
 /**
- * Fetch attendance for a single plenary meeting
+ * Parse attendance records from a meeting detail HTML page.
+ * Extracted for testability — fetchMeetingAttendance delegates here after fetching HTML.
  */
-export async function fetchMeetingAttendance(meeting: PlenaryMeeting): Promise<AttendanceRecord[]> {
-  const url = `${MEETING_DETAIL_URL}?BID=${meeting.bid}`;
-  const html = await fetchWithRetry(url);
-
+export function parseAttendanceHtml(html: string, meeting: PlenaryMeeting): AttendanceRecord[] {
   const records: AttendanceRecord[] = [];
 
   // The HTML structure repeats for each deputy:
@@ -172,6 +170,15 @@ export async function fetchMeetingAttendance(meeting: PlenaryMeeting): Promise<A
   }
 
   return records;
+}
+
+/**
+ * Fetch attendance for a single plenary meeting
+ */
+export async function fetchMeetingAttendance(meeting: PlenaryMeeting): Promise<AttendanceRecord[]> {
+  const url = `${MEETING_DETAIL_URL}?BID=${meeting.bid}`;
+  const html = await fetchWithRetry(url);
+  return parseAttendanceHtml(html, meeting);
 }
 
 /**
