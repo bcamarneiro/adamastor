@@ -80,7 +80,7 @@ async function fetchWithRetry(url: string, retries = MAX_RETRIES): Promise<strin
 /**
  * Parse status text to normalized status enum
  */
-function parseStatus(
+export function parseStatus(
   statusText: string
 ): 'present' | 'absent_quorum' | 'absent_justified' | 'absent_unjustified' {
   const normalized = statusText.toLowerCase().trim();
