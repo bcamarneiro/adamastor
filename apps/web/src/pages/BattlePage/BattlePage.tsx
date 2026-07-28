@@ -2,11 +2,18 @@ import { BattleRoyale } from '@/components/BattleRoyale';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
+import { useDeputyDetail } from '@/services/reportCard/useDeputyDetail';
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function BattlePage() {
   const navigate = useNavigate();
+  const { idA, idB } = useParams<{ idA: string; idB: string }>();
+
+  const { data: deputyA } = useDeputyDetail(idA ?? null);
+  const { data: deputyB } = useDeputyDetail(idB ?? null);
+
+  const hasUrlDeputies = !!idA && !!idB;
 
   return (
     <div className="min-h-screen bg-neutral-2 flex flex-col">
@@ -29,7 +36,14 @@ export function BattlePage() {
           </p>
         </div>
 
-        <BattleRoyale />
+        {hasUrlDeputies && (!deputyA || !deputyB) ? (
+          <div className="bg-neutral-3 rounded-xl p-6 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-9 mx-auto mb-3" />
+            <p className="text-neutral-11">A carregar comparação...</p>
+          </div>
+        ) : (
+          <BattleRoyale initialDeputyA={deputyA ?? null} initialDeputyB={deputyB ?? null} />
+        )}
       </main>
 
       <Footer />

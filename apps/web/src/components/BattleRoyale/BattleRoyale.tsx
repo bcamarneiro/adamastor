@@ -1,6 +1,7 @@
 import { PartyComparison } from '@/components/Parties';
 import { RotateCcw, Scale, Swords } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { DeputyDetail } from '../../lib/supabase';
 import { useCompareDeputies } from '../../services/battle/useCompareDeputies';
 import { BattleResults } from './BattleResults';
@@ -9,13 +10,37 @@ import { DeputySelector } from './DeputySelector';
 
 type BattleMode = 'deputies' | 'parties';
 
-export function BattleRoyale() {
+interface BattleRoyaleProps {
+  initialDeputyA?: DeputyDetail | null;
+  initialDeputyB?: DeputyDetail | null;
+}
+
+export function BattleRoyale({ initialDeputyA, initialDeputyB }: BattleRoyaleProps) {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<BattleMode>('deputies');
-  const [deputyA, setDeputyA] = useState<DeputyDetail | null>(null);
-  const [deputyB, setDeputyB] = useState<DeputyDetail | null>(null);
-  const [showResults, setShowResults] = useState(false);
+  const [deputyA, setDeputyA] = useState<DeputyDetail | null>(initialDeputyA ?? null);
+  const [deputyB, setDeputyB] = useState<DeputyDetail | null>(initialDeputyB ?? null);
+  const [showResults, setShowResults] = useState(!!(initialDeputyA && initialDeputyB));
 
   const comparison = useCompareDeputies(deputyA, deputyB);
+
+  // Auto-show results when deputies are loaded from URL params
+  useEffect(() => {
+    if (initialDeputyA && initialDeputyB) {
+      setDeputyA(initialDeputyA);
+      setDeputyB(initialDeputyB);
+      setShowResults(true);
+    }
+  }, [initialDeputyA, initialDeputyB]);
+
+  // Update URL when both deputies are selected and results are shown
+  useEffect(() => {
+    if (showResults && deputyA && deputyB) {
+      navigate(`/batalha/deputado/${deputyA.id}/vs/${deputyB.id}`, { replace: true });
+    } else if (!deputyA && !deputyB) {
+      navigate('/batalha', { replace: true });
+    }
+  }, [showResults, deputyA, deputyB, navigate]);
 
   const handleCompare = () => {
     if (deputyA && deputyB) {
