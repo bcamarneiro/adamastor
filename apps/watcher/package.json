@@ -23,7 +23,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "shared": "workspace:*",
     "@bokuweb/zstd-wasm": "^0.0.27",
     "@sentry/node": "^10.32.1",
     "@supabase/supabase-js": "^2.89.0",
@@ -32,10 +31,12 @@
     "@vercel/blob": "^2.0.1",
     "ajv": "^8.17.1",
     "backblaze-b2": "^1.7.0",
+    "cheerio": "^1.2.0",
     "date-fns": "^4.1.0",
     "deep-diff": "^1.0.2",
     "generate-schema": "^2.6.0",
     "minimist": "^1.2.8",
+    "shared": "workspace:*",
     "sharp": "^0.34.5",
     "zstd-codec": "^0.1.5"
   }

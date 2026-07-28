@@ -8,6 +8,8 @@
  * Meeting Detail: https://www.parlamento.pt/DeputadoGP/Paginas/DetalheReuniaoPlenaria.aspx?BID={id}
  */
 
+import { type CheerioAPI, load } from 'cheerio';
+
 import { POLITENESS_UA } from '../config.js';
 import { supabase } from '../supabase.js';
 
@@ -18,6 +20,15 @@ const MEETING_DETAIL_URL = `${BASE_URL}/DeputadoGP/Paginas/DetalheReuniaoPlenari
 const MAX_RETRIES = 3;
 const INITIAL_DELAY_MS = 1000;
 const POLITENESS_DELAY_MS = 500; // Delay between requests to be polite
+
+/**
+ * CSS selector for the row anchor: matches any `<a>` whose `id` ends with
+ * `hplDeputado`. Parliament's ASP.NET webforms emit ids like
+ * `ct00_hplDeputado` or `ctl00$contentPlaceHolder$...$hplDeputado` — the
+ * `ct<NN>_` / `ctl00$...$` prefix is a per-row container id and varies.
+ * Using an attribute-end selector keeps us from having to know the prefix.
+ */
+const DEPUTY_NAME_SELECTOR = 'a[id$="hplDeputado"]';
 
 export interface PlenaryMeeting {
   bid: number;
@@ -31,6 +42,15 @@ export interface AttendanceRecord {
   deputyName: string;
   party: string;
   status: 'present' | 'absent_quorum' | 'absent_justified' | 'absent_unjustified';
+  statusRaw: string;
+  reason: string | null;
+}
+
+/** Raw fields extracted from a single deputy row before status classification. */
+export interface RawAttendanceRow {
+  deputyBid: number;
+  deputyName: string;
+  party: string;
   statusRaw: string;
   reason: string | null;
 }
@@ -80,7 +100,7 @@ async function fetchWithRetry(url: string, retries = MAX_RETRIES): Promise<strin
 /**
  * Parse status text to normalized status enum
  */
-function parseStatus(
+export function parseStatus(
   statusText: string
 ): 'present' | 'absent_quorum' | 'absent_justified' | 'absent_unjustified' {
   const normalized = statusText.toLowerCase().trim();
@@ -102,27 +122,127 @@ function parseStatus(
 }
 
 /**
+ * Extract the meeting-list portion of a `reunioesplenarias.aspx` HTML page.
+ * Pure function — does no I/O — so it can be unit tested against fixtures.
+ *
+ * Each meeting is rendered as an anchor with href matching
+ * `DetalheReuniaoPlenaria.aspx?BID=<n>` and the meeting date as its text.
+ */
+export function parseMeetingListHtml(html: string): PlenaryMeeting[] {
+  const $ = load(html);
+  const meetings: PlenaryMeeting[] = [];
+  const seen = new Set<number>();
+
+  $('a[href*="DetalheReuniaoPlenaria.aspx"]').each((_i, el) => {
+    const href = $(el).attr('href') ?? '';
+    const bidMatch = href.match(/BID=(\d+)/);
+    if (!bidMatch) return;
+
+    const bid = Number.parseInt(bidMatch[1] ?? '', 10);
+    if (!Number.isFinite(bid) || seen.has(bid)) return;
+
+    const text = $(el).text().trim();
+    const dateMatch = text.match(/(\d{4}-\d{2}-\d{2})/);
+    if (!dateMatch) return;
+
+    seen.add(bid);
+    meetings.push({ bid, date: dateMatch[1] ?? '' });
+  });
+
+  return meetings;
+}
+
+/**
+ * Extract attendance rows from a `DetalheReuniaoPlenaria.aspx` HTML page.
+ * Pure function — does no I/O — so it can be unit tested against fixtures.
+ *
+ * The page renders one row per deputy whose markup looks like (with a
+ * per-row id prefix that varies, e.g. `ct00_` or `ctl00$...$ctl00$`):
+ *
+ *   <a id="ct00_hplDeputado" href="...Biografia.aspx?BID=7489">Deputy Name</a>
+ *   <span id="ct00_lblGP">PSD</span>
+ *   <span id="ct00_lblPresenca">Presença (P)</span>
+ *   <span id="ct00_lblMotivo"></span>
+ *
+ * Crucially, all four elements in the same row share the same id prefix
+ * (everything before `hplDeputado`). Rather than rely on DOM ancestry —
+ * which breaks when the page adds wrapper divs or moves spans to sibling
+ * containers — we anchor on the link's id, derive the prefix, and look
+ * up the other fields by id-prefix match. This is what makes the parser
+ * robust to the kind of layout refactors Parliament has historically
+ * shipped (e.g. wrapping rows in `<article>`, splitting fields across
+ * sibling `<div>`s, changing attribute order, etc.).
+ */
+export function parseMeetingAttendanceHtml(html: string): RawAttendanceRow[] {
+  const $: CheerioAPI = load(html);
+  const rows: RawAttendanceRow[] = [];
+
+  $(DEPUTY_NAME_SELECTOR).each((_i, el) => {
+    const $link = $(el);
+    const linkId = $link.attr('id') ?? '';
+    if (!linkId.endsWith('hplDeputado')) return;
+
+    // Everything before "hplDeputado" is the row's id prefix
+    const prefix = linkId.slice(0, -'hplDeputado'.length);
+    if (!prefix) return;
+
+    const name = $link.text().trim();
+    const href = $link.attr('href') ?? '';
+    const bidMatch = href.match(/BID=(\d+)/);
+    if (!bidMatch) return;
+
+    const deputyBid = Number.parseInt(bidMatch[1] ?? '', 10);
+    if (!Number.isFinite(deputyBid) || !name) return;
+
+    // Look up the matching spans by full id (prefix + suffix). This
+    // explicitly avoids any DOM-tree assumption about where the spans
+    // live relative to the link — they're just looked up by id.
+    const party = $(`#${escapeIdSelector(prefix)}lblGP`)
+      .first()
+      .text()
+      .trim();
+    const statusRaw = $(`#${escapeIdSelector(prefix)}lblPresenca`)
+      .first()
+      .text()
+      .trim();
+    const reasonText = $(`#${escapeIdSelector(prefix)}lblMotivo`)
+      .first()
+      .text()
+      .trim();
+
+    // statusRaw is the only mandatory field for an attendance row
+    if (!statusRaw) return;
+
+    rows.push({
+      deputyBid,
+      deputyName: name,
+      party,
+      statusRaw,
+      reason: reasonText || null,
+    });
+  });
+
+  return rows;
+}
+
+/**
+ * CSS id selectors may contain characters that have special meaning in CSS
+ * (`.`, `:`, `$`, `&`, `*`, etc. — all of which appear in ASP.NET webform
+ * ids like `ctl00$contentPlaceHolder$lblGP`). Escape those for use in a
+ * `#<id>` selector.
+ */
+function escapeIdSelector(id: string): string {
+  return id.replace(/([!"#$%&'()*+,./:;<=>?@\[\\\]^`{|}~])/g, '\\$1');
+}
+
+/**
  * Fetch list of all plenary meetings from the main page
  */
 export async function fetchMeetingList(): Promise<PlenaryMeeting[]> {
   console.log('[INFO] Fetching plenary meeting list...');
   const html = await fetchWithRetry(MEETING_LIST_URL);
 
-  const meetings: PlenaryMeeting[] = [];
-
-  // Pattern: <a ... href="/DeputadoGP/Paginas/DetalheReuniaoPlenaria.aspx?BID=335330">2025-12-18</a>
-  const regex = /href="[^"]*DetalheReuniaoPlenaria\.aspx\?BID=(\d+)"[^>]*>(\d{4}-\d{2}-\d{2})</g;
-
-  for (const match of html.matchAll(regex)) {
-    const bidStr = match[1];
-    const dateStr = match[2];
-    if (bidStr && dateStr) {
-      meetings.push({
-        bid: Number.parseInt(bidStr, 10),
-        date: dateStr,
-      });
-    }
-  }
+  const meetings = parseMeetingListHtml(html);
 
   console.log(`[INFO] Found ${meetings.length} plenary meetings`);
   return meetings;
@@ -135,43 +255,14 @@ export async function fetchMeetingAttendance(meeting: PlenaryMeeting): Promise<A
   const url = `${MEETING_DETAIL_URL}?BID=${meeting.bid}`;
   const html = await fetchWithRetry(url);
 
-  const records: AttendanceRecord[] = [];
+  const rawRows = parseMeetingAttendanceHtml(html);
 
-  // The HTML structure repeats for each deputy:
-  // <a ... href="...Biografia.aspx?BID=7489">Deputy Name</a>
-  // <span ... id="...lblGP" ...>PSD</span>
-  // <span ... id="...lblPresenca" ...>Presença (P)</span>
-  // <span ... id="...lblMotivo" ...>Reason text</span>
-
-  // Pattern to extract deputy blocks (each deputy has hplDeputado, lblGP, lblPresenca, lblMotivo)
-  const deputyBlockRegex =
-    /hplDeputado[^>]*href="[^"]*BID=(\d+)"[^>]*>([^<]+)<\/a>[\s\S]*?lblGP[^>]*>([^<]*)<[\s\S]*?lblPresenca[^>]*>([^<]*)<[\s\S]*?lblMotivo[^>]*>([^<]*)</g;
-
-  for (const deputyMatch of html.matchAll(deputyBlockRegex)) {
-    const bidStr = deputyMatch[1];
-    const name = deputyMatch[2];
-    const party = deputyMatch[3];
-    const statusRaw = deputyMatch[4];
-    const reason = deputyMatch[5];
-
-    if (!bidStr || !name || !statusRaw) continue;
-
-    const deputyBid = Number.parseInt(bidStr, 10);
-    const status = parseStatus(statusRaw);
-
-    records.push({
-      meetingBid: meeting.bid,
-      meetingDate: meeting.date,
-      deputyBid,
-      deputyName: name.trim(),
-      party: (party ?? '').trim(),
-      status,
-      statusRaw: statusRaw.trim(),
-      reason: reason?.trim() || null,
-    });
-  }
-
-  return records;
+  return rawRows.map((row) => ({
+    meetingBid: meeting.bid,
+    meetingDate: meeting.date,
+    ...row,
+    status: parseStatus(row.statusRaw),
+  }));
 }
 
 /**
