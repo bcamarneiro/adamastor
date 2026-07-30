@@ -44,7 +44,7 @@ export function createGradeChangeAlert(
   change: GradeChange
 ): GradeChangeAlert {
   return {
-    id: `gca-${deputyId}-${Date.now()}`,
+    id: `gca-${deputyId}-${crypto.randomUUID()}`,
     deputyId,
     deputyName,
     change,
