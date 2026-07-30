@@ -55,16 +55,16 @@ export interface OutputMetrics {
 
 /** Weights for activity components (must sum to 1.0). */
 export const ACTIVITY_WEIGHTS = {
-  attendance: 0.30,
-  proposals: 0.30,
+  attendance: 0.3,
+  proposals: 0.3,
   interventions: 0.25,
   questions: 0.15,
 } as const;
 
 /** Weights for output components (must sum to 1.0). */
 export const OUTPUT_WEIGHTS = {
-  voteParticipation: 0.50,
-  sessionAttendance: 0.50,
+  voteParticipation: 0.5,
+  sessionAttendance: 0.5,
 } as const;
 
 /** Human-readable labels keyed by efficiency score band. */
@@ -103,117 +103,115 @@ export interface EfficiencyScore {
 }
 
 // ---------------------------------------------------------------------------
-// Calculator
+// Helpers
 // ---------------------------------------------------------------------------
 
-export class EfficiencyScoreCalculator {
-  /**
-   * Compute the full efficiency score from raw activity + output data.
-   *
-   * All numeric inputs must be non-negative. The calculator handles zero
-   * activity gracefully (returns 0 efficiency).
-   */
-  static calculate(activity: ActivityMetrics, output: OutputMetrics): EfficiencyScore {
-    const activityScore = EfficiencyScoreCalculator.computeActivityScore(activity);
-    const outputScore = EfficiencyScoreCalculator.computeOutputScore(output);
-    const efficiencyRatio =
-      activityScore > 0 ? outputScore / activityScore : 0;
+/**
+ * Normalize a raw count to a 0–1 scale using a baseline average.
+ *
+ * A deputy at the baseline gets ~0.5. Twice the baseline → 1.0.
+ * Zero counts → 0. This prevents outlier deputies from skewing
+ * the score too heavily.
+ */
+function normalizeCount(value: number, baseline: number): number {
+  if (baseline <= 0) return 0;
+  return Math.min(value / (baseline * 2), 1);
+}
 
-    // Scale so that ratio 1.0 maps to 50 (balanced), max 2.0 → 100
-    const efficiencyScore = Math.min(Math.round(efficiencyRatio * 50), 100);
+/**
+ * Compute the aggregate activity score (0–100).
+ *
+ * Each metric is normalised so the deputy-level average maps to 50,
+ * individual metrics are then weighted and summed.
+ */
+function computeActivityScore(metrics: ActivityMetrics): number {
+  // Normalize counts: use a baseline where "average" is ~50 points.
+  // These baselines represent a typical active deputy in the Portuguese
+  // Parliament over one legislative session.
+  const normProposals = normalizeCount(
+    metrics.proposalsSubmitted,
+    10 // baseline average proposals
+  );
+  const normInterventions = normalizeCount(
+    metrics.interventionsMade,
+    25 // baseline average interventions
+  );
+  const normQuestions = normalizeCount(
+    metrics.questionsAsked,
+    8 // baseline average questions
+  );
 
-    return {
-      activityScore: Math.round(activityScore),
-      outputScore: Math.round(outputScore),
-      efficiencyRatio: Math.round(efficiencyRatio * 100) / 100,
-      efficiencyScore,
-      grade: EfficiencyScoreCalculator.scoreToGrade(efficiencyScore),
-      label: EfficiencyScoreCalculator.scoreToLabel(efficiencyScore),
-    };
-  }
+  return (
+    metrics.attendanceRate * ACTIVITY_WEIGHTS.attendance +
+    normProposals * ACTIVITY_WEIGHTS.proposals * 100 +
+    normInterventions * ACTIVITY_WEIGHTS.interventions * 100 +
+    normQuestions * ACTIVITY_WEIGHTS.questions * 100
+  );
+}
 
-  // -- internal helpers ----------------------------------------------------
+/**
+ * Compute the aggregate output score (0–100).
+ */
+function computeOutputScore(metrics: OutputMetrics): number {
+  // Vote participation rate (0–100)
+  const voteParticipation =
+    metrics.totalVotes > 0 ? (metrics.votesCast / metrics.totalVotes) * 100 : 0;
 
-  /**
-   * Compute the aggregate activity score (0–100).
-   *
-   * Each metric is normalised so the deputy-level average maps to 50,
-   * individual metrics are then weighted and summed.
-   */
-  private static computeActivityScore(metrics: ActivityMetrics): number {
-    // Normalize counts: use a baseline where "average" is ~50 points.
-    // These baselines represent a typical active deputy in the Portuguese
-    // Parliament over one legislative session.
-    const normProposals = EfficiencyScoreCalculator.normalizeCount(
-      metrics.proposalsSubmitted,
-      10, // baseline average proposals
-    );
-    const normInterventions = EfficiencyScoreCalculator.normalizeCount(
-      metrics.interventionsMade,
-      25, // baseline average interventions
-    );
-    const normQuestions = EfficiencyScoreCalculator.normalizeCount(
-      metrics.questionsAsked,
-      8, // baseline average questions
-    );
+  // Session attendance rate (0–100)
+  const sessionAttendance =
+    metrics.totalSessions > 0 ? (metrics.sessionsAttended / metrics.totalSessions) * 100 : 0;
 
-    return (
-      metrics.attendanceRate * ACTIVITY_WEIGHTS.attendance +
-      normProposals * ACTIVITY_WEIGHTS.proposals * 100 +
-      normInterventions * ACTIVITY_WEIGHTS.interventions * 100 +
-      normQuestions * ACTIVITY_WEIGHTS.questions * 100
-    );
-  }
+  return (
+    voteParticipation * OUTPUT_WEIGHTS.voteParticipation +
+    sessionAttendance * OUTPUT_WEIGHTS.sessionAttendance
+  );
+}
 
-  /**
-   * Compute the aggregate output score (0–100).
-   */
-  private static computeOutputScore(metrics: OutputMetrics): number {
-    // Vote participation rate (0–100)
-    const voteParticipation =
-      metrics.totalVotes > 0
-        ? (metrics.votesCast / metrics.totalVotes) * 100
-        : 0;
+/** Map a 0–100 score to a letter grade. */
+export function scoreToGrade(score: number): EfficiencyGrade {
+  if (score >= EFFICIENCY_THRESHOLDS.A) return 'A';
+  if (score >= EFFICIENCY_THRESHOLDS.B) return 'B';
+  if (score >= EFFICIENCY_THRESHOLDS.C) return 'C';
+  if (score >= EFFICIENCY_THRESHOLDS.D) return 'D';
+  return 'F';
+}
 
-    // Session attendance rate (0–100)
-    const sessionAttendance =
-      metrics.totalSessions > 0
-        ? (metrics.sessionsAttended / metrics.totalSessions) * 100
-        : 0;
+/** Map a 0–100 score to a Portuguese-language label. */
+export function scoreToLabel(score: number): string {
+  if (score >= 75) return EFFICIENCY_LABELS.exceptional;
+  if (score >= 60) return EFFICIENCY_LABELS.high;
+  if (score >= 45) return EFFICIENCY_LABELS.moderate;
+  if (score >= 30) return EFFICIENCY_LABELS.low;
+  return EFFICIENCY_LABELS.minimal;
+}
 
-    return (
-      voteParticipation * OUTPUT_WEIGHTS.voteParticipation +
-      sessionAttendance * OUTPUT_WEIGHTS.sessionAttendance
-    );
-  }
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
 
-  /**
-   * Normalize a raw count to a 0–1 scale using a baseline average.
-   *
-   * A deputy at the baseline gets ~0.5. Twice the baseline → 1.0.
-   * Zero counts → 0. This prevents outlier deputies from skewing
-   * the score too heavily.
-   */
-  private static normalizeCount(value: number, baseline: number): number {
-    if (baseline <= 0) return 0;
-    return Math.min(value / (baseline * 2), 1);
-  }
+/**
+ * Compute the full efficiency score from raw activity + output data.
+ *
+ * All numeric inputs must be non-negative. The calculator handles zero
+ * activity gracefully (returns 0 efficiency).
+ */
+export function calculateEfficiencyScore(
+  activity: ActivityMetrics,
+  output: OutputMetrics
+): EfficiencyScore {
+  const activityScore = computeActivityScore(activity);
+  const outputScore = computeOutputScore(output);
+  const efficiencyRatio = activityScore > 0 ? outputScore / activityScore : 0;
 
-  /** Map a 0–100 score to a letter grade. */
-  static scoreToGrade(score: number): EfficiencyGrade {
-    if (score >= EFFICIENCY_THRESHOLDS.A) return 'A';
-    if (score >= EFFICIENCY_THRESHOLDS.B) return 'B';
-    if (score >= EFFICIENCY_THRESHOLDS.C) return 'C';
-    if (score >= EFFICIENCY_THRESHOLDS.D) return 'D';
-    return 'F';
-  }
+  // Scale so that ratio 1.0 maps to 50 (balanced), max 2.0 → 100
+  const efficiencyScore = Math.min(Math.round(efficiencyRatio * 50), 100);
 
-  /** Map a 0–100 score to a Portuguese-language label. */
-  static scoreToLabel(score: number): string {
-    if (score >= 75) return EFFICIENCY_LABELS.exceptional;
-    if (score >= 60) return EFFICIENCY_LABELS.high;
-    if (score >= 45) return EFFICIENCY_LABELS.moderate;
-    if (score >= 30) return EFFICIENCY_LABELS.low;
-    return EFFICIENCY_LABELS.minimal;
-  }
+  return {
+    activityScore: Math.round(activityScore),
+    outputScore: Math.round(outputScore),
+    efficiencyRatio: Math.round(efficiencyRatio * 100) / 100,
+    efficiencyScore,
+    grade: scoreToGrade(efficiencyScore),
+    label: scoreToLabel(efficiencyScore),
+  };
 }

@@ -1,15 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  EfficiencyScoreCalculator,
   ACTIVITY_WEIGHTS,
   EFFICIENCY_LABELS,
-  EFFICIENCY_THRESHOLDS,
   OUTPUT_WEIGHTS,
+  calculateEfficiencyScore,
+  scoreToGrade,
+  scoreToLabel,
 } from './EfficiencyScoreCalculator';
-import type {
-  ActivityMetrics,
-  OutputMetrics,
-} from './EfficiencyScoreCalculator';
+import type { ActivityMetrics, OutputMetrics } from './EfficiencyScoreCalculator';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -37,7 +35,7 @@ const typicalOutput: OutputMetrics = {
 
 describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
   it('should assign a lower efficiency score when activity is high but output is low', () => {
-    const busyButIneffective = EfficiencyScoreCalculator.calculate(
+    const busyButIneffective = calculateEfficiencyScore(
       {
         attendanceRate: 95,
         proposalsSubmitted: 100,
@@ -49,7 +47,7 @@ describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
         totalVotes: 500,
         sessionsAttended: 10,
         totalSessions: 50,
-      },
+      }
     );
 
     // High activity, low output → efficiency should be low
@@ -60,7 +58,7 @@ describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
   });
 
   it('should assign a higher efficiency score when output matches or exceeds activity norm', () => {
-    const effective = EfficiencyScoreCalculator.calculate(
+    const effective = calculateEfficiencyScore(
       {
         attendanceRate: 80,
         proposalsSubmitted: 8,
@@ -72,7 +70,7 @@ describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
         totalVotes: 500,
         sessionsAttended: 48,
         totalSessions: 50,
-      },
+      }
     );
 
     // Moderate activity, high output → efficiency should be high
@@ -83,7 +81,7 @@ describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
   });
 
   it('should distinguish a "talker" (high interventions) from a "doer" (high vote participation)', () => {
-    const talker = EfficiencyScoreCalculator.calculate(
+    const talker = calculateEfficiencyScore(
       {
         attendanceRate: 70,
         proposalsSubmitted: 5,
@@ -95,10 +93,10 @@ describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
         totalVotes: 500,
         sessionsAttended: 20,
         totalSessions: 50,
-      },
+      }
     );
 
-    const doer = EfficiencyScoreCalculator.calculate(
+    const doer = calculateEfficiencyScore(
       {
         attendanceRate: 90,
         proposalsSubmitted: 15,
@@ -110,7 +108,7 @@ describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
         totalVotes: 500,
         sessionsAttended: 49,
         totalSessions: 50,
-      },
+      }
     );
 
     // The "doer" should have a higher efficiency score than the "talker"
@@ -124,12 +122,9 @@ describe('EfficiencyScoreCalculator — activity vs output distinction', () => {
 // Core calculator
 // ---------------------------------------------------------------------------
 
-describe('EfficiencyScoreCalculator.calculate', () => {
+describe('calculateEfficiencyScore', () => {
   it('should return a complete EfficiencyScore for typical input', () => {
-    const result = EfficiencyScoreCalculator.calculate(
-      typicalActivity,
-      typicalOutput,
-    );
+    const result = calculateEfficiencyScore(typicalActivity, typicalOutput);
 
     expect(result).toHaveProperty('activityScore');
     expect(result).toHaveProperty('outputScore');
@@ -149,7 +144,7 @@ describe('EfficiencyScoreCalculator.calculate', () => {
 
   it('should handle a perfectly balanced deputy (output ≈ activity)', () => {
     // Create input where output score ≈ activity score
-    const result = EfficiencyScoreCalculator.calculate(
+    const result = calculateEfficiencyScore(
       {
         attendanceRate: 85,
         proposalsSubmitted: 10,
@@ -161,7 +156,7 @@ describe('EfficiencyScoreCalculator.calculate', () => {
         totalVotes: 500, // 90%
         sessionsAttended: 45,
         totalSessions: 50, // 90%
-      },
+      }
     );
 
     // With 90% output and ~balanced activity, ratio should be around 0.90–1.10
@@ -174,9 +169,9 @@ describe('EfficiencyScoreCalculator.calculate', () => {
 // Edge cases
 // ---------------------------------------------------------------------------
 
-describe('EfficiencyScoreCalculator — edge cases', () => {
-  it('should return zero efficiency when activity is zero', () => {
-    const result = EfficiencyScoreCalculator.calculate(
+describe('calculateEfficiencyScore — edge cases', () => {
+  it('should return zero efficiency when all metrics are zero', () => {
+    const result = calculateEfficiencyScore(
       {
         attendanceRate: 0,
         proposalsSubmitted: 0,
@@ -188,7 +183,7 @@ describe('EfficiencyScoreCalculator — edge cases', () => {
         totalVotes: 0,
         sessionsAttended: 0,
         totalSessions: 0,
-      },
+      }
     );
 
     expect(result.activityScore).toBe(0);
@@ -200,15 +195,12 @@ describe('EfficiencyScoreCalculator — edge cases', () => {
   });
 
   it('should handle zero total votes gracefully (no division by zero)', () => {
-    const result = EfficiencyScoreCalculator.calculate(
-      typicalActivity,
-      {
-        votesCast: 0,
-        totalVotes: 0,
-        sessionsAttended: 0,
-        totalSessions: 0,
-      },
-    );
+    const result = calculateEfficiencyScore(typicalActivity, {
+      votesCast: 0,
+      totalVotes: 0,
+      sessionsAttended: 0,
+      totalSessions: 0,
+    });
 
     expect(result.outputScore).toBe(0);
     expect(result.efficiencyRatio).toBe(0);
@@ -216,22 +208,19 @@ describe('EfficiencyScoreCalculator — edge cases', () => {
   });
 
   it('should handle zero total sessions gracefully', () => {
-    const result = EfficiencyScoreCalculator.calculate(
-      typicalActivity,
-      {
-        votesCast: 100,
-        totalVotes: 200,
-        sessionsAttended: 0,
-        totalSessions: 0,
-      },
-    );
+    const result = calculateEfficiencyScore(typicalActivity, {
+      votesCast: 100,
+      totalVotes: 200,
+      sessionsAttended: 0,
+      totalSessions: 0,
+    });
 
     // Vote participation contributes 50% of output, session attendance 0%
     expect(result.outputScore).toBe(25); // (100/200 * 100) * 0.5 = 25
   });
 
   it('should cap efficiency score at 100', () => {
-    const result = EfficiencyScoreCalculator.calculate(
+    const result = calculateEfficiencyScore(
       {
         attendanceRate: 10,
         proposalsSubmitted: 0,
@@ -243,14 +232,14 @@ describe('EfficiencyScoreCalculator — edge cases', () => {
         totalVotes: 500,
         sessionsAttended: 50,
         totalSessions: 50,
-      },
+      }
     );
 
     expect(result.efficiencyScore).toBeLessThanOrEqual(100);
   });
 
   it('should handle very large numbers without overflow', () => {
-    const result = EfficiencyScoreCalculator.calculate(
+    const result = calculateEfficiencyScore(
       {
         attendanceRate: 100,
         proposalsSubmitted: 10_000,
@@ -262,7 +251,7 @@ describe('EfficiencyScoreCalculator — edge cases', () => {
         totalVotes: 1_000_000,
         sessionsAttended: 1_000,
         totalSessions: 1_000,
-      },
+      }
     );
 
     expect(result.efficiencyScore).toBeGreaterThanOrEqual(0);
@@ -270,9 +259,9 @@ describe('EfficiencyScoreCalculator — edge cases', () => {
   });
 
   it('should not produce NaN for any valid input', () => {
-    const result = EfficiencyScoreCalculator.calculate(
+    const result = calculateEfficiencyScore(
       { attendanceRate: 50, proposalsSubmitted: 5, interventionsMade: 10, questionsAsked: 3 },
-      { votesCast: 250, totalVotes: 500, sessionsAttended: 25, totalSessions: 50 },
+      { votesCast: 250, totalVotes: 500, sessionsAttended: 25, totalSessions: 50 }
     );
 
     expect(Number.isNaN(result.activityScore)).toBe(false);
@@ -286,7 +275,7 @@ describe('EfficiencyScoreCalculator — edge cases', () => {
 // Weight constants
 // ---------------------------------------------------------------------------
 
-describe('EfficiencyScoreCalculator — weight constants', () => {
+describe('weight constants', () => {
   it('should have activity weights that sum to 1.0', () => {
     const sum =
       ACTIVITY_WEIGHTS.attendance +
@@ -306,30 +295,30 @@ describe('EfficiencyScoreCalculator — weight constants', () => {
 // Grade classification
 // ---------------------------------------------------------------------------
 
-describe('EfficiencyScoreCalculator.scoreToGrade', () => {
+describe('scoreToGrade', () => {
   it('should return A for scores at or above the A threshold', () => {
-    expect(EfficiencyScoreCalculator.scoreToGrade(75)).toBe('A');
-    expect(EfficiencyScoreCalculator.scoreToGrade(100)).toBe('A');
+    expect(scoreToGrade(75)).toBe('A');
+    expect(scoreToGrade(100)).toBe('A');
   });
 
   it('should return B for scores between B and A thresholds', () => {
-    expect(EfficiencyScoreCalculator.scoreToGrade(60)).toBe('B');
-    expect(EfficiencyScoreCalculator.scoreToGrade(74)).toBe('B');
+    expect(scoreToGrade(60)).toBe('B');
+    expect(scoreToGrade(74)).toBe('B');
   });
 
   it('should return C for scores between C and B thresholds', () => {
-    expect(EfficiencyScoreCalculator.scoreToGrade(45)).toBe('C');
-    expect(EfficiencyScoreCalculator.scoreToGrade(59)).toBe('C');
+    expect(scoreToGrade(45)).toBe('C');
+    expect(scoreToGrade(59)).toBe('C');
   });
 
   it('should return D for scores between D and C thresholds', () => {
-    expect(EfficiencyScoreCalculator.scoreToGrade(30)).toBe('D');
-    expect(EfficiencyScoreCalculator.scoreToGrade(44)).toBe('D');
+    expect(scoreToGrade(30)).toBe('D');
+    expect(scoreToGrade(44)).toBe('D');
   });
 
   it('should return F for scores below the D threshold', () => {
-    expect(EfficiencyScoreCalculator.scoreToGrade(0)).toBe('F');
-    expect(EfficiencyScoreCalculator.scoreToGrade(29)).toBe('F');
+    expect(scoreToGrade(0)).toBe('F');
+    expect(scoreToGrade(29)).toBe('F');
   });
 });
 
@@ -337,13 +326,13 @@ describe('EfficiencyScoreCalculator.scoreToGrade', () => {
 // Label classification
 // ---------------------------------------------------------------------------
 
-describe('EfficiencyScoreCalculator.scoreToLabel', () => {
+describe('scoreToLabel', () => {
   it('should return Portuguese labels for each band', () => {
-    expect(EfficiencyScoreCalculator.scoreToLabel(90)).toBe(EFFICIENCY_LABELS.exceptional);
-    expect(EfficiencyScoreCalculator.scoreToLabel(70)).toBe(EFFICIENCY_LABELS.high);
-    expect(EfficiencyScoreCalculator.scoreToLabel(55)).toBe(EFFICIENCY_LABELS.moderate);
-    expect(EfficiencyScoreCalculator.scoreToLabel(40)).toBe(EFFICIENCY_LABELS.low);
-    expect(EfficiencyScoreCalculator.scoreToLabel(10)).toBe(EFFICIENCY_LABELS.minimal);
+    expect(scoreToLabel(90)).toBe(EFFICIENCY_LABELS.exceptional);
+    expect(scoreToLabel(70)).toBe(EFFICIENCY_LABELS.high);
+    expect(scoreToLabel(55)).toBe(EFFICIENCY_LABELS.moderate);
+    expect(scoreToLabel(40)).toBe(EFFICIENCY_LABELS.low);
+    expect(scoreToLabel(10)).toBe(EFFICIENCY_LABELS.minimal);
   });
 });
 
@@ -351,15 +340,15 @@ describe('EfficiencyScoreCalculator.scoreToLabel', () => {
 // Activity score decomposition
 // ---------------------------------------------------------------------------
 
-describe('EfficiencyScoreCalculator — activity score components', () => {
+describe('EfficiencyScore — activity score components', () => {
   it('should weight attendance at 30%', () => {
-    const perfectAttendance = EfficiencyScoreCalculator.calculate(
+    const perfectAttendance = calculateEfficiencyScore(
       { ...typicalActivity, attendanceRate: 100 },
-      typicalOutput,
+      typicalOutput
     );
-    const noAttendance = EfficiencyScoreCalculator.calculate(
+    const noAttendance = calculateEfficiencyScore(
       { ...typicalActivity, attendanceRate: 0 },
-      typicalOutput,
+      typicalOutput
     );
 
     // 100% attendance contributes 30 raw points (100 * 0.30)
@@ -369,13 +358,13 @@ describe('EfficiencyScoreCalculator — activity score components', () => {
   });
 
   it('should weight proposals at 30% (normalized)', () => {
-    const manyProposals = EfficiencyScoreCalculator.calculate(
+    const manyProposals = calculateEfficiencyScore(
       { ...typicalActivity, proposalsSubmitted: 20 }, // 2× baseline → 1.0 norm → 30 pts
-      typicalOutput,
+      typicalOutput
     );
-    const noProposals = EfficiencyScoreCalculator.calculate(
+    const noProposals = calculateEfficiencyScore(
       { ...typicalActivity, proposalsSubmitted: 0 },
-      typicalOutput,
+      typicalOutput
     );
 
     expect(manyProposals.activityScore).toBeGreaterThan(noProposals.activityScore);
@@ -386,12 +375,9 @@ describe('EfficiencyScoreCalculator — activity score components', () => {
 // Integration scenario: dashboard API shape
 // ---------------------------------------------------------------------------
 
-describe('EfficiencyScoreCalculator — dashboard API integration', () => {
+describe('calculateEfficiencyScore — dashboard API integration', () => {
   it('should produce a score object with all required fields for the transparency dashboard', () => {
-    const score = EfficiencyScoreCalculator.calculate(
-      typicalActivity,
-      typicalOutput,
-    );
+    const score = calculateEfficiencyScore(typicalActivity, typicalOutput);
 
     // Fields expected by the dashboard API consumer
     expect(typeof score.activityScore).toBe('number');
@@ -404,10 +390,7 @@ describe('EfficiencyScoreCalculator — dashboard API integration', () => {
   });
 
   it('should compute distinct activity and output scores for the same deputy', () => {
-    const score = EfficiencyScoreCalculator.calculate(
-      typicalActivity,
-      typicalOutput,
-    );
+    const score = calculateEfficiencyScore(typicalActivity, typicalOutput);
 
     // Activity and output are separate, independently computable dimensions
     expect(score.activityScore).not.toBe(score.outputScore);
