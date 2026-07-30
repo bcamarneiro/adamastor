@@ -23,6 +23,8 @@ import { useFeatureFlags } from '../../store/useFeatureFlags';
 import { HELP_TEXTS, HelpTooltip } from '../ui/HelpTooltip';
 import { GradeCircle } from './GradeCircle';
 import { MetricBar } from './MetricBar';
+import { MetricsTrajectoryPanel } from './MetricsTrajectoryPanel';
+import type { TrajectoryMetric } from './MetricsTrajectoryPanel';
 
 function SourceIndicator({
   sourceType,
@@ -64,6 +66,26 @@ function formatDate(dateStr: string | null): string {
   if (!dateStr) return 'presente';
   const date = new Date(dateStr);
   return date.toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' });
+}
+
+/** Generate sample monthly trajectory data from current snapshot values.
+ *  Once a monthly data pipeline exists, replace this with real data. */
+function buildSampleTrajectories(deputy: DeputyDetail): TrajectoryMetric[] {
+  const months = ['Jan', 'Fev', 'Mar', 'Abr'];
+  const base = (v: number) => Math.max(1, Math.round(v * 0.8));
+  const spread = (v: number) => {
+    const b = base(v);
+    return months.map((m, i) => ({ month: m, value: Math.round(b + (v - b) * ((i + 1) / months.length)) }));
+  };
+
+  return [
+    { label: 'Propostas', data: spread(deputy.proposal_count), color: 'accent' },
+    { label: 'Intervenções', data: spread(deputy.intervention_count), color: 'accent' },
+    ...(deputy.attendance_rate !== null
+      ? [{ label: 'Presença', data: spread(deputy.attendance_rate).map((d) => ({ ...d, value: Math.min(100, d.value) })), isPercentage: true as const, color: 'success' as const }]
+      : []),
+    { label: 'Trabalho', data: spread(deputy.work_score).map((d) => ({ ...d, value: Math.min(100, d.value) })), isPercentage: true as const, color: 'accent' },
+  ];
 }
 
 export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardDetailProps) {
@@ -215,6 +237,13 @@ export function ReportCardDetail({ deputy, averages, extendedInfo }: ReportCardD
             </div>
           )}
       </div>
+
+      {/* Monthly Trajectory Section */}
+      {flags.monthlyTrajectory && (
+        <div className="p-6 border-t border-neutral-5">
+          <MetricsTrajectoryPanel metrics={buildSampleTrajectories(deputy)} />
+        </div>
+      )}
 
       {/* Extended Info Section */}
       {extendedInfo && (
