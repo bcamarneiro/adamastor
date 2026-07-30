@@ -14,6 +14,8 @@ export interface FeatureFlags {
   averageDisplay: boolean;
   /** Issue #5 - Question count is always 0 */
   questionCount: boolean;
+  /** BRU-882 - Monthly performance trajectory visualization */
+  monthlyTrajectory: boolean;
 }
 
 interface FeatureFlagsStore {
@@ -28,6 +30,7 @@ const DEFAULT_FLAGS: FeatureFlags = {
   downloadImage: false, // Hide until download is fixed
   averageDisplay: false, // Hide until average calculation is correct
   questionCount: false, // Hide until question count data is populated
+  monthlyTrajectory: false, // Hide until monthly data pipeline is ready
 };
 
 export const useFeatureFlags = create<FeatureFlagsStore>()(

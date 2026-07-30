@@ -4,3 +4,7 @@ export { DeputyCard } from './DeputyCard';
 export { PostalCodeInput } from './PostalCodeInput';
 export { ReportCardDetail } from './ReportCardDetail';
 export { DistrictDeputyList } from './DistrictDeputyList';
+export { MetricTrajectory } from './MetricTrajectory';
+export type { MonthlyDataPoint } from './MetricTrajectory';
+export { MetricsTrajectoryPanel } from './MetricsTrajectoryPanel';
+export type { TrajectoryMetric } from './MetricsTrajectoryPanel';
