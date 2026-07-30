@@ -18,7 +18,7 @@ const PAD = 4;
 
 function linePath(data: MonthlyDataPoint[], xScale: number, yScale: number, min: number): string {
   return data
-    .map((d, i) => `${i === 0 ? 'M' : 'L'}${i * xScale + PAD},${min - (d.value - min) * yScale + PAD}`)
+    .map((d, i) => `${i === 0 ? 'M' : 'L'}${i * xScale + PAD},${CHART_HEIGHT - PAD - (d.value - min) * yScale}`)
     .join(' ');
 }
 
@@ -112,7 +112,7 @@ export function MetricTrajectory({
           <circle
             key={d.month}
             cx={i * xScale + PAD}
-            cy={min - (d.value - min) * yScale + PAD}
+            cy={CHART_HEIGHT - PAD - (d.value - min) * yScale}
             r={3}
             className={`${fillMap[color]} stroke-neutral-1`}
             strokeWidth={1.5}

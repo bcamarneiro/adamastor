@@ -1,5 +1,5 @@
 import { TrendingUp } from 'lucide-react';
-import { type MonthlyDataPoint, MetricTrajectory } from './MetricTrajectory';
+import { MetricTrajectory, type MonthlyDataPoint } from './MetricTrajectory';
 
 export interface TrajectoryMetric {
   label: string;
@@ -36,11 +36,6 @@ export function MetricsTrajectoryPanel({
           />
         ))}
       </div>
-      {metrics.length === 0 && (
-        <p className="text-sm text-neutral-7 italic">
-          Dados mensais ainda não disponíveis.
-        </p>
-      )}
     </section>
   );
 }
