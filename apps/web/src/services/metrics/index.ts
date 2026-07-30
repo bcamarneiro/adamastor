@@ -1,5 +1,7 @@
 export {
-  EfficiencyScoreCalculator,
+  calculateEfficiencyScore,
+  scoreToGrade,
+  scoreToLabel,
   ACTIVITY_WEIGHTS,
   OUTPUT_WEIGHTS,
   EFFICIENCY_LABELS,
