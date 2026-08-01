@@ -22,7 +22,7 @@ jobs:
       - name: Get latest release tag (production only)
         if: inputs.environment == 'production'
         id: latest_release
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const releases = await github.rest.repos.listReleases({
