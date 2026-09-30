@@ -72,7 +72,7 @@ jobs:
       - name: Get latest release tag (production only)
         if: needs.determine-environment.outputs.environment == 'production'
         id: latest_release
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const releases = await github.rest.repos.listReleases({
@@ -249,7 +249,7 @@ jobs:
 
       - name: Notify on failure
         if: failure() && (needs.determine-environment.outputs.environment != 'production' || steps.latest_release.outputs.skip != 'true')
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const env = '${{ needs.determine-environment.outputs.environment }}';
