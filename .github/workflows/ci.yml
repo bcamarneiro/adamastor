@@ -241,7 +241,7 @@ jobs:
             echo "No supabase file changes - skipping db-migrations"
           fi
 
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v2
         if: steps.check-paths.outputs.should_run == 'true'
         with:
           version: latest
