@@ -1,15 +1,15 @@
-import Footer from '@/components/Footer';
-import { FullRankings } from '@/components/Leaderboard/FullRankings';
-import { LegislatureBadge } from '@/components/LegislatureBadge';
-import MainNav from '@/components/MainNav';
-import { SEO } from '@/components/SEO';
-import PageHeader from '@/components/layout/PageHeader';
-import Section from '@/components/layout/Section';
-import StatCard from '@/components/layout/StatCard';
-import { type District, type Party, supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
 import { BarChart3, Filter, TrendingUp, Users, X } from 'lucide-react';
 import { useState } from 'react';
+import Footer from '@/components/Footer';
+import { FullRankings } from '@/components/Leaderboard/FullRankings';
+import { LegislatureBadge } from '@/components/LegislatureBadge';
+import PageHeader from '@/components/layout/PageHeader';
+import Section from '@/components/layout/Section';
+import StatCard from '@/components/layout/StatCard';
+import MainNav from '@/components/MainNav';
+import { SEO } from '@/components/SEO';
+import { type District, type Party, supabase } from '@/lib/supabase';
 
 const GRADES = ['A', 'B', 'C', 'D', 'F'] as const;
 

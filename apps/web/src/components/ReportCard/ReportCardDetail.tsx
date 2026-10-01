@@ -27,7 +27,10 @@ import { MetricBar } from './MetricBar';
 function SourceIndicator({
   sourceType,
   sourceUrl,
-}: { sourceType?: 'api' | 'scraper' | null; sourceUrl?: string | null }) {
+}: {
+  sourceType?: 'api' | 'scraper' | null;
+  sourceUrl?: string | null;
+}) {
   const Icon = sourceType === 'api' ? Database : Globe;
   return (
     <span

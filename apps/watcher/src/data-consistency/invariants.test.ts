@@ -9,7 +9,7 @@
  */
 
 import { beforeAll, describe, expect, it } from 'bun:test';
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { scoreToGrade } from './helpers.js';
 
 let supabase: SupabaseClient;

@@ -1,6 +1,6 @@
-import { PartyComparison } from '@/components/Parties';
 import { RotateCcw, Scale, Swords } from 'lucide-react';
 import { useState } from 'react';
+import { PartyComparison } from '@/components/Parties';
 import type { DeputyDetail } from '../../lib/supabase';
 import { useCompareDeputies } from '../../services/battle/useCompareDeputies';
 import { BattleResults } from './BattleResults';

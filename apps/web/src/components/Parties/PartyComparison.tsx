@@ -1,8 +1,8 @@
+import { RotateCcw, Scale, Trophy } from 'lucide-react';
+import { useState } from 'react';
 import { ComparisonBars } from '@/components/ui/ComparisonBars';
 import type { PartyStats } from '@/lib/supabase';
 import { useCompareParties } from '@/services/parties';
-import { RotateCcw, Scale, Trophy } from 'lucide-react';
-import { useState } from 'react';
 import { PartySelector } from './PartySelector';
 
 export function PartyComparison() {

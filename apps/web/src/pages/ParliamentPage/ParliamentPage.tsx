@@ -1,5 +1,5 @@
-import PageLayout from '@/components/ui/Layout/PageLayout';
 import { Outlet } from 'react-router-dom';
+import PageLayout from '@/components/ui/Layout/PageLayout';
 
 const ParliamentPage: React.FC = () => {
   return (

@@ -20,12 +20,11 @@ export { createCompareHook } from './createCompareHook';
 
 // Types
 export type {
+  CompareOptions,
   ComparisonMetric,
   ComparisonResult,
   MetricConfig,
-  CompareOptions,
 } from './types';
-
+export type { CompareResult } from './utils';
 // Utility function and type
 export { compare } from './utils';
-export type { CompareResult } from './utils';

@@ -1,8 +1,8 @@
+import type React from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { Spinner } from '@/components/Spinner';
 import { type Initiative, useInitiatives } from '@/services/initiatives/useInitiatives';
 import { formatDate } from '@/utils/dateUtils';
-import type React from 'react';
-import { Link, useParams } from 'react-router-dom';
 
 /**
  * Calculates the duration in days between two dates

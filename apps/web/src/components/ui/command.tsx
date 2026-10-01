@@ -1,7 +1,7 @@
-import { cn } from '@/utils/cn';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 import * as React from 'react';
+import { cn } from '@/utils/cn';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -119,11 +119,11 @@ CommandLoading.displayName = CommandPrimitive.Loading.displayName;
 
 export {
   Command,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
-  CommandSeparator,
+  CommandList,
   CommandLoading,
+  CommandSeparator,
 };

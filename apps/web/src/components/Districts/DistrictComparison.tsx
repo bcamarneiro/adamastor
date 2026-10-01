@@ -1,8 +1,8 @@
+import { MapPin, RotateCcw, Scale, Trophy } from 'lucide-react';
+import { useState } from 'react';
 import { ComparisonBars } from '@/components/ui/ComparisonBars';
 import type { DistrictStats } from '@/lib/supabase';
 import { useCompareDistricts } from '@/services/districts/useCompareDistricts';
-import { MapPin, RotateCcw, Scale, Trophy } from 'lucide-react';
-import { useState } from 'react';
 import { DistrictSelector } from './DistrictSelector';
 
 /**

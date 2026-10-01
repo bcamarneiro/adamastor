@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -7,23 +7,23 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": [
-      "node_modules",
-      "dist",
-      ".next",
-      "coverage",
-      "*.min.js",
-      "supabase/.temp",
-      "tsconfig*.json",
-      "*.d.ts",
-      "**/public/data",
-      "**/snapshots/**",
-      "**/playwright-report/**"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/.next",
+      "!**/coverage",
+      "!**/*.min.js",
+      "!**/supabase/.temp",
+      "!**/tsconfig*.json",
+      "!**/*.d.ts",
+      "!**/public/data",
+      "!**/snapshots",
+      "!**/playwright-report"
     ]
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "css": { "parser": { "tailwindDirectives": true } },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",

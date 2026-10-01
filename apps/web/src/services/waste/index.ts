@@ -1,4 +1,3 @@
-export { useWasteStats } from './useWasteStats';
 export {
   DEPUTY_MONTHLY_SALARY,
   MONTHS_PER_YEAR,
@@ -6,4 +5,5 @@ export {
   TOTAL_DEPUTIES,
   YEARLY_SALARY,
 } from './constants';
-export { useCalculateWaste, formatCurrency } from './useCalculateWaste';
+export { formatCurrency, useCalculateWaste } from './useCalculateWaste';
+export { useWasteStats } from './useWasteStats';

@@ -1,10 +1,3 @@
-import Footer from '@/components/Footer';
-import { LegislatureBadge } from '@/components/LegislatureBadge';
-import MainNav from '@/components/MainNav';
-import { PartyDeputyList } from '@/components/ReportCard/PartyDeputyList';
-import { SEO } from '@/components/SEO';
-import { usePartyStats } from '@/services/parties';
-import { useDeputiesByParty } from '@/services/reportCard';
 import {
   ArrowLeft,
   CheckCircle,
@@ -16,6 +9,13 @@ import {
   Users,
 } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import Footer from '@/components/Footer';
+import { LegislatureBadge } from '@/components/LegislatureBadge';
+import MainNav from '@/components/MainNav';
+import { PartyDeputyList } from '@/components/ReportCard/PartyDeputyList';
+import { SEO } from '@/components/SEO';
+import { usePartyStats } from '@/services/parties';
+import { useDeputiesByParty } from '@/services/reportCard';
 
 export function PartyPage() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export function PartyPage() {
   const deputiesWithAttendance = deputies.filter((d) => d.attendance_rate != null);
   const avgAttendance =
     deputiesWithAttendance.length > 0
-      ? deputiesWithAttendance.reduce((sum, d) => sum + d.attendance_rate!, 0) /
+      ? deputiesWithAttendance.reduce((sum, d) => sum + (d.attendance_rate ?? 0), 0) /
         deputiesWithAttendance.length
       : null;
 

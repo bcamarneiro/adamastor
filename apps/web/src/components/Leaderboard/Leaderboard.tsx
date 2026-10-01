@@ -1,7 +1,7 @@
-import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { useBottomWorkers } from '../../services/leaderboard/useBottomWorkers';
 import { useTopWorkers } from '../../services/leaderboard/useTopWorkers';
 import { LeaderboardCard } from './LeaderboardCard';

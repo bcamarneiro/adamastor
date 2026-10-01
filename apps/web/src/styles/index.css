@@ -258,7 +258,8 @@
 
 @font-face {
   font-family: "Switzer-Variable";
-  src: url("../assets/fonts/Switzer-Variable.woff2") format("woff2"),
+  src:
+    url("../assets/fonts/Switzer-Variable.woff2") format("woff2"),
     url("../assets/fonts/Switzer-Variable.woff") format("woff");
   font-weight: 100 900;
   font-display: swap;
@@ -609,8 +610,9 @@ blockquote {
 }
 
 code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
   background-color: var(--color-neutral-3);
   padding: var(--spacing-1) var(--spacing-2);
   border-radius: var(--radius-sm);
@@ -767,8 +769,9 @@ pre code {
   padding: 0.125em 0.375em;
   border-radius: 0.25rem;
   font-size: 0.875em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
 }
 
 .prose pre {

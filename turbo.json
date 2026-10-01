@@ -5,11 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-      "env": [
-        "VITE_*",
-        "NEXT_PUBLIC_*",
-        "NODE_ENV"
-      ]
+      "env": ["VITE_*", "NEXT_PUBLIC_*", "NODE_ENV"]
     },
     "test": {
       "dependsOn": ["^build"],
@@ -42,10 +38,7 @@
       "dependsOn": ["build"],
       "outputs": ["playwright-report/**", "test-results/**"],
       "cache": false,
-      "env": [
-        "PLAYWRIGHT_BASE_URL",
-        "CI"
-      ]
+      "env": ["PLAYWRIGHT_BASE_URL", "CI"]
     },
     "e2e:smoke": {
       "dependsOn": ["build"],

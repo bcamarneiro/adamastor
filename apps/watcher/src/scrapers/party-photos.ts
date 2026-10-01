@@ -63,8 +63,7 @@ const PARTY_CONFIGS: PartyPhotoConfig[] = [
     partyAcronym: 'IL',
     baseUrl: 'https://iniciativaliberal.pt',
     listPageUrl: 'https://iniciativaliberal.pt/pessoas/grupo-parlamentar-nacional/',
-    photoUrlPattern:
-      /https:\/\/iniciativaliberal\.pt\/wp-content\/uploads\/[^"'\s]+\-copiar\.jpg/gi,
+    photoUrlPattern: /https:\/\/iniciativaliberal\.pt\/wp-content\/uploads\/[^"'\s]+-copiar\.jpg/gi,
     namePattern: /<h[23][^>]*>([^<]+)<\/h[23]>/gi,
   },
   {
@@ -173,16 +172,13 @@ function extractNameFromUrl(url: string): string | null {
  * Normalize a name for fuzzy matching.
  */
 function normalizeName(name: string): string {
-  return (
-    name
-      .toLowerCase()
-      .normalize('NFD')
-      // biome-ignore lint/suspicious/noMisleadingCharacterClass: Unicode range for diacritical marks is intentional
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-      .replace(/[^a-z\s]/g, '') // Remove non-alpha
-      .replace(/\s+/g, ' ')
-      .trim()
-  );
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .replace(/[^a-z\s]/g, '') // Remove non-alpha
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /**

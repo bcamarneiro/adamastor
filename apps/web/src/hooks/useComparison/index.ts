@@ -1,18 +1,16 @@
 // Types
-export type {
-  ComparisonMetric,
-  MetricConfig,
-  ComparisonResult,
-} from './types';
 
 // Compare utility
-export { compare, type CompareResult } from './compare';
-
+export { type CompareResult, compare } from './compare';
+export type {
+  ComparisonMetric,
+  ComparisonResult,
+  MetricConfig,
+} from './types';
 // Hook
-export {
-  useComparison,
-  type UseComparisonOptions,
-} from './useComparison';
-
 // Default export for convenient usage
-export { useComparison as default } from './useComparison';
+export {
+  type UseComparisonOptions,
+  useComparison,
+  useComparison as default,
+} from './useComparison';

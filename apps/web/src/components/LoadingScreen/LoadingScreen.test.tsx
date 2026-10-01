@@ -25,17 +25,14 @@ vi.mock('framer-motion', () => ({
       'aria-live'?: 'polite' | 'off' | 'assertive';
       'aria-label'?: string;
     }) => (
+      // biome-ignore lint/a11y/useAriaPropsSupportedByRole: mock forwards whatever role the component under test passes
       <div className={className} role={role} aria-live={ariaLive} aria-label={ariaLabel}>
         {children}
       </div>
     ),
-    span: ({
-      children,
-      className,
-    }: {
-      children: React.ReactNode;
-      className?: string;
-    }) => <span className={className}>{children}</span>,
+    span: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+      <span className={className}>{children}</span>
+    ),
   },
 }));
 

@@ -168,7 +168,7 @@ export async function transformInitiatives(
             partyVotes.push({
               external_id: voto.id,
               initiative_id: initiativeId,
-              session_number: Number.parseInt(voto.reuniao) || undefined,
+              session_number: Number.parseInt(voto.reuniao, 10) || undefined,
               voted_at: voto.data,
               result: voto.resultado?.toLowerCase().includes('aprovad') ? 'approved' : 'rejected',
               is_unanimous: voto.unanime === 'Sim',

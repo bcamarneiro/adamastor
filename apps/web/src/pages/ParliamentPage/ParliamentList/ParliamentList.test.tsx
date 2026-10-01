@@ -7,9 +7,9 @@ import {
   createFullParliamentSetup,
   createMockElectoralDistrict,
   createMockMP,
+  createMockParliamentaryGroup,
   createMockParliamentData,
   createMockParliamentMetadata,
-  createMockParliamentaryGroup,
   createSearchableMPs,
 } from '../../../test/mocks/parliament';
 import ParliamentList from './ParliamentList';

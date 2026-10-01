@@ -8,9 +8,9 @@ import type { Edge, Node } from '@xyflow/react';
  * @returns The nodes with updated positions
  */
 export function calculateNodePositions<
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: default lets untyped React Flow callers infer node data
   NodeData extends Record<string, unknown> = any,
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: default lets untyped React Flow callers infer edge data
   EdgeData extends Record<string, unknown> = any,
 >(nodes: Node<NodeData>[], edges: Edge<EdgeData>[]): Node<NodeData>[] {
   // Step 1: Identify root nodes (nodes that are only sources, not targets)
@@ -53,7 +53,7 @@ export function calculateNodePositions<
   let groupXOffset = 0;
 
   for (const [groupIndex, group] of Object.entries(nodeGroups)) {
-    const groupNum = Number.parseInt(groupIndex);
+    const groupNum = Number.parseInt(groupIndex, 10);
 
     // Calculate group dimensions
     const groupWidth = Math.max(group.length * HORIZONTAL_SPACING, HORIZONTAL_SPACING);

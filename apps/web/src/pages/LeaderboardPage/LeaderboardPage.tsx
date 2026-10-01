@@ -1,10 +1,10 @@
 import Footer from '@/components/Footer';
 import { Leaderboard } from '@/components/Leaderboard';
 import { LegislatureBadge } from '@/components/LegislatureBadge';
-import MainNav from '@/components/MainNav';
-import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import PageHeader from '@/components/layout/PageHeader';
 import Section from '@/components/layout/Section';
+import MainNav from '@/components/MainNav';
+import { SEO, SEO_CONFIGS } from '@/components/SEO';
 
 export function LeaderboardPage() {
   return (

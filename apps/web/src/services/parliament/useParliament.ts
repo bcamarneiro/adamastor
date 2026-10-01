@@ -1,6 +1,6 @@
-import type { MP, ParliamentData } from '@/types/parliament';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
+import type { MP, ParliamentData } from '@/types/parliament';
 
 type ParliamentMetadata = {
   total: number;

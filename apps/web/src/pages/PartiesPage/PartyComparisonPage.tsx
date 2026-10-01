@@ -1,9 +1,9 @@
+import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { PartyComparison } from '@/components/Parties';
 import { SEO } from '@/components/SEO';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export function PartyComparisonPage() {
   return (

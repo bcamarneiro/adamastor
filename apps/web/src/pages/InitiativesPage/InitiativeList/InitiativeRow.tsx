@@ -105,6 +105,7 @@ const InitiativeRow = memo(function InitiativeRow({
           )}
         </div>
         {/* biome-ignore lint/a11y/useSemanticElements: rowheader role for table structure */}
+        {/* biome-ignore lint/a11y/useFocusableInteractive: header of a read-only role="table"; nothing to activate */}
         <div role="rowheader" className="p-3 font-medium">
           {initiative.IniNr}
         </div>

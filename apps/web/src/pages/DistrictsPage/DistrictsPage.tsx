@@ -1,3 +1,5 @@
+import { ArrowLeft, MapPin, Scale, Users } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { DistrictCard, PortugalMap } from '@/components/Districts';
 import Footer from '@/components/Footer';
 import { LegislatureBadge } from '@/components/LegislatureBadge';
@@ -5,8 +7,6 @@ import MainNav from '@/components/MainNav';
 import { SEO } from '@/components/SEO';
 import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { useDistrictStats } from '@/services/districts';
-import { ArrowLeft, MapPin, Scale, Users } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 
 export function DistrictsPage() {
   const navigate = useNavigate();

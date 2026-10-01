@@ -18,7 +18,7 @@ import Footer from '../../components/Footer';
 import Hero from '../../components/Hero';
 import KeyMetrics from '../../components/KeyMetrics';
 import MainNav from '../../components/MainNav';
-import { SEO, SEO_CONFIGS, getOrganizationSchema } from '../../components/SEO';
+import { getOrganizationSchema, SEO, SEO_CONFIGS } from '../../components/SEO';
 
 const featureCards = [
   {

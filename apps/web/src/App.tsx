@@ -1,9 +1,10 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
+
 const PrivacidadePage = lazy(() => import('./pages/PrivacidadePage/PrivacidadePage'));
-import { Route, Routes } from 'react-router-dom';
 
 import { useAppSettingsStore } from '@store/useAppSettingsStore';
 import { cn } from '@utils/cn';
+import { Route, Routes } from 'react-router-dom';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 import FourOFour from './components/FourOFour/FourOFour';

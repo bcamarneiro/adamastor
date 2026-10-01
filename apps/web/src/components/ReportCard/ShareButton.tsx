@@ -1,7 +1,7 @@
-import { useFeatureFlags } from '@/store/useFeatureFlags';
 import { toPng } from 'html-to-image';
 import { Check, Copy, Download, Share2, X } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { useFeatureFlags } from '@/store/useFeatureFlags';
 import type { DeputyDetail } from '../../lib/supabase';
 import { ShareableCard } from './ShareableCard';
 

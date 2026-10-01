@@ -1,13 +1,13 @@
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { ReportCardDetail } from '@/components/ReportCard/ReportCardDetail';
 import { ShareButton } from '@/components/ReportCard/ShareButton';
-import { SEO, getDeputySchema } from '@/components/SEO';
+import { getDeputySchema, SEO } from '@/components/SEO';
 import { useDeputyDetail } from '@/services/reportCard/useDeputyDetail';
 import { useDeputyExtendedInfo } from '@/services/reportCard/useDeputyExtendedInfo';
 import { useNationalAverages } from '@/services/reportCard/useNationalAverages';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export function DeputyPage() {
   const { deputyId } = useParams<{ deputyId: string }>();
