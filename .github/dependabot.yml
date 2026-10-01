@@ -1,6 +1,9 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  # "bun", not "npm": with a bun.lock the npm ecosystem tries to run Bun and fails
+  # ("Dependabot could not run Bun ... configuration error"), so it could neither
+  # update the lockfile in its PRs nor rebase them.
+  - package-ecosystem: "bun"
     directory: "/"
     schedule:
       interval: "weekly"
