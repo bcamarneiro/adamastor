@@ -1,6 +1,6 @@
-import { useFeatureFlags } from '@/store/useFeatureFlags';
 import { QRCodeSVG } from 'qrcode.react';
 import { forwardRef } from 'react';
+import { useFeatureFlags } from '@/store/useFeatureFlags';
 import type { DeputyDetail } from '../../lib/supabase';
 import { GradeCircle } from './GradeCircle';
 

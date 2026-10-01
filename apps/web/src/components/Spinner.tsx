@@ -13,6 +13,7 @@ export const Spinner = ({ size = 'md', className = '' }: SpinnerProps) => {
   return (
     <div
       className={`animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-600 ${sizeClasses[size]} ${className}`}
+      role="img"
       aria-label="Loading"
     >
       <span className="sr-only">Loading...</span>

@@ -1,5 +1,5 @@
-import { type ComparisonMetric, type MetricConfig, useComparison } from '@/hooks/useComparison';
 import { useMemo } from 'react';
+import { type ComparisonMetric, type MetricConfig, useComparison } from '@/hooks/useComparison';
 import type { PartyStats } from '../../lib/supabase';
 
 // Re-export for backward compatibility

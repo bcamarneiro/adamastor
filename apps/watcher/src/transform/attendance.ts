@@ -23,15 +23,12 @@ interface DeputyMatch {
  * Normalize name for fuzzy matching
  */
 function normalizeName(name: string): string {
-  return (
-    name
-      .toLowerCase()
-      .normalize('NFD')
-      // biome-ignore lint/suspicious/noMisleadingCharacterClass: Unicode range for diacritical marks is intentional
-      .replace(/[\u0300-\u036f]/g, '') // Remove accents
-      .replace(/[^a-z\s]/g, '') // Remove non-letters
-      .trim()
-  );
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/[^a-z\s]/g, '') // Remove non-letters
+    .trim();
 }
 
 /**

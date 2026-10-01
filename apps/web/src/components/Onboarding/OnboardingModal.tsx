@@ -1,9 +1,9 @@
-import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
-import { useOnboardingDismissed } from '@/hooks/useFirstVisit';
-import { cn } from '@/utils/cn';
 import { BarChart3, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
+import { useOnboardingDismissed } from '@/hooks/useFirstVisit';
+import { cn } from '@/utils/cn';
 
 const ONBOARDING_STEPS = [
   {

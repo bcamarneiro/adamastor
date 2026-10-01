@@ -1,9 +1,9 @@
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { BattleRoyale } from '@/components/BattleRoyale';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
-import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 export function BattlePage() {
   const navigate = useNavigate();

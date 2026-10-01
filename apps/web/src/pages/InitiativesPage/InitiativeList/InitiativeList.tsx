@@ -242,7 +242,6 @@ const InitiativeList = () => {
         {isLoading ? (
           <div
             className="flex justify-center items-center h-full min-h-64 transition-opacity duration-200"
-            // biome-ignore lint/a11y/useSemanticElements: role="status" is correct for loading indicators
             role="status"
             aria-label="Loading initiatives"
           >
@@ -258,22 +257,27 @@ const InitiativeList = () => {
               {/* biome-ignore lint/a11y/useFocusableInteractive: Header row doesn't need focus */}
               <div role="row" className={gridColsClass}>
                 {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
+                {/* biome-ignore lint/a11y/useFocusableInteractive: header of a read-only role="table"; nothing to activate */}
                 <div role="columnheader" className="p-3" aria-label="Expand/collapse">
                   <span className="sr-only">Expand</span>
                 </div>
                 {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
+                {/* biome-ignore lint/a11y/useFocusableInteractive: header of a read-only role="table"; nothing to activate */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   #
                 </div>
                 {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
+                {/* biome-ignore lint/a11y/useFocusableInteractive: header of a read-only role="table"; nothing to activate */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   Phase
                 </div>
                 {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
+                {/* biome-ignore lint/a11y/useFocusableInteractive: header of a read-only role="table"; nothing to activate */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   Title
                 </div>
                 {/* biome-ignore lint/a11y/useSemanticElements: columnheader role for grid-based table */}
+                {/* biome-ignore lint/a11y/useFocusableInteractive: header of a read-only role="table"; nothing to activate */}
                 <div role="columnheader" className="p-3 font-semibold text-neutral-12">
                   Actions
                 </div>

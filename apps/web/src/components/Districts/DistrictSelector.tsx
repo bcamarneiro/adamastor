@@ -1,7 +1,7 @@
-import type { DistrictStats } from '@/lib/supabase';
-import { useDistrictStats } from '@/services/districts';
 import { MapPin, Search, X } from 'lucide-react';
 import { useState } from 'react';
+import type { DistrictStats } from '@/lib/supabase';
+import { useDistrictStats } from '@/services/districts';
 
 interface DistrictSelectorProps {
   label: string;

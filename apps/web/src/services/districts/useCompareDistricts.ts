@@ -1,5 +1,5 @@
-import type { ComparisonMetric } from '@/types/comparison';
 import { useMemo } from 'react';
+import type { ComparisonMetric } from '@/types/comparison';
 import { type MetricConfig, useComparison } from '../../hooks/useComparison';
 import type { DistrictStats } from '../../lib/supabase';
 

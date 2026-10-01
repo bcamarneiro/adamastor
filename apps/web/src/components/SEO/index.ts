@@ -1,8 +1,8 @@
 export {
+  default,
+  getBreadcrumbSchema,
+  getDeputySchema,
+  getOrganizationSchema,
   SEO,
   SEO_CONFIGS,
-  getOrganizationSchema,
-  getDeputySchema,
-  getBreadcrumbSchema,
 } from './SEO';
-export { default } from './SEO';

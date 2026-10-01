@@ -1,12 +1,12 @@
+import { AlertTriangle, Info } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { PostalCodeInput } from '@/components/ReportCard/PostalCodeInput';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { supabase } from '@/lib/supabase';
 import { useDistrictByPostal } from '@/services/reportCard/useDistrictByPostal';
-import { AlertTriangle, Info } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 
 export function HomePage() {
   const navigate = useNavigate();

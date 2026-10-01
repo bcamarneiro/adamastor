@@ -1,7 +1,7 @@
-import type { PartyStats } from '@/lib/supabase';
-import { usePartyStats } from '@/services/parties';
 import { Search, X } from 'lucide-react';
 import { useState } from 'react';
+import type { PartyStats } from '@/lib/supabase';
+import { usePartyStats } from '@/services/parties';
 
 interface PartySelectorProps {
   label: string;

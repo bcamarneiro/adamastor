@@ -1,5 +1,5 @@
-import type { DistrictStats } from '@/lib/supabase';
 import { MapPin, Users } from 'lucide-react';
+import type { DistrictStats } from '@/lib/supabase';
 
 interface DistrictCardProps {
   district: DistrictStats;
@@ -46,6 +46,7 @@ export function DistrictCard({ district, rank, onClick, isSelected }: DistrictCa
   };
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: role="button" and tabIndex are set whenever onClick is
     <div
       data-testid="district-card"
       onClick={onClick}

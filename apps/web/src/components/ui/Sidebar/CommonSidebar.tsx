@@ -1,7 +1,7 @@
-import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
-import Sidebar from '@/components/ui/Sidebar/Sidebar';
 import { useAppSettingsStore } from '@store/useAppSettingsStore';
 import { Link, useLocation } from 'react-router-dom';
+import DebaixoDolhoLogo from '@/components/ui/Icons/DebaixoDolhoLogo';
+import Sidebar from '@/components/ui/Sidebar/Sidebar';
 
 const CommonSidebar = () => {
   const { leftSidebarExpanded } = useAppSettingsStore();

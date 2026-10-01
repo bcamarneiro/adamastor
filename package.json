@@ -2,7 +2,10 @@
   "name": "adamastor",
   "private": true,
   "packageManager": "bun@1.2.10",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "turbo run dev",
     "dev:debug": "bun run --cwd apps/web vite --debug --logLevel info",
@@ -24,7 +27,7 @@
     "release": "node scripts/release.js"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.4.7",
     "husky": "^9.1.7",
     "turbo": "^2.7.5",
     "typescript": "^5.7.2"

@@ -2,8 +2,8 @@ import type {
   ElectoralDistrict,
   MP,
   MPSituation,
-  ParliamentData,
   ParliamentaryGroup,
+  ParliamentData,
 } from '../../types/parliament';
 
 /**
@@ -86,10 +86,7 @@ export function createMockMP(overrides: Partial<MP> = {}): MP {
  * Contains the complete parliament structure with districts and MPs.
  */
 export function createMockParliamentData(
-  options: {
-    districts?: ElectoralDistrict[];
-    mps?: MP[];
-  } = {}
+  options: { districts?: ElectoralDistrict[]; mps?: MP[] } = {}
 ): ParliamentData {
   const defaultDistricts: ElectoralDistrict[] = [
     createMockElectoralDistrict({ cpId: 1, cpDes: 'Lisboa' }),

@@ -1,9 +1,9 @@
-import type { Initiative } from '@/services/initiatives/useInitiatives';
 import { describe, expect, it } from 'vitest';
+import type { Initiative } from '@/services/initiatives/useInitiatives';
 import {
-  DEFAULT_RELATED_INITIATIVES_LIMIT,
   areInitiativesRelated,
   buildRelatedInitiativesMap,
+  DEFAULT_RELATED_INITIATIVES_LIMIT,
   getRelatedInitiatives,
 } from './relatedInitiatives';
 

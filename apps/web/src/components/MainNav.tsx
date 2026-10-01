@@ -35,6 +35,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
   const isActive = (path: string) => location.pathname === path;
 
   // Close mobile menu on route change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: location.pathname is the trigger; the effect must re-run on navigation
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
@@ -132,7 +133,7 @@ const MainNav: React.FC<MainNavProps> = ({ scrollY }) => {
         onKeyDown={(e) => {
           if (e.key === 'Escape') setMobileMenuOpen(false);
         }}
-        aria-label="Fechar menu"
+        aria-hidden="true"
       />
 
       {/* Mobile Navigation - Only render on mobile when menu is open */}

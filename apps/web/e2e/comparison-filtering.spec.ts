@@ -5,15 +5,15 @@
  */
 import { expect, test } from './fixtures';
 import {
-  DISTRICT_CONFIG,
-  DROPDOWN_BUTTON_SELECTOR,
-  PARTY_CONFIG,
   checkComparisonResults,
   clearSelection,
   clickCompareButton,
   clickResetButton,
+  DISTRICT_CONFIG,
+  DROPDOWN_BUTTON_SELECTOR,
   getOptionCount,
   openSelector,
+  PARTY_CONFIG,
   searchInSelector,
   selectFirstOption,
   selectSecondOption,

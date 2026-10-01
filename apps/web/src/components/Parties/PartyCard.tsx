@@ -1,6 +1,6 @@
-import type { PartyStats } from '@/lib/supabase';
 import { FileText, HelpCircle, MessageSquare, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import type { PartyStats } from '@/lib/supabase';
 
 interface PartyCardProps {
   party: PartyStats;

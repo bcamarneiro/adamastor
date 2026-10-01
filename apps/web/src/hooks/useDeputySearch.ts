@@ -1,7 +1,7 @@
-import { supabase } from '@/lib/supabase';
-import type { DeputyDetail } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
+import type { DeputyDetail } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 const MIN_SEARCH_LENGTH = 2;
 const DEBOUNCE_MS = 300;

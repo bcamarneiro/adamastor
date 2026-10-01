@@ -1,12 +1,12 @@
+import { useQuery } from '@tanstack/react-query';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import MainNav from '@/components/MainNav';
 import { DistrictDeputyList } from '@/components/ReportCard/DistrictDeputyList';
 import { SEO } from '@/components/SEO';
 import { type District, supabase } from '@/lib/supabase';
 import { useDeputiesByDistrict } from '@/services/reportCard/useDeputiesByDistrict';
-import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 
 async function fetchDistrictBySlug(slug: string): Promise<District | null> {
   const { data, error } = await supabase.from('districts').select('*').eq('slug', slug).single();

@@ -1,3 +1,5 @@
+import { ArrowLeft, Flag, Scale, Trophy, Users } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import { LegislatureBadge } from '@/components/LegislatureBadge';
 import MainNav from '@/components/MainNav';
@@ -5,8 +7,6 @@ import { PartyCard } from '@/components/Parties';
 import { SEO, SEO_CONFIGS } from '@/components/SEO';
 import { HELP_TEXTS, HelpTooltip } from '@/components/ui/HelpTooltip';
 import { usePartyStats } from '@/services/parties';
-import { ArrowLeft, Flag, Scale, Trophy, Users } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 
 export function PartiesPage() {
   const navigate = useNavigate();

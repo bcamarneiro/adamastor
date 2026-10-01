@@ -1,7 +1,7 @@
-import type { DistrictStats } from '@/lib/supabase';
-import { cn } from '@/utils/cn';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import type { DistrictStats } from '@/lib/supabase';
+import { cn } from '@/utils/cn';
 
 interface PortugalMapProps {
   districts: DistrictStats[];
@@ -54,7 +54,6 @@ export function PortugalMap({ districts, className }: PortugalMapProps) {
       const slug = d.name
         .toLowerCase()
         .normalize('NFD')
-        // biome-ignore lint/suspicious/noMisleadingCharacterClass: Unicode range for diacritical marks is intentional
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/\s+/g, '-');
       acc[slug] = d;
@@ -117,6 +116,7 @@ export function PortugalMap({ districts, className }: PortugalMapProps) {
 
           return (
             <Link key={slug} to={`/distrito/${slug}`}>
+              {/* biome-ignore lint/a11y/noStaticElementInteractions: mouse handlers only drive the hover tooltip; the Link is the interactive element */}
               <path
                 d={path}
                 fill={getScoreColorHex(score)}

@@ -1,10 +1,10 @@
-import Footer from '@/components/Footer';
-import MainNav from '@/components/MainNav';
-import { SEO } from '@/components/SEO';
 import { ArrowLeft } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
+import Footer from '@/components/Footer';
+import MainNav from '@/components/MainNav';
+import { SEO } from '@/components/SEO';
 import contributePtMd from './contribute-pt.md';
 
 const ContributePage: React.FC = () => {

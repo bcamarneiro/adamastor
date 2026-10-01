@@ -1,4 +1,4 @@
-export { DeputyCard, PartyCard, DistrictCard } from './EntityCard';
-export { LoadingState } from './LoadingState';
 export { EmptyState } from './EmptyState';
+export { DeputyCard, DistrictCard, PartyCard } from './EntityCard';
 export { ErrorState } from './ErrorState';
+export { LoadingState } from './LoadingState';

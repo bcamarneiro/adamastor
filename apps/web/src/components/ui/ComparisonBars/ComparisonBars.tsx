@@ -1,5 +1,5 @@
-import type { ComparisonMetric } from '@/types/comparison';
 import { Trophy } from 'lucide-react';
+import type { ComparisonMetric } from '@/types/comparison';
 
 /**
  * Determines if a color value is a CSS color (hex, rgb, etc.) or a Tailwind class.

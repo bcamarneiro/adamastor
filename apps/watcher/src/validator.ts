@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import Ajv from 'ajv';
 import type { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 import generateSchema from 'generate-schema';
 
 export interface ValidateOptions {
